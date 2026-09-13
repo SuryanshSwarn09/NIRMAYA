@@ -67,7 +67,7 @@ def check_backend_env(root: Path) -> bool:
     print(f"  Venv:    {GREEN}FOUND ({venv_dir}){RESET}")
 
     # Check key packages
-    packages = ["fastapi", "pydantic", "sqlalchemy", "pytest", "httpx"]
+    packages = ["fastapi", "pydantic", "sqlalchemy", "alembic", "asyncpg", "pytest", "httpx"]
     missing = []
     for pkg in packages:
         try:
@@ -99,6 +99,7 @@ def check_config_files(root: Path):
     configs = [
         ("Backend .env.example", root / "backend" / ".env.example"),
         ("Frontend .env.example", root / "frontend" / ".env.example"),
+        ("Alembic Config", root / "backend" / "alembic.ini"),
         ("GitBook Docs YAML", root / "gitbook-docs.yaml"),
         ("GitBook Summary", root / "docs" / "SUMMARY.md"),
     ]
