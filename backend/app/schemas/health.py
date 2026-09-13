@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, Literal
 
 
 class StandardsCompliance(BaseModel):
@@ -15,11 +15,16 @@ class StandardsCompliance(BaseModel):
 
 
 class DatabaseHealth(BaseModel):
-    """Relational database connection telemetry."""
+    """Relational database connection and probe telemetry."""
 
-    status: str = Field(default="healthy", description="Database connection status")
+    status: Literal["healthy", "unreachable", "degraded", "not_configured"] = Field(
+        default="healthy", description="Database connection probe status"
+    )
     driver: str = Field(default="postgresql+asyncpg", description="Underlying DB driver")
-    latency_ms: Optional[float] = Field(default=None, description="Roundtrip query latency in ms")
+    database_type: Optional[str] = Field(default=None, description="Database dialect (e.g. postgresql, sqlite)")
+    latency_ms: Optional[float] = Field(default=None, description="Roundtrip query latency in milliseconds")
+    error: Optional[str] = Field(default=None, description="Error diagnostics if probe failed")
+    pool_size: Optional[int] = Field(default=None, description="Configured connection pool size")
 
 
 class SystemHealthResponse(BaseModel):
