@@ -43,6 +43,8 @@ class Settings(BaseSettings):
     )
     DATABASE_POOL_SIZE: int = 10
     DATABASE_MAX_OVERFLOW: int = 20
+    DATABASE_POOL_TIMEOUT: int = 30
+    DATABASE_POOL_RECYCLE: int = 3600
     DATABASE_ECHO: bool = False
 
     # Supabase Auth & Storage
@@ -71,6 +73,17 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.ENVIRONMENT == "production"
+
+    @computed_field
+    @property
+    def sync_database_url(self) -> str:
+        """Derive synchronous database URL for Alembic and migration tools."""
+        url = self.DATABASE_URL
+        if url.startswith("postgresql+asyncpg://"):
+            return url.replace("postgresql+asyncpg://", "postgresql+psycopg2://", 1)
+        if url.startswith("sqlite+aiosqlite://"):
+            return url.replace("sqlite+aiosqlite://", "sqlite://", 1)
+        return url
 
 
 settings = Settings()
