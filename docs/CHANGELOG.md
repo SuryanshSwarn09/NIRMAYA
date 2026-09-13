@@ -106,5 +106,26 @@
   - Cross-platform launchers validated on Windows PowerShell and POSIX Bash.
   - GitBook space updated with full architecture specifications and Week 1 retrospective.
 
+### Week 2: Relational Database Modeling & Migrations
+
+#### Day 6 (Sun) - Milestone 02-01
+- **Focus:** SQLAlchemy 2.0 Async Engine, Connection Pooling & Alembic Scaffold
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `ea72fbb: feat(core): add sync db url and pool settings`
+  2. `2f348bf: feat(db): add async engine and session factory`
+  3. `ab6b2ce: feat(db): add get_db dependency and ping utility`
+  4. `6167150: feat(schemas): add database health status schema`
+  5. `e0fd8fb: feat(api): add database health probe to health endpoint`
+  6. `7d65524: test(db): add unit tests for base model mixins`
+  7. `4d17ca3: test(db): add unit tests for async session and ping`
+  8. `0aaf33c: test(api): update health tests for database probe`
+  9. `b64312f: feat(migrations): setup alembic async migration environment`
+  10. `docs(journey): log day 6 deliverables and update changelog`
+- **Verification:**
+  - Automated test suite expanded to **15 tests (`pytest -v`)**, all passing (100%).
+  - Live database health probe tested with protective timeout and graceful degradation.
+  - Asynchronous Alembic configuration verified with `alembic` CLI.
+  - Standalone `scripts/db-check.py` and `scripts/doctor.py` diagnostic tools verified.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*

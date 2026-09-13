@@ -22,6 +22,7 @@
   * [Day 4: Unified Layout & Navigation Shell](journey/month-1/day-4.md)
   * [Day 5: Diagnostics, Capabilities & Orchestration](journey/month-1/day-5.md)
   * [Week 1 Retrospective & Metrics](journey/month-1/week-1-review.md)
+  * [Day 6: Async Engine, Pooling & Alembic](journey/month-1/day-6.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
