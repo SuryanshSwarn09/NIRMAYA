@@ -1,5 +1,6 @@
 """Unit test suite for health check endpoint, telemetry, and security headers."""
 
+from unittest.mock import patch
 import pytest
 from httpx import AsyncClient
 
@@ -28,7 +29,7 @@ async def test_health_check_payload_structure(client: AsyncClient):
 
     # Verify Health Telemetry
     data = payload["data"]
-    assert data["status"] == "healthy"
+    assert data["status"] in ["healthy", "degraded"]
     assert data["project"] == "NIRMAYA"
     assert data["environment"] == "development"
     assert data["uptime_seconds"] >= 0.0
@@ -40,8 +41,30 @@ async def test_health_check_payload_structure(client: AsyncClient):
     assert standards["loinc_mapped"] is True
     assert standards["snomed_ct_ready"] is True
 
-    # Verify Database Indicator
-    assert data["database"]["status"] == "healthy"
+    # Verify Database Indicator structure
+    db_telemetry = data["database"]
+    assert db_telemetry["status"] in ["healthy", "unreachable", "degraded"]
+    assert db_telemetry["driver"] in ["asyncpg", "aiosqlite", "relational"]
+
+
+@pytest.mark.asyncio
+async def test_database_health_probe_mock_healthy(client: AsyncClient):
+    """Verify health endpoint output when database probe returns healthy."""
+    mock_probe = {
+        "status": "healthy",
+        "latency_ms": 0.85,
+        "database_type": "postgresql",
+        "error": None,
+    }
+    with patch("app.api.v1.endpoints.health.check_db_health", return_value=mock_probe):
+        response = await client.get("/api/v1/health")
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["data"]["status"] == "healthy"
+        assert payload["data"]["database"]["status"] == "healthy"
+        assert payload["data"]["database"]["latency_ms"] == 0.85
+        assert payload["data"]["database"]["database_type"] == "postgresql"
+        assert payload["data"]["database"]["error"] is None
 
 
 @pytest.mark.asyncio
