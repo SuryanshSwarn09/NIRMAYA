@@ -7,6 +7,8 @@ from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import UserRole
 
 if TYPE_CHECKING:
+    from app.models.doctor import DoctorProfile
+    from app.models.lab import DiagnosticLabFacility
     from app.models.patient import PatientProfile
 
 
@@ -54,6 +56,22 @@ class User(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # 1-to-1 relationship with PatientProfile
     patient_profile: Mapped[Optional["PatientProfile"]] = relationship(
         "PatientProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
+    # 1-to-1 relationship with DoctorProfile
+    doctor_profile: Mapped[Optional["DoctorProfile"]] = relationship(
+        "DoctorProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
+    # 1-to-1 relationship with DiagnosticLabFacility
+    lab_facility: Mapped[Optional["DiagnosticLabFacility"]] = relationship(
+        "DiagnosticLabFacility",
         back_populates="user",
         uselist=False,
         cascade="all, delete-orphan",
