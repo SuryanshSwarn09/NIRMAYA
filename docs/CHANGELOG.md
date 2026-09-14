@@ -139,12 +139,32 @@
   7. `e7793d7: test(models): add unit tests for user entity constraints and roles`
   8. `86ca846: test(models): add unit tests for patient profile relationship and cascades`
   9. `7265675: test(schemas): add validation tests for user and patient profile schemas`
-  10. `docs(journey): log day 7 deliverables and update changelog`
+  10. `7ce7359: docs(journey): log day 7 deliverables and update changelog`
 - **Verification:**
   - Automated test suite expanded to **34 tests (`pytest -v`)**, all passing (100%).
   - User and PatientProfile entity creation, constraints, and cascade deletion verified in isolated async tests.
   - Pydantic v2 schemas validated for ABHA ID (`XX-XXXX-XXXX-XXXX`), `@abdm` handle, PIN code, and ORM deserialization.
   - GitBook documentation and summary table of contents updated.
 
+#### Day 8 (Tue) - Milestone 02-03
+- **Focus:** Provider & Diagnostic Entities: DoctorProfile (HPR) & DiagnosticLabFacility (HFR)
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `bea8d46: feat(models): add medical specialty and lab accreditation enums`
+  2. `2d5db8f: feat(models): implement doctor profile entity with hpr registry id`
+  3. `f1d9678: feat(models): implement diagnostic lab facility entity with hfr id`
+  4. `c59aacb: feat(models): wire doctor and lab relationships into user entity and __init__`
+  5. `58c008e: feat(schemas): create pydantic v2 schemas for doctor profile`
+  6. `8b631fd: feat(schemas): create pydantic v2 schemas for diagnostic lab facility`
+  7. `baf8eaf: test(models): add unit tests for doctor profile entity and hpr id`
+  8. `39302b7: test(models): add unit tests for diagnostic lab entity and hfr id`
+  9. `d36e353: test(schemas): add validation tests for doctor and lab schemas`
+  10. `docs(journey): log day 8 deliverables and update changelog`
+- **Verification:**
+  - Automated test suite expanded to **52 tests (`pytest -v`)**, all passing (100%).
+  - DoctorProfile and DiagnosticLabFacility persistence, unique constraints, and cascade deletion tested.
+  - Pydantic v2 schemas validated for ABDM HPR registry ID (`@hpr.abdm`), HFR ID (`IN-STATE-HFR-XXXXXX`), fee bounds, and nested ORM serialization.
+  - GitBook documentation and changelog updated.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
