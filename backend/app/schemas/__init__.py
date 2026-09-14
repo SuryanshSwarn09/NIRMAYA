@@ -7,10 +7,22 @@ from app.schemas.common import (
     PaginationMeta,
     PaginatedResponse,
 )
+from app.schemas.doctor import (
+    DoctorProfileBase,
+    DoctorProfileCreate,
+    DoctorProfileResponse,
+    DoctorProfileUpdate,
+)
 from app.schemas.health import (
     DatabaseHealth,
     StandardsCompliance,
     SystemHealthResponse,
+)
+from app.schemas.lab import (
+    DiagnosticLabFacilityBase,
+    DiagnosticLabFacilityCreate,
+    DiagnosticLabFacilityResponse,
+    DiagnosticLabFacilityUpdate,
 )
 from app.schemas.patient import (
     PatientProfileBase,
@@ -42,4 +54,12 @@ __all__ = [
     "PatientProfileCreate",
     "PatientProfileUpdate",
     "PatientProfileResponse",
+    "DoctorProfileBase",
+    "DoctorProfileCreate",
+    "DoctorProfileUpdate",
+    "DoctorProfileResponse",
+    "DiagnosticLabFacilityBase",
+    "DiagnosticLabFacilityCreate",
+    "DiagnosticLabFacilityUpdate",
+    "DiagnosticLabFacilityResponse",
 ]
