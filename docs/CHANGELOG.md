@@ -127,5 +127,24 @@
   - Asynchronous Alembic configuration verified with `alembic` CLI.
   - Standalone `scripts/db-check.py` and `scripts/doctor.py` diagnostic tools verified.
 
+#### Day 7 (Mon) - Milestone 02-02
+- **Focus:** Core Relational Entities: User, Role & Patient Profile with ABHA
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `23bd14e: feat(models): add clinical enums for user roles and patient attributes`
+  2. `93bf8ea: feat(models): implement user relational entity with role and supabase uid`
+  3. `985187c: feat(models): implement patient profile entity with abha identifiers`
+  4. `812bc30: feat(models): export core entities and wire model relationships in __init__`
+  5. `59c2e7c: feat(schemas): create pydantic v2 schemas for user management`
+  6. `65abbcd: feat(schemas): create pydantic v2 schemas for patient profile and abha`
+  7. `e7793d7: test(models): add unit tests for user entity constraints and roles`
+  8. `86ca846: test(models): add unit tests for patient profile relationship and cascades`
+  9. `7265675: test(schemas): add validation tests for user and patient profile schemas`
+  10. `docs(journey): log day 7 deliverables and update changelog`
+- **Verification:**
+  - Automated test suite expanded to **34 tests (`pytest -v`)**, all passing (100%).
+  - User and PatientProfile entity creation, constraints, and cascade deletion verified in isolated async tests.
+  - Pydantic v2 schemas validated for ABHA ID (`XX-XXXX-XXXX-XXXX`), `@abdm` handle, PIN code, and ORM deserialization.
+  - GitBook documentation and summary table of contents updated.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*

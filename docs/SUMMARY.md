@@ -23,6 +23,7 @@
   * [Day 5: Diagnostics, Capabilities & Orchestration](journey/month-1/day-5.md)
   * [Week 1 Retrospective & Metrics](journey/month-1/week-1-review.md)
   * [Day 6: Async Engine, Pooling & Alembic](journey/month-1/day-6.md)
+  * [Day 7: User & Patient Profile Models](journey/month-1/day-7.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
