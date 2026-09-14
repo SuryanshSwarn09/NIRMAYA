@@ -1,4 +1,4 @@
-"""Schemas package exporting common envelopes and domain models."""
+"""Schemas package exporting common envelopes, domain models, and health schemas."""
 
 from app.schemas.common import (
     APIResponse,
@@ -8,9 +8,21 @@ from app.schemas.common import (
     PaginatedResponse,
 )
 from app.schemas.health import (
-    StandardsCompliance,
     DatabaseHealth,
+    StandardsCompliance,
     SystemHealthResponse,
+)
+from app.schemas.patient import (
+    PatientProfileBase,
+    PatientProfileCreate,
+    PatientProfileResponse,
+    PatientProfileUpdate,
+)
+from app.schemas.user import (
+    UserBase,
+    UserCreate,
+    UserResponse,
+    UserUpdate,
 )
 
 __all__ = [
@@ -22,4 +34,12 @@ __all__ = [
     "StandardsCompliance",
     "DatabaseHealth",
     "SystemHealthResponse",
+    "UserBase",
+    "UserCreate",
+    "UserUpdate",
+    "UserResponse",
+    "PatientProfileBase",
+    "PatientProfileCreate",
+    "PatientProfileUpdate",
+    "PatientProfileResponse",
 ]
