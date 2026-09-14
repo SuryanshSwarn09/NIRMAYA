@@ -9,6 +9,7 @@ from alembic import context
 
 from app.core.config import settings
 from app.db.base import Base
+import app.models  # noqa: F401 - registers User and PatientProfile models
 
 # Interpret the config file for Python logging
 config = context.config
