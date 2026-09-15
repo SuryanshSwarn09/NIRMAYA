@@ -12,14 +12,15 @@ from app.db.fixtures import (
     LAB_FIXTURES,
     PATIENT_FIXTURES,
 )
-from app.models.doctor import DoctorProfile
-from app.models.lab import DiagnosticLabFacility
-from app.models.patient import PatientProfile
-from app.models.user import User
 
 
 async def clear_database(session: AsyncSession) -> Dict[str, int]:
     """Truncate all core entities in reverse foreign key order."""
+    from app.models.doctor import DoctorProfile
+    from app.models.lab import DiagnosticLabFacility
+    from app.models.patient import PatientProfile
+    from app.models.user import User
+
     labs_deleted = (await session.execute(delete(DiagnosticLabFacility))).rowcount or 0
     doctors_deleted = (await session.execute(delete(DoctorProfile))).rowcount or 0
     patients_deleted = (await session.execute(delete(PatientProfile))).rowcount or 0
@@ -44,6 +45,11 @@ async def seed_database(session: AsyncSession, reset: bool = False) -> Dict[str,
     Returns:
         Summary dictionary containing counts of entities seeded or existing.
     """
+    from app.models.doctor import DoctorProfile
+    from app.models.lab import DiagnosticLabFacility
+    from app.models.patient import PatientProfile
+    from app.models.user import User
+
     cleared_stats = {}
     if reset:
         cleared_stats = await clear_database(session)
