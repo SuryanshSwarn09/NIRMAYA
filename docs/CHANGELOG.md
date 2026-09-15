@@ -158,12 +158,33 @@
   7. `baf8eaf: test(models): add unit tests for doctor profile entity and hpr id`
   8. `39302b7: test(models): add unit tests for diagnostic lab entity and hfr id`
   9. `d36e353: test(schemas): add validation tests for doctor and lab schemas`
-  10. `docs(journey): log day 8 deliverables and update changelog`
+  10. `4fb1288: docs(journey): log day 8 deliverables and update changelog`
 - **Verification:**
   - Automated test suite expanded to **52 tests (`pytest -v`)**, all passing (100%).
   - DoctorProfile and DiagnosticLabFacility persistence, unique constraints, and cascade deletion tested.
   - Pydantic v2 schemas validated for ABDM HPR registry ID (`@hpr.abdm`), HFR ID (`IN-STATE-HFR-XXXXXX`), fee bounds, and nested ORM serialization.
   - GitBook documentation and changelog updated.
+
+#### Day 9 (Wed) - Milestone 02-04
+- **Focus:** Initial Alembic Migrations, Database Indexes & Synthetic Clinical Fixtures
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `61c1849: feat(migrations): create initial alembic migration for core entities`
+  2. `0dbcd0a: feat(db): implement synthetic clinical data fixtures`
+  3. `cf3d7db: feat(db): implement asynchronous database seeder service`
+  4. `80bcc2c: feat(scripts): add cli database seeder utility`
+  5. `81a0689: test(migrations): add unit tests for alembic migration upgrade and downgrade`
+  6. `7250b0d: test(db): add unit tests for database seeder service`
+  7. `66d8cce: test(db): add seeder reset and relationship integrity tests`
+  8. `7065464: refactor(db): export seeder and fixtures in app.db package`
+  9. `63c47f8: chore(scripts): update doctor.py diagnostic to check migrations and seed status`
+  10. `e705d0d: fix(db): defer model imports in seeder to prevent circular dependency`
+  11. `docs(journey): log day 9 deliverables and update changelog`
+- **Verification:**
+  - Automated test suite expanded to **58 tests (`pytest -v`)**, all passing (100%).
+  - Alembic migration `0001_initial_core_schema` upgrade and downgrade lifecycles validated in isolated tests.
+  - Synthetic fixtures and seeder verified across Patient, Doctor, Lab, and Admin personas with full relationship integrity.
+  - Pre-flight `scripts/doctor.py` diagnostic check verified migrations and seeder CLI discovery.
+  - GitBook documentation and summary table of contents updated.
 
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
