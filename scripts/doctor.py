@@ -111,6 +111,27 @@ def check_config_files(root: Path):
             print(f"  {name.ljust(25)} -> {RED}MISSING{RESET}")
 
 
+def check_database_migrations_and_seeder(root: Path) -> bool:
+    print(f"\n[{BOLD}Alembic Migrations & Database Seeder{RESET}]")
+    versions_dir = root / "backend" / "alembic" / "versions"
+    seed_script = root / "scripts" / "seed-db.py"
+
+    migration_files = [f for f in versions_dir.glob("*.py") if f.name != "__init__.py"] if versions_dir.exists() else []
+    if migration_files:
+        print(f"  Migrations:  {GREEN}{len(migration_files)} revision(s) found{RESET}")
+        for mf in sorted(migration_files):
+            print(f"    - {mf.stem}")
+    else:
+        print(f"  Migrations:  {YELLOW}NO REVISIONS FOUND in {versions_dir}{RESET}")
+
+    if seed_script.exists():
+        print(f"  Seeder CLI:  {GREEN}PRESENT ({seed_script.name}){RESET}")
+    else:
+        print(f"  Seeder CLI:  {RED}MISSING ({seed_script}){RESET}")
+
+    return bool(migration_files and seed_script.exists())
+
+
 def main():
     print_banner()
     root = Path(__file__).resolve().parent.parent
@@ -120,9 +141,10 @@ def main():
     b_ok = check_backend_env(root)
     f_ok = check_frontend_env(root)
     check_config_files(root)
+    m_ok = check_database_migrations_and_seeder(root)
 
     print(f"\n{BOLD}----------------------------------------------------------------{RESET}")
-    if p_ok and n_ok and f_ok:
+    if p_ok and n_ok and f_ok and m_ok:
         print(f"{GREEN}{BOLD}[OK] NIRMAYA Pre-Flight Check PASSED! Ready for development.{RESET}\n")
         sys.exit(0)
     else:
