@@ -7,6 +7,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
+import os
 from app.core.config import settings
 from app.db.base import Base
 import app.models  # noqa: F401 - registers User and PatientProfile models
@@ -20,8 +21,12 @@ if config.config_file_name is not None:
 # Target metadata for autogenerate support
 target_metadata = Base.metadata
 
-# Override URL from NIRMAYA settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Override URL from NIRMAYA settings or custom override (e.g. testing)
+override_url = config.attributes.get("override_url") or os.environ.get("ALEMBIC_DATABASE_URL")
+if override_url:
+    config.set_main_option("sqlalchemy.url", override_url)
+else:
+    config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 
 
 def run_migrations_offline() -> None:
@@ -36,6 +41,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        render_as_batch=url.startswith("sqlite") if url else False,
     )
 
     with context.begin_transaction():
@@ -48,6 +54,7 @@ def do_run_migrations(connection: Connection) -> None:
         connection=connection,
         target_metadata=target_metadata,
         compare_type=True,
+        render_as_batch=connection.dialect.name == "sqlite",
     )
 
     with context.begin_transaction():
