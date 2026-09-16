@@ -45,7 +45,7 @@ nirmaya-side/
 
 ### Version Control Setup
 - Initialized local Git repository on branch `main`.
-- Connected remote repository: `https://github.com/SuryanshSwarn09/NIRMAYA-mjr-proj.git`.
+- Connected remote repository: `https://github.com/SuryanshSwarn09/NIRMAYA.git`.
 - Configured `.gitignore` to prevent any node modules, build outputs, `.venv`, or OS metadata from entering version control.
 
 ---

@@ -238,7 +238,7 @@ export default function Home() {
                 </Button>
               </Link>
               <a
-                href="https://github.com/SuryanshSwarn09/NIRMAYA-mjr-proj"
+                href="https://github.com/SuryanshSwarn09/NIRMAYA"
                 target="_blank"
                 rel="noopener noreferrer"
               >
