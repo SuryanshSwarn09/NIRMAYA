@@ -112,9 +112,13 @@ class NIRMAYAAPIClient {
       throw new APIError(errorPayload, response.status);
     }
 
-    const json = (await response.json()) as APIResponseEnvelope<T>;
+    const json = (await response.json()) as Record<string, unknown>;
+    // If it is a paginated response containing pagination metadata, return the full envelope
+    if ("pagination" in json) {
+      return json as unknown as T;
+    }
     // If wrapped in standard APIResponse, return the inner data
-    return json.data !== undefined ? json.data : (json as unknown as T);
+    return json.data !== undefined ? (json.data as T) : (json as unknown as T);
   }
 
   public get<T>(endpoint: string, options?: RequestOptions): Promise<T> {
