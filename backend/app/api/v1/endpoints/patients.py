@@ -41,6 +41,27 @@ async def create_patient(
 
 
 @router.get(
+    "/by-abha/{identifier}",
+    response_model=APIResponse[PatientProfileResponse],
+    summary="Resolve patient clinical profile by ABHA Number or ABHA Address",
+    description="ABDM interoperability resolution endpoint matching either 14-digit ABHA ID or @abdm handle.",
+)
+async def get_patient_by_abha_identifier(
+    identifier: str,
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[PatientProfileResponse]:
+    """Resolve patient profile by ABHA number or @abdm address."""
+    patient = await patient_service.get_patient_by_abha(db, identifier)
+    if not patient:
+        raise EntityNotFoundException(entity_name="PatientProfile (ABHA)", entity_id=identifier)
+
+    return APIResponse(
+        message="Patient profile resolved via ABHA identity successfully",
+        data=PatientProfileResponse.model_validate(patient),
+    )
+
+
+@router.get(
     "/{patient_id}",
     response_model=APIResponse[PatientProfileResponse],
     summary="Retrieve patient clinical profile by UUID",
