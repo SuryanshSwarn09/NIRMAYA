@@ -41,6 +41,46 @@ async def create_patient(
 
 
 @router.get(
+    "/",
+    response_model=PaginatedResponse[PatientProfileResponse],
+    summary="List, search, and filter patient directory with pagination",
+    description="Retrieve paginated patient profiles filtered by search query, city, or blood group.",
+)
+async def get_patients(
+    page: int = Query(default=1, ge=1, description="1-indexed page number"),
+    limit: int = Query(default=20, ge=1, le=100, description="Page limit ceiling"),
+    query: Optional[str] = Query(default=None, description="Search across name, email, ABHA, city"),
+    city: Optional[str] = Query(default=None, description="Filter by residential city"),
+    blood_group: Optional[BloodGroup] = Query(default=None, description="Filter by blood group"),
+    db: AsyncSession = Depends(get_db),
+) -> PaginatedResponse[PatientProfileResponse]:
+    """List and search patients with pagination and clinical filters."""
+    skip = (page - 1) * limit
+    items, total_count = await patient_service.list_patients(
+        db=db,
+        skip=skip,
+        limit=limit,
+        query=query,
+        city=city,
+        blood_group=blood_group,
+    )
+
+    total_pages = (total_count + limit - 1) // limit if total_count > 0 else 0
+
+    return PaginatedResponse(
+        data=[PatientProfileResponse.model_validate(p) for p in items],
+        pagination=PaginationMeta(
+            total_count=total_count,
+            page=page,
+            limit=limit,
+            total_pages=total_pages,
+            has_next=page < total_pages,
+            has_prev=page > 1,
+        ),
+    )
+
+
+@router.get(
     "/by-abha/{identifier}",
     response_model=APIResponse[PatientProfileResponse],
     summary="Resolve patient clinical profile by ABHA Number or ABHA Address",
