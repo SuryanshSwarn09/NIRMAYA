@@ -120,3 +120,44 @@ async def get_patient(
         message="Patient profile retrieved successfully",
         data=PatientProfileResponse.model_validate(patient),
     )
+
+
+@router.put(
+    "/{patient_id}",
+    response_model=APIResponse[PatientProfileResponse],
+    summary="Update patient clinical demographics or contact information",
+    description="Updates existing patient attributes, verifying ABHA unique constraints.",
+)
+async def update_patient(
+    patient_id: str,
+    update_in: PatientProfileUpdate,
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[PatientProfileResponse]:
+    """Update patient profile fields."""
+    updated = await patient_service.update_patient_profile(
+        db=db,
+        patient_id=patient_id,
+        update_in=update_in,
+    )
+    return APIResponse(
+        message="Patient profile updated successfully",
+        data=PatientProfileResponse.model_validate(updated),
+    )
+
+
+@router.delete(
+    "/{patient_id}",
+    response_model=APIResponse[dict],
+    summary="Delete a patient clinical profile",
+    description="Removes a patient profile by UUID.",
+)
+async def delete_patient(
+    patient_id: str,
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[dict]:
+    """Delete patient profile by ID."""
+    await patient_service.delete_patient_profile(db, patient_id)
+    return APIResponse(
+        message="Patient profile deleted successfully",
+        data={"patient_id": patient_id, "deleted": True},
+    )
