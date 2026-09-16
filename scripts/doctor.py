@@ -66,18 +66,34 @@ def check_backend_env(root: Path) -> bool:
 
     print(f"  Venv:    {GREEN}FOUND ({venv_dir}){RESET}")
 
+    # Locate venv python executable
+    venv_python = venv_dir / "Scripts" / "python.exe"
+    if not venv_python.exists():
+        venv_python = venv_dir / "bin" / "python"
+
     # Check key packages
-    packages = ["fastapi", "pydantic", "sqlalchemy", "alembic", "asyncpg", "pytest", "httpx"]
-    missing = []
+    packages = ["fastapi", "pydantic", "sqlalchemy", "alembic", "asyncpg", "pytest", "httpx", "jwt"]
+    all_installed = True
     for pkg in packages:
+        imported = False
         try:
             __import__(pkg)
-            print(f"  Package: {pkg.ljust(12)} -> {GREEN}INSTALLED{RESET}")
+            imported = True
         except ImportError:
-            # Check if installed inside venv
-            print(f"  Package: {pkg.ljust(12)} -> {YELLOW}CHECK VENV{RESET}")
+            if venv_python.exists():
+                res = subprocess.run(
+                    [str(venv_python), "-c", f"import {pkg}"],
+                    capture_output=True,
+                )
+                imported = res.returncode == 0
 
-    return True
+        if imported:
+            print(f"  Package: {pkg.ljust(12)} -> {GREEN}INSTALLED{RESET}")
+        else:
+            print(f"  Package: {pkg.ljust(12)} -> {RED}MISSING{RESET}")
+            all_installed = False
+
+    return all_installed
 
 
 def check_frontend_env(root: Path) -> bool:
