@@ -54,3 +54,4 @@ class PaginatedResponse(BaseModel, Generic[DataT]):
     data: List[DataT] = Field(default_factory=list)
     pagination: PaginationMeta
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    request_id: Optional[str] = None
