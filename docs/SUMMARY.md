@@ -28,6 +28,7 @@
   * [Day 9: Initial Alembic Migrations & Seeding](journey/month-1/day-9.md)
   * [Day 10: Patient Vault CRUD API](journey/month-1/day-10.md)
   * [Week 2 Retrospective & Metrics](journey/month-1/week-2-review.md)
+  * [Weeks 1 & 2 Executive Audit Report](journey/month-1/week-1-2-executive-audit.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
