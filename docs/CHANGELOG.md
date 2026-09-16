@@ -178,13 +178,34 @@
   8. `7065464: refactor(db): export seeder and fixtures in app.db package`
   9. `63c47f8: chore(scripts): update doctor.py diagnostic to check migrations and seed status`
   10. `e705d0d: fix(db): defer model imports in seeder to prevent circular dependency`
-  11. `docs(journey): log day 9 deliverables and update changelog`
+  11. `c78e211: docs(journey): log day 9 deliverables and update changelog`
 - **Verification:**
   - Automated test suite expanded to **58 tests (`pytest -v`)**, all passing (100%).
   - Alembic migration `0001_initial_core_schema` upgrade and downgrade lifecycles validated in isolated tests.
   - Synthetic fixtures and seeder verified across Patient, Doctor, Lab, and Admin personas with full relationship integrity.
   - Pre-flight `scripts/doctor.py` diagnostic check verified migrations and seeder CLI discovery.
   - GitBook documentation and summary table of contents updated.
+
+#### Day 10 (Thu) - Milestone 02-05 & Closing Week 2
+- **Weekly Release Tag:** `v0.1.0-alpha.w2`
+- **Focus:** Patient Vault Profile CRUD API, Integration Tests & Week 2 Retrospective
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `37d5ab3: feat(services): implement patient vault database queries and crud service`
+  2. `5622c18: feat(api): create patient profile create and retrieve endpoints`
+  3. `45ca736: feat(api): add abha identifier resolution endpoint for patient vault`
+  4. `8bb7a0e: feat(api): add paginated patient listing and filter endpoints`
+  5. `7e1972e: feat(api): add patient profile update and delete endpoints`
+  6. `ab35401: feat(api): wire patient router into api v1 router`
+  7. `edae1ab: test(api): add integration tests for patient profile creation and abha lookup`
+  8. `fe62bae: test(api): add integration tests for patient listing, filters, update, and deletion`
+  9. `f133a06: docs(journey): log day 10 deliverables and week 2 retrospective`
+  10. `docs(changelog): record milestone 02-05 and close week 2`
+- **Verification:**
+  - Automated test suite expanded to **66 tests (`pytest -v`)**, all passing (100%).
+  - Patient Vault REST API endpoints (`/api/v1/patients/`) verified with full CRUD lifecycles.
+  - Dual-mode ABHA resolution endpoint verified for both 14-digit number and `@abdm` handle.
+  - Paginated directory listing verified with search filters, page ceiling, and boundary metadata.
+  - Week 2 retrospective logged, changelog synchronized, and release tagged as `v0.1.0-alpha.w2`.
 
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
