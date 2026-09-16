@@ -206,3 +206,127 @@ async def test_get_patient_by_abha_identifier(patient_api_client) -> None:
     # Lookup non-existent
     res_none = await client.get("/api/v1/patients/by-abha/nonexistent@abdm")
     assert res_none.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_list_patients_pagination_and_filtering(patient_api_client) -> None:
+    """Verify GET /api/v1/patients/ handles pagination, search queries, and clinical filters."""
+    client, session_factory = patient_api_client
+
+    # Seed 3 distinct patients
+    async with session_factory() as session:
+        u1 = User(email="p1@example.com", full_name="Ananya Roy")
+        u2 = User(email="p2@example.com", full_name="Rahul Varma")
+        u3 = User(email="p3@example.com", full_name="Sunita Deshmukh")
+        session.add_all([u1, u2, u3])
+        await session.commit()
+        u1_id, u2_id, u3_id = u1.id, u2.id, u3.id
+
+    await client.post(
+        "/api/v1/patients/",
+        json={"user_id": u1_id, "city": "Kolkata", "blood_group": "A+", "abha_address": "ananya@abdm"},
+    )
+    await client.post(
+        "/api/v1/patients/",
+        json={"user_id": u2_id, "city": "Pune", "blood_group": "B+", "abha_address": "rahul@abdm"},
+    )
+    await client.post(
+        "/api/v1/patients/",
+        json={"user_id": u3_id, "city": "Pune", "blood_group": "O+", "abha_address": "sunita@abdm"},
+    )
+
+    # 1. Pagination: Page 1 with limit 2
+    res_p1 = await client.get("/api/v1/patients/?page=1&limit=2")
+    assert res_p1.status_code == 200
+    body_p1 = res_p1.json()
+    assert len(body_p1["data"]) == 2
+    assert body_p1["pagination"]["total_count"] == 3
+    assert body_p1["pagination"]["page"] == 1
+    assert body_p1["pagination"]["total_pages"] == 2
+    assert body_p1["pagination"]["has_next"] is True
+    assert body_p1["pagination"]["has_prev"] is False
+
+    # 2. Pagination: Page 2
+    res_p2 = await client.get("/api/v1/patients/?page=2&limit=2")
+    assert res_p2.status_code == 200
+    body_p2 = res_p2.json()
+    assert len(body_p2["data"]) == 1
+    assert body_p2["pagination"]["has_next"] is False
+    assert body_p2["pagination"]["has_prev"] is True
+
+    # 3. Filter by City
+    res_city = await client.get("/api/v1/patients/?city=Pune")
+    assert res_city.status_code == 200
+    assert res_city.json()["pagination"]["total_count"] == 2
+
+    # 4. Filter by Blood Group
+    res_bg = await client.get("/api/v1/patients/", params={"blood_group": "A+"})
+    assert res_bg.status_code == 200
+    assert res_bg.json()["pagination"]["total_count"] == 1
+
+    # 5. Search Query
+    res_q = await client.get("/api/v1/patients/?query=Ananya")
+    assert res_q.status_code == 200
+    assert res_q.json()["pagination"]["total_count"] == 1
+    assert res_q.json()["data"][0]["user"]["full_name"] == "Ananya Roy"
+
+
+@pytest.mark.asyncio
+async def test_update_patient_profile(patient_api_client) -> None:
+    """Verify PUT /api/v1/patients/{id} updates demographic and contact fields."""
+    client, session_factory = patient_api_client
+
+    async with session_factory() as session:
+        user = User(email="update.me@example.com", full_name="Update User")
+        session.add(user)
+        await session.commit()
+        user_id = user.id
+
+    create_res = await client.post(
+        "/api/v1/patients/",
+        json={"user_id": user_id, "city": "Bengaluru", "pincode": "560001", "abha_address": "orig@abdm"},
+    )
+    patient_id = create_res.json()["data"]["id"]
+
+    # Update city, emergency contact, and pincode
+    update_payload = {
+        "city": "Mysuru",
+        "pincode": "570001",
+        "emergency_contact_name": "Ravi Update",
+        "emergency_contact_phone": "+919900112233",
+    }
+    update_res = await client.put(f"/api/v1/patients/{patient_id}", json=update_payload)
+    assert update_res.status_code == 200
+    data = update_res.json()["data"]
+    assert data["city"] == "Mysuru"
+    assert data["pincode"] == "570001"
+    assert data["emergency_contact_name"] == "Ravi Update"
+    assert data["abha_address"] == "orig@abdm"  # Untouched
+
+
+@pytest.mark.asyncio
+async def test_delete_patient_profile(patient_api_client) -> None:
+    """Verify DELETE /api/v1/patients/{id} removes profile and cascades correctly."""
+    client, session_factory = patient_api_client
+
+    async with session_factory() as session:
+        user = User(email="del.patient@example.com", full_name="Delete Patient")
+        session.add(user)
+        await session.commit()
+        user_id = user.id
+
+    create_res = await client.post(
+        "/api/v1/patients/",
+        json={"user_id": user_id, "abha_address": "del.me@abdm"},
+    )
+    patient_id = create_res.json()["data"]["id"]
+
+    # Delete
+    del_res = await client.delete(f"/api/v1/patients/{patient_id}")
+    assert del_res.status_code == 200
+    assert del_res.json()["success"] is True
+    assert del_res.json()["data"]["deleted"] is True
+
+    # Subsequent GET returns 404
+    fetch_res = await client.get(f"/api/v1/patients/{patient_id}")
+    assert fetch_res.status_code == 404
