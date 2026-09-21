@@ -155,3 +155,12 @@ def require_role(*allowed_roles: UserRole) -> RoleChecker:
     """Create a RoleChecker dependency for the specified permitted clinical roles."""
     return RoleChecker(allowed_roles)
 
+
+# Pre-configured role guards for standard clinical permission boundaries
+require_patient = require_role(UserRole.PATIENT)
+require_doctor = require_role(UserRole.DOCTOR)
+require_lab = require_role(UserRole.LAB)
+require_admin = require_role(UserRole.ADMIN)
+require_clinical_staff = require_role(UserRole.DOCTOR, UserRole.LAB)
+
+
