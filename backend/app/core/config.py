@@ -27,6 +27,14 @@ class Settings(BaseSettings):
         description="Core JWT signing secret",
     )
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    JWT_ALGORITHM: str = Field(
+        default="HS256",
+        description="JWT signature verification algorithm",
+    )
+    JWT_AUDIENCE: str = Field(
+        default="authenticated",
+        description="Expected JWT audience claim for Supabase Auth",
+    )
 
     # CORS Allowed Origins
     BACKEND_CORS_ORIGINS: List[str] = [
