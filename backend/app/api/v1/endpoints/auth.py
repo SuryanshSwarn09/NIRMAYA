@@ -7,7 +7,14 @@ from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
-from app.core.dependencies import get_current_user
+from app.core.dependencies import (
+    get_current_user,
+    require_admin,
+    require_clinical_staff,
+    require_doctor,
+    require_lab,
+    require_patient,
+)
 from app.core.exceptions import AuthenticationException, PermissionDeniedException
 from app.core.security import create_access_token, decode_access_token
 from app.db.session import get_db
@@ -120,3 +127,89 @@ async def generate_test_token(
             user=UserResponse.model_validate(user) if user else None,
         ),
     )
+
+
+# ----------------------------------------------------------------------------
+# RBAC Role Test Endpoints
+# ----------------------------------------------------------------------------
+
+
+@router.get(
+    "/roles/patient-only",
+    response_model=APIResponse[dict],
+    status_code=status.HTTP_200_OK,
+    summary="Access patient-guarded resource",
+)
+async def patient_only_endpoint(
+    current_user: User = Depends(require_patient),
+) -> APIResponse[dict]:
+    """Protected endpoint only accessible to Patient and Admin personas."""
+    return APIResponse(
+        message="Patient authorization verified",
+        data={"user_id": current_user.id, "role": current_user.role.value},
+    )
+
+
+@router.get(
+    "/roles/doctor-only",
+    response_model=APIResponse[dict],
+    status_code=status.HTTP_200_OK,
+    summary="Access doctor-guarded resource",
+)
+async def doctor_only_endpoint(
+    current_user: User = Depends(require_doctor),
+) -> APIResponse[dict]:
+    """Protected endpoint only accessible to Doctor and Admin personas."""
+    return APIResponse(
+        message="Doctor clinical authorization verified",
+        data={"user_id": current_user.id, "role": current_user.role.value},
+    )
+
+
+@router.get(
+    "/roles/lab-only",
+    response_model=APIResponse[dict],
+    status_code=status.HTTP_200_OK,
+    summary="Access diagnostic lab-guarded resource",
+)
+async def lab_only_endpoint(
+    current_user: User = Depends(require_lab),
+) -> APIResponse[dict]:
+    """Protected endpoint only accessible to Diagnostic Lab and Admin personas."""
+    return APIResponse(
+        message="Diagnostic laboratory authorization verified",
+        data={"user_id": current_user.id, "role": current_user.role.value},
+    )
+
+
+@router.get(
+    "/roles/admin-only",
+    response_model=APIResponse[dict],
+    status_code=status.HTTP_200_OK,
+    summary="Access administrative-guarded resource",
+)
+async def admin_only_endpoint(
+    current_user: User = Depends(require_admin),
+) -> APIResponse[dict]:
+    """Protected endpoint exclusively accessible to Administrator personas."""
+    return APIResponse(
+        message="Root administrative authorization verified",
+        data={"user_id": current_user.id, "role": current_user.role.value},
+    )
+
+
+@router.get(
+    "/roles/clinical-staff-only",
+    response_model=APIResponse[dict],
+    status_code=status.HTTP_200_OK,
+    summary="Access clinical-staff-guarded resource",
+)
+async def clinical_staff_only_endpoint(
+    current_user: User = Depends(require_clinical_staff),
+) -> APIResponse[dict]:
+    """Protected endpoint accessible to Doctors, Labs, and Admins."""
+    return APIResponse(
+        message="Clinical staff authorization verified",
+        data={"user_id": current_user.id, "role": current_user.role.value},
+    )
+
