@@ -6,10 +6,15 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from app.core.exceptions import AuthenticationException, PermissionDeniedException
+from app.core.exceptions import (
+    AuthenticationException,
+    EntityNotFoundException,
+    PermissionDeniedException,
+)
 from app.core.security import decode_access_token
 from app.db.session import get_db
 from app.models.enums import UserRole
+from app.models.patient import PatientProfile
 from app.models.user import User
 from app.schemas.auth import TokenPayload
 
@@ -162,5 +167,57 @@ require_doctor = require_role(UserRole.DOCTOR)
 require_lab = require_role(UserRole.LAB)
 require_admin = require_role(UserRole.ADMIN)
 require_clinical_staff = require_role(UserRole.DOCTOR, UserRole.LAB)
+
+
+async def verify_patient_access(
+    patient_id: str,
+    current_user: User,
+    db: AsyncSession,
+) -> PatientProfile:
+    """Verify that current actor has read authorization for the requested patient profile."""
+    stmt = (
+        select(PatientProfile)
+        .options(selectinload(PatientProfile.user))
+        .where(PatientProfile.id == patient_id)
+    )
+    patient = (await db.execute(stmt)).scalar_one_or_none()
+    if not patient:
+        raise EntityNotFoundException(entity_name="PatientProfile", entity_id=patient_id)
+
+    # Admin, Doctors, and Labs have clinical reading access; Patients can only view their own record
+    if current_user.role in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB):
+        return patient
+
+    if current_user.role == UserRole.PATIENT and patient.user_id == current_user.id:
+        return patient
+
+    raise PermissionDeniedException(
+        message="You do not possess authorization to access this patient's clinical health records",
+    )
+
+
+async def verify_patient_modification_access(
+    patient_id: str,
+    current_user: User,
+    db: AsyncSession,
+) -> PatientProfile:
+    """Verify that current actor has write/delete authorization for the requested patient profile."""
+    stmt = (
+        select(PatientProfile)
+        .options(selectinload(PatientProfile.user))
+        .where(PatientProfile.id == patient_id)
+    )
+    patient = (await db.execute(stmt)).scalar_one_or_none()
+    if not patient:
+        raise EntityNotFoundException(entity_name="PatientProfile", entity_id=patient_id)
+
+    # Only Administrator or the profile owner can modify or remove demographic data
+    if current_user.role == UserRole.ADMIN or patient.user_id == current_user.id:
+        return patient
+
+    raise PermissionDeniedException(
+        message="Only the patient account owner or an administrator can modify or remove this profile",
+    )
+
 
 
