@@ -231,6 +231,29 @@
   - Pre-flight diagnostic check `scripts/doctor.py` passing all 8 checkpoints.
   - **Tag Rule Honored:** Zero daily tags created (weekly release tag `v0.1.0-alpha.w3` scheduled for Day 15 close).
 
+#### Day 12 (Tue) - Milestone 03-02
+- **Focus:** Role-Based Access Control (RBAC), Clinical Security Guards & Resource Ownership Verification
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `2d5b173: feat(core): implement role checker security dependency factory`
+  2. `57278f1: feat(core): define role specific guards for patient doctor lab and admin`
+  3. `f3be6a6: feat(core): add resource ownership verification helper for patient profiles`
+  4. `8012a0e: feat(api): add rbac role test endpoints to auth router`
+  5. `2e8bb93: feat(api): protect patient profile creation with authentication guard`
+  6. `71335d9: feat(api): protect patient directory listing with clinical staff guard`
+  7. `ac9946c: feat(api): protect patient profile retrieval with ownership and clinical guard`
+  8. `e3ee0c5: feat(api): protect patient update and deletion with owner admin guard`
+  9. `c124ef9: test(core): add unit tests for role checker and permission hierarchies`
+  10. `76d3673: test(api): add integration tests for role boundaries and 403 forbidden responses`
+  11. `2b2a49a: test(api): update patient vault integration tests with rbac bearer auth`
+  12. `4109a6d: docs(journey): log day 12 rbac deliverables and permission matrices`
+  13. `docs(changelog): record milestone 03-02 rbac security guards`
+- **Verification:**
+  - Automated test suite expanded to **90 tests (`pytest -v`)**, all passing (100%).
+  - Configurable `RoleChecker` dependency factory and pre-configured role guards (`require_patient`, `require_doctor`, `require_lab`, `require_admin`, `require_clinical_staff`) fully validated.
+  - Admin superuser override bypass verified across all protected endpoints.
+  - Resource ownership checks (`verify_patient_access`, `verify_patient_modification_access`) strictly enforced on Patient Vault.
+  - Diagnostic endpoints under `/api/v1/auth/roles/*` verified for correct 200 vs 403 boundaries across all 4 user roles.
+  - **Tag Rule Honored:** Zero daily tags created (weekly release tag `v0.1.0-alpha.w3` scheduled for Day 15 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
-
