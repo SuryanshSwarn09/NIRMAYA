@@ -7,6 +7,7 @@ from app.core.dependencies import (
     get_current_user,
     require_clinical_staff,
     verify_patient_access,
+    verify_patient_modification_access,
 )
 from app.core.exceptions import EntityNotFoundException, PermissionDeniedException
 from app.db.session import get_db
@@ -150,9 +151,11 @@ async def get_patient(
 async def update_patient(
     patient_id: str,
     update_in: PatientProfileUpdate,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> APIResponse[PatientProfileResponse]:
-    """Update patient profile fields."""
+    """Update patient profile fields enforcing owner or administrator authorization."""
+    await verify_patient_modification_access(patient_id=patient_id, current_user=current_user, db=db)
     updated = await patient_service.update_patient_profile(
         db=db,
         patient_id=patient_id,
@@ -172,9 +175,11 @@ async def update_patient(
 )
 async def delete_patient(
     patient_id: str,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> APIResponse[dict]:
-    """Delete patient profile by ID."""
+    """Delete patient profile by ID enforcing owner or administrator authorization."""
+    await verify_patient_modification_access(patient_id=patient_id, current_user=current_user, db=db)
     await patient_service.delete_patient_profile(db, patient_id)
     return APIResponse(
         message="Patient profile deleted successfully",
