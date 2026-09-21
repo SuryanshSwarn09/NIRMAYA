@@ -40,9 +40,14 @@ def decode_access_token(
     if clean_token.lower().startswith("bearer "):
         clean_token = clean_token[7:].strip()
 
-    # Determine signature verification keys (primary + fallback)
-    primary_key = settings.SUPABASE_JWT_SECRET or settings.SECRET_KEY
-    fallback_key = settings.SECRET_KEY if primary_key != settings.SECRET_KEY else None
+    # Determine candidate signature verification keys
+    candidate_keys = []
+    if settings.SUPABASE_JWT_SECRET and not settings.SUPABASE_JWT_SECRET.startswith("supabase-jwt-secret-placeholder"):
+        candidate_keys.append(settings.SUPABASE_JWT_SECRET)
+    if settings.SECRET_KEY not in candidate_keys:
+        candidate_keys.append(settings.SECRET_KEY)
+    if settings.SUPABASE_JWT_SECRET and settings.SUPABASE_JWT_SECRET not in candidate_keys:
+        candidate_keys.append(settings.SUPABASE_JWT_SECRET)
 
     audience = settings.JWT_AUDIENCE if verify_aud else None
     decode_kwargs = {
@@ -52,36 +57,39 @@ def decode_access_token(
     if audience:
         decode_kwargs["audience"] = audience
 
-    try:
-        return jwt.decode(clean_token, primary_key, **decode_kwargs)
-    except jwt.InvalidSignatureError:
-        if fallback_key:
-            try:
-                return jwt.decode(clean_token, fallback_key, **decode_kwargs)
-            except jwt.InvalidSignatureError:
-                raise AuthenticationException(
-                    message="Token signature verification failed",
-                    error_code="INVALID_SIGNATURE",
-                )
+    last_sig_error = None
+    for key in candidate_keys:
+        try:
+            return jwt.decode(clean_token, key, **decode_kwargs)
+        except jwt.InvalidSignatureError as sig_err:
+            last_sig_error = sig_err
+            continue
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationException(
+                message="Authentication token has expired",
+                error_code="TOKEN_EXPIRED",
+            )
+        except jwt.InvalidAudienceError:
+            raise AuthenticationException(
+                message="Token audience claim does not match platform identifier",
+                error_code="INVALID_AUDIENCE",
+            )
+        except (jwt.DecodeError, jwt.InvalidTokenError) as exc:
+            raise AuthenticationException(
+                message=f"Malformed or invalid authentication token: {str(exc)}",
+                error_code="INVALID_TOKEN",
+            )
+
+    if last_sig_error:
         raise AuthenticationException(
             message="Token signature verification failed",
             error_code="INVALID_SIGNATURE",
         )
-    except jwt.ExpiredSignatureError:
-        raise AuthenticationException(
-            message="Authentication token has expired",
-            error_code="TOKEN_EXPIRED",
-        )
-    except jwt.InvalidAudienceError:
-        raise AuthenticationException(
-            message="Token audience claim does not match platform identifier",
-            error_code="INVALID_AUDIENCE",
-        )
-    except (jwt.DecodeError, jwt.InvalidTokenError) as exc:
-        raise AuthenticationException(
-            message=f"Malformed or invalid authentication token: {str(exc)}",
-            error_code="INVALID_TOKEN",
-        )
+
+    raise AuthenticationException(
+        message="Malformed or invalid authentication token",
+        error_code="INVALID_TOKEN",
+    )
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

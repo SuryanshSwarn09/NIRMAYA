@@ -62,7 +62,7 @@ class Settings(BaseSettings):
         default="", description="Supabase service role administrative key"
     )
     SUPABASE_JWT_SECRET: str = Field(
-        default="supabase-jwt-secret-placeholder",
+        default="supabase-jwt-secret-placeholder-32-chars-long",
         description="JWT secret for validating Supabase access tokens",
     )
 
