@@ -207,6 +207,30 @@
   - Paginated directory listing verified with search filters, page ceiling, and boundary metadata.
   - Week 2 retrospective logged, changelog synchronized, and release tagged as `v0.1.0-alpha.w2`.
 
+### Week 3: Authentication, Supabase Integration & RBAC Security
+
+#### Day 11 (Mon) - Milestone 03-01
+- **Focus:** Authentication, Supabase Auth Integration, Security Verification & JWT Middleware
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `028a7fa: feat(core): configure jwt settings and algorithm defaults`
+  2. `aeef18a: feat(core): add authentication exception and 401 error handler`
+  3. `4e480ac: feat(core): implement jwt encode decode and verification utilities`
+  4. `0b793e4: feat(schemas): add auth token payload and verification schemas`
+  5. `a210225: feat(core): implement get current user fastapi security dependencies`
+  6. `8c26930: feat(api): create auth me and token verification endpoints`
+  7. `6f230af: feat(api): wire auth router into api v1 router`
+  8. `2d67bc4: test(core): add unit tests for jwt signing decoding and expiration`
+  9. `19a85a9: test(api): add integration tests for auth endpoints and security headers`
+  10. `786311b: docs(journey): log day 11 deliverables and week 3 auth roadmap`
+  11. `docs(changelog): record milestone 03-01 auth and jwt middleware`
+- **Verification:**
+  - Automated test suite expanded to **78 tests (`pytest -v`)**, all passing (100%).
+  - Standards-compliant JWT validation (`HS256`/`RS256`) against Supabase Auth signatures.
+  - Security dependencies (`get_token_payload`, `get_current_user`, `get_current_active_user`) verified.
+  - Endpoints `/api/v1/auth/me`, `/api/v1/auth/verify`, and `/api/v1/auth/test-token` tested for full HTTP lifecycles.
+  - Pre-flight diagnostic check `scripts/doctor.py` passing all 8 checkpoints.
+  - **Tag Rule Honored:** Zero daily tags created (weekly release tag `v0.1.0-alpha.w3` scheduled for Day 15 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
