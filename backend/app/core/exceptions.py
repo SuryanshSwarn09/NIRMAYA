@@ -48,14 +48,33 @@ class PermissionDeniedException(AppException):
         )
 
 
+class AuthenticationException(AppException):
+    """Raised when request lacks valid authentication credentials or bearer token is invalid."""
+
+    def __init__(
+        self,
+        message: str = "Authentication credentials were not provided or are invalid",
+        error_code: str = "AUTHENTICATION_REQUIRED",
+        headers: Optional[dict] = None,
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+        self.headers = headers or {"WWW-Authenticate": "Bearer"}
+
+
 def register_exception_handlers(app):
     """Register uniform error handlers formatting failures into standard ErrorResponse JSON."""
 
     @app.exception_handler(AppException)
     async def app_exception_handler(request: Request, exc: AppException):
         request_id = getattr(request.state, "request_id", None)
+        headers = getattr(exc, "headers", None)
         return JSONResponse(
             status_code=exc.status_code,
+            headers=headers,
             content={
                 "success": False,
                 "error_code": exc.error_code,
