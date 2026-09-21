@@ -1,6 +1,6 @@
 """FastAPI security dependencies for bearer token validation and user resolution."""
 
-from typing import Optional
+from typing import Optional, Sequence
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import or_, select
@@ -9,6 +9,7 @@ from sqlalchemy.orm import selectinload
 from app.core.exceptions import AuthenticationException, PermissionDeniedException
 from app.core.security import decode_access_token
 from app.db.session import get_db
+from app.models.enums import UserRole
 from app.models.user import User
 from app.schemas.auth import TokenPayload
 
@@ -125,3 +126,32 @@ async def get_optional_current_user(
         return None
     except Exception:
         return None
+
+
+class RoleChecker:
+    """Security dependency enforcing role-based access control with admin superuser override."""
+
+    def __init__(self, allowed_roles: Sequence[UserRole]) -> None:
+        self.allowed_roles = list(allowed_roles)
+
+    async def __call__(
+        self,
+        current_user: User = Depends(get_current_active_user),
+    ) -> User:
+        """Validate that the authenticated actor possesses an authorized role."""
+        if current_user.role == UserRole.ADMIN or current_user.role in self.allowed_roles:
+            return current_user
+
+        allowed_names = ", ".join([r.value for r in self.allowed_roles])
+        raise PermissionDeniedException(
+            message=(
+                f"Role '{current_user.role.value}' is not authorized to access this health resource. "
+                f"Required role(s): {allowed_names}"
+            )
+        )
+
+
+def require_role(*allowed_roles: UserRole) -> RoleChecker:
+    """Create a RoleChecker dependency for the specified permitted clinical roles."""
+    return RoleChecker(allowed_roles)
+
