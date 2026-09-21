@@ -3,7 +3,7 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_clinical_staff
 from app.core.exceptions import EntityNotFoundException, PermissionDeniedException
 from app.db.session import get_db
 from app.models.enums import BloodGroup, UserRole
@@ -61,6 +61,7 @@ async def get_patients(
     query: Optional[str] = Query(default=None, description="Search across name, email, ABHA, city"),
     city: Optional[str] = Query(default=None, description="Filter by residential city"),
     blood_group: Optional[BloodGroup] = Query(default=None, description="Filter by blood group"),
+    current_user: User = Depends(require_clinical_staff),
     db: AsyncSession = Depends(get_db),
 ) -> PaginatedResponse[PatientProfileResponse]:
     """List and search patients with pagination and clinical filters."""
