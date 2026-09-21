@@ -3,7 +3,11 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.dependencies import get_current_user, require_clinical_staff
+from app.core.dependencies import (
+    get_current_user,
+    require_clinical_staff,
+    verify_patient_access,
+)
 from app.core.exceptions import EntityNotFoundException, PermissionDeniedException
 from app.db.session import get_db
 from app.models.enums import BloodGroup, UserRole
@@ -98,12 +102,18 @@ async def get_patients(
 )
 async def get_patient_by_abha_identifier(
     identifier: str,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> APIResponse[PatientProfileResponse]:
     """Resolve patient profile by ABHA number or @abdm address."""
     patient = await patient_service.get_patient_by_abha(db, identifier)
     if not patient:
         raise EntityNotFoundException(entity_name="PatientProfile (ABHA)", entity_id=identifier)
+
+    if current_user.role not in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB) and patient.user_id != current_user.id:
+        raise PermissionDeniedException(
+            message="You do not possess authorization to access this patient's clinical health records",
+        )
 
     return APIResponse(
         message="Patient profile resolved via ABHA identity successfully",
@@ -119,12 +129,11 @@ async def get_patient_by_abha_identifier(
 )
 async def get_patient(
     patient_id: str,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> APIResponse[PatientProfileResponse]:
-    """Fetch patient profile by ID."""
-    patient = await patient_service.get_patient_by_id(db, patient_id)
-    if not patient:
-        raise EntityNotFoundException(entity_name="PatientProfile", entity_id=patient_id)
+    """Fetch patient profile by ID enforcing patient ownership or clinical staff privileges."""
+    patient = await verify_patient_access(patient_id=patient_id, current_user=current_user, db=db)
 
     return APIResponse(
         message="Patient profile retrieved successfully",
