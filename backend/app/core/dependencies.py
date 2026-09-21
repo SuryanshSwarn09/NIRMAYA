@@ -60,7 +60,7 @@ async def get_current_user(
         .options(
             selectinload(User.patient_profile),
             selectinload(User.doctor_profile),
-            selectinload(User.diagnostic_facility),
+            selectinload(User.lab_facility),
         )
         .where(or_(*conditions))
     )
@@ -115,7 +115,7 @@ async def get_optional_current_user(
             .options(
                 selectinload(User.patient_profile),
                 selectinload(User.doctor_profile),
-                selectinload(User.diagnostic_facility),
+                selectinload(User.lab_facility),
             )
             .where(or_(*conditions))
         )
