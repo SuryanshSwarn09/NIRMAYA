@@ -3,9 +3,11 @@
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.exceptions import EntityNotFoundException
+from app.core.dependencies import get_current_user
+from app.core.exceptions import EntityNotFoundException, PermissionDeniedException
 from app.db.session import get_db
-from app.models.enums import BloodGroup
+from app.models.enums import BloodGroup, UserRole
+from app.models.user import User
 from app.schemas.common import APIResponse, PaginatedResponse, PaginationMeta
 from app.schemas.patient import (
     PatientProfileCreate,
@@ -26,13 +28,20 @@ router = APIRouter()
 )
 async def create_patient(
     profile_in: PatientProfileCreate,
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> APIResponse[PatientProfileResponse]:
     """Create a new patient clinical profile linked to a user account."""
+    target_user_id = current_user.id
+    if current_user.role == UserRole.ADMIN and profile_in.user_id:
+        target_user_id = profile_in.user_id
+    elif profile_in.user_id and profile_in.user_id != current_user.id:
+        raise PermissionDeniedException("Cannot create patient profile for another user account")
+
     patient = await patient_service.create_patient_profile(
         db=db,
         profile_in=profile_in,
-        user_id=profile_in.user_id,
+        user_id=target_user_id,
     )
     return APIResponse(
         message="Patient profile initialized successfully",
