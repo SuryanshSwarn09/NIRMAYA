@@ -30,6 +30,13 @@ from app.schemas.patient import (
     PatientProfileResponse,
     PatientProfileUpdate,
 )
+from app.schemas.auth import (
+    AuthContext,
+    TokenPayload,
+    TokenResponse,
+    TokenVerifyRequest,
+    TokenVerifyResponse,
+)
 from app.schemas.user import (
     UserBase,
     UserCreate,
@@ -62,4 +69,9 @@ __all__ = [
     "DiagnosticLabFacilityCreate",
     "DiagnosticLabFacilityUpdate",
     "DiagnosticLabFacilityResponse",
+    "AuthContext",
+    "TokenPayload",
+    "TokenResponse",
+    "TokenVerifyRequest",
+    "TokenVerifyResponse",
 ]
