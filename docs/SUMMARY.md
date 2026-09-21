@@ -29,6 +29,8 @@
   * [Day 10: Patient Vault CRUD API](journey/month-1/day-10.md)
   * [Week 2 Retrospective & Metrics](journey/month-1/week-2-review.md)
   * [Weeks 1 & 2 Executive Audit Report](journey/month-1/week-1-2-executive-audit.md)
+  * [Week 3: Authentication & RBAC Security](journey/month-1/week-3.md)
+    * [Day 11: Supabase Auth & JWT Middleware](journey/month-1/day-11.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
