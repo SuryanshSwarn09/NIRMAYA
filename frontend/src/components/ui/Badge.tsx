@@ -2,7 +2,18 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "verified" | "pending" | "critical" | "fhir" | "abdm" | "outline";
+  variant?:
+    | "default"
+    | "verified"
+    | "pending"
+    | "critical"
+    | "fhir"
+    | "abdm"
+    | "outline"
+    | "orange"
+    | "pink"
+    | "violet"
+    | "emerald";
   size?: "sm" | "md";
   dot?: boolean;
 }
@@ -15,35 +26,44 @@ export function Badge({
   dot = false,
   ...props
 }: BadgeProps) {
+  // Cal.com Design System Badge & Pastel Palette
   const variantStyles = {
-    default: "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800/60 dark:text-slate-200 dark:border-slate-700",
-    verified: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60",
-    pending: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60",
-    critical: "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60",
-    fhir: "bg-sky-50 text-sky-700 border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60",
-    abdm: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-800/60",
-    outline: "bg-transparent text-slate-700 border-slate-300 dark:text-slate-300 dark:border-slate-700",
+    default: "bg-[#f5f5f5] text-[#111111] border-[#e5e7eb]",
+    verified: "bg-[#ecfdf5] text-[#065f46] border-[#a7f3d0]",
+    pending: "bg-[#fff7ed] text-[#9a3412] border-[#fed7aa]",
+    critical: "bg-[#fef2f2] text-[#991b1b] border-[#fecaca]",
+    fhir: "bg-[#f8f9fa] text-[#111111] border-[#e5e7eb]",
+    abdm: "bg-[#f5f3ff] text-[#5b21b6] border-[#ddd6fe]",
+    outline: "bg-transparent text-[#111111] border-[#e5e7eb]",
+    orange: "bg-[#fff7ed] text-[#ea580c] border-[#fed7aa]",
+    pink: "bg-[#fdf2f8] text-[#db2777] border-[#fbcfe8]",
+    violet: "bg-[#f5f3ff] text-[#7c3aed] border-[#ddd6fe]",
+    emerald: "bg-[#ecfdf5] text-[#059669] border-[#a7f3d0]",
   };
 
   const dotColors = {
-    default: "bg-slate-500",
-    verified: "bg-emerald-500",
-    pending: "bg-amber-500",
-    critical: "bg-rose-500",
-    fhir: "bg-sky-500",
-    abdm: "bg-indigo-500",
-    outline: "bg-slate-400",
+    default: "bg-[#111111]",
+    verified: "bg-[#10b981]",
+    pending: "bg-[#f59e0b]",
+    critical: "bg-[#ef4444]",
+    fhir: "bg-[#3b82f6]",
+    abdm: "bg-[#8b5cf6]",
+    outline: "bg-[#6b7280]",
+    orange: "bg-[#fb923c]",
+    pink: "bg-[#ec4899]",
+    violet: "bg-[#8b5cf6]",
+    emerald: "bg-[#34d399]",
   };
 
   const sizeStyles = {
-    sm: "px-2 py-0.5 text-xs",
-    md: "px-2.5 py-1 text-xs font-medium",
+    sm: "px-2.5 py-0.5 text-[11px] leading-tight font-medium",
+    md: "px-3 py-1 text-xs font-medium", // Cal.com standard 4px 12px pill
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border transition-colors font-medium select-none",
+        "inline-flex items-center gap-1.5 rounded-full border transition-colors select-none",
         variantStyles[variant],
         sizeStyles[size],
         className
