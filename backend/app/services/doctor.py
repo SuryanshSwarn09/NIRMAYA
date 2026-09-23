@@ -8,7 +8,7 @@ from app.core.exceptions import AppException, EntityNotFoundException
 from app.models.doctor import DoctorProfile
 from app.models.enums import MedicalSpecialty
 from app.models.user import User
-from app.schemas.doctor import DoctorProfileCreate
+from app.schemas.doctor import DoctorProfileCreate, DoctorProfileUpdate
 
 
 async def get_doctor_by_id(db: AsyncSession, doctor_id: str) -> Optional[DoctorProfile]:
@@ -171,5 +171,68 @@ async def create_doctor_profile(
 
     # Re-fetch with loaded user
     return await get_doctor_by_id(db, doctor.id)  # type: ignore[return-value]
+
+
+async def update_doctor_profile(
+    db: AsyncSession,
+    doctor_id: str,
+    update_in: DoctorProfileUpdate,
+) -> DoctorProfile:
+    """Update practice credentials, fees, and consultation settings of an existing doctor profile."""
+    doctor = await get_doctor_by_id(db, doctor_id)
+    if not doctor:
+        raise EntityNotFoundException(entity_name="DoctorProfile", entity_id=doctor_id)
+
+    update_data = update_in.model_dump(exclude_unset=True)
+
+    # Check registration number collision if changing
+    if "registration_number" in update_data and update_data["registration_number"]:
+        clean_reg = update_data["registration_number"].strip()
+        if clean_reg != doctor.registration_number:
+            stmt = select(DoctorProfile).where(
+                DoctorProfile.registration_number == clean_reg,
+                DoctorProfile.id != doctor_id,
+            )
+            if await db.scalar(stmt):
+                raise AppException(
+                    message=f"Registration number '{clean_reg}' is already registered to another doctor",
+                    error_code="DUPLICATE_REGISTRATION_NUMBER",
+                    status_code=409,
+                )
+            update_data["registration_number"] = clean_reg
+
+    # Check HPR ID collision if changing
+    if "hpr_id" in update_data and update_data["hpr_id"]:
+        clean_hpr = update_data["hpr_id"].strip()
+        if clean_hpr != doctor.hpr_id:
+            stmt = select(DoctorProfile).where(
+                DoctorProfile.hpr_id == clean_hpr,
+                DoctorProfile.id != doctor_id,
+            )
+            if await db.scalar(stmt):
+                raise AppException(
+                    message=f"HPR ID '{clean_hpr}' is already registered to another doctor",
+                    error_code="DUPLICATE_HPR_ID",
+                    status_code=409,
+                )
+            update_data["hpr_id"] = clean_hpr
+
+    for field, value in update_data.items():
+        setattr(doctor, field, value)
+
+    await db.commit()
+    return await get_doctor_by_id(db, doctor_id)  # type: ignore[return-value]
+
+
+async def delete_doctor_profile(db: AsyncSession, doctor_id: str) -> bool:
+    """Delete a doctor profile by UUID primary key."""
+    doctor = await get_doctor_by_id(db, doctor_id)
+    if not doctor:
+        raise EntityNotFoundException(entity_name="DoctorProfile", entity_id=doctor_id)
+
+    await db.delete(doctor)
+    await db.commit()
+    return True
+
 
 
