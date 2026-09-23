@@ -33,6 +33,7 @@
     * [Day 11: Supabase Auth & JWT Middleware](journey/month-1/day-11.md)
     * [Day 12: Role-Based Access Control & Security Guards](journey/month-1/day-12.md)
     * [Day 13: Doctor EMR Directory & Clinical Provider Endpoints](journey/month-1/day-13.md)
+    * [Cal.com Modern SaaS UI Transformation](journey/month-1/calcom-design-system-migration.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
