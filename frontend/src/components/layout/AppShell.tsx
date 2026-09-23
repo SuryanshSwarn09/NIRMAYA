@@ -14,7 +14,7 @@ export function AppShell({ children }: AppShellProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50/50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 selection:bg-sky-500/20">
+    <div className="min-h-screen flex flex-col bg-white text-[#111111] selection:bg-slate-200 selection:text-black">
       {/* 1. Global Interoperability & Live Node Status Bar */}
       <SystemStatusBar />
 
@@ -31,9 +31,9 @@ export function AppShell({ children }: AppShellProps) {
       />
 
       {/* 4. Main Page Viewport Container */}
-      <main className="flex-1 w-full">{children}</main>
+      <main className="flex-1 w-full bg-white">{children}</main>
 
-      {/* 5. Enterprise Healthcare Footer */}
+      {/* 5. Cal.com Dark Footer Closing Surface */}
       <Footer />
     </div>
   );
