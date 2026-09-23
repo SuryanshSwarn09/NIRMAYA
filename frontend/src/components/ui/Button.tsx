@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "emerald" | "secondary" | "outline" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "link" | "danger" | "emerald";
   size?: "sm" | "md" | "lg" | "icon";
   isLoading?: boolean;
 }
@@ -22,26 +22,30 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
+    // Cal.com Design System Button Styles
     const variantStyles = {
       primary:
-        "bg-slate-900 text-white hover:bg-slate-800 shadow-sm shadow-slate-900/10 active:scale-[0.99] dark:bg-sky-500 dark:text-slate-950 dark:hover:bg-sky-400",
-      emerald:
-        "bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm shadow-emerald-700/20 active:scale-[0.99] dark:bg-emerald-500 dark:hover:bg-emerald-600",
+        "bg-[#111111] text-white hover:bg-[#242424] active:bg-[#242424] border border-[#111111] shadow-sm disabled:bg-[#e5e7eb] disabled:border-[#e5e7eb] disabled:text-[#6b7280]",
       secondary:
-        "bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700",
+        "bg-white text-[#111111] border border-[#e5e7eb] hover:bg-[#f5f5f5] active:bg-[#e5e7eb] shadow-sm",
       outline:
-        "border border-slate-300 bg-transparent text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800",
+        "bg-white text-[#111111] border border-[#e5e7eb] hover:bg-[#f5f5f5] active:bg-[#e5e7eb]",
       ghost:
-        "bg-transparent text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/80",
+        "bg-transparent text-[#374151] hover:bg-[#f5f5f5] hover:text-[#111111]",
+      link:
+        "bg-transparent text-[#111111] hover:underline p-0 h-auto font-semibold",
       danger:
-        "bg-rose-600 text-white hover:bg-rose-700 shadow-sm shadow-rose-700/20 dark:bg-rose-500 dark:hover:bg-rose-600",
+        "bg-[#ef4444] text-white hover:bg-[#dc2626] border border-[#ef4444]",
+      // Backwards-compatible alias to Cal.com primary
+      emerald:
+        "bg-[#111111] text-white hover:bg-[#242424] active:bg-[#242424] border border-[#111111] shadow-sm",
     };
 
     const sizeStyles = {
-      sm: "h-8 px-3 text-xs rounded-md gap-1.5",
-      md: "h-10 px-4 text-sm rounded-lg gap-2",
-      lg: "h-12 px-6 text-base rounded-xl gap-2.5 font-semibold",
-      icon: "h-10 w-10 p-0 rounded-lg justify-center",
+      sm: "h-8 px-3 text-xs rounded-[6px] gap-1.5 font-medium",
+      md: "h-10 px-4 text-sm rounded-[8px] gap-2 font-semibold", // Cal.com standard 40px, 8px radius
+      lg: "h-11 px-5 text-sm rounded-[8px] gap-2.5 font-semibold",
+      icon: "h-9 w-9 p-0 rounded-full justify-center border border-[#e5e7eb] bg-white text-[#111111] hover:bg-[#f5f5f5]", // Cal.com circular 36px
     };
 
     return (
@@ -49,7 +53,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          "inline-flex items-center justify-center font-medium transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
+          "inline-flex items-center justify-center transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#111111] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
           variantStyles[variant],
           sizeStyles[size],
           className
