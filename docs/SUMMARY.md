@@ -32,6 +32,7 @@
   * [Week 3: Authentication & RBAC Security](journey/month-1/week-3.md)
     * [Day 11: Supabase Auth & JWT Middleware](journey/month-1/day-11.md)
     * [Day 12: Role-Based Access Control & Security Guards](journey/month-1/day-12.md)
+    * [Day 13: Doctor EMR Directory & Clinical Provider Endpoints](journey/month-1/day-13.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
