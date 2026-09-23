@@ -4,9 +4,11 @@ from typing import List, Optional, Tuple
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
+from app.core.exceptions import AppException, EntityNotFoundException
 from app.models.doctor import DoctorProfile
 from app.models.enums import MedicalSpecialty
 from app.models.user import User
+from app.schemas.doctor import DoctorProfileCreate
 
 
 async def get_doctor_by_id(db: AsyncSession, doctor_id: str) -> Optional[DoctorProfile]:
@@ -109,4 +111,65 @@ async def list_doctors(
     items = list(result.scalars().all())
 
     return items, total_count
+
+
+async def create_doctor_profile(
+    db: AsyncSession,
+    profile_in: DoctorProfileCreate,
+    user_id: Optional[str] = None,
+) -> DoctorProfile:
+    """Create and persist a new doctor profile with registration and HPR uniqueness checks."""
+    target_user_id = user_id or profile_in.user_id
+    if not target_user_id:
+        raise AppException(
+            message="A valid user_id is required to create a doctor profile",
+            error_code="MISSING_USER_ID",
+            status_code=400,
+        )
+
+    # Verify user identity exists
+    user = await db.scalar(select(User).where(User.id == target_user_id))
+    if not user:
+        raise EntityNotFoundException(entity_name="User", entity_id=target_user_id)
+
+    # Check if user already has an existing doctor profile
+    existing_user_profile = await get_doctor_by_user_id(db, target_user_id)
+    if existing_user_profile:
+        raise AppException(
+            message=f"User '{target_user_id}' already has an active doctor profile",
+            error_code="PROFILE_ALREADY_EXISTS",
+            status_code=409,
+        )
+
+    # Verify unique registration number
+    stmt_reg = select(DoctorProfile).where(
+        DoctorProfile.registration_number == profile_in.registration_number.strip()
+    )
+    if await db.scalar(stmt_reg):
+        raise AppException(
+            message=f"Registration number '{profile_in.registration_number}' is already registered",
+            error_code="DUPLICATE_REGISTRATION_NUMBER",
+            status_code=409,
+        )
+
+    # Verify unique HPR ID if provided
+    if profile_in.hpr_id:
+        clean_hpr = profile_in.hpr_id.strip()
+        stmt_hpr = select(DoctorProfile).where(DoctorProfile.hpr_id == clean_hpr)
+        if await db.scalar(stmt_hpr):
+            raise AppException(
+                message=f"HPR ID '{profile_in.hpr_id}' is already registered",
+                error_code="DUPLICATE_HPR_ID",
+                status_code=409,
+            )
+
+    # Prepare data and persist
+    data = profile_in.model_dump(exclude={"user_id"})
+    doctor = DoctorProfile(user_id=target_user_id, **data)
+    db.add(doctor)
+    await db.commit()
+
+    # Re-fetch with loaded user
+    return await get_doctor_by_id(db, doctor.id)  # type: ignore[return-value]
+
 
