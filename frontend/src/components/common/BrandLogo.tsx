@@ -8,35 +8,39 @@ interface BrandLogoProps {
   size?: "sm" | "md" | "lg";
 }
 
+/**
+ * Cal.com-inspired BrandLogo:
+ * Clean, restrained geometric brand mark with monochrome wordmark.
+ */
 export function BrandLogo({
   className,
   showSubtitle = true,
   size = "md",
 }: BrandLogoProps) {
   const iconSizes = {
-    sm: "h-8 w-8 text-sm rounded-lg",
-    md: "h-10 w-10 text-lg rounded-xl",
-    lg: "h-12 w-12 text-xl rounded-2xl",
+    sm: "h-7 w-7 text-xs rounded-full",
+    md: "h-8 w-8 text-sm rounded-full",
+    lg: "h-10 w-10 text-base rounded-full",
   };
 
   const titleSizes = {
-    sm: "text-base",
-    md: "text-lg",
-    lg: "text-2xl",
+    sm: "text-base tracking-tight",
+    md: "text-lg tracking-tight",
+    lg: "text-xl tracking-tight",
   };
 
   return (
     <Link
       href="/"
       className={cn(
-        "group flex items-center gap-3 select-none transition-transform active:scale-[0.99]",
+        "group flex items-center gap-2.5 select-none transition-transform active:scale-[0.99]",
         className
       )}
     >
-      {/* Brand Icon Badge */}
+      {/* Cal.com-style geometric circle brand icon */}
       <div
         className={cn(
-          "bg-gradient-to-tr from-slate-900 via-sky-700 to-emerald-500 flex items-center justify-center text-white font-extrabold shadow-md shadow-sky-500/20 group-hover:shadow-sky-500/30 transition-shadow",
+          "bg-[#111111] text-white flex items-center justify-center font-bold shadow-sm transition-transform group-hover:scale-105",
           iconSizes[size]
         )}
       >
@@ -48,19 +52,19 @@ export function BrandLogo({
         <div className="flex items-center gap-2">
           <span
             className={cn(
-              "font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-sky-800 to-slate-900 dark:from-white dark:via-sky-200 dark:to-white bg-clip-text text-transparent leading-none",
+              "font-bold text-[#111111] leading-none",
               titleSizes[size]
             )}
           >
-            NIRMAYA
+            nirmaya
           </span>
-          <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-sky-100 text-sky-800 dark:bg-sky-950/70 dark:text-sky-300 border border-sky-200/80 dark:border-sky-800/60 leading-none">
+          <span className="text-[10px] uppercase font-semibold tracking-wider px-1.5 py-0.5 rounded-full bg-[#f5f5f5] text-[#6b7280] border border-[#e5e7eb] leading-none">
             Network
           </span>
         </div>
 
         {showSubtitle && (
-          <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-tight mt-1 hidden sm:block">
+          <p className="text-[10px] text-[#6b7280] font-normal tracking-tight mt-0.5 hidden sm:block">
             Networked Interoperable Records Medical Assets & Your Archives
           </p>
         )}
