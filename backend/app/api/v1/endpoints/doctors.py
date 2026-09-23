@@ -170,3 +170,49 @@ async def get_doctor(
         data=DoctorProfileResponse.model_validate(doctor),
     )
 
+
+@router.put(
+    "/{doctor_id}",
+    response_model=APIResponse[DoctorProfileResponse],
+    summary="Update doctor practice credentials, fees, and consultation details",
+    description="Updates existing doctor attributes, verifying unique registration and HPR constraints.",
+)
+async def update_doctor(
+    doctor_id: str,
+    update_in: DoctorProfileUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[DoctorProfileResponse]:
+    """Update doctor profile fields enforcing owner or administrator authorization."""
+    await verify_doctor_modification_access(doctor_id=doctor_id, current_user=current_user, db=db)
+    updated = await doctor_service.update_doctor_profile(
+        db=db,
+        doctor_id=doctor_id,
+        update_in=update_in,
+    )
+    return APIResponse(
+        message="Doctor profile updated successfully",
+        data=DoctorProfileResponse.model_validate(updated),
+    )
+
+
+@router.delete(
+    "/{doctor_id}",
+    response_model=APIResponse[dict],
+    summary="Delete a doctor clinical profile",
+    description="Removes a doctor profile by UUID primary key.",
+)
+async def delete_doctor(
+    doctor_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[dict]:
+    """Delete doctor profile by ID enforcing owner or administrator authorization."""
+    await verify_doctor_modification_access(doctor_id=doctor_id, current_user=current_user, db=db)
+    await doctor_service.delete_doctor_profile(db, doctor_id)
+    return APIResponse(
+        message="Doctor profile deleted successfully",
+        data={"doctor_id": doctor_id, "deleted": True},
+    )
+
+
