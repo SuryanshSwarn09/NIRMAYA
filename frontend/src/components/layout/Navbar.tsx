@@ -21,13 +21,13 @@ export function Navbar({
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/80 dark:border-slate-800/80 bg-white/85 dark:bg-[#090d16]/85 backdrop-blur-md transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Brand Identity */}
+    <header className="sticky top-0 z-40 h-16 bg-white border-b border-[#e5e7eb] transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
+        {/* Brand Wordmark & Geometric Mark */}
         <BrandLogo size="md" />
 
-        {/* Desktop Route Links */}
-        <nav className="hidden lg:flex items-center gap-1.5">
+        {/* Center Desktop Navigation Links (Inter 14px / 500) */}
+        <nav className="hidden lg:flex items-center gap-1">
           {MAIN_NAV_ITEMS.map((item) => {
             const isActive =
               pathname === item.href ||
@@ -38,10 +38,10 @@ export function Navbar({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
+                  "flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-sm font-medium transition-colors select-none",
                   isActive
-                    ? "bg-slate-100 dark:bg-slate-800/90 text-slate-900 dark:text-white font-semibold"
-                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-[#f5f5f5] text-[#111111] font-semibold"
+                    : "text-[#6b7280] hover:text-[#111111] hover:bg-[#f8f9fa]"
                 )}
               >
                 <span>{item.title}</span>
@@ -55,31 +55,32 @@ export function Navbar({
           })}
         </nav>
 
-        {/* Auth Actions & Mobile Hamburger */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="hidden sm:flex items-center gap-2">
-            <Link href="/login">
-              <Button variant="outline" size="sm">
-                Sign In
-              </Button>
+        {/* Right Action Cluster: Sign In link + Primary #111111 CTA + Mobile Hamburger */}
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm font-semibold text-[#111111] hover:text-[#6b7280] px-2 py-1.5 transition-colors select-none"
+            >
+              Sign In
             </Link>
             <Link href="/register">
-              <Button variant="emerald" size="sm">
+              <Button variant="primary" size="md">
                 Register with ABHA
               </Button>
             </Link>
           </div>
 
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile Menu Toggle Button (36px circular) */}
           <button
             onClick={onToggleMobileMenu}
-            className="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="lg:hidden h-9 w-9 flex items-center justify-center rounded-full border border-[#e5e7eb] text-[#111111] hover:bg-[#f5f5f5] transition-colors"
             aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             {isMobileMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             ) : (
-              <Menu className="h-5 w-5" />
+              <Menu className="h-4 w-4" />
             )}
           </button>
         </div>
