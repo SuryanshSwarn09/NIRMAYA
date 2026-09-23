@@ -255,5 +255,31 @@
   - Diagnostic endpoints under `/api/v1/auth/roles/*` verified for correct 200 vs 403 boundaries across all 4 user roles.
   - **Tag Rule Honored:** Zero daily tags created (weekly release tag `v0.1.0-alpha.w3` scheduled for Day 15 close).
 
+#### Day 13 (Wed) - Milestone 03-03
+- **Focus:** Doctor EMR Directory, Clinical Provider Endpoints & ABDM Healthcare Professional Registry
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `75d0a0e: feat(core): add doctor modification access security guard`
+  2. `e9f1b28: feat(services): implement doctor profile retrieval queries by id reg and hpr`
+  3. `f951e19: feat(services): implement paginated doctor directory listing with clinical filters`
+  4. `dbc0cb6: feat(services): implement doctor profile creation with abdm hpr validation`
+  5. `b49db7d: feat(services): implement doctor profile update and deletion service operations`
+  6. `05fe31c: feat(api): create doctor profile onboarding endpoint with rbac guard`
+  7. `ffd4daf: feat(api): create doctor directory listing and resolution endpoints`
+  8. `43d8aed: feat(api): create doctor profile update and deletion endpoints`
+  9. `e496cba: feat(api): wire doctor router into api v1 router`
+  10. `6978c09: test(services): add comprehensive unit tests for doctor service layer`
+  11. `8a035f5: test(api): add integration test suite for doctor endpoints and rbac guards`
+  12. `a12f231: docs(journey): log day 13 doctor emr directory and provider endpoints`
+  13. `docs(changelog): record milestone 03-03 doctor emr directory deliverables`
+- **Verification:**
+  - Automated test suite expanded to **109 tests (`pytest -v`)**, all passing (100%).
+  - Doctor EMR business service layer (`app/services/doctor.py`) verified with complete CRUD lifecycle and collision handling.
+  - Doctor directory listing verified with pagination and clinical filters (`specialty`, `teleconsult_only`, `max_fee`, `query`).
+  - Dual resolution verified for ABDM Healthcare Professional Registry (`@hpr.abdm`) and Medical Council licensing numbers.
+  - Ownership guard (`verify_doctor_modification_access`) verified with Admin superuser override.
+  - Pre-flight diagnostic check `scripts/doctor.py` passing all 8 checkpoints.
+  - **Tag Rule Honored:** Zero daily tags created (weekly release tag `v0.1.0-alpha.w3` scheduled for Day 15 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
