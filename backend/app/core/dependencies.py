@@ -13,6 +13,7 @@ from app.core.exceptions import (
 )
 from app.core.security import decode_access_token
 from app.db.session import get_db
+from app.models.doctor import DoctorProfile
 from app.models.enums import UserRole
 from app.models.patient import PatientProfile
 from app.models.user import User
@@ -218,6 +219,31 @@ async def verify_patient_modification_access(
     raise PermissionDeniedException(
         message="Only the patient account owner or an administrator can modify or remove this profile",
     )
+
+
+async def verify_doctor_modification_access(
+    doctor_id: str,
+    current_user: User,
+    db: AsyncSession,
+) -> DoctorProfile:
+    """Verify that current actor has write/delete authorization for the requested doctor profile."""
+    stmt = (
+        select(DoctorProfile)
+        .options(selectinload(DoctorProfile.user))
+        .where(DoctorProfile.id == doctor_id)
+    )
+    doctor = (await db.execute(stmt)).scalar_one_or_none()
+    if not doctor:
+        raise EntityNotFoundException(entity_name="DoctorProfile", entity_id=doctor_id)
+
+    # Only Administrator or the doctor profile owner can modify or remove credentials
+    if current_user.role == UserRole.ADMIN or doctor.user_id == current_user.id:
+        return doctor
+
+    raise PermissionDeniedException(
+        message="Only the doctor account owner or an administrator can modify or remove this profile",
+    )
+
 
 
 
