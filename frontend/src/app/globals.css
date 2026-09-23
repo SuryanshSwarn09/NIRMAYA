@@ -1,83 +1,52 @@
 @import "tailwindcss";
 
 @theme {
-  --color-clinical-navy-50: #f0f4f8;
-  --color-clinical-navy-100: #d9e2ec;
-  --color-clinical-navy-200: #bcccdc;
-  --color-clinical-navy-300: #9fb3c8;
-  --color-clinical-navy-400: #627d98;
-  --color-clinical-navy-500: #486581;
-  --color-clinical-navy-600: #334e68;
-  --color-clinical-navy-700: #1e293b;
-  --color-clinical-navy-800: #101827;
-  --color-clinical-navy-900: #0f172a;
-  --color-clinical-navy-950: #090d16;
+  --color-primary: #111111;
+  --color-primary-active: #242424;
+  --color-primary-disabled: #e5e7eb;
+  --color-ink: #111111;
+  --color-body: #374151;
+  --color-muted: #6b7280;
+  --color-muted-soft: #898989;
+  --color-hairline: #e5e7eb;
+  --color-hairline-soft: #f3f4f6;
+  --color-canvas: #ffffff;
+  --color-surface-soft: #f8f9fa;
+  --color-surface-card: #f5f5f5;
+  --color-surface-strong: #e5e7eb;
+  --color-surface-dark: #101010;
+  --color-surface-dark-elevated: #1a1a1a;
+  --color-on-primary: #ffffff;
+  --color-on-dark: #ffffff;
+  --color-on-dark-soft: #a1a1aa;
+  --color-brand-accent: #3b82f6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-badge-orange: #fb923c;
+  --color-badge-pink: #ec4899;
+  --color-badge-violet: #8b5cf6;
+  --color-badge-emerald: #34d399;
 
-  --color-clinical-emerald-50: #ecfdf5;
-  --color-clinical-emerald-100: #d1fae5;
-  --color-clinical-emerald-200: #a7f3d0;
-  --color-clinical-emerald-300: #6ee7b7;
-  --color-clinical-emerald-400: #34d399;
-  --color-clinical-emerald-500: #10b981;
-  --color-clinical-emerald-600: #059669;
-  --color-clinical-emerald-700: #047857;
-
-  --color-clinical-cyan-50: #f0f9ff;
-  --color-clinical-cyan-100: #e0f2fe;
-  --color-clinical-cyan-400: #38bdf8;
-  --color-clinical-cyan-500: #0ea5e9;
-  --color-clinical-cyan-600: #0284c7;
-  --color-clinical-cyan-700: #0369a1;
-
-  --color-clinical-amber-50: #fffbeb;
-  --color-clinical-amber-500: #f59e0b;
-  --color-clinical-amber-600: #d97706;
-
-  --color-clinical-crimson-50: #fef2f2;
-  --color-clinical-crimson-500: #ef4444;
-  --color-clinical-crimson-600: #dc2626;
-
-  --font-sans: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
+
+  --shadow-cal-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-cal-md: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --card-border: #e2e8f0;
-  --primary: #0f172a;
+  --background: #ffffff;
+  --foreground: #111111;
+  --card: #f5f5f5;
+  --card-foreground: #111111;
+  --card-border: #e5e7eb;
+  --primary: #111111;
   --primary-foreground: #ffffff;
-  --accent-emerald: #059669;
-  --accent-emerald-fg: #ffffff;
-  --accent-cyan: #0284c7;
-  --muted: #64748b;
-  --muted-bg: #f1f5f9;
-  --border: #e2e8f0;
-  --input: #cbd5e1;
-  --ring: #0ea5e9;
-  --radius: 0.75rem;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #090d16;
-    --foreground: #f8fafc;
-    --card: #0f172a;
-    --card-foreground: #f8fafc;
-    --card-border: #1e293b;
-    --primary: #38bdf8;
-    --primary-foreground: #090d16;
-    --accent-emerald: #10b981;
-    --accent-emerald-fg: #090d16;
-    --accent-cyan: #38bdf8;
-    --muted: #94a3b8;
-    --muted-bg: #1e293b;
-    --border: #1e293b;
-    --input: #334155;
-    --ring: #38bdf8;
-  }
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --radius-card: 12px;
+  --radius-btn: 8px;
 }
 
 * {
@@ -94,28 +63,59 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Glassmorphism primitives for medical cards and overlays */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+/* Cal.com Geometric Display Typography Classes */
+.display-xl {
+  font-family: var(--font-sans);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -2px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .glass-panel {
-    background: rgba(15, 23, 42, 0.75);
-    border: 1px solid rgba(30, 41, 59, 0.8);
-  }
+.display-lg {
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
 }
 
-/* Clinical pulse indicators */
+.display-md {
+  font-family: var(--font-sans);
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -1px;
+}
+
+.display-sm {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+/* Subtle hairline borders and soft shadow utilities */
+.cal-hairline {
+  border: 1px solid var(--color-hairline, #e5e7eb);
+}
+
+.cal-shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.cal-shadow-md {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Subtle pulse for live status indicators */
 @keyframes pulse-subtle {
   0%, 100% {
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 }
 
