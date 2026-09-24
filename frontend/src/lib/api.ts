@@ -74,12 +74,25 @@ class NIRMAYAAPIClient {
     return url.toString();
   }
 
+  private getAuthToken(overrideToken?: string): string | null {
+    if (overrideToken) return overrideToken;
+    if (typeof window !== "undefined") {
+      try {
+        return localStorage.getItem("nirmaya_token");
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
   private async request<T>(
     endpoint: string,
     options: RequestOptions = {}
   ): Promise<T> {
     const { token, params, headers = {}, ...restOptions } = options;
     const url = this.buildUrl(endpoint, params);
+    const resolvedToken = this.getAuthToken(token);
 
     const requestHeaders: Record<string, string> = {
       "Content-Type": "application/json",
@@ -87,8 +100,8 @@ class NIRMAYAAPIClient {
       ...(headers as Record<string, string>),
     };
 
-    if (token) {
-      requestHeaders["Authorization"] = `Bearer ${token}`;
+    if (resolvedToken) {
+      requestHeaders["Authorization"] = `Bearer ${resolvedToken}`;
     }
 
     const response = await fetch(url, {
@@ -166,6 +179,32 @@ class NIRMAYAAPIClient {
         abdm_sandbox: boolean;
       };
     }>("/api/v1/health");
+  }
+
+  /**
+   * Auth API helpers
+   */
+  public async getMe(token?: string) {
+    return this.get<Record<string, unknown>>("/api/v1/auth/me", { token });
+  }
+
+  public async verifyToken(token: string) {
+    return this.post<{ valid: boolean; claims?: Record<string, unknown> }>(
+      "/api/v1/auth/verify",
+      { token }
+    );
+  }
+
+  public async issueTestToken(payload: {
+    email: string;
+    role: string;
+    sub?: string;
+    expires_minutes?: number;
+  }) {
+    return this.post<{ access_token: string }>(
+      "/api/v1/auth/test-token",
+      payload
+    );
   }
 }
 
