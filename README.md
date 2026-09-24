@@ -17,8 +17,12 @@
 
 [ Live Demo Portal](https://nirmaya-tau.vercel.app/) • [ GitBook Documentation](https://suryanshs-projects.gitbook.io/nirmaya-docs) • [System Architecture](docs/ARCHITECTURE.md) • [Changelog](docs/CHANGELOG.md) • [API Swagger Docs](http://localhost:8000/docs)
 
+<br/><br/>
+
+<img src="docs/assets/nirmaya-mockup.png" alt="NIRMAYA Modern Clinical Interoperability Platform" width="850" />
 
 </div>
+
 
 ---
 

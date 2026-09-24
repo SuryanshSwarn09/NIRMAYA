@@ -7,8 +7,10 @@
 > 🌐 **Live Deployed Web Portal:** [https://nirmaya-tau.vercel.app/](https://nirmaya-tau.vercel.app/)  
 > 📖 **Official GitBook Documentation:** [https://suryanshs-projects.gitbook.io/nirmaya-docs](https://suryanshs-projects.gitbook.io/nirmaya-docs)
 
+<div align="center">
+  <img src="assets/nirmaya-mockup.png" alt="NIRMAYA Clinical Platform Mockup" width="780" />
+</div>
 
----
 
 ## The Vision at a Glance
 
