@@ -297,9 +297,30 @@
   - `next build --turbopack` compiled cleanly with 0 TypeScript/CSS errors.
   - White canvas `#ffffff`, pure black `#111111` 40px/8px primary CTAs, `#f5f5f5` content cards, `#101010` closing dark footer verified.
   - Interactive signature `NavPillGroup` and Cal.com booking slot picker UI fragment embedded in hero band.
+#### Day 14 (Thu) - Milestone 03-04
+- **Focus:** Frontend Auth Integration, Session Persistence & Clinical Portals
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `5fe19c6: feat(auth): create frontend AuthContext and useAuth session provider`
+  2. `b5fdad6: feat(api): wire auth token injection and user endpoints in api client`
+  3. `2f50c6d: feat(auth): implement next.js route middleware for protected clinical routes`
+  4. `7e4a0bd: feat(ui): design cal.com styled login page with credentials form and demo personas`
+  5. `e0014b0: feat(ui): build cal.com styled abha registration page with role selector`
+  6. `2f08864: feat(portal): scaffold patient vault portal with abha card and timeline`
+  7. `5541255: feat(portal): scaffold provider emr console with hpr badge and prescription flow`
+  8. `2449b13: feat(layout): connect navbar to auth context with dynamic user session state`
+  9. `5c0ff79: feat(layout): wrap app shell in auth provider`
+  10. `test(frontend): verify client auth lifecycle and build with turbopack`
+  11. `docs(journey): log day 14 frontend auth and session persistence deliverables`
+  12. `docs(changelog): record milestone 03-04 frontend auth integration`
+- **Verification:**
+  - Full Next.js 15 Turbopack production build verified passing for all routes (`/`, `/login`, `/register`, `/patient`, `/doctor`) with 0 errors.
+  - AuthContext and cookie synchronization tested for Next.js edge route middleware protection.
+  - One-click clinical demo personas verified for Doctor, Patient, Lab, and Admin roles.
+  - Backend test suite passing **109/109 tests (100%)**.
   - **Tag Rule Honored:** Zero daily tags created (weekly release tag `v0.1.0-alpha.w3` scheduled for Day 15 close).
 
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
