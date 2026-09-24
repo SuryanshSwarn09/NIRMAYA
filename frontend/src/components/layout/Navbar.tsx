@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/common/BrandLogo";
 import { Badge, Button } from "@/components/ui";
 import { MAIN_NAV_ITEMS } from "@/config/navigation";
-import { Menu, X } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { Menu, X, LogOut, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -19,6 +20,14 @@ export function Navbar({
   isMobileMenuOpen = false,
 }: NavbarProps) {
   const pathname = usePathname();
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+    const parts = name.split(" ");
+    if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    return name.slice(0, 2).toUpperCase();
+  };
 
   return (
     <header className="sticky top-0 z-40 h-16 bg-white border-b border-[#e5e7eb] transition-colors">
@@ -55,21 +64,51 @@ export function Navbar({
           })}
         </nav>
 
-        {/* Right Action Cluster: Sign In link + Primary #111111 CTA + Mobile Hamburger */}
+        {/* Right Action Cluster: Authenticated User State vs Sign In CTA */}
         <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-3">
-            <Link
-              href="/login"
-              className="text-sm font-semibold text-[#111111] hover:text-[#6b7280] px-2 py-1.5 transition-colors select-none"
-            >
-              Sign In
-            </Link>
-            <Link href="/register">
-              <Button variant="primary" size="md">
-                Register with ABHA
-              </Button>
-            </Link>
-          </div>
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-2.5">
+              <Link
+                href={user.role === "doctor" ? "/doctor" : "/patient"}
+                className="flex items-center gap-2 py-1 px-2 rounded-full border border-[#e5e7eb] hover:bg-[#f8f9fa] transition-colors"
+              >
+                <div className="h-7 w-7 rounded-full bg-[#111111] text-white flex items-center justify-center font-bold text-xs">
+                  {getInitials(user.fullName)}
+                </div>
+                <div className="hidden sm:flex flex-col text-left">
+                  <span className="text-xs font-semibold text-[#111111] leading-tight">
+                    {user.fullName || user.email.split("@")[0]}
+                  </span>
+                  <span className="text-[10px] uppercase font-bold text-[#059669] leading-tight">
+                    {user.role}
+                  </span>
+                </div>
+              </Link>
+
+              <button
+                onClick={logout}
+                title="Sign Out"
+                className="h-8 w-8 flex items-center justify-center rounded-full border border-[#e5e7eb] text-[#6b7280] hover:text-[#111111] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+                aria-label="Sign Out"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center gap-3">
+              <Link
+                href="/login"
+                className="text-sm font-semibold text-[#111111] hover:text-[#6b7280] px-2 py-1.5 transition-colors select-none"
+              >
+                Sign In
+              </Link>
+              <Link href="/register">
+                <Button variant="primary" size="md">
+                  Register with ABHA
+                </Button>
+              </Link>
+            </div>
+          )}
 
           {/* Mobile Menu Toggle Button (36px circular) */}
           <button
