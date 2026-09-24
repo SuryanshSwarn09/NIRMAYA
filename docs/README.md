@@ -3,6 +3,10 @@
 **NIRMAYA**: **N**etworked **I**nteroperable **R**ecords **M**edical **A**ssets & **Y**our **A**rchives
 
 > A Unified Digital Health Interoperability Platform & Longitudinal Patient Vault built on modern healthcare data standards: **HL7 FHIR Release 4** and the **Ayushman Bharat Digital Mission (ABDM)** ecosystem.
+>
+> 🌐 **Live Deployed Web Portal:** [https://nirmaya-tau.vercel.app/](https://nirmaya-tau.vercel.app/)  
+> 📖 **Official GitBook Documentation:** [https://suryanshs-projects.gitbook.io/nirmaya-docs](https://suryanshs-projects.gitbook.io/nirmaya-docs)
+
 
 ---
 

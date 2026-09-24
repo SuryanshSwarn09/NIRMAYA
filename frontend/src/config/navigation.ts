@@ -73,10 +73,12 @@ export const FOOTER_SECTIONS = [
   {
     title: "Academic Project",
     links: [
+      { label: "GitBook Documentation", href: "https://suryanshs-projects.gitbook.io/nirmaya-docs" },
+      { label: "Live Deployment (Vercel)", href: "https://nirmaya-tau.vercel.app/" },
       { label: "System Architecture", href: "https://github.com/SuryanshSwarn09/NIRMAYA" },
-      { label: "GitBook Documentation", href: "https://github.com/SuryanshSwarn09/NIRMAYA/tree/main/docs" },
       { label: "FastAPI Swagger Docs", href: "http://localhost:8000/docs" },
       { label: "Daily Development Log", href: "https://github.com/SuryanshSwarn09/NIRMAYA/blob/main/docs/CHANGELOG.md" },
     ],
   },
 ];
+

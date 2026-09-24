@@ -2,18 +2,21 @@
 
 <div align="center">
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-nirmaya--tau.vercel.app-111111.svg?style=flat&logo=vercel&logoColor=white)](https://nirmaya-tau.vercel.app/)
+[![GitBook](https://img.shields.io/badge/GitBook-Documentation-3884FF.svg?style=flat&logo=gitbook&logoColor=white)](https://suryanshs-projects.gitbook.io/nirmaya-docs)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.5+-000000.svg?style=flat&logo=next.js&logoColor=white)](https://nextjs.org)
 [![Tailwind CSS v4](https://img.shields.io/badge/Tailwind-CSS_v4-38B2AC.svg?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 [![HL7 FHIR](https://img.shields.io/badge/HL7_FHIR-Release_4-E53E3E.svg?style=flat&logo=fhir&logoColor=white)](https://hl7.org/fhir/R4/)
 [![ABDM](https://img.shields.io/badge/ABDM-Sandbox_Ready-FF9933.svg?style=flat)](https://abdm.gov.in/)
-[![Tests](https://img.shields.io/badge/Pytest-11_Passed_(100%25)-brightgreen.svg?style=flat&logo=pytest&logoColor=white)](backend/tests/)
+[![Tests](https://img.shields.io/badge/Pytest-109_Passed_(100%25)-brightgreen.svg?style=flat&logo=pytest&logoColor=white)](backend/tests/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
 
 **A Unified Health Interoperability Network & Longitudinal Patient Vault**  
 *Built on HL7 FHIR Release 4 and Simulated Ayushman Bharat Digital Mission (ABDM) Standards*
 
-[System Architecture](docs/ARCHITECTURE.md) • [GitBook Documentation](docs/README.md) • [Changelog](docs/CHANGELOG.md) • [API Swagger Docs](http://localhost:8000/docs)
+[🌐 Live Demo Portal](https://nirmaya-tau.vercel.app/) • [📖 GitBook Documentation](https://suryanshs-projects.gitbook.io/nirmaya-docs) • [System Architecture](docs/ARCHITECTURE.md) • [Changelog](docs/CHANGELOG.md) • [API Swagger Docs](http://localhost:8000/docs)
+
 
 </div>
 
@@ -99,11 +102,14 @@ npm run dev:bash
 ```
 
 ### 3. Service Endpoints
-- **Frontend Web Portal:** [http://localhost:3000](http://localhost:3000)
+- **Live Deployed Web Portal:** [https://nirmaya-tau.vercel.app/](https://nirmaya-tau.vercel.app/)
+- **Official GitBook Documentation:** [https://suryanshs-projects.gitbook.io/nirmaya-docs](https://suryanshs-projects.gitbook.io/nirmaya-docs)
+- **Local Frontend Web Portal:** [http://localhost:3000](http://localhost:3000)
 - **FastAPI Core Backend:** [http://localhost:8000](http://localhost:8000)
 - **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 - **FHIR Capabilities Statement:** [http://localhost:8000/api/v1/meta](http://localhost:8000/api/v1/meta)
 - **System Health & Telemetry:** [http://localhost:8000/api/v1/health](http://localhost:8000/api/v1/health)
+
 
 ---
 

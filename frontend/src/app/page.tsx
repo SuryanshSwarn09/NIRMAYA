@@ -65,16 +65,28 @@ export default function Home() {
                   </Button>
                 </Link>
                 <a
+                  href="https://suryanshs-projects.gitbook.io/nirmaya-docs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" size="lg">
+                    <FileText className="h-4 w-4 mr-1 text-[#6b7280]" />
+                    <span>GitBook Docs</span>
+                    <ExternalLink className="h-3.5 w-3.5 ml-1 opacity-50" />
+                  </Button>
+                </a>
+                <a
                   href="http://localhost:8000/docs"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Button variant="outline" size="lg">
                     <Database className="h-4 w-4 mr-1 text-[#6b7280]" />
-                    <span>FastAPI Swagger</span>
+                    <span>Swagger API</span>
                     <ExternalLink className="h-3.5 w-3.5 ml-1 opacity-50" />
                   </Button>
                 </a>
+
               </div>
 
               {/* Enterprise Guarantees Checklist */}
