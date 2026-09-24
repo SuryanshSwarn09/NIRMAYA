@@ -34,6 +34,7 @@
     * [Day 12: Role-Based Access Control & Security Guards](journey/month-1/day-12.md)
     * [Day 13: Doctor EMR Directory & Clinical Provider Endpoints](journey/month-1/day-13.md)
     * [Cal.com Modern SaaS UI Transformation](journey/month-1/calcom-design-system-migration.md)
+    * [Day 14: Frontend Auth Integration & Clinical Portals](journey/month-1/day-14.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
