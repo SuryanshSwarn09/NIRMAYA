@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 interface BrandLogoProps {
@@ -10,17 +11,17 @@ interface BrandLogoProps {
 
 /**
  * Cal.com-inspired BrandLogo:
- * Clean, restrained geometric brand mark with monochrome wordmark.
+ * Renders custom brand icon mark with monochrome wordmark.
  */
 export function BrandLogo({
   className,
   showSubtitle = true,
   size = "md",
 }: BrandLogoProps) {
-  const iconSizes = {
-    sm: "h-7 w-7 text-xs rounded-full",
-    md: "h-8 w-8 text-sm rounded-full",
-    lg: "h-10 w-10 text-base rounded-full",
+  const iconDimensions = {
+    sm: { width: 28, height: 28, className: "h-7 w-7 rounded-full" },
+    md: { width: 34, height: 34, className: "h-8.5 w-8.5 rounded-full" },
+    lg: { width: 42, height: 42, className: "h-10.5 w-10.5 rounded-full" },
   };
 
   const titleSizes = {
@@ -28,6 +29,8 @@ export function BrandLogo({
     md: "text-lg tracking-tight",
     lg: "text-xl tracking-tight",
   };
+
+  const dim = iconDimensions[size];
 
   return (
     <Link
@@ -37,14 +40,21 @@ export function BrandLogo({
         className
       )}
     >
-      {/* Cal.com-style geometric circle brand icon */}
+      {/* Custom Designed Logo Icon */}
       <div
         className={cn(
-          "bg-[#111111] text-white flex items-center justify-center font-bold shadow-sm transition-transform group-hover:scale-105",
-          iconSizes[size]
+          "relative overflow-hidden flex items-center justify-center shrink-0 border border-[#e5e7eb] shadow-xs group-hover:scale-105 transition-transform bg-white",
+          dim.className
         )}
       >
-        <span>N</span>
+        <Image
+          src="/logo.png"
+          alt="NIRMAYA Logo"
+          width={dim.width}
+          height={dim.height}
+          priority
+          className="object-contain"
+        />
       </div>
 
       {/* Brand Text Hierarchy */}

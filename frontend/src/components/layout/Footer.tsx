@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { FOOTER_SECTIONS } from "@/config/navigation";
+
 import { ExternalLink, Shield } from "lucide-react";
 
 /**
@@ -16,9 +18,16 @@ export function Footer() {
           {/* Brand Identity & Mission Statement */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-full bg-white text-[#101010] flex items-center justify-center font-bold text-sm">
-                <span>N</span>
+              <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center overflow-hidden border border-[#262626]">
+                <Image
+                  src="/logo.png"
+                  alt="NIRMAYA Logo"
+                  width={32}
+                  height={32}
+                  className="object-contain"
+                />
               </div>
+
               <span className="font-bold text-white text-lg tracking-tight">
                 nirmaya
               </span>

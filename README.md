@@ -15,7 +15,7 @@
 **A Unified Health Interoperability Network & Longitudinal Patient Vault**  
 *Built on HL7 FHIR Release 4 and Simulated Ayushman Bharat Digital Mission (ABDM) Standards*
 
-[🌐 Live Demo Portal](https://nirmaya-tau.vercel.app/) • [📖 GitBook Documentation](https://suryanshs-projects.gitbook.io/nirmaya-docs) • [System Architecture](docs/ARCHITECTURE.md) • [Changelog](docs/CHANGELOG.md) • [API Swagger Docs](http://localhost:8000/docs)
+[ Live Demo Portal](https://nirmaya-tau.vercel.app/) • [ GitBook Documentation](https://suryanshs-projects.gitbook.io/nirmaya-docs) • [System Architecture](docs/ARCHITECTURE.md) • [Changelog](docs/CHANGELOG.md) • [API Swagger Docs](http://localhost:8000/docs)
 
 
 </div>

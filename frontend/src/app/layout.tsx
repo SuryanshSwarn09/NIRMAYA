@@ -31,7 +31,15 @@ export const metadata: Metadata = {
     "Interoperability",
     "Medical Records",
   ],
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
 };
+
 
 export default function RootLayout({
   children,

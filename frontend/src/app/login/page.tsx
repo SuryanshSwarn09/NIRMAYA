@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+
 import { Button, Badge, Card } from "@/components/ui";
 import { useAuth, DEMO_PERSONAS, type UserRole } from "@/context/AuthContext";
 import { 
@@ -63,10 +65,18 @@ export default function LoginPage() {
         
         {/* Cal.com Clean Branding & Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex h-10 w-10 rounded-full bg-[#111111] text-white items-center justify-center font-bold text-sm shadow-xs mx-auto mb-2">
-            N
+          <div className="h-10 w-10 rounded-full overflow-hidden border border-[#e5e7eb] shadow-xs mx-auto mb-2 bg-white flex items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="NIRMAYA Logo"
+              width={40}
+              height={40}
+              priority
+              className="object-contain"
+            />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#111111]">
+
             Welcome back to NIRMAYA
           </h1>
           <p className="text-sm text-[#6b7280]">
