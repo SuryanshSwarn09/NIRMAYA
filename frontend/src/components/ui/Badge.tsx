@@ -4,8 +4,10 @@ import { cn } from "@/lib/utils";
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?:
     | "default"
+    | "neutral"
     | "verified"
     | "pending"
+    | "warning"
     | "critical"
     | "fhir"
     | "abdm"
@@ -29,8 +31,10 @@ export function Badge({
   // Cal.com Design System Badge & Pastel Palette
   const variantStyles = {
     default: "bg-[#f5f5f5] text-[#111111] border-[#e5e7eb]",
+    neutral: "bg-[#f5f5f5] text-[#111111] border-[#e5e7eb]",
     verified: "bg-[#ecfdf5] text-[#065f46] border-[#a7f3d0]",
     pending: "bg-[#fff7ed] text-[#9a3412] border-[#fed7aa]",
+    warning: "bg-[#fff7ed] text-[#ea580c] border-[#fed7aa]",
     critical: "bg-[#fef2f2] text-[#991b1b] border-[#fecaca]",
     fhir: "bg-[#f8f9fa] text-[#111111] border-[#e5e7eb]",
     abdm: "bg-[#f5f3ff] text-[#5b21b6] border-[#ddd6fe]",
@@ -43,8 +47,10 @@ export function Badge({
 
   const dotColors = {
     default: "bg-[#111111]",
+    neutral: "bg-[#6b7280]",
     verified: "bg-[#10b981]",
     pending: "bg-[#f59e0b]",
+    warning: "bg-[#f59e0b]",
     critical: "bg-[#ef4444]",
     fhir: "bg-[#3b82f6]",
     abdm: "bg-[#8b5cf6]",
