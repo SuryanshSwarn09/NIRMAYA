@@ -35,6 +35,8 @@
     * [Day 13: Doctor EMR Directory & Clinical Provider Endpoints](journey/month-1/day-13.md)
     * [Cal.com Modern SaaS UI Transformation](journey/month-1/calcom-design-system-migration.md)
     * [Day 14: Frontend Auth Integration & Clinical Portals](journey/month-1/day-14.md)
+    * [Day 15: Security Hardening, Rate Limiting & Diagnostic Gateway](journey/month-1/day-15.md)
+    * [Week 3 Retrospective & Executive Metrics](journey/month-1/week-3-review.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)

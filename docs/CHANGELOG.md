@@ -319,8 +319,34 @@
   - Backend test suite passing **109/109 tests (100%)**.
   - **Tag Rule Honored:** Zero daily tags created (weekly release tag `v0.1.0-alpha.w3` scheduled for Day 15 close).
 
+#### Day 15 (Fri) - Milestone 03-05 (Week 3 Close & Release v0.1.0-alpha.w3)
+- **Focus:** Security Hardening, Rate Limiting, Diagnostic Gateway Portal & Week 3 Close
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `8f20dda: feat(config): add rate limiting settings and environment parameters`
+  2. `010a420: feat(security): enhance security headers with hsts and csp directives`
+  3. `f2818ef: feat(middleware): implement async token bucket rate limiting middleware`
+  4. `d78646c: feat(api): wire rate limiting middleware into fastapi application pipeline`
+  5. `2378861: test(security): add test suite for rate limiting and 429 response headers`
+  6. `4130cd2: feat(portal): scaffold diagnostic lab gateway with nabl accreditation badge`
+  7. `02fcd10: feat(portal): build cryptographic pdf report ingestion and sha256 hashing`
+  8. `00be3ba: feat(portal): implement structured loinc observation and fhir report builder`
+  9. `6f3e940: test(frontend): verify full frontend production build with lab gateway`
+  10. `adcd43d: docs(journey): log day 15 security audit and rate limiting deliverables`
+  11. `f527b09: docs(journey): create week 3 retrospective and executive metrics report`
+  12. `docs(changelog): record milestone 03-05 and week 3 release deliverables`
+  13. `chore(release): cut official week 3 release tag v0.1.0-alpha.w3`
+- **Verification:**
+  - Automated test suite expanded to **115 tests (`pytest -v`)**, all passing (100%) in 22 seconds.
+  - Rate limiting middleware validated with 429 status code, Retry-After header, and token bucket replenishment.
+  - OWASP headers validated: Content-Security-Policy, Strict-Transport-Security, COOP, and CORP.
+  - Diagnostic Gateway (`/lab`) operational with NABL accreditation, client-side Web Crypto SHA-256 PDF hashing, 6-parameter LOINC builder, and live HL7 FHIR `DiagnosticReport` bundle preview.
+  - Next.js 15 Turbopack production build verified passing for all 11 static/edge routes with 0 errors.
+  - Pre-flight diagnostic check `scripts/doctor.py` passing all 8 checkpoints.
+  - **Weekly Release Tag Cut:** `v0.1.0-alpha.w3` successfully created to conclude Week 3.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
 

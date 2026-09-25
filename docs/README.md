@@ -4,13 +4,11 @@
 
 > A Unified Digital Health Interoperability Platform & Longitudinal Patient Vault built on modern healthcare data standards: **HL7 FHIR Release 4** and the **Ayushman Bharat Digital Mission (ABDM)** ecosystem.
 >
-> 🌐 **Live Deployed Web Portal:** [https://nirmaya-tau.vercel.app/](https://nirmaya-tau.vercel.app/)  
-> 📖 **Official GitBook Documentation:** [https://suryanshs-projects.gitbook.io/nirmaya-docs](https://suryanshs-projects.gitbook.io/nirmaya-docs)
+> **Live Deployed Web Portal:** [https://nirmaya-tau.vercel.app/](https://nirmaya-tau.vercel.app/)  
+> **Official GitBook Documentation:** [https://suryanshs-projects.gitbook.io/nirmaya-docs](https://suryanshs-projects.gitbook.io/nirmaya-docs)
 
-<div align="center">
-  <img src="assets/nirmaya-mockup.png" alt="NIRMAYA Clinical Platform Mockup" width="780" />
-</div>
 
+---
 
 ## The Vision at a Glance
 
