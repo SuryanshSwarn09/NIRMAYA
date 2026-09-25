@@ -72,7 +72,7 @@ def check_backend_env(root: Path) -> bool:
         venv_python = venv_dir / "bin" / "python"
 
     # Check key packages
-    packages = ["fastapi", "pydantic", "sqlalchemy", "alembic", "asyncpg", "pytest", "httpx", "jwt"]
+    packages = ["fastapi", "pydantic", "sqlalchemy", "greenlet", "alembic", "asyncpg", "pytest", "httpx", "jwt"]
     all_installed = True
     for pkg in packages:
         imported = False
