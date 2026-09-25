@@ -12,6 +12,7 @@ from app.core.middleware import (
     PerformanceTelemetryMiddleware,
     CorrelationIdMiddleware,
 )
+from app.core.rate_limit import RateLimitingMiddleware
 from app.core.exceptions import register_exception_handlers
 from app.api.v1.router import api_router
 
@@ -48,6 +49,9 @@ app.add_middleware(PerformanceTelemetryMiddleware)
 
 # 3. Add correlation ID middleware (X-Request-ID propagation)
 app.add_middleware(CorrelationIdMiddleware)
+
+# 4. Add token-bucket rate limiting middleware (DDoS & brute force mitigation)
+app.add_middleware(RateLimitingMiddleware)
 
 # 4. Set up dynamic CORS middleware
 app.add_middleware(
