@@ -70,6 +70,13 @@ class Settings(BaseSettings):
     FHIR_VERSION: str = "R4"
     ABDM_SANDBOX_ENABLED: bool = True
 
+    # Rate Limiting & Abuse Defense
+    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_AUTH_PER_MINUTE: int = 15
+    RATE_LIMIT_API_PER_MINUTE: int = 60
+    RATE_LIMIT_BURST_CAPACITY: int = 20
+    SECURITY_HSTS_SECONDS: int = 31536000  # 1 year
+
     model_config = SettingsConfigDict(
         case_sensitive=True,
         env_file=".env",
