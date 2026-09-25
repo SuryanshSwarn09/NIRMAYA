@@ -16,8 +16,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
   {
     title: "Patient Vault",
     href: "/patient",
-    badge: "Vault",
-    badgeVariant: "verified",
     description: "Self-sovereign longitudinal health records & appointment booking",
     role: "patient",
     iconName: "ShieldCheck",
@@ -25,8 +23,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
   {
     title: "Provider EMR",
     href: "/doctor",
-    badge: "EMR",
-    badgeVariant: "fhir",
     description: "Clinical encounters, vitals recording & e-prescriptions",
     role: "doctor",
     iconName: "Stethoscope",
@@ -34,8 +30,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
   {
     title: "Diagnostic Gateway",
     href: "/lab",
-    badge: "Lab",
-    badgeVariant: "abdm",
     description: "Direct upload of test observations & digitally stamped reports",
     role: "lab",
     iconName: "FlaskConical",
@@ -43,8 +37,6 @@ export const MAIN_NAV_ITEMS: NavItem[] = [
   {
     title: "FHIR Standards",
     href: "/fhir",
-    badge: "R4",
-    badgeVariant: "fhir",
     description: "Interactive HL7 FHIR R4 schema explorer & bundle validator",
     role: "public",
     iconName: "Database",

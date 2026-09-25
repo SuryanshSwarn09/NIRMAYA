@@ -32,8 +32,14 @@ export function Navbar({
   return (
     <header className="sticky top-0 z-40 h-16 bg-white border-b border-[#e5e7eb] transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
-        {/* Brand Wordmark & Geometric Mark */}
-        <BrandLogo size="md" />
+        {/* Brand Wordmark & Geometric Mark with Subtle Network Pill */}
+        <div className="flex items-center gap-3">
+          <BrandLogo size="md" />
+          <div className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#f8f9fa] border border-[#e5e7eb] text-[11px] text-[#4b5563] font-medium">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />
+            <span>Network Active</span>
+          </div>
+        </div>
 
         {/* Center Desktop Navigation Links (Inter 14px / 500) */}
         <nav className="hidden lg:flex items-center gap-1">
@@ -54,14 +60,17 @@ export function Navbar({
                 )}
               >
                 <span>{item.title}</span>
-                {item.badge && (
-                  <Badge variant={item.badgeVariant || "default"} size="sm">
-                    {item.badge}
-                  </Badge>
-                )}
               </Link>
             );
           })}
+          <a
+            href="https://suryanshs-projects.gitbook.io/nirmaya-docs"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-sm font-medium text-[#6b7280] hover:text-[#111111] hover:bg-[#f8f9fa] transition-colors select-none"
+          >
+            <span>Documentation</span>
+          </a>
         </nav>
 
         {/* Right Action Cluster: Authenticated User State vs Sign In CTA */}

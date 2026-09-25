@@ -17,10 +17,7 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <AuthProvider>
       <div className="min-h-screen flex flex-col bg-white text-[#111111] selection:bg-slate-200 selection:text-black">
-        {/* 1. Global Interoperability & Live Node Status Bar */}
-        <SystemStatusBar />
-
-        {/* 2. Primary Navigation Header */}
+        {/* 1. Primary Navigation Header */}
         <Navbar
           isMobileMenuOpen={isMobileMenuOpen}
           onToggleMobileMenu={() => setIsMobileMenuOpen((prev) => !prev)}
