@@ -96,6 +96,13 @@ class RateLimiter:
         else:
             client_ip = "127.0.0.1"
 
+        # Check if Authorization Bearer token is provided
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ", 1)[1]
+            token_fingerprint = str(abs(hash(token)) % 1000000)
+            return f"{client_ip}:token:{token_fingerprint}"
+
         # Check if authenticated user subject is attached to request state
         user_sub = getattr(request.state, "user_sub", None)
         if user_sub:
