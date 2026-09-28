@@ -65,7 +65,25 @@ class AuthenticationException(AppException):
         self.headers = headers or {"WWW-Authenticate": "Bearer"}
 
 
+class ConflictException(AppException):
+    """Raised when an operation encounters a state conflict (e.g., overlapping slots or already booked)."""
+
+    def __init__(
+        self,
+        message: str = "Resource conflict encountered during operation",
+        error_code: str = "CONFLICT",
+        details: Optional[List[ErrorDetail]] = None,
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            status_code=status.HTTP_409_CONFLICT,
+            details=details,
+        )
+
+
 def register_exception_handlers(app):
+
     """Register uniform error handlers formatting failures into standard ErrorResponse JSON."""
 
     @app.exception_handler(AppException)
