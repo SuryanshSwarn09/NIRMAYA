@@ -353,8 +353,38 @@
   - Published audit report to GitBook navigation tree (`docs/journey/month-1/week-1-3-codebase-audit.md`).
   - Audited security, HL7 FHIR R4, ABDM compliance, and Cal.com visual standards.
 
+### Week 4: Clinical Encounters, Scheduling & Month 1 Close (Release v0.1.0)
+
+#### Day 16 (Mon) - Milestone 04-01
+- **Focus:** Appointment Scheduling Data Models, Conflict-Free Slot Engine & Clinical Booking API
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `837570d: feat(models): add slot and appointment status enums`
+  2. `1af5428: feat(core): add ConflictException for slot and booking concurrency control`
+  3. `d67bdaa: feat(models): define doctor slot and appointment orm models with relational constraints`
+  4. `7132938: feat(alembic): add migration for doctor slot and appointment tables`
+  5. `a91a4b8: feat(schemas): create pydantic models for appointment booking and slot generation`
+  6. `5cc157e: feat(services): implement conflict-free doctor slot generation engine`
+  7. `a9147ad: feat(services): implement appointment booking and lifecycle transition logic`
+  8. `725656c: feat(api): implement doctor availability slot generation and query endpoints`
+  9. `bdcc5cd: feat(api): implement appointment booking and clinical status management router`
+  10. `5a65dad: test(appointments): add comprehensive test suite for slot engine and booking lifecycle`
+  11. `docs(journey): add week 4 overview and day 16 appointment scheduling deliverables`
+- **Key Deliverables:**
+  - Standard enums: `SlotStatus` (`available`, `held`, `booked`, `blocked`), `AppointmentStatus`, and `AppointmentType`.
+  - SQLAlchemy 2.0 ORM models `DoctorSlot` and `Appointment` with foreign key cascades and unique constraints (`uq_doctor_slot_start`, `uq_appointment_slot_id`).
+  - Canonical Alembic migration `0002_appointments_and_slots_schema` with clean upgrade & downgrade verified.
+  - Pydantic v2 schemas: `DoctorSlotResponse`, `SlotGenerateRequest`, `SlotGenerateResult`, `AppointmentCreate`, `AppointmentResponse`, `AppointmentStatusUpdate`.
+  - Conflict-free slot generation engine (`slot_engine.py`) with mathematical practice hour subdivision, lunch break exclusion, and idempotency across PostgreSQL and SQLite.
+  - Complete appointment booking API (`/api/v1/appointments/`) with slot locking, status lifecycle, and automatic slot replenishment on cancellation.
+- **Verification:**
+  - Automated test suite expanded to **125 tests (`pytest -q`)**, all passing (100%) in 27.41s.
+  - Next.js 15 Turbopack production build verified passing for all 11 static/edge routes with 0 errors.
+  - Pre-flight diagnostic check `scripts/doctor.py` passing all 8 checkpoints.
+  - **Tag Discipline Honored:** Zero daily tags created (weekly release tag `v0.1.0` scheduled for Day 20 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
 
