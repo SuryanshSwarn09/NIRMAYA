@@ -1,16 +1,18 @@
 """Healthcare provider clinical credentials and EMR profile model for NIRMAYA."""
 
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 from sqlalchemy import Boolean, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import MedicalSpecialty
 
 if TYPE_CHECKING:
+    from app.models.appointment import Appointment, DoctorSlot
     from app.models.user import User
 
 
 class DoctorProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+
     """Clinical credentials, medical council licensing, and consultation profile for doctors."""
 
     # 1-to-1 linkage to User identity
@@ -85,7 +87,22 @@ class DoctorProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         back_populates="doctor_profile",
     )
 
+    # Doctor consultation slots
+    slots: Mapped[List["DoctorSlot"]] = relationship(
+        "DoctorSlot",
+        back_populates="doctor",
+        cascade="all, delete-orphan",
+    )
+
+    # Clinical encounter appointments
+    appointments: Mapped[List["Appointment"]] = relationship(
+        "Appointment",
+        back_populates="doctor",
+        cascade="all, delete-orphan",
+    )
+
     def __repr__(self) -> str:
+
         return (
             f"<DoctorProfile id={self.id} user_id={self.user_id} "
             f"reg={self.registration_number} specialty={self.specialty}>"

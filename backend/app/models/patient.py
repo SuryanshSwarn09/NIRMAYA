@@ -1,17 +1,19 @@
 """Patient clinical profile and ABHA identity model for NIRMAYA."""
 
 from datetime import date
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 from sqlalchemy import Date, Enum, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import BloodGroup, Gender
 
 if TYPE_CHECKING:
+    from app.models.appointment import Appointment
     from app.models.user import User
 
 
 class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
+
     """Clinical demographics and longitudinal health vault profile for patients."""
 
     # 1-to-1 linkage to User identity
@@ -92,7 +94,15 @@ class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         back_populates="patient_profile",
     )
 
+    # Clinical encounter appointments
+    appointments: Mapped[List["Appointment"]] = relationship(
+        "Appointment",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+    )
+
     def __repr__(self) -> str:
+
         return (
             f"<PatientProfile id={self.id} user_id={self.user_id} "
             f"abha_address={self.abha_address}>"
