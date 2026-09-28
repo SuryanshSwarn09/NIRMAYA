@@ -1,5 +1,9 @@
-"""NIRMAYA services package exposing modular domain business logic."""
-
+from app.services.appointment import (
+    book_appointment,
+    get_appointment_by_id,
+    list_appointments,
+    update_appointment_status,
+)
 from app.services.doctor import (
     create_doctor_profile,
     delete_doctor_profile,
@@ -18,6 +22,11 @@ from app.services.patient import (
     get_patient_by_user_id,
     list_patients,
     update_patient_profile,
+)
+from app.services.slot_engine import (
+    generate_slots_for_doctor,
+    get_doctor_slots,
+    get_slot_by_id,
 )
 
 __all__ = [
@@ -38,4 +47,14 @@ __all__ = [
     "create_doctor_profile",
     "update_doctor_profile",
     "delete_doctor_profile",
+    # Slot engine
+    "generate_slots_for_doctor",
+    "get_doctor_slots",
+    "get_slot_by_id",
+    # Appointment service
+    "book_appointment",
+    "get_appointment_by_id",
+    "list_appointments",
+    "update_appointment_status",
 ]
+
