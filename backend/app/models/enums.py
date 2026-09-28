@@ -65,3 +65,36 @@ class LabAccreditation(str, Enum):
     ISO_15189 = "ISO 15189"
     STATE_GOVT = "State Government Registered"
     OTHER = "Other"
+
+
+class SlotStatus(str, Enum):
+    """Availability status lifecycle for doctor consultation time slots."""
+
+    AVAILABLE = "available"
+    HELD = "held"
+    BOOKED = "booked"
+    BLOCKED = "blocked"
+
+
+class AppointmentStatus(str, Enum):
+    """Clinical encounter appointment status aligned with HL7 FHIR R4 Appointment.status.
+
+    Reference: http://hl7.org/fhir/R4/valueset-appointmentstatus.html
+    """
+
+    SCHEDULED = "scheduled"
+    CONFIRMED = "confirmed"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+    NO_SHOW = "no_show"
+
+
+class AppointmentType(str, Enum):
+    """Encounter classification aligned with HL7 FHIR R4 Appointment.appointmentType."""
+
+    ROUTINE_CHECKUP = "routine_checkup"
+    FOLLOW_UP = "follow_up"
+    TELECONSULTATION = "teleconsultation"
+    EMERGENCY = "emergency"
+
