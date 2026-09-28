@@ -1,6 +1,5 @@
-"""Doctor EMR API endpoints for managing healthcare provider credentials and directory."""
-
-from typing import Optional
+from datetime import date
+from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.dependencies import (
@@ -9,8 +8,13 @@ from app.core.dependencies import (
 )
 from app.core.exceptions import EntityNotFoundException, PermissionDeniedException
 from app.db.session import get_db
-from app.models.enums import MedicalSpecialty, UserRole
+from app.models.enums import MedicalSpecialty, SlotStatus, UserRole
 from app.models.user import User
+from app.schemas.appointment import (
+    DoctorSlotResponse,
+    SlotGenerateRequest,
+    SlotGenerateResult,
+)
 from app.schemas.common import APIResponse, PaginatedResponse, PaginationMeta
 from app.schemas.doctor import (
     DoctorProfileCreate,
@@ -18,8 +22,10 @@ from app.schemas.doctor import (
     DoctorProfileUpdate,
 )
 from app.services import doctor as doctor_service
+from app.services import slot_engine
 
 router = APIRouter()
+
 
 
 @router.post(
@@ -214,5 +220,65 @@ async def delete_doctor(
         message="Doctor profile deleted successfully",
         data={"doctor_id": doctor_id, "deleted": True},
     )
+
+
+# ============================================================================
+# Doctor Consultation Availability Slots
+# ============================================================================
+
+
+@router.get(
+    "/{doctor_id}/slots",
+    response_model=APIResponse[List[DoctorSlotResponse]],
+    summary="Query doctor consultation availability slots",
+    description="Returns available or filtered time slots for a practitioner doctor.",
+)
+async def get_slots(
+    doctor_id: str,
+    target_date: Optional[date] = Query(None, description="Filter slots for a specific calendar date (YYYY-MM-DD)"),
+    start_date: Optional[date] = Query(None, description="Start date window"),
+    end_date: Optional[date] = Query(None, description="End date window"),
+    slot_status: Optional[SlotStatus] = Query(None, description="Filter by slot status (e.g. available, booked)"),
+    is_teleconsult: Optional[bool] = Query(None, description="Filter by teleconsultation readiness"),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[List[DoctorSlotResponse]]:
+    """Retrieve consultation slots for a doctor with optional status and temporal filtering."""
+    slots = await slot_engine.get_doctor_slots(
+        db=db,
+        doctor_id=doctor_id,
+        target_date=target_date,
+        start_date=start_date,
+        end_date=end_date,
+        status=slot_status,
+        is_teleconsult=is_teleconsult,
+    )
+    return APIResponse(
+        message="Doctor consultation slots retrieved successfully",
+        data=[DoctorSlotResponse.model_validate(s) for s in slots],
+    )
+
+
+@router.post(
+    "/{doctor_id}/slots/generate",
+    response_model=APIResponse[SlotGenerateResult],
+    status_code=status.HTTP_201_CREATED,
+    summary="Generate conflict-free consultation slots",
+    description="Computes and persists discrete availability slots based on working hours and break windows.",
+)
+async def generate_slots(
+    doctor_id: str,
+    request: SlotGenerateRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[SlotGenerateResult]:
+    """Generate availability slots for a doctor enforcing owner doctor or administrator authorization."""
+    await verify_doctor_modification_access(doctor_id=doctor_id, current_user=current_user, db=db)
+    request.doctor_id = doctor_id
+    result = await slot_engine.generate_slots_for_doctor(db=db, request=request)
+    return APIResponse(
+        message=f"Generated {result.total_generated} consultation slots ({result.total_skipped_existing} existing slots skipped)",
+        data=result,
+    )
+
 
 
