@@ -40,11 +40,11 @@ def test_migration_revision_head(alembic_config) -> None:
     heads = script.get_heads()
 
     assert len(heads) == 1
-    assert heads[0] == "0001_initial_core_schema"
+    assert heads[0] == "0002_appointments_and_slots_schema"
 
 
 def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
-    """Verify that migration upgrade creates all 4 tables and downgrade cleans them."""
+    """Verify that migration upgrade creates all tables and downgrade cleans them."""
     cfg, sync_db_url, _ = alembic_config
 
     # 1. Run upgrade to head
@@ -55,7 +55,15 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
     inspector = inspect(engine)
     table_names = set(inspector.get_table_names())
 
-    expected_tables = {"user", "patient_profile", "doctor_profile", "diagnostic_lab_facility", "alembic_version"}
+    expected_tables = {
+        "user",
+        "patient_profile",
+        "doctor_profile",
+        "diagnostic_lab_facility",
+        "doctor_slot",
+        "appointment",
+        "alembic_version",
+    }
     assert expected_tables.issubset(table_names), f"Missing tables: {expected_tables - table_names}"
 
     # Verify key columns on 'user'
@@ -74,6 +82,14 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
     lab_cols = {col["name"] for col in inspector.get_columns("diagnostic_lab_facility")}
     assert {"id", "user_id", "facility_name", "license_number", "accreditation", "hfr_id"}.issubset(lab_cols)
 
+    # Verify key columns on 'doctor_slot'
+    slot_cols = {col["name"] for col in inspector.get_columns("doctor_slot")}
+    assert {"id", "doctor_id", "start_time", "end_time", "status", "is_teleconsult"}.issubset(slot_cols)
+
+    # Verify key columns on 'appointment'
+    appt_cols = {col["name"] for col in inspector.get_columns("appointment")}
+    assert {"id", "patient_id", "doctor_id", "slot_id", "status", "scheduled_start"}.issubset(appt_cols)
+
     engine.dispose()
 
     # 3. Run downgrade to base
@@ -85,5 +101,13 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
     remaining_tables = set(inspector_after.get_table_names())
     engine_after.dispose()
 
-    core_tables = {"user", "patient_profile", "doctor_profile", "diagnostic_lab_facility"}
+    core_tables = {
+        "user",
+        "patient_profile",
+        "doctor_profile",
+        "diagnostic_lab_facility",
+        "doctor_slot",
+        "appointment",
+    }
     assert not core_tables.intersection(remaining_tables), f"Tables not dropped: {core_tables.intersection(remaining_tables)}"
+

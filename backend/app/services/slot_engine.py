@@ -1,12 +1,12 @@
 """Conflict-free doctor consultation slot generation engine for NIRMAYA platform.
 
 Computes discrete, non-overlapping availability windows adhering to clinical practice hours,
-break intervals, and ensures idempotent slot generation.
+break intervals, and ensures idempotent slot generation across PostgreSQL and SQLite.
 """
 
 from datetime import date, datetime, time, timedelta, timezone
 from typing import List, Optional, Set
-from sqlalchemy import and_, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import EntityNotFoundException
 from app.models.appointment import DoctorSlot
@@ -17,6 +17,15 @@ from app.schemas.appointment import (
     SlotGenerateRequest,
     SlotGenerateResult,
 )
+
+
+def _normalize_utc(dt: datetime) -> datetime:
+    """Normalize datetime to UTC and remove microsecond precision for exact interval matching."""
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    else:
+        dt = dt.astimezone(timezone.utc)
+    return dt.replace(microsecond=0)
 
 
 async def generate_slots_for_doctor(
@@ -34,28 +43,11 @@ async def generate_slots_for_doctor(
     if not doctor:
         raise EntityNotFoundException("DoctorProfile", request.doctor_id)
 
-    # 2. Query all existing slots in the date range to avoid unique constraint violations
-    range_start_dt = datetime.combine(
-        request.start_date,
-        time(0, 0, 0),
-        tzinfo=timezone.utc,
-    )
-    range_end_dt = datetime.combine(
-        request.end_date,
-        time(23, 59, 59),
-        tzinfo=timezone.utc,
-    )
-
-    existing_slots_stmt = select(DoctorSlot).where(
-        and_(
-            DoctorSlot.doctor_id == request.doctor_id,
-            DoctorSlot.start_time >= range_start_dt,
-            DoctorSlot.start_time <= range_end_dt,
-        )
-    )
+    # 2. Query all existing slots for this doctor to identify pre-existing intervals
+    existing_slots_stmt = select(DoctorSlot).where(DoctorSlot.doctor_id == request.doctor_id)
     existing_slots_result = await db.scalars(existing_slots_stmt)
     existing_slot_starts: Set[datetime] = {
-        s.start_time for s in existing_slots_result.all()
+        _normalize_utc(s.start_time) for s in existing_slots_result.all()
     }
 
     # 3. Generate candidate slot intervals day by day
@@ -101,23 +93,23 @@ async def generate_slots_for_doctor(
             # Check if this slot overlaps with the break window
             is_break_overlap = False
             if break_start and break_end:
-                # Overlaps if slot_start < break_end and slot_end > break_start
                 if slot_start < break_end and slot_end > break_start:
                     is_break_overlap = True
 
             if not is_break_overlap:
-                if slot_start in existing_slot_starts:
+                normalized_start = _normalize_utc(slot_start)
+                if normalized_start in existing_slot_starts:
                     skipped_count += 1
                 else:
                     slot_entity = DoctorSlot(
                         doctor_id=request.doctor_id,
-                        start_time=slot_start,
-                        end_time=slot_end,
+                        start_time=normalized_start,
+                        end_time=_normalize_utc(slot_end),
                         status=SlotStatus.AVAILABLE,
                         is_teleconsult=request.is_teleconsult,
                     )
                     new_slots.append(slot_entity)
-                    existing_slot_starts.add(slot_start)
+                    existing_slot_starts.add(normalized_start)
 
             slot_start += slot_delta
 
@@ -149,30 +141,31 @@ async def get_doctor_slots(
     is_teleconsult: Optional[bool] = None,
 ) -> List[DoctorSlot]:
     """Query doctor consultation availability slots with optional temporal and status filtering."""
-    filters = [DoctorSlot.doctor_id == doctor_id]
+    stmt = (
+        select(DoctorSlot)
+        .where(DoctorSlot.doctor_id == doctor_id)
+        .order_by(DoctorSlot.start_time.asc())
+    )
+    all_slots = list((await db.scalars(stmt)).all())
 
-    if target_date:
-        dt_start = datetime.combine(target_date, time(0, 0, 0), tzinfo=timezone.utc)
-        dt_end = datetime.combine(target_date, time(23, 59, 59), tzinfo=timezone.utc)
-        filters.append(DoctorSlot.start_time >= dt_start)
-        filters.append(DoctorSlot.start_time <= dt_end)
-    else:
-        if start_date:
-            dt_start = datetime.combine(start_date, time(0, 0, 0), tzinfo=timezone.utc)
-            filters.append(DoctorSlot.start_time >= dt_start)
-        if end_date:
-            dt_end = datetime.combine(end_date, time(23, 59, 59), tzinfo=timezone.utc)
-            filters.append(DoctorSlot.start_time <= dt_end)
+    filtered: List[DoctorSlot] = []
+    for s in all_slots:
+        st_utc = _normalize_utc(s.start_time)
+        slot_date = st_utc.date()
 
-    if status:
-        filters.append(DoctorSlot.status == status)
+        if target_date and slot_date != target_date:
+            continue
+        if start_date and slot_date < start_date:
+            continue
+        if end_date and slot_date > end_date:
+            continue
+        if status and s.status != status:
+            continue
+        if is_teleconsult is not None and s.is_teleconsult != is_teleconsult:
+            continue
+        filtered.append(s)
 
-    if is_teleconsult is not None:
-        filters.append(DoctorSlot.is_teleconsult == is_teleconsult)
-
-    stmt = select(DoctorSlot).where(and_(*filters)).order_by(DoctorSlot.start_time.asc())
-    result = await db.scalars(stmt)
-    return list(result.all())
+    return filtered
 
 
 async def get_slot_by_id(
