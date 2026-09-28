@@ -1,3 +1,4 @@
-from . import health, meta, patients
+from . import appointments, auth, doctors, health, meta, patients
 
-__all__ = ["health", "meta", "patients"]
+__all__ = ["appointments", "auth", "doctors", "health", "meta", "patients"]
+
