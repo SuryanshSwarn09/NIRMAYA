@@ -37,6 +37,7 @@
     * [Day 14: Frontend Auth Integration & Clinical Portals](journey/month-1/day-14.md)
     * [Day 15: Security Hardening, Rate Limiting & Diagnostic Gateway](journey/month-1/day-15.md)
     * [Week 3 Retrospective & Executive Metrics](journey/month-1/week-3-review.md)
+    * [Weeks 1–3 Comprehensive Codebase Audit](journey/month-1/week-1-3-codebase-audit.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
