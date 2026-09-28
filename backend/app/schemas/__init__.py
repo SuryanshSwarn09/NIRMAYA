@@ -37,12 +37,24 @@ from app.schemas.auth import (
     TokenVerifyRequest,
     TokenVerifyResponse,
 )
+from app.schemas.appointment import (
+    AppointmentBase,
+    AppointmentCreate,
+    AppointmentResponse,
+    AppointmentStatusUpdate,
+    DoctorSlotBase,
+    DoctorSlotCreate,
+    DoctorSlotResponse,
+    SlotGenerateRequest,
+    SlotGenerateResult,
+)
 from app.schemas.user import (
     UserBase,
     UserCreate,
     UserResponse,
     UserUpdate,
 )
+
 
 __all__ = [
     "APIResponse",
@@ -74,4 +86,14 @@ __all__ = [
     "TokenResponse",
     "TokenVerifyRequest",
     "TokenVerifyResponse",
+    "DoctorSlotBase",
+    "DoctorSlotCreate",
+    "DoctorSlotResponse",
+    "SlotGenerateRequest",
+    "SlotGenerateResult",
+    "AppointmentBase",
+    "AppointmentCreate",
+    "AppointmentResponse",
+    "AppointmentStatusUpdate",
 ]
+
