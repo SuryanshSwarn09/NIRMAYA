@@ -6,8 +6,9 @@ break intervals, and ensures idempotent slot generation across PostgreSQL and SQ
 
 from datetime import date, datetime, time, timedelta, timezone
 from typing import List, Optional, Set
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.core.exceptions import EntityNotFoundException
 from app.models.appointment import DoctorSlot
 from app.models.doctor import DoctorProfile
@@ -131,6 +132,39 @@ async def generate_slots_for_doctor(
     )
 
 
+async def sweep_expired_holds(
+    db: AsyncSession,
+    slot_id: Optional[str] = None,
+) -> int:
+    """Identify slots currently in HELD status whose held_until timestamp has passed,
+
+    and atomically revert them back to AVAILABLE status.
+    """
+    now_utc = datetime.now(timezone.utc)
+    conditions = [
+        DoctorSlot.status == SlotStatus.HELD,
+        DoctorSlot.held_until.is_not(None),
+        DoctorSlot.held_until < now_utc,
+    ]
+    if slot_id:
+        conditions.append(DoctorSlot.id == slot_id)
+
+    stmt = select(DoctorSlot).where(and_(*conditions))
+    expired_slots = list((await db.scalars(stmt)).all())
+
+    swept_count = 0
+    for slot in expired_slots:
+        slot.status = SlotStatus.AVAILABLE
+        slot.held_until = None
+        slot.held_by_patient_id = None
+        swept_count += 1
+
+    if swept_count > 0:
+        await db.commit()
+
+    return swept_count
+
+
 async def get_doctor_slots(
     db: AsyncSession,
     doctor_id: str,
@@ -141,11 +175,15 @@ async def get_doctor_slots(
     is_teleconsult: Optional[bool] = None,
 ) -> List[DoctorSlot]:
     """Query doctor consultation availability slots with optional temporal and status filtering."""
+    # Automatically sweep any expired holds so returned availability is real-time accurate
+    await sweep_expired_holds(db)
+
     stmt = (
         select(DoctorSlot)
         .where(DoctorSlot.doctor_id == doctor_id)
         .order_by(DoctorSlot.start_time.asc())
     )
+
     all_slots = list((await db.scalars(stmt)).all())
 
     filtered: List[DoctorSlot] = []
