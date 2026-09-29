@@ -57,6 +57,19 @@ class DoctorSlot(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         nullable=False,
     )
 
+    # Temporary hold reservation lifecycle
+    held_until: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        index=True,
+    )
+    held_by_patient_id: Mapped[Optional[str]] = mapped_column(
+        String(36),
+        ForeignKey("patient_profile.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+
     # Concurrency and conflict guard
     __table_args__ = (
         UniqueConstraint("doctor_id", "start_time", name="uq_doctor_slot_start"),
@@ -72,6 +85,12 @@ class DoctorSlot(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         back_populates="slot",
         uselist=False,
     )
+    held_by_patient: Mapped[Optional["PatientProfile"]] = relationship(
+        "PatientProfile",
+        foreign_keys=[held_by_patient_id],
+        back_populates="held_slots",
+    )
+
 
     def __repr__(self) -> str:
         return (
