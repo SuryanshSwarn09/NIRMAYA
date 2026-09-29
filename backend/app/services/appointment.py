@@ -19,6 +19,8 @@ from app.schemas.appointment import (
     AppointmentResponse,
     AppointmentStatusUpdate,
 )
+from app.services.slot_engine import sweep_expired_holds
+
 
 
 def _format_appointment_response(appt: Appointment) -> AppointmentResponse:
@@ -89,7 +91,15 @@ async def book_appointment(
 
     # 3. Process slot if provided
     if payload.slot_id:
-        slot_stmt = select(DoctorSlot).where(DoctorSlot.id == payload.slot_id)
+        # Sweep expired holds first
+        await sweep_expired_holds(db, slot_id=payload.slot_id)
+
+        # Acquire exclusive row-level lock (FOR UPDATE in PostgreSQL, db-level in SQLite)
+        slot_stmt = (
+            select(DoctorSlot)
+            .where(DoctorSlot.id == payload.slot_id)
+            .with_for_update()
+        )
         slot_entity = await db.scalar(slot_stmt)
         if not slot_entity:
             raise EntityNotFoundException("DoctorSlot", payload.slot_id)
@@ -101,16 +111,32 @@ async def book_appointment(
                 status_code=400,
             )
 
-        if slot_entity.status != SlotStatus.AVAILABLE:
+        now_utc = datetime.now(timezone.utc)
+        if slot_entity.status == SlotStatus.BOOKED:
             raise ConflictException(
-                message=f"Slot '{payload.slot_id}' is not available for booking (status: {slot_entity.status.value})",
+                message=f"Slot '{payload.slot_id}' is already booked",
                 error_code="SLOT_NOT_AVAILABLE",
             )
+        elif slot_entity.status == SlotStatus.BLOCKED:
+            raise ConflictException(
+                message=f"Slot '{payload.slot_id}' is blocked by practitioner",
+                error_code="SLOT_BLOCKED",
+            )
+        elif slot_entity.status == SlotStatus.HELD:
+            # Check if held by another patient and hold has not expired
+            if slot_entity.held_by_patient_id != patient_id and slot_entity.held_until and slot_entity.held_until > now_utc:
+                raise ConflictException(
+                    message=f"Slot '{payload.slot_id}' is currently held by another patient",
+                    error_code="SLOT_HELD_BY_ANOTHER_PATIENT",
+                )
 
         scheduled_start = slot_entity.start_time
         scheduled_end = slot_entity.end_time
-        # Mark slot as booked
+
+        # Mark slot as booked and clear temporary hold metadata
         slot_entity.status = SlotStatus.BOOKED
+        slot_entity.held_until = None
+        slot_entity.held_by_patient_id = None
     else:
         # Non-slot ad-hoc / walk-in booking
         if not payload.scheduled_start or not payload.scheduled_end:
@@ -121,6 +147,7 @@ async def book_appointment(
             )
         scheduled_start = payload.scheduled_start
         scheduled_end = payload.scheduled_end
+
 
     # 4. Instantiate Appointment entity
     appointment = Appointment(
@@ -227,12 +254,19 @@ async def update_appointment_status(
     # If cancelling, replenish/free the associated slot
     if target_status == AppointmentStatus.CANCELLED:
         if appointment.slot_id:
-            slot_stmt = select(DoctorSlot).where(DoctorSlot.id == appointment.slot_id)
+            slot_stmt = (
+                select(DoctorSlot)
+                .where(DoctorSlot.id == appointment.slot_id)
+                .with_for_update()
+            )
             slot = await db.scalar(slot_stmt)
-            if slot and slot.status == SlotStatus.BOOKED:
+            if slot and slot.status in (SlotStatus.BOOKED, SlotStatus.HELD):
                 slot.status = SlotStatus.AVAILABLE
+                slot.held_until = None
+                slot.held_by_patient_id = None
 
     appointment.status = target_status
+
 
     if payload.clinical_notes:
         if appointment.clinical_notes:
