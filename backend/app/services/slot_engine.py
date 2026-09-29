@@ -9,7 +9,12 @@ from typing import List, Optional, Set
 from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.exceptions import EntityNotFoundException
+from app.core.exceptions import (
+    ConflictException,
+    EntityNotFoundException,
+    PermissionDeniedException,
+)
+
 from app.models.appointment import DoctorSlot
 from app.models.doctor import DoctorProfile
 from app.models.enums import SlotStatus
@@ -213,3 +218,93 @@ async def get_slot_by_id(
     """Retrieve a single DoctorSlot by its primary key."""
     stmt = select(DoctorSlot).where(DoctorSlot.id == slot_id)
     return await db.scalar(stmt)
+
+
+async def hold_slot(
+    db: AsyncSession,
+    slot_id: str,
+    patient_id: str,
+    duration_minutes: int = 10,
+) -> DoctorSlot:
+    """Reserve/hold a consultation slot with row-level locking.
+
+    Raises ConflictException if slot is already booked, blocked, or held by another patient.
+    """
+    # 1. Sweep expired holds on this slot
+    await sweep_expired_holds(db, slot_id=slot_id)
+
+    # 2. Acquire exclusive row-level lock (FOR UPDATE)
+    stmt = (
+        select(DoctorSlot)
+        .where(DoctorSlot.id == slot_id)
+        .with_for_update()
+    )
+    slot = await db.scalar(stmt)
+    if not slot:
+        raise EntityNotFoundException("DoctorSlot", slot_id)
+
+    # 3. Check current status
+    now_utc = datetime.now(timezone.utc)
+    if slot.status == SlotStatus.BOOKED:
+        raise ConflictException(
+            message=f"Slot '{slot_id}' is already booked",
+            error_code="SLOT_ALREADY_BOOKED",
+        )
+    if slot.status == SlotStatus.BLOCKED:
+        raise ConflictException(
+            message=f"Slot '{slot_id}' is blocked by practitioner",
+            error_code="SLOT_BLOCKED",
+        )
+    if slot.status == SlotStatus.HELD:
+        # Check if held by another patient and not expired
+        if slot.held_by_patient_id != patient_id and slot.held_until and slot.held_until > now_utc:
+            raise ConflictException(
+                message=f"Slot '{slot_id}' is currently held by another patient",
+                error_code="SLOT_HELD_BY_ANOTHER_PATIENT",
+            )
+
+    # 4. Set hold
+    expiration = now_utc + timedelta(minutes=duration_minutes)
+    slot.status = SlotStatus.HELD
+    slot.held_until = expiration
+    slot.held_by_patient_id = patient_id
+
+    await db.commit()
+    await db.refresh(slot)
+    return slot
+
+
+async def release_slot_hold(
+    db: AsyncSession,
+    slot_id: str,
+    patient_id: Optional[str] = None,
+    force_admin: bool = False,
+) -> DoctorSlot:
+    """Release a held slot back to AVAILABLE status with row-level locking."""
+    stmt = (
+        select(DoctorSlot)
+        .where(DoctorSlot.id == slot_id)
+        .with_for_update()
+    )
+    slot = await db.scalar(stmt)
+    if not slot:
+        raise EntityNotFoundException("DoctorSlot", slot_id)
+
+    if slot.status != SlotStatus.HELD:
+        # Already released or booked
+        return slot
+
+    # If patient_id given and not force_admin, check ownership
+    if not force_admin and patient_id and slot.held_by_patient_id != patient_id:
+        raise PermissionDeniedException(
+            message="You are not authorized to release a hold placed by another patient"
+        )
+
+    slot.status = SlotStatus.AVAILABLE
+    slot.held_until = None
+    slot.held_by_patient_id = None
+
+    await db.commit()
+    await db.refresh(slot)
+    return slot
+

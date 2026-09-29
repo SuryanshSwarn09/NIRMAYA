@@ -27,6 +27,8 @@ from app.services.slot_engine import (
     generate_slots_for_doctor,
     get_doctor_slots,
     get_slot_by_id,
+    hold_slot,
+    release_slot_hold,
     sweep_expired_holds,
 )
 
@@ -53,6 +55,9 @@ __all__ = [
     "get_doctor_slots",
     "get_slot_by_id",
     "sweep_expired_holds",
+    "hold_slot",
+    "release_slot_hold",
+
 
     # Appointment service
     "book_appointment",
