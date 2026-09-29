@@ -40,7 +40,7 @@ def test_migration_revision_head(alembic_config) -> None:
     heads = script.get_heads()
 
     assert len(heads) == 1
-    assert heads[0] == "0002_appointments_and_slots_schema"
+    assert heads[0] == "0003_slot_concurrency_and_hold_fields"
 
 
 def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
@@ -84,7 +84,16 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
 
     # Verify key columns on 'doctor_slot'
     slot_cols = {col["name"] for col in inspector.get_columns("doctor_slot")}
-    assert {"id", "doctor_id", "start_time", "end_time", "status", "is_teleconsult"}.issubset(slot_cols)
+    assert {
+        "id",
+        "doctor_id",
+        "start_time",
+        "end_time",
+        "status",
+        "is_teleconsult",
+        "held_until",
+        "held_by_patient_id",
+    }.issubset(slot_cols)
 
     # Verify key columns on 'appointment'
     appt_cols = {col["name"] for col in inspector.get_columns("appointment")}
