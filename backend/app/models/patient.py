@@ -8,8 +8,9 @@ from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import BloodGroup, Gender
 
 if TYPE_CHECKING:
-    from app.models.appointment import Appointment
+    from app.models.appointment import Appointment, DoctorSlot
     from app.models.user import User
+
 
 
 class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -101,7 +102,15 @@ class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         cascade="all, delete-orphan",
     )
 
+    # Consultation slots currently reserved/held by this patient
+    held_slots: Mapped[List["DoctorSlot"]] = relationship(
+        "DoctorSlot",
+        foreign_keys="DoctorSlot.held_by_patient_id",
+        back_populates="held_by_patient",
+    )
+
     def __repr__(self) -> str:
+
 
         return (
             f"<PatientProfile id={self.id} user_id={self.user_id} "
