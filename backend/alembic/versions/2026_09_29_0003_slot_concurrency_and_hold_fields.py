@@ -24,42 +24,39 @@ def upgrade() -> None:
     # ------------------------------------------------------------------------
     # Add held_until and held_by_patient_id to doctor_slot
     # ------------------------------------------------------------------------
-    op.add_column(
-        "doctor_slot",
-        sa.Column("held_until", sa.DateTime(timezone=True), nullable=True),
-    )
-    op.add_column(
-        "doctor_slot",
-        sa.Column("held_by_patient_id", sa.String(length=36), nullable=True),
-    )
-    op.create_index(
-        op.f("ix_doctor_slot_held_until"),
-        "doctor_slot",
-        ["held_until"],
-        unique=False,
-    )
-    op.create_index(
-        op.f("ix_doctor_slot_held_by_patient_id"),
-        "doctor_slot",
-        ["held_by_patient_id"],
-        unique=False,
-    )
-    op.create_foreign_key(
-        "fk_doctor_slot_held_by_patient",
-        "doctor_slot",
-        "patient_profile",
-        ["held_by_patient_id"],
-        ["id"],
-        ondelete="SET NULL",
-    )
+    with op.batch_alter_table("doctor_slot") as batch_op:
+        batch_op.add_column(
+            sa.Column("held_until", sa.DateTime(timezone=True), nullable=True),
+        )
+        batch_op.add_column(
+            sa.Column("held_by_patient_id", sa.String(length=36), nullable=True),
+        )
+        batch_op.create_index(
+            batch_op.f("ix_doctor_slot_held_until"),
+            ["held_until"],
+            unique=False,
+        )
+        batch_op.create_index(
+            batch_op.f("ix_doctor_slot_held_by_patient_id"),
+            ["held_by_patient_id"],
+            unique=False,
+        )
+        batch_op.create_foreign_key(
+            "fk_doctor_slot_held_by_patient",
+            "patient_profile",
+            ["held_by_patient_id"],
+            ["id"],
+            ondelete="SET NULL",
+        )
 
 
 def downgrade() -> None:
     # ------------------------------------------------------------------------
     # Drop foreign key, indexes, and columns
     # ------------------------------------------------------------------------
-    op.drop_constraint("fk_doctor_slot_held_by_patient", "doctor_slot", type_="foreignkey")
-    op.drop_index(op.f("ix_doctor_slot_held_by_patient_id"), table_name="doctor_slot")
-    op.drop_index(op.f("ix_doctor_slot_held_until"), table_name="doctor_slot")
-    op.drop_column("doctor_slot", "held_by_patient_id")
-    op.drop_column("doctor_slot", "held_until")
+    with op.batch_alter_table("doctor_slot") as batch_op:
+        batch_op.drop_constraint("fk_doctor_slot_held_by_patient", type_="foreignkey")
+        batch_op.drop_index(batch_op.f("ix_doctor_slot_held_by_patient_id"))
+        batch_op.drop_index(batch_op.f("ix_doctor_slot_held_until"))
+        batch_op.drop_column("held_by_patient_id")
+        batch_op.drop_column("held_until")
