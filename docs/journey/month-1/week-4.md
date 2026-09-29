@@ -9,8 +9,8 @@
 | Day | Focus Area | Key Deliverables | Status |
 |---|---|---|---|
 | **Day 16 (Mon)** | Appointment Models & Slot Engine | `DoctorSlot`, `Appointment` models, migration 0002, conflict-free slot generator, booking API | **Completed** |
-| **Day 17 (Tue)** | Booking Concurrency & ACID Locking | `SELECT ... FOR UPDATE` row locks, held slot timeouts, double-booking prevention, concurrency tests | *Next* |
-| **Day 18 (Wed)** | HL7 FHIR Encounter Transformers | HL7 FHIR R4 `Appointment` & `Encounter` resource bundles, ABDM consent linkage | *Scheduled* |
+| **Day 17 (Tue)** | Booking Concurrency & ACID Locking | `SELECT ... FOR UPDATE` row locks, 10-min slot holds, auto-sweep engine, migration 0003, race-condition stress tests | **Completed** |
+| **Day 18 (Wed)** | HL7 FHIR Encounter Transformers | HL7 FHIR R4 `Appointment` & `Encounter` resource bundles, ABDM consent linkage | *Next* |
 | **Day 19 (Thu)** | Cal.com Slot Picker UI Integration | Interactive calendar availability matrix on `/doctor` and `/patient`, booking modal | *Scheduled* |
 | **Day 20 (Fri)** | Month 1 Retrospective & Release v0.1.0 | End-to-end clinical encounter verification, accessibility audit, Month 1 close & tag `v0.1.0` | *Scheduled* |
 
@@ -19,6 +19,7 @@
 ## Week 4 Architecture Highlights
 
 - **Conflict-Free Availability Engine:** Mathematical subdivision of daily clinical practice hours into discrete consultation windows with break interval exclusions and idempotency.
+- **Slot Hold Lifecycle & Concurrency Guards:** Cal.com-style 10-minute temporary reservation holds, row-level locking (`with_for_update`), and autonomous expired-hold sweeping.
 - **Relational Integrity & ACID Safety:** Bidirectional cascade integrity across `DoctorProfile`, `PatientProfile`, `DoctorSlot`, and `Appointment` with strict unique constraints (`uq_doctor_slot_start`, `uq_appointment_slot_id`).
 - **Resource Lifecycle Management:** Synchronized state machine where appointment cancellations automatically replenish reserved doctor slots back to `AVAILABLE`.
 - **Standards-Based Design:** Core models directly mirror HL7 FHIR R4 `Appointment`, `Schedule`, and `Slot` specifications.

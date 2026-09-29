@@ -40,6 +40,7 @@
     * [Weeks 1–3 Comprehensive Codebase Audit](journey/month-1/week-1-3-codebase-audit.md)
   * [Week 4: Clinical Encounters, Scheduling & Month 1 Close](journey/month-1/week-4.md)
     * [Day 16: Appointment Models & Slot Generation Engine](journey/month-1/day-16.md)
+    * [Day 17: Booking Concurrency & ACID Row-Level Locking](journey/month-1/day-17.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
