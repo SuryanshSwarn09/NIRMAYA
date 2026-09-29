@@ -382,6 +382,37 @@
   - Pre-flight diagnostic check `scripts/doctor.py` passing all 8 checkpoints.
   - **Tag Discipline Honored:** Zero daily tags created (weekly release tag `v0.1.0` scheduled for Day 20 close).
 
+#### Day 17 (Tue) - Milestone 04-02
+- **Focus:** Slot Booking Concurrency, ACID Row-Level Locking & Cal.com-Style Held Slot Lifecycle
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `00bb86c: feat(models): add held_until and held_by_patient_id concurrency fields to doctor slot`
+  2. `16eb5bb: feat(models): establish held_slots relationship on patient profile`
+  3. `d2db3df: feat(alembic): generate migration 0003 for slot concurrency and hold tracking`
+  4. `e11ca64: feat(schemas): define slot hold and release request response schemas`
+  5. `90d3eee: feat(services): implement expired hold auto-sweep mechanism in slot engine`
+  6. `94dbde2: feat(services): implement atomic slot hold and manual release with row locking`
+  7. `1c9bb85: feat(services): enhance appointment booking with with_for_update concurrency guards`
+  8. `cea6df5: feat(api): expose slot hold and release endpoints in doctor router`
+  9. `5338f36: fix(concurrency): harden slot hold lifecycle and timezone normalization`
+  10. `5ae4bcc: fix(alembic): use batch_alter_table in migration 0003 for cross-dialect constraint support`
+  11. `71e222d: test(concurrency): add unit and integration test suite for slot hold lifecycle and race conditions`
+  12. `8162597: test(migrations): update migration test harness for revision 0003 head and slot hold fields`
+  13. `025c4ec: docs(journey): record day 17 booking concurrency and acid row locking deliverables`
+  14. `docs(changelog): record milestone 04-02 slot concurrency and hold engine`
+- **Key Deliverables:**
+  - **Cal.com Temporary Slot Hold Engine:** 1–30 min reservation window (default 10 mins) preventing race conditions during patient booking intake.
+  - **ACID Row-Level Locking:** Enforced `select(...).with_for_update()` on `DoctorSlot` across slot hold, release, and booking transactions.
+  - **Collision Backstops:** Mapped database unique constraint violations on `appointment.slot_id` to HTTP 409 `SLOT_ALREADY_BOOKED` envelopes.
+  - **Autonomous Hold Auto-Sweeper (`sweep_expired_holds`):** Atomically sweeps expired holds back to `AVAILABLE` on slot query and checkout.
+  - **Alembic Migration 0003:** Added `held_until` and `held_by_patient_id` using `batch_alter_table` for PostgreSQL and SQLite parity.
+  - **Slot Hold Endpoints:** `POST /api/v1/doctors/{id}/slots/{id}/hold` and `POST /api/v1/doctors/{id}/slots/{id}/release`.
+- **Verification:**
+  - Full automated backend test suite expanded to **134 passing tests (100% pass rate)** in 26.02s.
+  - Concurrency stress tests verified: under 5 simultaneous client booking requests (`asyncio.gather`), exactly 1 succeeded with 201 Created and 4 received 409 Conflict envelopes.
+  - Next.js 15 Turbopack production build compiled cleanly across all 11 routes with 0 errors.
+  - Pre-flight diagnostic check `scripts/doctor.py` verified 8/8 passing.
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.1.0` reserved for Day 20 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
