@@ -58,10 +58,43 @@ class DoctorSlotResponse(DoctorSlotBase):
 
     id: str = Field(description="Unique UUIDv4 slot identifier")
     doctor_id: str = Field(description="UUIDv4 of the associated DoctorProfile")
+    held_until: Optional[datetime] = Field(default=None, description="UTC timestamp until which the slot is held")
+    held_by_patient_id: Optional[str] = Field(default=None, description="UUIDv4 of the patient holding the slot")
     created_at: datetime
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class SlotHoldRequest(BaseModel):
+    """Request payload to reserve/hold a slot for consultation checkout."""
+
+    hold_duration_minutes: int = Field(
+        default=10,
+        ge=1,
+        le=30,
+        description="Duration in minutes to temporarily hold the slot (1-30 minutes)",
+    )
+
+
+class SlotHoldResponse(BaseModel):
+    """Confirmation payload returned when a slot is successfully held."""
+
+    slot_id: str = Field(description="Unique UUIDv4 of the held slot")
+    doctor_id: str = Field(description="UUIDv4 of the associated DoctorProfile")
+    status: SlotStatus = Field(description="Updated slot status (HELD)")
+    held_until: datetime = Field(description="UTC timestamp when the hold will expire")
+    held_by_patient_id: str = Field(description="UUIDv4 of the patient holding the slot")
+    hold_duration_seconds: int = Field(description="Duration of the hold in seconds")
+
+
+class SlotReleaseResponse(BaseModel):
+    """Response payload when a held slot is released back to available."""
+
+    slot_id: str = Field(description="Unique UUIDv4 of the slot")
+    status: SlotStatus = Field(description="Updated slot status (AVAILABLE)")
+    released: bool = Field(default=True, description="Flag indicating successful release")
+
 
 
 class SlotGenerateRequest(BaseModel):

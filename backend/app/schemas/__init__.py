@@ -47,7 +47,11 @@ from app.schemas.appointment import (
     DoctorSlotResponse,
     SlotGenerateRequest,
     SlotGenerateResult,
+    SlotHoldRequest,
+    SlotHoldResponse,
+    SlotReleaseResponse,
 )
+
 from app.schemas.user import (
     UserBase,
     UserCreate,
@@ -95,5 +99,9 @@ __all__ = [
     "AppointmentCreate",
     "AppointmentResponse",
     "AppointmentStatusUpdate",
+    "SlotHoldRequest",
+    "SlotHoldResponse",
+    "SlotReleaseResponse",
 ]
+
 
