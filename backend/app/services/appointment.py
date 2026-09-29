@@ -7,6 +7,7 @@ and automatic slot replenishment upon cancellation. Aligned with HL7 FHIR R4 App
 from datetime import datetime, timezone
 from typing import List, Optional, Tuple
 from sqlalchemy import and_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from app.core.exceptions import AppException, ConflictException, EntityNotFoundException
@@ -124,7 +125,10 @@ async def book_appointment(
             )
         elif slot_entity.status == SlotStatus.HELD:
             # Check if held by another patient and hold has not expired
-            if slot_entity.held_by_patient_id != patient_id and slot_entity.held_until and slot_entity.held_until > now_utc:
+            held_until = slot_entity.held_until
+            if held_until and held_until.tzinfo is None:
+                held_until = held_until.replace(tzinfo=timezone.utc)
+            if slot_entity.held_by_patient_id != patient_id and held_until and held_until > now_utc:
                 raise ConflictException(
                     message=f"Slot '{payload.slot_id}' is currently held by another patient",
                     error_code="SLOT_HELD_BY_ANOTHER_PATIENT",
@@ -148,7 +152,6 @@ async def book_appointment(
         scheduled_start = payload.scheduled_start
         scheduled_end = payload.scheduled_end
 
-
     # 4. Instantiate Appointment entity
     appointment = Appointment(
         patient_id=patient_id,
@@ -162,14 +165,22 @@ async def book_appointment(
         clinical_notes=payload.clinical_notes,
         teleconsultation_url=payload.teleconsultation_url,
     )
-    db.add(appointment)
-    await db.commit()
+    appointment.doctor = doctor
+    appointment.patient = patient
+    if slot_entity:
+        appointment.slot = slot_entity
 
-    # Re-query with full relationships for structured response
-    refreshed = await get_appointment_by_id(db, appointment.id)
-    if not refreshed:
-        raise AppException("Failed to load newly created appointment", status_code=500)
-    return _format_appointment_response(refreshed)
+    db.add(appointment)
+    try:
+        await db.commit()
+    except IntegrityError as exc:
+        await db.rollback()
+        raise ConflictException(
+            message=f"Slot '{payload.slot_id}' was claimed by a concurrent booking transaction",
+            error_code="SLOT_ALREADY_BOOKED",
+        ) from exc
+
+    return _format_appointment_response(appointment)
 
 
 async def get_appointment_by_id(

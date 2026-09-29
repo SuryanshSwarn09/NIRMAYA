@@ -1,6 +1,6 @@
 from datetime import date, datetime, timezone
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Body, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.dependencies import (
     get_current_user,
@@ -299,7 +299,7 @@ async def generate_slots(
 async def hold_doctor_slot(
     doctor_id: str,
     slot_id: str,
-    payload: Optional[SlotHoldRequest] = None,
+    payload: Optional[SlotHoldRequest] = Body(default=None),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> APIResponse[SlotHoldResponse]:
@@ -323,14 +323,17 @@ async def hold_doctor_slot(
     )
 
     remaining_seconds = 0
-    if slot.held_until:
-        remaining_seconds = max(0, int((slot.held_until - datetime.now(timezone.utc)).total_seconds()))
+    held_until_dt = slot.held_until
+    if held_until_dt:
+        if held_until_dt.tzinfo is None:
+            held_until_dt = held_until_dt.replace(tzinfo=timezone.utc)
+        remaining_seconds = max(0, int((held_until_dt - datetime.now(timezone.utc)).total_seconds()))
 
     hold_data = SlotHoldResponse(
         slot_id=slot.id,
         doctor_id=slot.doctor_id,
         status=slot.status,
-        held_until=slot.held_until or datetime.now(timezone.utc),
+        held_until=held_until_dt or datetime.now(timezone.utc),
         held_by_patient_id=slot.held_by_patient_id or patient_id,
         hold_duration_seconds=remaining_seconds,
     )

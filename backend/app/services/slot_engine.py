@@ -256,8 +256,11 @@ async def hold_slot(
             error_code="SLOT_BLOCKED",
         )
     if slot.status == SlotStatus.HELD:
+        held_until = slot.held_until
+        if held_until and held_until.tzinfo is None:
+            held_until = held_until.replace(tzinfo=timezone.utc)
         # Check if held by another patient and not expired
-        if slot.held_by_patient_id != patient_id and slot.held_until and slot.held_until > now_utc:
+        if slot.held_by_patient_id != patient_id and held_until and held_until > now_utc:
             raise ConflictException(
                 message=f"Slot '{slot_id}' is currently held by another patient",
                 error_code="SLOT_HELD_BY_ANOTHER_PATIENT",
