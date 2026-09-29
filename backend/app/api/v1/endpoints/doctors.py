@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timezone
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,7 +6,11 @@ from app.core.dependencies import (
     get_current_user,
     verify_doctor_modification_access,
 )
-from app.core.exceptions import EntityNotFoundException, PermissionDeniedException
+from app.core.exceptions import (
+    AppException,
+    EntityNotFoundException,
+    PermissionDeniedException,
+)
 from app.db.session import get_db
 from app.models.enums import MedicalSpecialty, SlotStatus, UserRole
 from app.models.user import User
@@ -14,6 +18,9 @@ from app.schemas.appointment import (
     DoctorSlotResponse,
     SlotGenerateRequest,
     SlotGenerateResult,
+    SlotHoldRequest,
+    SlotHoldResponse,
+    SlotReleaseResponse,
 )
 from app.schemas.common import APIResponse, PaginatedResponse, PaginationMeta
 from app.schemas.doctor import (
@@ -22,9 +29,11 @@ from app.schemas.doctor import (
     DoctorProfileUpdate,
 )
 from app.services import doctor as doctor_service
+from app.services import patient as patient_service
 from app.services import slot_engine
 
 router = APIRouter()
+
 
 
 
@@ -279,6 +288,92 @@ async def generate_slots(
         message=f"Generated {result.total_generated} consultation slots ({result.total_skipped_existing} existing slots skipped)",
         data=result,
     )
+
+
+@router.post(
+    "/{doctor_id}/slots/{slot_id}/hold",
+    response_model=APIResponse[SlotHoldResponse],
+    summary="Hold a consultation slot for checkout",
+    description="Places a temporary 1-30 minute lock on a consultation slot to prevent race conditions during booking checkout.",
+)
+async def hold_doctor_slot(
+    doctor_id: str,
+    slot_id: str,
+    payload: Optional[SlotHoldRequest] = None,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[SlotHoldResponse]:
+    """Temporarily reserve a slot for the authenticated patient."""
+    patient = await patient_service.get_patient_by_user_id(db, current_user.id)
+    if not patient and current_user.role != UserRole.ADMIN:
+        raise AppException(
+            message="Authenticated user does not have an active patient vault profile",
+            error_code="PATIENT_PROFILE_REQUIRED",
+            status_code=400,
+        )
+
+    patient_id = patient.id if patient else current_user.id
+    duration = payload.hold_duration_minutes if payload else 10
+
+    slot = await slot_engine.hold_slot(
+        db=db,
+        slot_id=slot_id,
+        patient_id=patient_id,
+        duration_minutes=duration,
+    )
+
+    remaining_seconds = 0
+    if slot.held_until:
+        remaining_seconds = max(0, int((slot.held_until - datetime.now(timezone.utc)).total_seconds()))
+
+    hold_data = SlotHoldResponse(
+        slot_id=slot.id,
+        doctor_id=slot.doctor_id,
+        status=slot.status,
+        held_until=slot.held_until or datetime.now(timezone.utc),
+        held_by_patient_id=slot.held_by_patient_id or patient_id,
+        hold_duration_seconds=remaining_seconds,
+    )
+
+    return APIResponse(
+        message=f"Slot successfully reserved for {duration} minutes",
+        data=hold_data,
+    )
+
+
+@router.post(
+    "/{doctor_id}/slots/{slot_id}/release",
+    response_model=APIResponse[SlotReleaseResponse],
+    summary="Release a held consultation slot",
+    description="Manually relinquishes a temporary slot reservation, returning the slot to available status immediately.",
+)
+async def release_doctor_slot_hold(
+    doctor_id: str,
+    slot_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[SlotReleaseResponse]:
+    """Release a held slot back to AVAILABLE status."""
+    is_admin = current_user.role == UserRole.ADMIN
+    patient = await patient_service.get_patient_by_user_id(db, current_user.id)
+    patient_id = patient.id if patient else current_user.id
+
+    slot = await slot_engine.release_slot_hold(
+        db=db,
+        slot_id=slot_id,
+        patient_id=patient_id,
+        force_admin=is_admin,
+    )
+
+    return APIResponse(
+        message="Consultation slot released back to available",
+        data=SlotReleaseResponse(
+            slot_id=slot.id,
+            status=slot.status,
+            released=True,
+        ),
+    )
+
 
 
 
