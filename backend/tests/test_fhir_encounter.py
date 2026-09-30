@@ -421,3 +421,123 @@ def test_to_abdm_health_information_artifact() -> None:
     bundle_bytes = artifact.bundle.model_dump_json(by_alias=True).encode("utf-8")
     expected_sig = hashlib.sha256(bundle_bytes).hexdigest()
     assert artifact.signature == expected_sig
+
+
+# ============================================================================
+# Integration Tests: FastAPI Endpoints & RBAC Authorization
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_api_get_appointment_fhir(fhir_test_env) -> None:
+    """Verify GET /api/v1/appointments/{id}/fhir returns valid FHIR Appointment resource."""
+    client, session_factory = fhir_test_env
+    fixture = await seed_fhir_fixture(session_factory)
+    appt = fixture["appointment"]
+    patient_user = fixture["patient_user"]
+
+    res = await client.get(
+        f"/api/v1/appointments/{appt.id}/fhir",
+        headers=auth_header_for(patient_user),
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["success"] is True
+    fhir_data = body["data"]
+    assert fhir_data["resourceType"] == "Appointment"
+    assert fhir_data["id"] == appt.id
+    assert fhir_data["status"] == "booked"
+    assert fhir_data["appointmentType"]["coding"][0]["code"] == "ROUTINE"
+    assert len(fhir_data["participant"]) == 2
+
+
+@pytest.mark.asyncio
+async def test_api_get_encounter_fhir(fhir_test_env) -> None:
+    """Verify GET /api/v1/appointments/{id}/encounter returns valid FHIR Encounter resource."""
+    client, session_factory = fhir_test_env
+    fixture = await seed_fhir_fixture(session_factory)
+    appt = fixture["appointment"]
+    doctor_user = fixture["doctor_user"]
+
+    res = await client.get(
+        f"/api/v1/appointments/{appt.id}/encounter",
+        headers=auth_header_for(doctor_user),
+    )
+    assert res.status_code == 200
+    body = res.json()
+    assert body["success"] is True
+    enc_data = body["data"]
+    assert enc_data["resourceType"] == "Encounter"
+    assert enc_data["status"] == "planned"
+    assert enc_data["class"]["code"] == "AMB"
+    assert enc_data["subject"]["reference"] == f"Patient/{fixture['patient'].id}"
+
+
+@pytest.mark.asyncio
+async def test_api_get_encounter_bundle_fhir(fhir_test_env) -> None:
+    """Verify GET /api/v1/appointments/{id}/fhir-bundle returns full Collection Bundle."""
+    client, session_factory = fhir_test_env
+    fixture = await seed_fhir_fixture(session_factory)
+    appt = fixture["appointment"]
+    patient_user = fixture["patient_user"]
+
+    res = await client.get(
+        f"/api/v1/appointments/{appt.id}/fhir-bundle",
+        headers=auth_header_for(patient_user),
+    )
+    assert res.status_code == 200
+    bundle = res.json()["data"]
+    assert bundle["resourceType"] == "Bundle"
+    assert bundle["type"] == "collection"
+    assert bundle["total"] == 4
+    assert len(bundle["entry"]) == 4
+
+
+@pytest.mark.asyncio
+async def test_api_link_abdm_consent(fhir_test_env) -> None:
+    """Verify POST /api/v1/appointments/{id}/abdm/link-consent returns signed HI artifact."""
+    client, session_factory = fhir_test_env
+    fixture = await seed_fhir_fixture(session_factory)
+    appt = fixture["appointment"]
+    patient_user = fixture["patient_user"]
+
+    link_payload = {
+        "hip_id": "IN010000099",
+        "consent_artifact_id": "consent-uuid-889900",
+    }
+    res = await client.post(
+        f"/api/v1/appointments/{appt.id}/abdm/link-consent",
+        json=link_payload,
+        headers=auth_header_for(patient_user),
+    )
+    assert res.status_code == 200
+    artifact = res.json()["data"]
+    assert artifact["careContextReference"].startswith("APPT-")
+    assert artifact["patientReference"] == "91-1122-3344-5566"
+    assert artifact["hipId"] == "IN010000099"
+    assert artifact["consentArtifactId"] == "consent-uuid-889900"
+    assert len(artifact["signature"]) == 64
+    assert artifact["bundle"]["resourceType"] == "Bundle"
+
+
+@pytest.mark.asyncio
+async def test_api_fhir_access_control_guards(fhir_test_env) -> None:
+    """Verify unauthorized patient receives 403 Forbidden, but Admin is allowed."""
+    client, session_factory = fhir_test_env
+    fixture = await seed_fhir_fixture(session_factory)
+    appt = fixture["appointment"]
+    unauthorized_patient = fixture["other_user"]
+    admin_user = fixture["admin_user"]
+
+    # 1. Unauthorized patient receives 403
+    for path in [f"/api/v1/appointments/{appt.id}/fhir", f"/api/v1/appointments/{appt.id}/encounter", f"/api/v1/appointments/{appt.id}/fhir-bundle"]:
+        res = await client.get(path, headers=auth_header_for(unauthorized_patient))
+        assert res.status_code == 403
+
+    # 2. Admin can access
+    admin_res = await client.get(
+        f"/api/v1/appointments/{appt.id}/fhir-bundle",
+        headers=auth_header_for(admin_user),
+    )
+    assert admin_res.status_code == 200
+    assert admin_res.json()["data"]["resourceType"] == "Bundle"
