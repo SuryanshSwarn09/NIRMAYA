@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from typing import List, Optional
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Body, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.dependencies import get_current_user
 from app.core.exceptions import (
@@ -12,10 +12,15 @@ from app.core.exceptions import (
 )
 from app.db.session import get_db
 from app.fhir import (
+    ABDMConsentLinkRequest,
+    ABDMConsentLinkage,
     FHIRAppointment,
+    FHIRBundle,
     FHIREncounter,
+    to_abdm_health_information_artifact,
     to_fhir_appointment,
     to_fhir_encounter,
+    to_fhir_encounter_bundle,
 )
 from app.models.appointment import Appointment
 from app.models.enums import AppointmentStatus, UserRole
@@ -268,4 +273,61 @@ async def get_encounter_fhir(
         message="HL7 FHIR R4 Encounter resource generated successfully",
         data=fhir_resource,
     )
+
+
+@router.get(
+    "/{appointment_id}/fhir-bundle",
+    response_model=APIResponse[FHIRBundle],
+    summary="Export clinical encounter bundle as HL7 FHIR R4 Collection Bundle",
+    description="Generates a multi-resource HL7 FHIR R4 Bundle containing Appointment, Encounter, Patient, and Practitioner entries.",
+)
+async def get_encounter_bundle_fhir(
+    appointment_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[FHIRBundle]:
+    """Retrieve multi-resource collection bundle for clinical encounter."""
+    appt = await appointment_service.get_appointment_by_id(db, appointment_id)
+    if not appt:
+        raise EntityNotFoundException("Appointment", appointment_id)
+
+    _verify_appointment_access(appt, current_user)
+    fhir_bundle = to_fhir_encounter_bundle(appt)
+    return APIResponse(
+        message="HL7 FHIR R4 Collection Bundle generated successfully",
+        data=fhir_bundle,
+    )
+
+
+@router.post(
+    "/{appointment_id}/abdm/link-consent",
+    response_model=APIResponse[ABDMConsentLinkage],
+    summary="Link ABDM CareContext & generate signed health information artifact",
+    description="Associates clinical encounter with patient ABHA under CareContext APPT-XXXXXXXX and generates SHA-256 signed HI artifact.",
+)
+async def link_abdm_consent(
+    appointment_id: str,
+    payload: Optional[ABDMConsentLinkRequest] = Body(default=None),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[ABDMConsentLinkage]:
+    """Link ABDM consent and emit signed Health Information artifact."""
+    appt = await appointment_service.get_appointment_by_id(db, appointment_id)
+    if not appt:
+        raise EntityNotFoundException("Appointment", appointment_id)
+
+    _verify_appointment_access(appt, current_user)
+    hip_id = payload.hip_id if payload else "IN010000001"
+    consent_id = payload.consent_artifact_id if payload else None
+
+    artifact = to_abdm_health_information_artifact(
+        appt=appt,
+        hip_id=hip_id,
+        consent_id=consent_id,
+    )
+    return APIResponse(
+        message="ABDM CareContext linked and signed Health Information artifact generated",
+        data=artifact,
+    )
+
 
