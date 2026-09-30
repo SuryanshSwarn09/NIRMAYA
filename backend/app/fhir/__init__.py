@@ -15,6 +15,12 @@ from app.fhir.schemas import (
     FHIRPeriod,
     FHIRReference,
 )
+from app.fhir.transformers import (
+    to_abdm_health_information_artifact,
+    to_fhir_appointment,
+    to_fhir_encounter,
+    to_fhir_encounter_bundle,
+)
 
 __all__ = [
     "ABDMConsentLinkRequest",
@@ -30,4 +36,8 @@ __all__ = [
     "FHIRParticipant",
     "FHIRPeriod",
     "FHIRReference",
+    "to_abdm_health_information_artifact",
+    "to_fhir_appointment",
+    "to_fhir_encounter",
+    "to_fhir_encounter_bundle",
 ]

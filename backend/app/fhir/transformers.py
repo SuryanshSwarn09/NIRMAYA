@@ -6,9 +6,11 @@ and signed ABDM CareContext Consent Artifacts.
 """
 
 from datetime import datetime, timezone
+import hashlib
 from typing import Any, Dict, List, Optional
 import uuid
 from app.fhir.schemas import (
+    ABDMConsentLinkage,
     FHIRAppointment,
     FHIRBundle,
     FHIRBundleEntry,
@@ -473,5 +475,58 @@ def to_fhir_encounter_bundle(appt: Appointment) -> FHIRBundle:
         total=len(entries),
         entry=entries,
     )
+
+
+# ============================================================================
+# Transformer: ABDM Health Information Artifact & Cryptographic Signer
+# ============================================================================
+
+
+def to_abdm_health_information_artifact(
+    appt: Appointment,
+    hip_id: str = "IN010000001",
+    consent_id: Optional[str] = None,
+) -> ABDMConsentLinkage:
+    """Build an ABDM-compliant Health Information artifact with CareContext and SHA-256 signature.
+
+    Args:
+        appt: Clinical appointment entity.
+        hip_id: Health Information Provider registry identifier.
+        consent_id: Active ABDM consent artifact UUID if consented.
+
+    Returns:
+        ABDMConsentLinkage containing FHIR bundle, careContextReference, and SHA-256 digest.
+    """
+    # Generate canonical multi-resource FHIR Bundle
+    bundle = to_fhir_encounter_bundle(appt)
+
+    # Derive canonical deterministic CareContext Reference: APPT-XXXXXXXX
+    clean_uuid = appt.id.replace("-", "")[:8].upper()
+    care_context_ref = f"APPT-{clean_uuid}"
+
+    # Determine patient reference (prefer ABHA number/address, fallback to vault UUID)
+    patient_ref = appt.patient_id
+    if appt.patient:
+        patient_ref = (
+            appt.patient.abha_number
+            or appt.patient.abha_address
+            or f"Patient/{appt.patient_id}"
+        )
+
+    # Compute SHA-256 tamper-evident digest of serialized bundle
+    bundle_json = bundle.model_dump_json(by_alias=True)
+    digest = hashlib.sha256(bundle_json.encode("utf-8")).hexdigest()
+
+    return ABDMConsentLinkage(
+        careContextReference=care_context_ref,
+        patientReference=patient_ref,
+        hiType="OPConsultation",
+        hipId=hip_id,
+        consentArtifactId=consent_id,
+        timestamp=datetime.now(timezone.utc),
+        signature=digest,
+        bundle=bundle,
+    )
+
 
 
