@@ -12,8 +12,11 @@ from app.fhir.schemas import (
     FHIRAppointment,
     FHIRCodeableConcept,
     FHIRCoding,
+    FHIREncounter,
+    FHIREncounterParticipant,
     FHIRIdentifier,
     FHIRParticipant,
+    FHIRPeriod,
     FHIRReference,
 )
 from app.models.appointment import Appointment
@@ -39,6 +42,16 @@ NIRMAYA_TO_FHIR_APPOINTMENT_STATUS: Dict[AppointmentStatus, str] = {
     AppointmentStatus.COMPLETED: "fulfilled",
     AppointmentStatus.CANCELLED: "cancelled",
     AppointmentStatus.NO_SHOW: "noshow",
+}
+
+# NIRMAYA to FHIR R4 Encounter status mapping
+NIRMAYA_TO_FHIR_ENCOUNTER_STATUS: Dict[AppointmentStatus, str] = {
+    AppointmentStatus.SCHEDULED: "planned",
+    AppointmentStatus.CONFIRMED: "planned",
+    AppointmentStatus.IN_PROGRESS: "in-progress",
+    AppointmentStatus.COMPLETED: "finished",
+    AppointmentStatus.CANCELLED: "cancelled",
+    AppointmentStatus.NO_SHOW: "entered-in-error",
 }
 
 # NIRMAYA AppointmentType to HL7 FHIR CodeableConcept mapping
@@ -215,3 +228,129 @@ def to_fhir_appointment(appt: Appointment) -> FHIRAppointment:
         slot=slots,
         participant=participants,
     )
+
+
+# ============================================================================
+# Transformer: Encounter -> FHIR Encounter Resource
+# ============================================================================
+
+
+def to_fhir_encounter(appt: Appointment) -> FHIREncounter:
+    """Transform internal clinical appointment/encounter into an HL7 FHIR R4 Encounter resource.
+
+    Args:
+        appt: Appointment database entity.
+
+    Returns:
+        Standard FHIREncounter resource model.
+    """
+    fhir_status = NIRMAYA_TO_FHIR_ENCOUNTER_STATUS.get(appt.status, "planned")
+
+    # Class: VR (Virtual/Telehealth) vs AMB (Ambulatory)
+    is_teleconsult = (
+        appt.appointment_type == AppointmentType.TELECONSULTATION
+        or (appt.slot and appt.slot.is_teleconsult)
+    )
+
+    if is_teleconsult:
+        encounter_class = FHIRCoding(
+            system=HL7_ACT_CODE_SYSTEM,
+            code="VR",
+            display="Virtual",
+        )
+    else:
+        encounter_class = FHIRCoding(
+            system=HL7_ACT_CODE_SYSTEM,
+            code="AMB",
+            display="Ambulatory",
+        )
+
+    # Identifiers
+    identifiers = [
+        FHIRIdentifier(
+            system=NIRMAYA_ENCOUNTER_SYSTEM,
+            value=f"enc-{appt.id}",
+            use="official",
+        )
+    ]
+
+    # Type
+    types: List[FHIRCodeableConcept] = []
+    if appt.appointment_type in APPOINTMENT_TYPE_MAPPINGS:
+        types.append(APPOINTMENT_TYPE_MAPPINGS[appt.appointment_type])
+
+    # Subject (Patient)
+    pat_display = None
+    if appt.patient and appt.patient.user:
+        pat_display = appt.patient.user.full_name
+
+    subject = FHIRReference(
+        reference=f"Patient/{appt.patient_id}",
+        display=pat_display,
+        type="Patient",
+    )
+
+    # Participants (Doctor/Practitioner)
+    participants: List[FHIREncounterParticipant] = []
+    doc_display = None
+    if appt.doctor and appt.doctor.user:
+        doc_display = appt.doctor.user.full_name
+
+    participants.append(
+        FHIREncounterParticipant(
+            individual=FHIRReference(
+                reference=f"Practitioner/{appt.doctor_id}",
+                display=doc_display,
+                type="Practitioner",
+            ),
+            type=[
+                FHIRCodeableConcept(
+                    coding=[
+                        FHIRCoding(
+                            system=HL7_PARTICIPATION_TYPE_SYSTEM,
+                            code="PPRF",
+                            display="Primary performer",
+                        )
+                    ]
+                )
+            ],
+        )
+    )
+
+    # Appointment reference
+    appointments = [
+        FHIRReference(
+            reference=f"Appointment/{appt.id}",
+            type="Appointment",
+        )
+    ]
+
+    # Period
+    period = FHIRPeriod(
+        start=appt.scheduled_start,
+        end=appt.scheduled_end,
+    )
+
+    # Reason code
+    reason_codes: List[FHIRCodeableConcept] = []
+    if appt.reason:
+        reason_codes.append(
+            FHIRCodeableConcept(
+                coding=[],
+                text=appt.reason,
+            )
+        )
+
+    return FHIREncounter(
+        id=f"enc-{appt.id}",
+        identifier=identifiers,
+        status=fhir_status,
+        class_=encounter_class,
+        type=types,
+        subject=subject,
+        participant=participants,
+        appointment=appointments,
+        period=period,
+        reasonCode=reason_codes,
+    )
+
