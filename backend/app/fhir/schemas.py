@@ -241,3 +241,104 @@ class FHIREncounter(BaseModel):
         description="Coded reason the encounter takes place",
     )
 
+
+# ============================================================================
+# FHIR R4 Multi-Resource Collection Bundle
+# ============================================================================
+
+
+class FHIRBundleEntry(BaseModel):
+    """Entry containing a single FHIR resource inside a Bundle."""
+
+    fullUrl: str = Field(
+        description="Canonical URL or urn:uuid for the resource entry",
+        example="urn:uuid:686523ba-744c-4bb7-925b-4f88eefcd269",
+    )
+    resource: Dict[str, Any] = Field(
+        description="The embedded FHIR Resource instance dictionary",
+    )
+
+
+class FHIRBundle(BaseModel):
+    """HL7 FHIR Release 4 Collection or Document Bundle."""
+
+    resourceType: Literal["Bundle"] = Field(
+        default="Bundle",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Unique identifier for the bundle envelope",
+    )
+    type: str = Field(
+        default="collection",
+        description="document | message | transaction | transaction-response | batch | batch-response | history | searchset | collection",
+    )
+    timestamp: datetime = Field(
+        description="When the bundle was assembled (UTC)",
+    )
+    total: Optional[int] = Field(
+        default=None,
+        description="If searchset or collection, total number of matching matches",
+    )
+    entry: List[FHIRBundleEntry] = Field(
+        default_factory=list,
+        description="Entry list containing resources",
+    )
+
+
+# ============================================================================
+# Ayushman Bharat Digital Mission (ABDM) CareContext & Consent Linkage
+# ============================================================================
+
+
+class ABDMConsentLinkage(BaseModel):
+    """ABDM-compliant Health Information artifact with CareContext & SHA-256 signature."""
+
+    careContextReference: str = Field(
+        description="Deterministic ABDM CareContext identifier linking encounter to patient health vault",
+        example="APPT-231336EC",
+    )
+    patientReference: str = Field(
+        description="Patient ABHA identifier or internal health vault UUID",
+        example="91-0000-0000-0001",
+    )
+    hiType: str = Field(
+        default="OPConsultation",
+        description="ABDM Health Information Type (e.g. OPConsultation, Prescription, DiagnosticReport)",
+    )
+    hipId: str = Field(
+        description="ABDM Health Information Provider Registry ID",
+        example="IN010000001",
+    )
+    consentArtifactId: Optional[str] = Field(
+        default=None,
+        description="Active ABDM Consent Artifact UUID granting HIU access",
+    )
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="Timestamp of artifact generation",
+    )
+    signature: str = Field(
+        description="Hex-encoded SHA-256 cryptographic digest of canonical FHIR bundle for tamper-evidence",
+        example="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    )
+    bundle: FHIRBundle = Field(
+        description="Standard HL7 FHIR R4 Bundle containing Appointment and Encounter resources",
+    )
+
+
+class ABDMConsentLinkRequest(BaseModel):
+    """Payload to simulate linking an ABDM Consent Artifact and generating an HI artifact."""
+
+    hip_id: Optional[str] = Field(
+        default="IN010000001",
+        description="Optional Health Information Provider ID",
+        example="IN010000001",
+    )
+    consent_artifact_id: Optional[str] = Field(
+        default=None,
+        description="Optional active ABDM Consent Artifact UUID",
+        example="c7a10204-58f7-4dc1-a477-9df03da9ea60",
+    )
+
+
