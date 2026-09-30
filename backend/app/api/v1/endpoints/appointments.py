@@ -11,6 +11,13 @@ from app.core.exceptions import (
     PermissionDeniedException,
 )
 from app.db.session import get_db
+from app.fhir import (
+    FHIRAppointment,
+    FHIREncounter,
+    to_fhir_appointment,
+    to_fhir_encounter,
+)
+from app.models.appointment import Appointment
 from app.models.enums import AppointmentStatus, UserRole
 from app.models.user import User
 from app.schemas.appointment import (
@@ -24,6 +31,19 @@ from app.services import doctor as doctor_service
 from app.services import patient as patient_service
 
 router = APIRouter()
+
+
+def _verify_appointment_access(appt: Appointment, current_user: User) -> None:
+    """Verify that current user is the patient, doctor, or an administrator."""
+    is_admin = current_user.role == UserRole.ADMIN
+    is_patient = appt.patient and appt.patient.user_id == current_user.id
+    is_doctor = appt.doctor and appt.doctor.user_id == current_user.id
+
+    if not (is_admin or is_patient or is_doctor):
+        raise PermissionDeniedException(
+            message="You are not authorized to access this clinical encounter resource"
+        )
+
 
 
 @router.post(
@@ -195,3 +215,57 @@ async def update_status(
         message=f"Appointment status transitioned to {payload.status.value}",
         data=updated,
     )
+
+
+# ============================================================================
+# HL7 FHIR Release 4 Endpoints
+# ============================================================================
+
+
+@router.get(
+    "/{appointment_id}/fhir",
+    response_model=APIResponse[FHIRAppointment],
+    summary="Export appointment as HL7 FHIR R4 Appointment",
+    description="Serializes internal clinical appointment model into an HL7 FHIR Release 4 compliant Appointment resource.",
+)
+async def get_appointment_fhir(
+    appointment_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[FHIRAppointment]:
+    """Retrieve appointment formatted as an HL7 FHIR R4 Appointment resource."""
+    appt = await appointment_service.get_appointment_by_id(db, appointment_id)
+    if not appt:
+        raise EntityNotFoundException("Appointment", appointment_id)
+
+    _verify_appointment_access(appt, current_user)
+    fhir_resource = to_fhir_appointment(appt)
+    return APIResponse(
+        message="HL7 FHIR R4 Appointment resource generated successfully",
+        data=fhir_resource,
+    )
+
+
+@router.get(
+    "/{appointment_id}/encounter",
+    response_model=APIResponse[FHIREncounter],
+    summary="Export encounter as HL7 FHIR R4 Encounter",
+    description="Serializes clinical encounter into an HL7 FHIR Release 4 compliant Encounter resource with ambulatory/virtual classification.",
+)
+async def get_encounter_fhir(
+    appointment_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[FHIREncounter]:
+    """Retrieve clinical encounter formatted as an HL7 FHIR R4 Encounter resource."""
+    appt = await appointment_service.get_appointment_by_id(db, appointment_id)
+    if not appt:
+        raise EntityNotFoundException("Appointment", appointment_id)
+
+    _verify_appointment_access(appt, current_user)
+    fhir_resource = to_fhir_encounter(appt)
+    return APIResponse(
+        message="HL7 FHIR R4 Encounter resource generated successfully",
+        data=fhir_resource,
+    )
+
