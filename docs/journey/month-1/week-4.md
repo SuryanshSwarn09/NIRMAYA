@@ -10,8 +10,8 @@
 |---|---|---|---|
 | **Day 16 (Mon)** | Appointment Models & Slot Engine | `DoctorSlot`, `Appointment` models, migration 0002, conflict-free slot generator, booking API | **Completed** |
 | **Day 17 (Tue)** | Booking Concurrency & ACID Locking | `SELECT ... FOR UPDATE` row locks, 10-min slot holds, auto-sweep engine, migration 0003, race-condition stress tests | **Completed** |
-| **Day 18 (Wed)** | HL7 FHIR Encounter Transformers | HL7 FHIR R4 `Appointment` & `Encounter` resource bundles, ABDM consent linkage | *Next* |
-| **Day 19 (Thu)** | Cal.com Slot Picker UI Integration | Interactive calendar availability matrix on `/doctor` and `/patient`, booking modal | *Scheduled* |
+| **Day 18 (Wed)** | HL7 FHIR Encounter Transformers | HL7 FHIR R4 `Appointment` & `Encounter` resource bundles, ABDM consent linkage | **Completed** |
+| **Day 19 (Thu)** | Cal.com Slot Picker UI Integration | Interactive calendar availability matrix on `/doctor` and `/patient`, booking modal | *Next* |
 | **Day 20 (Fri)** | Month 1 Retrospective & Release v0.1.0 | End-to-end clinical encounter verification, accessibility audit, Month 1 close & tag `v0.1.0` | *Scheduled* |
 
 ---
