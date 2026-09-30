@@ -10,6 +10,8 @@ from typing import Any, Dict, List, Optional
 import uuid
 from app.fhir.schemas import (
     FHIRAppointment,
+    FHIRBundle,
+    FHIRBundleEntry,
     FHIRCodeableConcept,
     FHIRCoding,
     FHIREncounter,
@@ -353,4 +355,123 @@ def to_fhir_encounter(appt: Appointment) -> FHIREncounter:
         period=period,
         reasonCode=reason_codes,
     )
+
+
+# ============================================================================
+# Transformer: Multi-Resource FHIR Collection Bundle
+# ============================================================================
+
+
+def to_fhir_encounter_bundle(appt: Appointment) -> FHIRBundle:
+    """Bundle Appointment, Encounter, Patient, and Practitioner resources into a standard FHIR Bundle.
+
+    Args:
+        appt: Appointment database entity.
+
+    Returns:
+        FHIRBundle with type='collection' containing all clinical interaction resources.
+    """
+    entries: List[FHIRBundleEntry] = []
+
+    # 1. Appointment resource
+    fhir_appt = to_fhir_appointment(appt)
+    entries.append(
+        FHIRBundleEntry(
+            fullUrl=f"urn:uuid:{appt.id}",
+            resource=fhir_appt.model_dump(by_alias=True, exclude_none=True),
+        )
+    )
+
+    # 2. Encounter resource
+    fhir_enc = to_fhir_encounter(appt)
+    entries.append(
+        FHIRBundleEntry(
+            fullUrl=f"urn:uuid:{fhir_enc.id}",
+            resource=fhir_enc.model_dump(by_alias=True, exclude_none=True),
+        )
+    )
+
+    # 3. Patient resource entry (if available)
+    if appt.patient and appt.patient.user:
+        pat = appt.patient
+        patient_resource: Dict[str, Any] = {
+            "resourceType": "Patient",
+            "id": pat.id,
+            "identifier": [
+                {
+                    "system": "https://healthid.ndhm.gov.in",
+                    "value": pat.abha_number or "UNASSIGNED",
+                    "type": {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                                "code": "MR",
+                                "display": "Medical record number",
+                            }
+                        ]
+                    },
+                }
+            ],
+            "name": [
+                {
+                    "use": "official",
+                    "text": pat.user.full_name,
+                }
+            ],
+            "gender": pat.gender.value if pat.gender else "unknown",
+        }
+        if pat.date_of_birth:
+            patient_resource["birthDate"] = pat.date_of_birth.isoformat()
+
+        entries.append(
+            FHIRBundleEntry(
+                fullUrl=f"urn:uuid:{pat.id}",
+                resource=patient_resource,
+            )
+        )
+
+    # 4. Practitioner resource entry (if available)
+    if appt.doctor and appt.doctor.user:
+        doc = appt.doctor
+        practitioner_resource: Dict[str, Any] = {
+            "resourceType": "Practitioner",
+            "id": doc.id,
+            "identifier": [
+                {
+                    "system": "https://doctor.ndhm.gov.in",
+                    "value": doc.registration_number or "UNREGISTERED",
+                    "type": {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                                "code": "MD",
+                                "display": "Medical License number",
+                            }
+                        ]
+                    },
+                }
+            ],
+            "name": [
+                {
+                    "use": "official",
+                    "text": doc.user.full_name,
+                    "prefix": ["Dr."],
+                }
+            ],
+        }
+        entries.append(
+            FHIRBundleEntry(
+                fullUrl=f"urn:uuid:{doc.id}",
+                resource=practitioner_resource,
+            )
+        )
+
+    return FHIRBundle(
+        id=str(uuid.uuid4()),
+        type="collection",
+        timestamp=datetime.now(timezone.utc),
+        total=len(entries),
+        entry=entries,
+    )
+
 
