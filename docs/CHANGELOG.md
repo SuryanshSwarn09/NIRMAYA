@@ -429,7 +429,7 @@
   11. `3689963: test(fhir): add unit test suite for fhir appointment and encounter transformers`
   12. `c2d1ead: test(fhir): add integration and authorization tests for fhir endpoints`
   13. `acb9ffd: docs(journey): record day 18 fhir encounter transformers and abdm consent deliverables`
-  14. `docs(changelog): record milestone 04-03 fhir encounter and abdm consent engine`
+  14. `49885e7: docs(changelog): record milestone 04-03 fhir encounter and abdm consent engine`
 - **Key Deliverables:**
   - **HL7 FHIR R4 Schema Suite:** Standard Pydantic v2 data models for `FHIRIdentifier`, `FHIRCoding`, `FHIRCodeableConcept`, `FHIRReference`, `FHIRPeriod`, `FHIRParticipant`, `FHIRAppointment`, `FHIREncounter`, `FHIRBundleEntry`, and `FHIRBundle`.
   - **Clinical Status & Act Class Transformers:** Bijective status mappings (`booked`, `proposed`, `arrived`, `fulfilled`, `cancelled`, `noshow`) and act classifications mapping teleconsultations to `VR` (Virtual) and in-person visits to `AMB` (Ambulatory) via `http://terminology.hl7.org/CodeSystem/v3-ActCode`.
@@ -443,8 +443,37 @@
   - Pre-flight diagnostic check `scripts/doctor.py` verified 8/8 passing.
   - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.1.0` reserved for Day 20 close).
 
+#### Day 19 (Thu) - Milestone 04-04
+- **Focus:** Cal.com Slot Picker UI Integration & Clinical Booking Flow
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `7402003: feat(api): define appointment and slot types and extend frontend api client`
+  2. `328b1c0: feat(ui): implement calcom slot hold countdown alert component`
+  3. `ec3a8ea: feat(ui): implement calcom interactive date matrix and slot picker component`
+  4. `bca07b3: feat(ui): implement clinical appointment booking intake modal`
+  5. `ed49cdc: feat(ui): export appointment components from appointments module`
+  6. `66ab3fd: feat(doctor): implement doctor availability and slot generation manager component`
+  7. `02d3dee: feat(patient): integrate calcom slot picker and scheduled consultations into patient vault`
+  8. `739b8b8: feat(doctor): integrate slot availability engine into doctor emr dashboard`
+  9. `5744b12: test(frontend): add integration test suite for calcom slot picker and booking flow`
+  10. `1484cc6: docs(journey): record day 19 calcom slot picker ui integration deliverables`
+  11. `docs(changelog): record milestone 04-04 calcom slot picker and booking flow`
+- **Key Deliverables:**
+  - **Typed Scheduling API Client:** Extended `frontend/src/lib/api.ts` with TypeScript contracts for `DoctorSlot`, `SlotHoldResponse`, `SlotGenerateRequest`, `AppointmentCreate`, `Appointment`, and asynchronous endpoints.
+  - **Cal.com Interactive Slot Picker:** Built `CalcomSlotPicker.tsx` featuring dual-column calendar matrix on the left and availability windows on the right, status styling (`available`, `held`, `booked`, `blocked`), modality filters (`AMB` vs `VR`), and automated 10-minute hold engagement.
+  - **Temporary Slot Hold Banner:** Built `SlotHoldCountdown.tsx` providing real-time ticking reservation countdown and manual release triggers.
+  - **Clinical Intake Booking Modal:** Built `AppointmentBookingModal.tsx` providing chief complaint intake, confidential notes, consultation type selection, and post-booking ABDM CareContext (`APPT-XXXXXXXX`) confirmation.
+  - **Doctor Availability Manager:** Built `DoctorSlotManager.tsx` on `/doctor` with practice hours configuration, lunch break exclusions, and one-click bulk conflict-free slot generation.
+  - **Patient Vault Upgrades:** Integrated Cal.com slot picker and scheduled appointments list into `/patient`.
+  - **End-to-End Integration Test Suite:** Added `test_calcom_booking_flow.py` verifying full appointment lifecycle from slot generation to hold reservation, 409 conflict backstop, and FHIR export.
+- **Verification:**
+  - Full automated backend test suite expanded to **146 passing tests (100% pass rate)** in 31.07s.
+  - Next.js 15 Turbopack production build compiled **11 / 11 static and edge routes with zero errors** in 42s.
+  - Pre-flight diagnostic check `scripts/doctor.py` verified 8/8 passing.
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.1.0` reserved for Day 20 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
 
