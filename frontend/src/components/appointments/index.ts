@@ -5,3 +5,4 @@
 export * from "./SlotHoldCountdown";
 export * from "./CalcomSlotPicker";
 export * from "./AppointmentBookingModal";
+export * from "./DoctorSlotManager";
