@@ -42,6 +42,7 @@
     * [Day 16: Appointment Models & Slot Generation Engine](journey/month-1/day-16.md)
     * [Day 17: Booking Concurrency & ACID Row-Level Locking](journey/month-1/day-17.md)
     * [Day 18: HL7 FHIR Encounter Transformers & ABDM Consent Linkage](journey/month-1/day-18.md)
+    * [Day 19: Cal.com Slot Picker UI Integration & Clinical Booking Flow](journey/month-1/day-19.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
