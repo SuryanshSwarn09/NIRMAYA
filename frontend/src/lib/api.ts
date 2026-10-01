@@ -47,6 +47,133 @@ export interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean | undefined>;
 }
 
+// ============================================================================
+// Clinical Scheduling & Slot Models
+// ============================================================================
+
+export type SlotStatus = "available" | "held" | "booked" | "blocked";
+
+export type AppointmentStatus =
+  | "scheduled"
+  | "confirmed"
+  | "in_progress"
+  | "completed"
+  | "cancelled"
+  | "no_show";
+
+export type AppointmentType =
+  | "routine_checkup"
+  | "follow_up"
+  | "teleconsultation"
+  | "emergency";
+
+export interface DoctorProfile {
+  id: string;
+  user_id: string;
+  full_name?: string;
+  email?: string;
+  registration_number: string;
+  medical_council: string;
+  specialty: string;
+  qualifications?: string;
+  experience_years?: number;
+  consultation_fee: number;
+  hospital_affiliation?: string;
+  teleconsultation_available: boolean;
+  hpr_id?: string;
+}
+
+export interface DoctorSlot {
+  id: string;
+  doctor_id: string;
+  start_time: string;
+  end_time: string;
+  status: SlotStatus;
+  is_teleconsult: boolean;
+  held_until?: string | null;
+  held_by_patient_id?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SlotHoldResponse {
+  slot_id: string;
+  doctor_id: string;
+  status: SlotStatus;
+  held_until: string;
+  held_by_patient_id: string;
+  hold_duration_seconds: number;
+}
+
+export interface SlotReleaseResponse {
+  slot_id: string;
+  status: SlotStatus;
+  released: boolean;
+}
+
+export interface SlotGenerateRequest {
+  doctor_id?: string;
+  start_date: string; // YYYY-MM-DD
+  end_date: string;   // YYYY-MM-DD
+  day_start_hour?: number;
+  day_start_minute?: number;
+  day_end_hour?: number;
+  day_end_minute?: number;
+  slot_duration_minutes?: number;
+  break_start_hour?: number;
+  break_start_minute?: number;
+  break_end_hour?: number;
+  break_end_minute?: number;
+  is_teleconsult?: boolean;
+}
+
+export interface SlotGenerateResult {
+  total_generated: number;
+  total_skipped_existing: number;
+  slots: DoctorSlot[];
+}
+
+export interface AppointmentCreate {
+  doctor_id: string;
+  slot_id?: string;
+  scheduled_start?: string;
+  scheduled_end?: string;
+  appointment_type?: AppointmentType;
+  reason?: string;
+  clinical_notes?: string;
+  teleconsultation_url?: string;
+}
+
+export interface Appointment {
+  id: string;
+  patient_id: string;
+  doctor_id: string;
+  slot_id?: string | null;
+  appointment_type: AppointmentType;
+  status: AppointmentStatus;
+  scheduled_start: string;
+  scheduled_end: string;
+  reason?: string | null;
+  clinical_notes?: string | null;
+  teleconsultation_url?: string | null;
+  created_at: string;
+  updated_at: string;
+  doctor_name?: string | null;
+  doctor_specialty?: string | null;
+  patient_name?: string | null;
+}
+
+export interface ABDMConsentLinkage {
+  careContextReference: string;
+  patientReference: string;
+  hiType: string;
+  hipId: string;
+  consentArtifactId?: string | null;
+  timestamp: string;
+  signature: string;
+  bundle: Record<string, unknown>;
+}
+
 class NIRMAYAAPIClient {
   private baseUrl: string;
 
@@ -206,6 +333,152 @@ class NIRMAYAAPIClient {
       payload
     );
   }
+
+  // ==========================================================================
+  // Doctor & Provider Directory Methods
+  // ==========================================================================
+
+  public async getDoctors(params?: {
+    query?: string;
+    specialty?: string;
+    teleconsult_only?: boolean;
+    max_fee?: number;
+    page?: number;
+    limit?: number;
+  }) {
+    return this.get<DoctorProfile[]>("/api/v1/doctors/", { params });
+  }
+
+  public async getDoctorById(doctorId: string) {
+    return this.get<DoctorProfile>(`/api/v1/doctors/${doctorId}`);
+  }
+
+  // ==========================================================================
+  // Doctor Consultation Slots & Availability Engine
+  // ==========================================================================
+
+  public async getDoctorSlots(
+    doctorId: string,
+    params?: {
+      target_date?: string;
+      start_date?: string;
+      end_date?: string;
+      slot_status?: SlotStatus;
+      is_teleconsult?: boolean;
+    }
+  ) {
+    return this.get<DoctorSlot[]>(`/api/v1/doctors/${doctorId}/slots`, {
+      params,
+    });
+  }
+
+  public async generateDoctorSlots(
+    doctorId: string,
+    payload: SlotGenerateRequest
+  ) {
+    return this.post<SlotGenerateResult>(
+      `/api/v1/doctors/${doctorId}/slots/generate`,
+      payload
+    );
+  }
+
+  public async holdDoctorSlot(
+    doctorId: string,
+    slotId: string,
+    durationMinutes: number = 10
+  ) {
+    return this.post<SlotHoldResponse>(
+      `/api/v1/doctors/${doctorId}/slots/${slotId}/hold`,
+      { hold_duration_minutes: durationMinutes }
+    );
+  }
+
+  public async releaseDoctorSlot(doctorId: string, slotId: string) {
+    return this.post<SlotReleaseResponse>(
+      `/api/v1/doctors/${doctorId}/slots/${slotId}/release`
+    );
+  }
+
+  // ==========================================================================
+  // Clinical Appointments & Encounter Lifecycle
+  // ==========================================================================
+
+  public async bookAppointment(payload: AppointmentCreate) {
+    return this.post<Appointment>("/api/v1/appointments/", payload);
+  }
+
+  public async getAppointments(params?: {
+    patient_id?: string;
+    doctor_id?: string;
+    status?: AppointmentStatus;
+    page?: number;
+    limit?: number;
+  }) {
+    return this.get<Appointment[]>("/api/v1/appointments/", { params });
+  }
+
+  public async getAppointmentById(appointmentId: string) {
+    return this.get<Appointment>(`/api/v1/appointments/${appointmentId}`);
+  }
+
+  public async updateAppointmentStatus(
+    appointmentId: string,
+    payload: {
+      status: AppointmentStatus;
+      clinical_notes?: string;
+      cancellation_reason?: string;
+    }
+  ) {
+    return this.patch<Appointment>(
+      `/api/v1/appointments/${appointmentId}/status`,
+      payload
+    );
+  }
+
+  // ==========================================================================
+  // HL7 FHIR Release 4 & ABDM Consent Artifacts
+  // ==========================================================================
+
+  public async getAppointmentFhir(appointmentId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/appointments/${appointmentId}/fhir`
+    );
+  }
+
+  public async getAppointmentEncounter(appointmentId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/appointments/${appointmentId}/encounter`
+    );
+  }
+
+  public async getAppointmentFhirBundle(appointmentId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/appointments/${appointmentId}/fhir-bundle`
+    );
+  }
+
+  public async linkAbdmConsent(
+    appointmentId: string,
+    payload?: { hip_id?: string; consent_artifact_id?: string }
+  ) {
+    return this.post<ABDMConsentLinkage>(
+      `/api/v1/appointments/${appointmentId}/abdm/link-consent`,
+      payload
+    );
+  }
+
+  public patch<T>(
+    endpoint: string,
+    body?: unknown,
+    options?: RequestOptions
+  ): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: "PATCH",
+      body: body ? JSON.stringify(body) : undefined,
+      ...options,
+    });
+  }
 }
 
 export const apiClient = new NIRMAYAAPIClient();
+
