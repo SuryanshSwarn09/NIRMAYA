@@ -516,4 +516,80 @@ async def test_e2e_fhir_standards_and_cryptographic_bundle_integrity(e2e_clinica
     assert len(abdm_data["signature"]) == 64
 
 
+@pytest.mark.asyncio
+async def test_e2e_rbac_security_isolation(e2e_clinical_env) -> None:
+    """Verify cross-patient and unauthorized access to appointments and FHIR records is strictly blocked."""
+    client, session_factory = e2e_clinical_env
+
+    async with session_factory() as db:
+        doc_a = User(email="doc.a@nirmaya.health", full_name="Dr. Alpha", role=UserRole.DOCTOR)
+        doc_b = User(email="doc.b@nirmaya.health", full_name="Dr. Beta", role=UserRole.DOCTOR)
+        pat_a = User(email="pat.a@example.com", full_name="Patient Alpha", role=UserRole.PATIENT)
+        pat_b = User(email="pat.b@example.com", full_name="Patient Beta", role=UserRole.PATIENT)
+        db.add_all([doc_a, doc_b, pat_a, pat_b])
+        await db.flush()
+
+        prof_doc_a = DoctorProfile(user_id=doc_a.id, registration_number="DOC-A", medical_council="Delhi Medical Council", specialty=MedicalSpecialty.NEUROLOGY, qualifications="MD")
+        prof_doc_b = DoctorProfile(user_id=doc_b.id, registration_number="DOC-B", medical_council="Delhi Medical Council", specialty=MedicalSpecialty.ORTHOPEDICS, qualifications="MS")
+        prof_pat_a = PatientProfile(user_id=pat_a.id, gender=Gender.MALE)
+        prof_pat_b = PatientProfile(user_id=pat_b.id, gender=Gender.FEMALE)
+        db.add_all([prof_doc_a, prof_doc_b, prof_pat_a, prof_pat_b])
+        await db.commit()
+
+        # Create appointment for Patient Alpha with Doctor Alpha
+        appt = Appointment(
+            patient_id=prof_pat_a.id,
+            doctor_id=prof_doc_a.id,
+            scheduled_start=datetime.now(timezone.utc) + timedelta(days=1),
+            scheduled_end=datetime.now(timezone.utc) + timedelta(days=1, minutes=30),
+            status=AppointmentStatus.SCHEDULED,
+            reason="Neurology consultation",
+        )
+        db.add(appt)
+        await db.commit()
+        appt_id = appt.id
+
+    # 1. Unauthenticated request -> 401 Unauthorized
+    unauth_res = await client.get(f"/api/v1/appointments/{appt_id}")
+    assert unauth_res.status_code == 401
+
+    # 2. Patient Beta attempts to view Patient Alpha's appointment -> 403 Forbidden
+    cross_pat_res = await client.get(
+        f"/api/v1/appointments/{appt_id}",
+        headers=create_auth_token(pat_b),
+    )
+    assert cross_pat_res.status_code == 403
+
+    # 3. Patient Beta attempts to view Patient Alpha's FHIR bundle -> 403 Forbidden
+    cross_fhir_res = await client.get(
+        f"/api/v1/appointments/{appt_id}/fhir-bundle",
+        headers=create_auth_token(pat_b),
+    )
+    assert cross_fhir_res.status_code == 403
+
+    # 4. Patient Beta attempts to cancel Patient Alpha's appointment -> 403 Forbidden
+    cross_cancel_res = await client.patch(
+        f"/api/v1/appointments/{appt_id}/status",
+        json={"status": "cancelled"},
+        headers=create_auth_token(pat_b),
+    )
+    assert cross_cancel_res.status_code == 403
+
+    # 5. Doctor Beta (unrelated) attempts to view Patient Alpha's appointment -> 403 Forbidden
+    cross_doc_res = await client.get(
+        f"/api/v1/appointments/{appt_id}",
+        headers=create_auth_token(doc_b),
+    )
+    assert cross_doc_res.status_code == 403
+
+    # 6. Attending Doctor Alpha CAN view the appointment -> 200 OK
+    doc_a_res = await client.get(
+        f"/api/v1/appointments/{appt_id}",
+        headers=create_auth_token(doc_a),
+    )
+    assert doc_a_res.status_code == 200
+    assert doc_a_res.json()["data"]["id"] == appt_id
+
+
+
 
