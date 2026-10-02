@@ -271,3 +271,140 @@ async def test_e2e_full_clinical_lifecycle(e2e_clinical_env) -> None:
         assert reclaimed_slot.held_by_patient_id is None
         assert reclaimed_slot.held_until is None
 
+
+@pytest.mark.asyncio
+async def test_e2e_concurrency_race_condition(e2e_clinical_env) -> None:
+    """Verify that concurrent booking attempts on the same slot return deterministic HTTP 409 Conflict."""
+    client, session_factory = e2e_clinical_env
+
+    # 1. Provision doctor and two competing patients
+    async with session_factory() as db:
+        doc = User(email="dr.concurrency@nirmaya.health", full_name="Dr. Concurrency", role=UserRole.DOCTOR)
+        db.add(doc)
+        await db.flush()
+
+        doc_prof = DoctorProfile(
+            user_id=doc.id,
+            registration_number="DMC-CONCUR-01",
+            medical_council="Delhi Medical Council",
+            specialty=MedicalSpecialty.PEDIATRICS,
+            qualifications="MBBS, MD",
+            consultation_fee=1000,
+        )
+        db.add(doc_prof)
+
+        p1 = User(email="p1@example.com", full_name="Patient One", role=UserRole.PATIENT)
+        p2 = User(email="p2@example.com", full_name="Patient Two", role=UserRole.PATIENT)
+        db.add_all([p1, p2])
+        await db.flush()
+
+        db.add(PatientProfile(user_id=p1.id, gender=Gender.MALE))
+        db.add(PatientProfile(user_id=p2.id, gender=Gender.FEMALE))
+        await db.commit()
+
+        doctor_id = doc_prof.id
+
+    # 2. Generate a single slot
+    gen_res = await client.post(
+        f"/api/v1/doctors/{doctor_id}/slots/generate",
+        json={
+            "doctor_id": doctor_id,
+            "start_date": "2026-10-22",
+            "end_date": "2026-10-22",
+            "day_start_hour": 10,
+            "day_start_minute": 0,
+            "day_end_hour": 10,
+            "day_end_minute": 30,
+            "slot_duration_minutes": 30,
+        },
+        headers=create_auth_token(doc),
+    )
+    assert gen_res.status_code == 201
+    slot_id = gen_res.json()["data"]["slots"][0]["id"]
+
+    # 3. Patient 1 holds the slot
+    hold_p1 = await client.post(
+        f"/api/v1/doctors/{doctor_id}/slots/{slot_id}/hold",
+        json={"hold_duration_minutes": 10},
+        headers=create_auth_token(p1),
+    )
+    assert hold_p1.status_code == 200
+
+    # 4. Patient 2 attempts to hold the same slot -> 409 Conflict
+    hold_p2 = await client.post(
+        f"/api/v1/doctors/{doctor_id}/slots/{slot_id}/hold",
+        json={"hold_duration_minutes": 10},
+        headers=create_auth_token(p2),
+    )
+    assert hold_p2.status_code == 409
+    assert hold_p2.json()["error_code"] == "SLOT_HELD_BY_ANOTHER_PATIENT"
+
+    # 5. Patient 2 attempts to directly book the held slot -> 409 Conflict
+    direct_book_p2 = await client.post(
+        "/api/v1/appointments/",
+        json={"doctor_id": doctor_id, "slot_id": slot_id, "appointment_type": "routine_checkup", "reason": "Checkup"},
+        headers=create_auth_token(p2),
+    )
+    assert direct_book_p2.status_code == 409
+    assert direct_book_p2.json()["error_code"] == "SLOT_HELD_BY_ANOTHER_PATIENT"
+
+
+@pytest.mark.asyncio
+async def test_e2e_expired_hold_sweep(e2e_clinical_env) -> None:
+    """Verify expired holds are cleared by sweep engine and made available for booking."""
+    client, session_factory = e2e_clinical_env
+
+    async with session_factory() as db:
+        doc = User(email="dr.sweep@nirmaya.health", full_name="Dr. Sweep", role=UserRole.DOCTOR)
+        p1 = User(email="p.expired@example.com", full_name="Patient Expired", role=UserRole.PATIENT)
+        p2 = User(email="p.new@example.com", full_name="Patient New", role=UserRole.PATIENT)
+        db.add_all([doc, p1, p2])
+        await db.flush()
+
+        doc_prof = DoctorProfile(
+            user_id=doc.id,
+            registration_number="DMC-SWEEP-01",
+            medical_council="Delhi Medical Council",
+            specialty=MedicalSpecialty.DERMATOLOGY,
+            qualifications="MBBS, DVD",
+            consultation_fee=800,
+        )
+        db.add(doc_prof)
+        db.add(PatientProfile(user_id=p1.id, gender=Gender.MALE))
+        db.add(PatientProfile(user_id=p2.id, gender=Gender.FEMALE))
+        await db.flush()
+
+        # Seed slot with expired hold
+        slot = DoctorSlot(
+            doctor_id=doc_prof.id,
+            start_time=datetime.now(timezone.utc) + timedelta(days=2),
+            end_time=datetime.now(timezone.utc) + timedelta(days=2, minutes=30),
+            status=SlotStatus.HELD,
+            held_until=datetime.now(timezone.utc) - timedelta(minutes=5),  # expired 5 min ago
+            held_by_patient_id=p1.id,
+        )
+        db.add(slot)
+        await db.commit()
+        slot_id = slot.id
+        doctor_id = doc_prof.id
+
+    # Execute sweep
+    async with session_factory() as db:
+        swept_count = await sweep_expired_holds(db)
+        assert swept_count >= 1
+
+        refreshed_slot = await db.scalar(select(DoctorSlot).where(DoctorSlot.id == slot_id))
+        assert refreshed_slot.status == SlotStatus.AVAILABLE
+        assert refreshed_slot.held_until is None
+        assert refreshed_slot.held_by_patient_id is None
+
+    # Patient 2 can now immediately hold and book this slot
+    new_hold = await client.post(
+        f"/api/v1/doctors/{doctor_id}/slots/{slot_id}/hold",
+        json={"hold_duration_minutes": 10},
+        headers=create_auth_token(p2),
+    )
+    assert new_hold.status_code == 200
+    assert new_hold.json()["data"]["status"] == "held"
+
+
