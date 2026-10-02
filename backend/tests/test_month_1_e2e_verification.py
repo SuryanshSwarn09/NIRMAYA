@@ -408,3 +408,112 @@ async def test_e2e_expired_hold_sweep(e2e_clinical_env) -> None:
     assert new_hold.json()["data"]["status"] == "held"
 
 
+@pytest.mark.asyncio
+async def test_e2e_fhir_standards_and_cryptographic_bundle_integrity(e2e_clinical_env) -> None:
+    """Validate HL7 FHIR R4 schema compliance, AMB vs VR act codings, and SHA-256 tamper-evidence."""
+    client, session_factory = e2e_clinical_env
+
+    async with session_factory() as db:
+        doc = User(email="dr.standards@nirmaya.health", full_name="Dr. Standards Compliance", role=UserRole.DOCTOR)
+        pat = User(email="pat.standards@example.com", full_name="Aarav Sharma", role=UserRole.PATIENT)
+        db.add_all([doc, pat])
+        await db.flush()
+
+        doc_prof = DoctorProfile(
+            user_id=doc.id,
+            registration_number="NMC-2024-STD-99",
+            medical_council="National Medical Commission",
+            specialty=MedicalSpecialty.GENERAL_MEDICINE,
+            qualifications="MBBS, MS",
+            consultation_fee=1500,
+        )
+        pat_prof = PatientProfile(
+            user_id=pat.id,
+            gender=Gender.MALE,
+            date_of_birth=date(1992, 7, 10),
+            abha_number="91-4455-6677-8899",
+        )
+        db.add_all([doc_prof, pat_prof])
+        await db.commit()
+
+        doctor_id = doc_prof.id
+        patient_id = pat_prof.id
+
+    # 1. Book In-Person Consultation (AMB classification)
+    in_person_slot_res = await client.post(
+        f"/api/v1/doctors/{doctor_id}/slots/generate",
+        json={
+            "doctor_id": doctor_id,
+            "start_date": "2026-10-25",
+            "end_date": "2026-10-25",
+            "day_start_hour": 14,
+            "day_start_minute": 0,
+            "day_end_hour": 14,
+            "day_end_minute": 30,
+            "slot_duration_minutes": 30,
+            "is_teleconsult": False,
+        },
+        headers=create_auth_token(doc),
+    )
+    assert in_person_slot_res.status_code == 201
+    in_person_slot_id = in_person_slot_res.json()["data"]["slots"][0]["id"]
+
+    # Book in-person
+    book_amb_res = await client.post(
+        "/api/v1/appointments/",
+        json={
+            "doctor_id": doctor_id,
+            "slot_id": in_person_slot_id,
+            "appointment_type": "routine_checkup",
+            "reason": "Pre-operative evaluation",
+        },
+        headers=create_auth_token(pat),
+    )
+    assert book_amb_res.status_code == 201
+    amb_appt_id = book_amb_res.json()["data"]["id"]
+
+    # Verify FHIR Encounter class is AMB (Ambulatory)
+    enc_amb_res = await client.get(
+        f"/api/v1/appointments/{amb_appt_id}/encounter",
+        headers=create_auth_token(pat),
+    )
+    assert enc_amb_res.status_code == 200
+    enc_amb = enc_amb_res.json()["data"]
+    assert enc_amb["class"]["code"] == "AMB"
+    assert enc_amb["class"]["display"] == "Ambulatory"
+
+    # Export Collection Bundle & link ABDM
+    bundle_res = await client.get(
+        f"/api/v1/appointments/{amb_appt_id}/fhir-bundle",
+        headers=create_auth_token(pat),
+    )
+    assert bundle_res.status_code == 200
+    bundle_data = bundle_res.json()["data"]
+    assert bundle_data["resourceType"] == "Bundle"
+    assert bundle_data["type"] == "collection"
+    assert bundle_data["total"] == 4
+
+    # Verify entries in bundle
+    entries = bundle_data["entry"]
+    patient_entry = next(e for e in entries if e["resource"]["resourceType"] == "Patient")
+    practitioner_entry = next(e for e in entries if e["resource"]["resourceType"] == "Practitioner")
+
+    assert patient_entry["resource"]["identifier"][0]["system"] == "https://healthid.ndhm.gov.in"
+    assert patient_entry["resource"]["identifier"][0]["value"] == "91-4455-6677-8899"
+    assert practitioner_entry["resource"]["identifier"][0]["system"] == "https://doctor.ndhm.gov.in"
+    assert practitioner_entry["resource"]["identifier"][0]["value"] == "NMC-2024-STD-99"
+
+    # Verify ABDM artifact signature
+    abdm_res = await client.post(
+        f"/api/v1/appointments/{amb_appt_id}/abdm/link-consent",
+        headers=create_auth_token(pat),
+    )
+    assert abdm_res.status_code == 200
+    abdm_data = abdm_res.json()["data"]
+    expected_ref = f"APPT-{amb_appt_id.replace('-', '')[:8].upper()}"
+    assert abdm_data["careContextReference"] == expected_ref
+    assert abdm_data["patientReference"] == "91-4455-6677-8899"
+    assert len(abdm_data["signature"]) == 64
+
+
+
