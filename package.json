@@ -10,7 +10,13 @@
     "dev:backend": "cd backend && python -m uvicorn app.main:app --reload --port 8000",
     "build:frontend": "npm --prefix frontend run build",
     "test:backend": "cd backend && python -m pytest -v",
+    "test": "npm --prefix frontend run build && cd backend && python -m pytest",
     "doctor": "python scripts/doctor.py"
+  },
+  "homepage": "https://suryanshs-projects.gitbook.io/nirmaya-docs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuryanshSwarn09/NIRMAYA.git"
   },
   "keywords": [
     "healthcare",
