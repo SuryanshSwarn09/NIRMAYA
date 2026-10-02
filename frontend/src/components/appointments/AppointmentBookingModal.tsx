@@ -133,11 +133,12 @@ export function AppointmentBookingModal({
         className="w-full max-w-lg bg-white rounded-[16px] border border-[#e5e7eb] shadow-2xl overflow-hidden transition-all"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="booking-modal-title"
       >
         {/* Header */}
         <div className="p-5 sm:p-6 border-b border-[#e5e7eb] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-[#111111]">
+            <h3 id="booking-modal-title" className="text-base sm:text-lg font-bold text-[#111111]">
               {confirmedAppointment ? "Booking Confirmed" : "Confirm Clinical Consultation"}
             </h3>
             <Badge variant="verified" size="sm">
@@ -147,6 +148,7 @@ export function AppointmentBookingModal({
           <button
             type="button"
             onClick={handleModalClose}
+            aria-label="Close booking modal"
             className="h-8 w-8 rounded-full border border-[#e5e7eb] text-[#6b7280] hover:text-[#111111] hover:bg-[#f5f5f5] flex items-center justify-center transition-all cursor-pointer"
           >
             <X className="h-4 w-4" />

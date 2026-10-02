@@ -73,6 +73,9 @@ export function SlotHoldCountdown({
 
   return (
     <div
+      role="status"
+      aria-live="polite"
+      aria-label={`Slot hold reservation: ${formattedTime} remaining`}
       className={`p-3.5 rounded-[8px] border transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm ${
         isUrgent
           ? "border-[#fed7aa] bg-[#fff7ed] text-[#9a3412]"
@@ -108,6 +111,7 @@ export function SlotHoldCountdown({
             size="sm"
             onClick={onRelease}
             isLoading={isReleasing}
+            aria-label="Release held consultation slot"
             className="text-xs text-[#6b7280] hover:text-[#111111] hover:bg-black/[0.04]"
           >
             <X className="h-3.5 w-3.5 mr-1" />

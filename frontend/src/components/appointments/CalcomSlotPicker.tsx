@@ -340,6 +340,8 @@ export function CalcomSlotPicker({
                   type="button"
                   disabled={disabled}
                   onClick={() => handleDayClick(day)}
+                  aria-pressed={active}
+                  aria-label={`${monthName} ${day}${current ? ' (Today)' : ''}`}
                   className={`h-9 sm:h-11 rounded-[8px] sm:rounded-full text-xs sm:text-sm font-semibold transition-all relative flex flex-col items-center justify-center cursor-pointer ${
                     active
                       ? "bg-[#111111] text-white shadow-xs"
@@ -447,6 +449,8 @@ export function CalcomSlotPicker({
                     type="button"
                     disabled={isUnavailable || isHolding}
                     onClick={() => handleSlotClick(slot)}
+                    aria-pressed={isSelected || isHeldByMe}
+                    aria-label={`Select consultation slot at ${startTime} (${slot.is_teleconsult ? 'Teleconsultation' : 'In-person'})`}
                     className={`w-full p-3 rounded-[8px] border text-left transition-all flex items-center justify-between cursor-pointer ${
                       isSelected
                         ? "bg-[#111111] text-white border-[#111111] shadow-xs"
