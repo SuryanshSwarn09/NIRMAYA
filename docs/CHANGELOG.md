@@ -471,8 +471,35 @@
   - Pre-flight diagnostic check `scripts/doctor.py` verified 8/8 passing.
   - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.1.0` reserved for Day 20 close).
 
+#### Day 20 (Fri) - Milestone 04-05 (Official Release v0.1.0)
+- **Focus:** Month 1 Retrospective, Full Clinical Verification & Official Release `v0.1.0`
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `test(e2e): implement month 1 full clinical lifecycle verification suite`
+  2. `test(concurrency): add high-throughput race condition and expired hold sweep tests`
+  3. `test(fhir): verify fhir r4 bundle compliance and abdm cryptographic integrity`
+  4. `test(rbac): add role-based security isolation tests for clinical appointments`
+  5. `test(a11y): add wcag 2.1 accessibility and aria audit tests for calcom components`
+  6. `docs(journey): record day 20 clinical verification and accessibility audit deliverables`
+  7. `docs(review): compile week 4 encounters and scheduling retrospective report`
+  8. `docs(retrospective): author month 1 executive retrospective and architectural synthesis`
+  9. `docs(summary): update gitbook summary navigation with month 1 finale entries`
+  10. `docs(changelog): record milestone 04-05 month 1 retrospective and release v0.1.0`
+  11. `chore(release): prepare monorepo package manifests for release v0.1.0`
+- **Key Deliverables:**
+  - **Month 1 End-to-End Clinical Verification Suite:** Implemented `test_month_1_e2e_verification.py` validating the full clinical journey from multi-role user creation to doctor practice slot generation, 10-minute Cal.com holds, ACID booking, FHIR R4 collection bundle export, ABDM CareContext linkage with SHA-256 digest, and appointment cancellation slot replenishment.
+  - **Concurrency Collision & Expired Hold Sweep:** Validated deterministic HTTP 409 `SLOT_HELD_BY_ANOTHER_PATIENT` under race conditions and autonomous expired hold reclamation via `sweep_expired_holds`.
+  - **WCAG 2.1 AA Accessibility Hardening:** Conducted accessibility audit and added ARIA semantics (`aria-pressed`, `aria-label`, `aria-live="polite"`, `role="status"`, `aria-labelledby`, `role="dialog"`) across `CalcomSlotPicker`, `SlotHoldCountdown`, and `AppointmentBookingModal`.
+  - **Comprehensive GitBook Documentation:** Authored Day 20 log (`docs/journey/month-1/day-20.md`), Week 4 Review (`docs/journey/month-1/week-4-review.md`), and Month 1 Executive Retrospective (`docs/journey/month-1/month-1-retrospective.md`).
+  - **Official Milestone Release Tag `v0.1.0`:** Created and pushed the official annotated release tag marking the completion of Month 1 (Foundation, Schemas, RBAC & Encounters).
+- **Verification:**
+  - Full automated backend test suite expanded to **151 passing tests (100% pass rate)** in 17.67s.
+  - Next.js 15 Turbopack production build compiled **11 / 11 static and edge routes with zero errors** in 46s.
+  - Pre-flight diagnostic check `scripts/doctor.py` verified 8/8 passing.
+  - Official Release Tag: `v0.1.0` cut and pushed to `origin/main`.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
 
