@@ -12,7 +12,15 @@
 | **Day 17 (Tue)** | Booking Concurrency & ACID Locking | `SELECT ... FOR UPDATE` row locks, 10-min slot holds, auto-sweep engine, migration 0003, race-condition stress tests | **Completed** |
 | **Day 18 (Wed)** | HL7 FHIR Encounter Transformers | HL7 FHIR R4 `Appointment` & `Encounter` resource bundles, ABDM consent linkage | **Completed** |
 | **Day 19 (Thu)** | Cal.com Slot Picker UI Integration | Interactive calendar availability matrix on `/doctor` and `/patient`, booking modal | **Completed** |
-| **Day 20 (Fri)** | Month 1 Retrospective & Release v0.1.0 | End-to-end clinical encounter verification, accessibility audit, Month 1 close & tag `v0.1.0` | *Next* |
+| **Day 20 (Fri)** | Month 1 Retrospective & Release v0.1.0 | End-to-end clinical encounter verification, accessibility audit, Month 1 close & tag `v0.1.0` | **Completed** |
+
+---
+
+## Week 4 Milestones & Retrospectives
+
+- [Day 20 Daily Engineering Log](day-20.md)
+- [Week 4 Comprehensive Retrospective](week-4-review.md)
+- [Month 1 Executive Retrospective & Platform Foundation Report](month-1-retrospective.md)
 
 ---
 
@@ -23,3 +31,4 @@
 - **Relational Integrity & ACID Safety:** Bidirectional cascade integrity across `DoctorProfile`, `PatientProfile`, `DoctorSlot`, and `Appointment` with strict unique constraints (`uq_doctor_slot_start`, `uq_appointment_slot_id`).
 - **Resource Lifecycle Management:** Synchronized state machine where appointment cancellations automatically replenish reserved doctor slots back to `AVAILABLE`.
 - **Standards-Based Design:** Core models directly mirror HL7 FHIR R4 `Appointment`, `Schedule`, and `Slot` specifications.
+

@@ -43,6 +43,9 @@
     * [Day 17: Booking Concurrency & ACID Row-Level Locking](journey/month-1/day-17.md)
     * [Day 18: HL7 FHIR Encounter Transformers & ABDM Consent Linkage](journey/month-1/day-18.md)
     * [Day 19: Cal.com Slot Picker UI Integration & Clinical Booking Flow](journey/month-1/day-19.md)
+    * [Day 20: Month 1 Retrospective, Full Verification & Release v0.1.0](journey/month-1/day-20.md)
+    * [Week 4 Retrospective & Encounters Review](journey/month-1/week-4-review.md)
+    * [Month 1 Comprehensive Retrospective & Foundation Report](journey/month-1/month-1-retrospective.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
