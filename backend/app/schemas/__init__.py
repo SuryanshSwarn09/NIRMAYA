@@ -51,6 +51,13 @@ from app.schemas.appointment import (
     SlotHoldResponse,
     SlotReleaseResponse,
 )
+from app.schemas.condition import (
+    ConditionBase,
+    ConditionCreate,
+    ConditionFilter,
+    ConditionResponse,
+    ConditionUpdate,
+)
 
 from app.schemas.user import (
     UserBase,
@@ -102,6 +109,11 @@ __all__ = [
     "SlotHoldRequest",
     "SlotHoldResponse",
     "SlotReleaseResponse",
+    "ConditionBase",
+    "ConditionCreate",
+    "ConditionUpdate",
+    "ConditionResponse",
+    "ConditionFilter",
 ]
 
 
