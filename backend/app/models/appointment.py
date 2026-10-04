@@ -107,6 +107,9 @@ class Appointment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     """
 
     __tablename__ = "appointment"
+    __table_args__ = (
+        UniqueConstraint("slot_id", name="uq_appointment_slot_id"),
+    )
 
     # 1. Patient Vault foreign key
     patient_id: Mapped[str] = mapped_column(

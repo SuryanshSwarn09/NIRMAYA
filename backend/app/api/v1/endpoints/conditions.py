@@ -131,8 +131,8 @@ async def list_patient_problem_list(
     category: Optional[ConditionCategory] = Query(None, description="Filter by condition category"),
     severity: Optional[ConditionSeverity] = Query(None, description="Filter by severity assessment"),
     encounter_id: Optional[str] = Query(None, description="Filter by encounter UUID"),
-    skip: int = Query(0, ge=0, description="Offset for pagination"),
-    limit: int = Query(50, ge=1, le=100, description="Page size limit"),
+    page: int = Query(1, ge=1, description="1-indexed page number"),
+    limit: int = Query(20, ge=1, le=100, description="Page size limit"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> PaginatedResponse[ConditionResponse]:
@@ -146,7 +146,8 @@ async def list_patient_problem_list(
         encounter_id=encounter_id,
     )
 
-    conditions, total = await condition_service.list_patient_conditions(
+    skip = (page - 1) * limit
+    conditions, total_count = await condition_service.list_patient_conditions(
         db=db,
         patient_id=patient_id,
         filters=filters,
@@ -154,15 +155,18 @@ async def list_patient_problem_list(
         limit=limit,
     )
 
+    total_pages = (total_count + limit - 1) // limit if total_count > 0 else 0
+
     return PaginatedResponse(
         success=True,
-        message="Patient conditions retrieved successfully",
         data=[ConditionResponse.model_validate(c) for c in conditions],
         pagination=PaginationMeta(
-            total=total,
-            skip=skip,
+            total_count=total_count,
+            page=page,
             limit=limit,
-            has_more=(skip + limit) < total,
+            total_pages=total_pages,
+            has_next=page < total_pages,
+            has_prev=page > 1,
         ),
     )
 

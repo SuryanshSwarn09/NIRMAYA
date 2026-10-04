@@ -167,8 +167,6 @@ async def book_appointment(
     )
     appointment.doctor = doctor
     appointment.patient = patient
-    if slot_entity:
-        appointment.slot = slot_entity
 
     db.add(appointment)
     try:
