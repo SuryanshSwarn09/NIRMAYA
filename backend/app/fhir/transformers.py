@@ -11,11 +11,13 @@ from typing import Any, Dict, List, Optional
 import uuid
 from app.fhir.schemas import (
     ABDMConsentLinkage,
+    FHIRAnnotation,
     FHIRAppointment,
     FHIRBundle,
     FHIRBundleEntry,
     FHIRCodeableConcept,
     FHIRCoding,
+    FHIRCondition,
     FHIREncounter,
     FHIREncounterParticipant,
     FHIRIdentifier,
@@ -24,7 +26,15 @@ from app.fhir.schemas import (
     FHIRReference,
 )
 from app.models.appointment import Appointment
-from app.models.enums import AppointmentStatus, AppointmentType
+from app.models.condition import ClinicalCondition
+from app.models.enums import (
+    AppointmentStatus,
+    AppointmentType,
+    ClinicalStatus,
+    ConditionCategory,
+    ConditionSeverity,
+    VerificationStatus,
+)
 
 
 # ============================================================================
@@ -34,9 +44,33 @@ from app.models.enums import AppointmentStatus, AppointmentType
 HL7_APPOINTMENT_TYPE_SYSTEM = "http://terminology.hl7.org/CodeSystem/v2-0276"
 HL7_ACT_CODE_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-ActCode"
 HL7_PARTICIPATION_TYPE_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-ParticipationType"
+HL7_CONDITION_CLINICAL_SYSTEM = "http://terminology.hl7.org/CodeSystem/condition-clinical"
+HL7_CONDITION_VER_STATUS_SYSTEM = "http://terminology.hl7.org/CodeSystem/condition-ver-status"
+HL7_CONDITION_CATEGORY_SYSTEM = "http://terminology.hl7.org/CodeSystem/condition-category"
+SNOMED_CT_SYSTEM = "http://snomed.info/sct"
 NIRMAYA_APPOINTMENT_SYSTEM = "https://nirmaya.health/fhir/appointment"
 NIRMAYA_ENCOUNTER_SYSTEM = "https://nirmaya.health/fhir/encounter"
+NIRMAYA_CONDITION_SYSTEM = "https://nirmaya.health/fhir/condition"
 NIRMAYA_CARE_CONTEXT_SYSTEM = "https://nirmaya.health/abdm/care-context"
+
+# Condition severity mappings to SNOMED-CT concepts
+CONDITION_SEVERITY_MAPPINGS: Dict[ConditionSeverity, FHIRCoding] = {
+    ConditionSeverity.MILD: FHIRCoding(
+        system=SNOMED_CT_SYSTEM,
+        code="255604002",
+        display="Mild",
+    ),
+    ConditionSeverity.MODERATE: FHIRCoding(
+        system=SNOMED_CT_SYSTEM,
+        code="6736007",
+        display="Moderate",
+    ),
+    ConditionSeverity.SEVERE: FHIRCoding(
+        system=SNOMED_CT_SYSTEM,
+        code="24484000",
+        display="Severe",
+    ),
+}
 
 # NIRMAYA to FHIR R4 Appointment status mapping
 NIRMAYA_TO_FHIR_APPOINTMENT_STATUS: Dict[AppointmentStatus, str] = {
@@ -527,6 +561,157 @@ def to_abdm_health_information_artifact(
         signature=digest,
         bundle=bundle,
     )
+
+
+# ============================================================================
+# Transformer: FHIR R4 Condition Resource Serializer
+# ============================================================================
+
+
+def to_fhir_condition(cond: ClinicalCondition) -> FHIRCondition:
+    """Translate a NIRMAYA ClinicalCondition model to an HL7 FHIR Release 4 Condition resource.
+
+    Args:
+        cond: Internal relational ClinicalCondition entity.
+
+    Returns:
+        FHIRCondition instance fully compliant with FHIR R4 standard.
+    """
+    # 1. Clinical Status
+    clinical_status_coding = FHIRCoding(
+        system=HL7_CONDITION_CLINICAL_SYSTEM,
+        code=cond.clinical_status.value,
+        display=cond.clinical_status.value.capitalize(),
+    )
+    clinical_status_cc = FHIRCodeableConcept(
+        coding=[clinical_status_coding],
+        text=cond.clinical_status.value,
+    )
+
+    # 2. Verification Status
+    verification_status_cc = None
+    if cond.verification_status:
+        verification_status_coding = FHIRCoding(
+            system=HL7_CONDITION_VER_STATUS_SYSTEM,
+            code=cond.verification_status.value,
+            display=cond.verification_status.value.replace("-", " ").capitalize(),
+        )
+        verification_status_cc = FHIRCodeableConcept(
+            coding=[verification_status_coding],
+            text=cond.verification_status.value,
+        )
+
+    # 3. Category
+    category_coding = FHIRCoding(
+        system=HL7_CONDITION_CATEGORY_SYSTEM,
+        code=cond.category.value,
+        display=cond.category.value.replace("-", " ").title(),
+    )
+    category_list = [
+        FHIRCodeableConcept(
+            coding=[category_coding],
+            text=cond.category.value,
+        )
+    ]
+
+    # 4. Severity (optional)
+    severity_cc = None
+    if cond.severity and cond.severity in CONDITION_SEVERITY_MAPPINGS:
+        severity_coding = CONDITION_SEVERITY_MAPPINGS[cond.severity]
+        severity_cc = FHIRCodeableConcept(
+            coding=[severity_coding],
+            text=cond.severity.value.capitalize(),
+        )
+
+    # 5. Code (SNOMED-CT / ICD-10)
+    code_cc = FHIRCodeableConcept(
+        coding=[
+            FHIRCoding(
+                system=cond.code_coding_system,
+                code=cond.code_value,
+                display=cond.code_display,
+            )
+        ],
+        text=cond.code_display,
+    )
+
+    # 6. Body site
+    body_site_list: List[FHIRCodeableConcept] = []
+    if cond.body_site:
+        body_site_list.append(
+            FHIRCodeableConcept(
+                coding=[],
+                text=cond.body_site,
+            )
+        )
+
+    # 7. Identifiers
+    identifiers = [
+        FHIRIdentifier(
+            system=NIRMAYA_CONDITION_SYSTEM,
+            value=cond.id,
+            use="official",
+        )
+    ]
+
+    # 8. Subject (Patient reference)
+    patient_display = None
+    if getattr(cond, "patient", None) and getattr(cond.patient, "user", None):
+        patient_display = cond.patient.user.full_name
+    subject_ref = FHIRReference(
+        reference=f"Patient/{cond.patient_id}",
+        display=patient_display,
+        type="Patient",
+    )
+
+    # 9. Encounter (if linked)
+    encounter_ref = None
+    if cond.encounter_id:
+        encounter_ref = FHIRReference(
+            reference=f"Encounter/{cond.encounter_id}",
+            type="Encounter",
+        )
+
+    # 10. Recorder (if doctor linked)
+    recorder_ref = None
+    if cond.recorded_by_doctor_id:
+        doctor_display = None
+        if getattr(cond, "recorded_by_doctor", None) and getattr(cond.recorded_by_doctor, "user", None):
+            doctor_display = cond.recorded_by_doctor.user.full_name
+        recorder_ref = FHIRReference(
+            reference=f"Practitioner/{cond.recorded_by_doctor_id}",
+            display=doctor_display,
+            type="Practitioner",
+        )
+
+    # 11. Notes
+    notes: List[FHIRAnnotation] = []
+    if cond.note:
+        notes.append(
+            FHIRAnnotation(
+                text=cond.note,
+                time=cond.recorded_date,
+            )
+        )
+
+    return FHIRCondition(
+        id=cond.id,
+        identifier=identifiers,
+        clinicalStatus=clinical_status_cc,
+        verificationStatus=verification_status_cc,
+        category=category_list,
+        severity=severity_cc,
+        code=code_cc,
+        bodySite=body_site_list,
+        subject=subject_ref,
+        encounter=encounter_ref,
+        onsetDateTime=cond.onset_date_time,
+        abatementDateTime=cond.abatement_date_time,
+        recordedDate=cond.recorded_date,
+        recorder=recorder_ref,
+        note=notes,
+    )
+
 
 
 

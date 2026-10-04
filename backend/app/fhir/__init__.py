@@ -20,6 +20,7 @@ from app.fhir.schemas import (
 from app.fhir.transformers import (
     to_abdm_health_information_artifact,
     to_fhir_appointment,
+    to_fhir_condition,
     to_fhir_encounter,
     to_fhir_encounter_bundle,
 )
@@ -44,4 +45,5 @@ __all__ = [
     "to_fhir_appointment",
     "to_fhir_encounter",
     "to_fhir_encounter_bundle",
+    "to_fhir_condition",
 ]
