@@ -4,6 +4,13 @@ from app.services.appointment import (
     list_appointments,
     update_appointment_status,
 )
+from app.services.condition import (
+    delete_condition,
+    get_condition_by_id,
+    list_patient_conditions,
+    record_condition,
+    update_condition,
+)
 from app.services.doctor import (
     create_doctor_profile,
     delete_doctor_profile,
@@ -64,5 +71,11 @@ __all__ = [
     "get_appointment_by_id",
     "list_appointments",
     "update_appointment_status",
+    # Condition service
+    "record_condition",
+    "get_condition_by_id",
+    "list_patient_conditions",
+    "update_condition",
+    "delete_condition",
 ]
 
