@@ -46,6 +46,9 @@
     * [Day 20: Month 1 Retrospective, Full Verification & Release v0.1.0](journey/month-1/day-20.md)
     * [Week 4 Retrospective & Encounters Review](journey/month-1/week-4-review.md)
     * [Month 1 Comprehensive Retrospective & Foundation Report](journey/month-1/month-1-retrospective.md)
+* [Month 2: Clinical Data & Observational Engine](journey/month-2/week-5.md)
+  * [Week 5: Clinical Problem Lists & Diagnostic Encounters](journey/month-2/week-5.md)
+    * [Day 21: Clinical Condition & Problem List Schemas](journey/month-2/day-21.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)

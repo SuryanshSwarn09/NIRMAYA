@@ -498,7 +498,39 @@
   - Official Release Tag: `v0.1.0` cut and pushed to `origin/main`.
 
 ---
+
+## Month 2: Clinical Data, Observational Engine & Diagnostic Integrations
+
+### Week 5: Clinical Problem Lists & Diagnostic Encounters
+
+#### Day 21 (Mon) - Milestone 05-01: Clinical Condition & Problem List Schemas
+- **Focus:** Longitudinal Patient Problem Lists, SNOMED-CT / ICD-10 Codings, Alembic Migration 0004, HL7 FHIR R4 Condition Transformer, REST Endpoints, and Concurrency Hardening.
+- **Executed Micro-Commits (10+ Daily Rule):**
+  1. `c6f8c73: feat(models): define clinical condition enums and status lifecycles`
+  2. `c739ee8: feat(models): implement clinical condition problem list model`
+  3. `1724694: feat(db): add alembic migration 0004 for clinical conditions schema`
+  4. `2a09403: feat(schemas): define pydantic schemas for clinical conditions`
+  5. `8bbe90a: feat(fhir): define hl7 fhir r4 condition schema`
+  6. `02fd634: feat(fhir): implement fhir r4 condition transformer`
+  7. `5d9cbaa: feat(services): implement clinical condition service layer`
+  8. `14226dc: feat(api): implement clinical condition rest endpoints`
+  9. `fdfa75c: test(conditions): add unit and integration test suite for condition management and fhir export`
+  10. `87d92dc: docs(journey): add week 5 roadmap and day 21 condition schema documentation`
+  11. `0b58e39: docs(summary): update gitbook navigation and changelog for day 21 milestone 05-01`
+- **Key Deliverables:**
+  - `ClinicalCondition` entity, `ClinicalStatus`, `VerificationStatus`, `ConditionCategory`, `ConditionSeverity`.
+  - Alembic migration `0004_conditions_schema` applied cleanly and verified.
+  - Pydantic v2 schemas: `ConditionCreate`, `ConditionUpdate`, `ConditionResponse`, `ConditionFilter`.
+  - HL7 FHIR Release 4 `Condition` resource model and transformer `to_fhir_condition`.
+  - REST endpoints under `/api/v1/patients/{id}/conditions`, `/api/v1/conditions/{id}`, `/api/v1/conditions/{id}/fhir`.
+  - Hardened `Appointment` model with table-level constraint `uq_appointment_slot_id` and resolved SQLAlchemy 1-to-1 displacement for deterministic high-concurrency race condition handling.
+- **Verification:**
+  - Automated test suite: **160/160 tests passing (100%)** across 29 test suites in 21.58s.
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.2.0` reserved for Day 40 close).
+
+---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
 
