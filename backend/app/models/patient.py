@@ -9,6 +9,7 @@ from app.models.enums import BloodGroup, Gender
 
 if TYPE_CHECKING:
     from app.models.appointment import Appointment, DoctorSlot
+    from app.models.condition import ClinicalCondition
     from app.models.user import User
 
 
@@ -107,6 +108,13 @@ class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         "DoctorSlot",
         foreign_keys="DoctorSlot.held_by_patient_id",
         back_populates="held_by_patient",
+    )
+
+    # Longitudinal clinical conditions problem list
+    conditions: Mapped[List["ClinicalCondition"]] = relationship(
+        "ClinicalCondition",
+        back_populates="patient",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self) -> str:

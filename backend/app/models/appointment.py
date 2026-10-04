@@ -4,13 +4,14 @@ Aligned with HL7 FHIR Release 4 Appointment & Schedule resources.
 """
 
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import AppointmentStatus, AppointmentType, SlotStatus
 
 if TYPE_CHECKING:
+    from app.models.condition import ClinicalCondition
     from app.models.doctor import DoctorProfile
     from app.models.patient import PatientProfile
 
@@ -182,6 +183,10 @@ class Appointment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     slot: Mapped[Optional["DoctorSlot"]] = relationship(
         "DoctorSlot",
         back_populates="appointment",
+    )
+    conditions: Mapped[List["ClinicalCondition"]] = relationship(
+        "ClinicalCondition",
+        back_populates="encounter",
     )
 
     def __repr__(self) -> str:

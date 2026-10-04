@@ -1,6 +1,7 @@
 """Relational models package exporting core platform entities and clinical enums."""
 
 from app.models.appointment import Appointment, DoctorSlot
+from app.models.condition import ClinicalCondition
 from app.models.doctor import DoctorProfile
 from app.models.enums import (
     AppointmentStatus,
@@ -27,6 +28,7 @@ __all__ = [
     "DiagnosticLabFacility",
     "DoctorSlot",
     "Appointment",
+    "ClinicalCondition",
     "UserRole",
     "Gender",
     "BloodGroup",

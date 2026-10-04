@@ -8,6 +8,7 @@ from app.models.enums import MedicalSpecialty
 
 if TYPE_CHECKING:
     from app.models.appointment import Appointment, DoctorSlot
+    from app.models.condition import ClinicalCondition
     from app.models.user import User
 
 
@@ -99,6 +100,12 @@ class DoctorProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         "Appointment",
         back_populates="doctor",
         cascade="all, delete-orphan",
+    )
+
+    # Clinical conditions recorded/diagnosed by this doctor
+    recorded_conditions: Mapped[List["ClinicalCondition"]] = relationship(
+        "ClinicalCondition",
+        back_populates="recorded_by_doctor",
     )
 
     def __repr__(self) -> str:
