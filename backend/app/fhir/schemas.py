@@ -101,6 +101,24 @@ class FHIRPeriod(BaseModel):
     )
 
 
+class FHIRAnnotation(BaseModel):
+    """FHIR R4 Annotation representing clinical notes and commentaries."""
+
+    text: str = Field(
+        description="The annotation text content",
+        example="Patient reports improvement after antihypertensive therapy.",
+    )
+    time: Optional[datetime] = Field(
+        default=None,
+        description="When the annotation was recorded (UTC)",
+    )
+    authorString: Optional[str] = Field(
+        default=None,
+        description="Individual responsible for the annotation",
+        example="Dr. Jane Smith",
+    )
+
+
 # ============================================================================
 # FHIR R4 Appointment Resource
 # ============================================================================
@@ -239,6 +257,83 @@ class FHIREncounter(BaseModel):
     reasonCode: List[FHIRCodeableConcept] = Field(
         default_factory=list,
         description="Coded reason the encounter takes place",
+    )
+
+
+# ============================================================================
+# FHIR R4 Condition Resource
+# ============================================================================
+
+
+class FHIRCondition(BaseModel):
+    """HL7 FHIR Release 4 Condition resource model.
+
+    Represents detailed clinical condition, problem, diagnosis, or health event
+    aligned with FHIR R4 Condition specification.
+    Reference: http://hl7.org/fhir/R4/condition.html
+    """
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    resourceType: Literal["Condition"] = Field(
+        default="Condition",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this clinical condition artifact",
+    )
+    identifier: List[FHIRIdentifier] = Field(
+        default_factory=list,
+        description="External business identifiers",
+    )
+    clinicalStatus: FHIRCodeableConcept = Field(
+        description="active | recurrence | relapse | inactive | remission | resolved",
+    )
+    verificationStatus: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="unconfirmed | provisional | differential | confirmed | refuted | entered-in-error",
+    )
+    category: List[FHIRCodeableConcept] = Field(
+        default_factory=list,
+        description="problem-list-item | encounter-diagnosis | chronic-condition",
+    )
+    severity: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Subjective severity assessment (mild | moderate | severe)",
+    )
+    code: FHIRCodeableConcept = Field(
+        description="Identification of the condition, problem or diagnosis (SNOMED-CT / ICD-10)",
+    )
+    bodySite: List[FHIRCodeableConcept] = Field(
+        default_factory=list,
+        description="Anatomical location, if relevant",
+    )
+    subject: FHIRReference = Field(
+        description="Who has the condition? Reference to Patient resource",
+    )
+    encounter: Optional[FHIRReference] = Field(
+        default=None,
+        description="Encounter created as part of",
+    )
+    onsetDateTime: Optional[datetime] = Field(
+        default=None,
+        description="Estimated or actual date, date-time, or age",
+    )
+    abatementDateTime: Optional[datetime] = Field(
+        default=None,
+        description="When in resolution/remission",
+    )
+    recordedDate: Optional[datetime] = Field(
+        default=None,
+        description="Date record was first recorded (UTC)",
+    )
+    recorder: Optional[FHIRReference] = Field(
+        default=None,
+        description="Who recorded the condition (e.g. Practitioner)",
+    )
+    note: List[FHIRAnnotation] = Field(
+        default_factory=list,
+        description="Additional information about the Condition",
     )
 
 
