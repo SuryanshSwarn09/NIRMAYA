@@ -6,11 +6,15 @@ from app.models.enums import (
     AppointmentStatus,
     AppointmentType,
     BloodGroup,
+    ClinicalStatus,
+    ConditionCategory,
+    ConditionSeverity,
     Gender,
     LabAccreditation,
     MedicalSpecialty,
     SlotStatus,
     UserRole,
+    VerificationStatus,
 )
 from app.models.lab import DiagnosticLabFacility
 from app.models.patient import PatientProfile
@@ -31,5 +35,9 @@ __all__ = [
     "SlotStatus",
     "AppointmentStatus",
     "AppointmentType",
+    "ClinicalStatus",
+    "VerificationStatus",
+    "ConditionCategory",
+    "ConditionSeverity",
 ]
 

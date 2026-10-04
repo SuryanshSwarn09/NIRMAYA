@@ -98,3 +98,52 @@ class AppointmentType(str, Enum):
     TELECONSULTATION = "teleconsultation"
     EMERGENCY = "emergency"
 
+
+class ClinicalStatus(str, Enum):
+    """Clinical status of the condition aligned with HL7 FHIR R4 ConditionClinicalStatusCodes.
+
+    Reference: http://terminology.hl7.org/CodeSystem/condition-clinical
+    """
+
+    ACTIVE = "active"
+    RECURRENCE = "recurrence"
+    RELAPSE = "relapse"
+    INACTIVE = "inactive"
+    REMISSION = "remission"
+    RESOLVED = "resolved"
+
+
+class VerificationStatus(str, Enum):
+    """Verification status of the condition aligned with HL7 FHIR R4 ConditionVerificationStatus.
+
+    Reference: http://terminology.hl7.org/CodeSystem/condition-ver-status
+    """
+
+    UNCONFIRMED = "unconfirmed"
+    PROVISIONAL = "provisional"
+    DIFFERENTIAL = "differential"
+    CONFIRMED = "confirmed"
+    REFUTED = "refuted"
+    ENTERED_IN_ERROR = "entered-in-error"
+
+
+class ConditionCategory(str, Enum):
+    """Category classification of clinical condition aligned with HL7 FHIR R4 ConditionCategoryCodes.
+
+    Reference: http://terminology.hl7.org/CodeSystem/condition-category
+    """
+
+    PROBLEM_LIST_ITEM = "problem-list-item"
+    ENCOUNTER_DIAGNOSIS = "encounter-diagnosis"
+    CHRONIC_CONDITION = "chronic-condition"
+
+
+class ConditionSeverity(str, Enum):
+    """Subjective severity assessment of the condition aligned with SNOMED-CT / FHIR ValueSet.
+
+    Reference: http://hl7.org/fhir/R4/valueset-condition-severity.html
+    """
+
+    MILD = "mild"
+    MODERATE = "moderate"
+    SEVERE = "severe"
