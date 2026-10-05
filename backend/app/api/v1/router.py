@@ -6,6 +6,7 @@ from app.api.v1.endpoints import (
     doctors,
     health,
     meta,
+    observations,
     patients,
 )
 
@@ -17,5 +18,7 @@ api_router.include_router(patients.router, prefix="/patients", tags=["Patient Va
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])
 api_router.include_router(appointments.router, prefix="/appointments", tags=["Clinical Appointments"])
 api_router.include_router(conditions.router, prefix="", tags=["Clinical Conditions & Problem List"])
+api_router.include_router(observations.router, prefix="", tags=["Clinical Observations & Vital Signs"])
+
 
 
