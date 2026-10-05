@@ -147,3 +147,49 @@ class ConditionSeverity(str, Enum):
     MILD = "mild"
     MODERATE = "moderate"
     SEVERE = "severe"
+
+
+class ObservationStatus(str, Enum):
+    """Status of the clinical observation aligned with HL7 FHIR R4 Observation.status.
+
+    Reference: http://hl7.org/fhir/R4/valueset-observation-status.html
+    """
+
+    REGISTERED = "registered"
+    PRELIMINARY = "preliminary"
+    FINAL = "final"
+    AMENDED = "amended"
+    CORRECTED = "corrected"
+    CANCELLED = "cancelled"
+    ENTERED_IN_ERROR = "entered-in-error"
+    UNKNOWN = "unknown"
+
+
+class ObservationCategory(str, Enum):
+    """High-level classification of observation aligned with HL7 FHIR R4 ObservationCategoryCodes.
+
+    Reference: http://terminology.hl7.org/CodeSystem/observation-category
+    """
+
+    VITAL_SIGNS = "vital-signs"
+    LABORATORY = "laboratory"
+    IMAGING = "imaging"
+    EXAM = "exam"
+    THERAPY = "therapy"
+    ACTIVITY = "activity"
+    SOCIAL_HISTORY = "social-history"
+
+
+class ObservationInterpretation(str, Enum):
+    """Clinical interpretation flags for observations relative to reference ranges.
+
+    Reference: http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation
+    """
+
+    NORMAL = "normal"
+    HIGH = "high"
+    LOW = "low"
+    CRITICALLY_HIGH = "critically-high"
+    CRITICALLY_LOW = "critically-low"
+    ABNORMAL = "abnormal"
+
