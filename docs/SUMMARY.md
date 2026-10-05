@@ -49,6 +49,7 @@
 * [Month 2: Clinical Data & Observational Engine](journey/month-2/overview.md)
   * [Week 5: Clinical Problem Lists & Diagnostic Encounters](journey/month-2/week-5.md)
     * [Day 21: Clinical Condition & Problem List Schemas](journey/month-2/day-21.md)
+    * [Day 22: Vital Signs & LOINC Telemetry Engine](journey/month-2/day-22.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
