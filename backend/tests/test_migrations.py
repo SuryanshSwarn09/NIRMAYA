@@ -40,7 +40,7 @@ def test_migration_revision_head(alembic_config) -> None:
     heads = script.get_heads()
 
     assert len(heads) == 1
-    assert heads[0] == "0004_conditions_schema"
+    assert heads[0] == "0005_observations_schema"
 
 
 def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
@@ -63,6 +63,7 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "doctor_slot",
         "appointment",
         "clinical_condition",
+        "clinical_observation",
         "alembic_version",
     }
     assert expected_tables.issubset(table_names), f"Missing tables: {expected_tables - table_names}"
@@ -114,6 +115,24 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "code_display",
     }.issubset(condition_cols)
 
+    # Verify key columns on 'clinical_observation'
+    observation_cols = {col["name"] for col in inspector.get_columns("clinical_observation")}
+    assert {
+        "id",
+        "patient_id",
+        "encounter_id",
+        "performer_doctor_id",
+        "status",
+        "category",
+        "code_value",
+        "code_display",
+        "effective_date_time",
+        "value_quantity",
+        "value_unit",
+        "components",
+        "interpretation",
+    }.issubset(observation_cols)
+
     engine.dispose()
 
     # 3. Run downgrade to base
@@ -133,6 +152,7 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "doctor_slot",
         "appointment",
         "clinical_condition",
+        "clinical_observation",
     }
     assert not core_tables.intersection(remaining_tables), f"Tables not dropped: {core_tables.intersection(remaining_tables)}"
 
