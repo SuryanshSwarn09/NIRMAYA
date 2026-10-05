@@ -13,11 +13,15 @@ from app.models.enums import (
     Gender,
     LabAccreditation,
     MedicalSpecialty,
+    ObservationCategory,
+    ObservationInterpretation,
+    ObservationStatus,
     SlotStatus,
     UserRole,
     VerificationStatus,
 )
 from app.models.lab import DiagnosticLabFacility
+from app.models.observation import ClinicalObservation
 from app.models.patient import PatientProfile
 from app.models.user import User
 
@@ -29,6 +33,7 @@ __all__ = [
     "DoctorSlot",
     "Appointment",
     "ClinicalCondition",
+    "ClinicalObservation",
     "UserRole",
     "Gender",
     "BloodGroup",
@@ -41,5 +46,8 @@ __all__ = [
     "VerificationStatus",
     "ConditionCategory",
     "ConditionSeverity",
+    "ObservationStatus",
+    "ObservationCategory",
+    "ObservationInterpretation",
 ]
 

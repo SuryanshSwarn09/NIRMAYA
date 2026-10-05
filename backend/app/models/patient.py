@@ -10,6 +10,7 @@ from app.models.enums import BloodGroup, Gender
 if TYPE_CHECKING:
     from app.models.appointment import Appointment, DoctorSlot
     from app.models.condition import ClinicalCondition
+    from app.models.observation import ClinicalObservation
     from app.models.user import User
 
 
@@ -113,6 +114,13 @@ class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # Longitudinal clinical conditions problem list
     conditions: Mapped[List["ClinicalCondition"]] = relationship(
         "ClinicalCondition",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+    )
+
+    # Observational telemetry and vital signs
+    observations: Mapped[List["ClinicalObservation"]] = relationship(
+        "ClinicalObservation",
         back_populates="patient",
         cascade="all, delete-orphan",
     )

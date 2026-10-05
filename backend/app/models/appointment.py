@@ -13,6 +13,7 @@ from app.models.enums import AppointmentStatus, AppointmentType, SlotStatus
 if TYPE_CHECKING:
     from app.models.condition import ClinicalCondition
     from app.models.doctor import DoctorProfile
+    from app.models.observation import ClinicalObservation
     from app.models.patient import PatientProfile
 
 
@@ -189,6 +190,10 @@ class Appointment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
     conditions: Mapped[List["ClinicalCondition"]] = relationship(
         "ClinicalCondition",
+        back_populates="encounter",
+    )
+    observations: Mapped[List["ClinicalObservation"]] = relationship(
+        "ClinicalObservation",
         back_populates="encounter",
     )
 
