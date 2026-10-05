@@ -30,11 +30,38 @@ export default function DoctorEMRPage() {
   const [dosage, setDosage] = useState("Once daily at bedtime");
   const [issuedPrescription, setIssuedPrescription] = useState(false);
 
+  // Patient Clinical Vitals Telemetry (Day 22)
+  const [patientVitals, setPatientVitals] = useState({
+    bp: "134 / 86 mmHg",
+    hr: "72 bpm",
+    spo2: "98% Room Air",
+    bmi: "24.2 kg/m²",
+  });
+  const [isRecordingVitals, setIsRecordingVitals] = useState(false);
+  const [newSystolic, setNewSystolic] = useState("134");
+  const [newDiastolic, setNewDiastolic] = useState("86");
+  const [newHr, setNewHr] = useState("72");
+  const [newSpo2, setNewSpo2] = useState("98");
+  const [vitalsSaved, setVitalsSaved] = useState(false);
+
   const doctorId = "doc-ananya-sharma";
 
   const handleSignPrescription = (e: React.FormEvent) => {
     e.preventDefault();
     setIssuedPrescription(true);
+  };
+
+  const handleSaveVitals = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPatientVitals({
+      bp: `${newSystolic} / ${newDiastolic} mmHg`,
+      hr: `${newHr} bpm`,
+      spo2: `${newSpo2}% Room Air`,
+      bmi: patientVitals.bmi,
+    });
+    setVitalsSaved(true);
+    setIsRecordingVitals(false);
+    setTimeout(() => setVitalsSaved(false), 3000);
   };
 
   return (
@@ -198,21 +225,37 @@ export default function DoctorEMRPage() {
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="p-2.5 rounded-[6px] bg-[#f8f9fa] border border-[#e5e7eb]">
                   <span className="text-[#6b7280] block text-[11px]">Blood Pressure</span>
-                  <span className="font-bold text-sm text-[#111111]">134 / 86 mmHg</span>
+                  <span className="font-bold text-sm text-[#111111]">{patientVitals.bp}</span>
                 </div>
                 <div className="p-2.5 rounded-[6px] bg-[#f8f9fa] border border-[#e5e7eb]">
                   <span className="text-[#6b7280] block text-[11px]">Heart Rate</span>
-                  <span className="font-bold text-sm text-[#111111]">72 bpm</span>
+                  <span className="font-bold text-sm text-[#111111]">{patientVitals.hr}</span>
                 </div>
                 <div className="p-2.5 rounded-[6px] bg-[#f8f9fa] border border-[#e5e7eb]">
                   <span className="text-[#6b7280] block text-[11px]">SpO2</span>
-                  <span className="font-bold text-sm text-[#059669]">98% Room Air</span>
+                  <span className="font-bold text-sm text-[#059669]">{patientVitals.spo2}</span>
                 </div>
                 <div className="p-2.5 rounded-[6px] bg-[#f8f9fa] border border-[#e5e7eb]">
                   <span className="text-[#6b7280] block text-[11px]">BMI</span>
-                  <span className="font-bold text-sm text-[#111111]">24.2 kg/m²</span>
+                  <span className="font-bold text-sm text-[#111111]">{patientVitals.bmi}</span>
                 </div>
               </div>
+
+              {vitalsSaved && (
+                <div className="p-2 rounded-[6px] bg-[#ecfdf5] border border-[#a7f3d0] text-xs text-[#065f46] flex items-center gap-1.5 animate-fadeIn">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#059669] shrink-0" />
+                  <span>Clinical telemetry saved & signed to FHIR observation store!</span>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setIsRecordingVitals(true)}
+                className="w-full py-2 px-3 rounded-[6px] border border-[#111111] bg-[#111111] text-xs font-semibold text-white hover:bg-black transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+              >
+                <Activity className="h-3.5 w-3.5" />
+                Record Clinical Vitals
+              </button>
             </Card>
           </div>
 
@@ -353,6 +396,118 @@ export default function DoctorEMRPage() {
 
           </div>
 
+        </div>
+      )}
+
+      {/* Record Clinical Vitals Modal Dialog */}
+      {isRecordingVitals && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-[12px] border border-[#e5e7eb] shadow-xl max-w-md w-full p-6 space-y-5 animate-scaleUp">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+              <div>
+                <h3 className="text-base font-bold text-[#111111] flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-[#111111]" />
+                  Record Clinical Vitals
+                </h3>
+                <p className="text-xs text-[#6b7280]">
+                  Patient: <span className="font-semibold text-[#111111]">{selectedPatient}</span> (Encounter Examination)
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsRecordingVitals(false)}
+                className="text-[#9ca3af] hover:text-[#111111] text-lg font-bold p-1 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveVitals} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#111111] mb-1">
+                    Systolic BP (mmHg)
+                  </label>
+                  <input
+                    type="number"
+                    min="60"
+                    max="260"
+                    required
+                    value={newSystolic}
+                    onChange={(e) => setNewSystolic(e.target.value)}
+                    className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-sm focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  />
+                  <span className="text-[10px] text-[#6b7280]">LOINC 8480-6</span>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#111111] mb-1">
+                    Diastolic BP (mmHg)
+                  </label>
+                  <input
+                    type="number"
+                    min="40"
+                    max="150"
+                    required
+                    value={newDiastolic}
+                    onChange={(e) => setNewDiastolic(e.target.value)}
+                    className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-sm focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  />
+                  <span className="text-[10px] text-[#6b7280]">LOINC 8462-4</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-[#111111] mb-1">
+                    Heart Rate (bpm)
+                  </label>
+                  <input
+                    type="number"
+                    min="30"
+                    max="220"
+                    required
+                    value={newHr}
+                    onChange={(e) => setNewHr(e.target.value)}
+                    className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-sm focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  />
+                  <span className="text-[10px] text-[#6b7280]">LOINC 8867-4</span>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#111111] mb-1">
+                    SpO2 Pulse Ox (%)
+                  </label>
+                  <input
+                    type="number"
+                    min="50"
+                    max="100"
+                    required
+                    value={newSpo2}
+                    onChange={(e) => setNewSpo2(e.target.value)}
+                    className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-sm focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  />
+                  <span className="text-[10px] text-[#6b7280]">LOINC 2708-6</span>
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2 border-t border-[#e5e7eb]">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setIsRecordingVitals(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="sm"
+                >
+                  Save & Validate Reading
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 

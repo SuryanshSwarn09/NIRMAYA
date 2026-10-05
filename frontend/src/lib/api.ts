@@ -467,6 +467,62 @@ class NIRMAYAAPIClient {
     );
   }
 
+  // ==========================================================================
+  // Clinical Observations & Vital Signs Telemetry
+  // ==========================================================================
+
+  public async recordObservation(
+    patientId: string,
+    payload: Partial<ClinicalObservation>
+  ) {
+    return this.post<ClinicalObservation>(
+      `/api/v1/patients/${patientId}/observations`,
+      payload
+    );
+  }
+
+  public async getPatientObservations(
+    patientId: string,
+    params?: Record<string, string | number | boolean | undefined>
+  ) {
+    return this.get<ClinicalObservation[]>(
+      `/api/v1/patients/${patientId}/observations`,
+      { params }
+    );
+  }
+
+  public async getLatestVitals(patientId: string) {
+    return this.get<VitalsSummary>(
+      `/api/v1/patients/${patientId}/observations/vitals/latest`
+    );
+  }
+
+  public async getObservationById(observationId: string) {
+    return this.get<ClinicalObservation>(
+      `/api/v1/observations/${observationId}`
+    );
+  }
+
+  public async updateObservation(
+    observationId: string,
+    payload: {
+      status?: ObservationStatus;
+      interpretation?: ObservationInterpretation;
+      note?: string;
+    }
+  ) {
+    return this.patch<ClinicalObservation>(
+      `/api/v1/observations/${observationId}`,
+      payload
+    );
+  }
+
+  public async getObservationFhir(observationId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/observations/${observationId}/fhir`
+    );
+  }
+
   public patch<T>(
     endpoint: string,
     body?: unknown,
@@ -480,5 +536,91 @@ class NIRMAYAAPIClient {
   }
 }
 
+// ============================================================================
+// Clinical Observation & Vital Signs Types
+// ============================================================================
+
+export type ObservationStatus =
+  | "registered"
+  | "preliminary"
+  | "final"
+  | "amended"
+  | "corrected"
+  | "cancelled"
+  | "entered-in-error"
+  | "unknown";
+
+export type ObservationCategory =
+  | "vital-signs"
+  | "laboratory"
+  | "imaging"
+  | "exam"
+  | "therapy"
+  | "activity"
+  | "social-history";
+
+export type ObservationInterpretation =
+  | "normal"
+  | "high"
+  | "low"
+  | "critically-high"
+  | "critically-low"
+  | "abnormal";
+
+export interface ObservationComponent {
+  code_system: string;
+  code_value: string;
+  code_display: string;
+  value_quantity: number;
+  value_unit: string;
+  value_code?: string;
+  interpretation?: ObservationInterpretation;
+  reference_range_low?: number;
+  reference_range_high?: number;
+}
+
+export interface ClinicalObservation {
+  id: string;
+  patient_id: string;
+  encounter_id?: string;
+  performer_doctor_id?: string;
+  status: ObservationStatus;
+  category: ObservationCategory;
+  code_coding_system: string;
+  code_value: string;
+  code_display: string;
+  effective_date_time: string;
+  issued_date_time: string;
+  value_quantity?: number;
+  value_unit?: string;
+  value_system?: string;
+  value_code?: string;
+  value_string?: string;
+  components?: ObservationComponent[];
+  reference_range_low?: number;
+  reference_range_high?: number;
+  reference_range_text?: string;
+  interpretation?: ObservationInterpretation;
+  body_site?: string;
+  method?: string;
+  note?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VitalsSummary {
+  blood_pressure?: ClinicalObservation;
+  heart_rate?: ClinicalObservation;
+  respiratory_rate?: ClinicalObservation;
+  body_temperature?: ClinicalObservation;
+  oxygen_saturation?: ClinicalObservation;
+  body_mass_index?: ClinicalObservation;
+  weight?: ClinicalObservation;
+  height?: ClinicalObservation;
+  blood_glucose?: ClinicalObservation;
+  last_recorded_at?: string;
+}
+
 export const apiClient = new NIRMAYAAPIClient();
+
 

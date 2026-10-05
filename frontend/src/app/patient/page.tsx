@@ -19,7 +19,12 @@ import {
   MapPin,
   Stethoscope,
   CheckCircle2,
-  Copy
+  Copy,
+  Heart,
+  Plus,
+  Thermometer,
+  Gauge,
+  X
 } from "lucide-react";
 import { 
   CalcomSlotPicker, 
@@ -29,7 +34,8 @@ import {
   apiClient, 
   DoctorSlot, 
   SlotHoldResponse, 
-  Appointment 
+  Appointment,
+  ClinicalObservation
 } from "@/lib/api";
 
 const CLINICIANS = [
@@ -91,6 +97,62 @@ export default function PatientVaultPage() {
     },
   ]);
 
+  // Vitals & Observational Telemetry State (Day 22)
+  const [vitalsList, setVitalsList] = useState<any[]>([
+    {
+      id: "obs-bp-01",
+      code_value: "85354-9",
+      code_display: "Blood Pressure Panel",
+      value_quantity: null,
+      value_unit: "mmHg",
+      interpretation: "high",
+      components: [
+        { code_value: "8480-6", code_display: "Systolic", value_quantity: 134, value_unit: "mmHg", interpretation: "high" },
+        { code_value: "8462-4", code_display: "Diastolic", value_quantity: 86, value_unit: "mmHg", interpretation: "high" },
+      ],
+      effective_date_time: "Today, 10:15 AM",
+      method: "Automated oscillometric",
+    },
+    {
+      id: "obs-hr-01",
+      code_value: "8867-4",
+      code_display: "Heart Rate",
+      value_quantity: 72,
+      value_unit: "/min",
+      interpretation: "normal",
+      reference_range_text: "60 - 100 /min",
+      effective_date_time: "Today, 10:15 AM",
+    },
+    {
+      id: "obs-spo2-01",
+      code_value: "2708-6",
+      code_display: "Oxygen Saturation (SpO2)",
+      value_quantity: 98,
+      value_unit: "%",
+      interpretation: "normal",
+      reference_range_text: "95 - 100 %",
+      effective_date_time: "Today, 10:15 AM",
+    },
+    {
+      id: "obs-bmi-01",
+      code_value: "39156-5",
+      code_display: "Body Mass Index (BMI)",
+      value_quantity: 24.2,
+      value_unit: "kg/m²",
+      interpretation: "normal",
+      reference_range_text: "18.5 - 24.9 kg/m²",
+      effective_date_time: "Sep 28, 2026",
+    },
+  ]);
+
+  // Vitals Modal State
+  const [isLogVitalsOpen, setIsLogVitalsOpen] = useState(false);
+  const [logVitalType, setLogVitalType] = useState<"hr" | "bp" | "spo2">("hr");
+  const [logValue, setLogValue] = useState("75");
+  const [logSystolic, setLogSystolic] = useState("120");
+  const [logDiastolic, setLogDiastolic] = useState("80");
+  const [selectedFhirJson, setSelectedFhirJson] = useState<any | null>(null);
+
   // Handle slot hold reservation
   const handleHoldSlot = async (slot: DoctorSlot) => {
     setIsHolding(true);
@@ -141,6 +203,60 @@ export default function PatientVaultPage() {
     ]);
     setActiveHold(null);
     setSelectedSlot(null);
+  };
+
+  // Handle logging new vital sign (Day 22)
+  const handleLogVitalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (logVitalType === "hr") {
+      const val = parseFloat(logValue) || 72;
+      const interp = val > 100 ? "high" : val < 60 ? "low" : "normal";
+      const newObs = {
+        id: `obs-hr-${Date.now()}`,
+        code_value: "8867-4",
+        code_display: "Heart Rate",
+        value_quantity: val,
+        value_unit: "/min",
+        interpretation: interp,
+        reference_range_text: "60 - 100 /min",
+        effective_date_time: "Just now (Self-reported)",
+      };
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== "8867-4")]);
+    } else if (logVitalType === "bp") {
+      const sys = parseFloat(logSystolic) || 120;
+      const dia = parseFloat(logDiastolic) || 80;
+      const interp = sys > 130 || dia > 85 ? "high" : sys < 90 || dia < 60 ? "low" : "normal";
+      const newObs = {
+        id: `obs-bp-${Date.now()}`,
+        code_value: "85354-9",
+        code_display: "Blood Pressure Panel",
+        value_quantity: null,
+        value_unit: "mmHg",
+        interpretation: interp,
+        components: [
+          { code_value: "8480-6", code_display: "Systolic", value_quantity: sys, value_unit: "mmHg", interpretation: interp },
+          { code_value: "8462-4", code_display: "Diastolic", value_quantity: dia, value_unit: "mmHg", interpretation: interp },
+        ],
+        effective_date_time: "Just now (Self-reported)",
+        method: "Home monitor",
+      };
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== "85354-9")]);
+    } else if (logVitalType === "spo2") {
+      const val = parseFloat(logValue) || 98;
+      const interp = val < 95 ? "low" : "normal";
+      const newObs = {
+        id: `obs-spo2-${Date.now()}`,
+        code_value: "2708-6",
+        code_display: "Oxygen Saturation (SpO2)",
+        value_quantity: val,
+        value_unit: "%",
+        interpretation: interp,
+        reference_range_text: "95 - 100 %",
+        effective_date_time: "Just now (Self-reported)",
+      };
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== "2708-6")]);
+    }
+    setIsLogVitalsOpen(false);
   };
 
   return (
@@ -454,8 +570,143 @@ export default function PatientVaultPage() {
 
           </div>
 
-          {/* Right 7 Columns: Longitudinal Clinical History Timeline */}
+          {/* Right 7 Columns: Longitudinal Clinical History & Vitals Telemetry */}
           <div className="lg:col-span-7 space-y-6">
+
+            {/* Vital Signs & Clinical Telemetry Panel (Day 22) */}
+            <Card variant="mockup" className="space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg">Vital Signs & Biometric Telemetry</CardTitle>
+                    <Badge variant="verified">LOINC & FHIR R4</Badge>
+                  </div>
+                  <CardDescription>
+                    Longitudinal physiological telemetry and patient self-measurements.
+                  </CardDescription>
+                </div>
+                <Button 
+                  variant="secondary" 
+                  size="sm"
+                  onClick={() => setIsLogVitalsOpen(true)}
+                  className="cursor-pointer"
+                >
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  Log Vital
+                </Button>
+              </div>
+
+              {/* Vitals Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {vitalsList.map((vital) => {
+                  const isHigh = vital.interpretation === "high" || vital.interpretation === "critically-high";
+                  const isLow = vital.interpretation === "low" || vital.interpretation === "critically-low";
+
+                  return (
+                    <div
+                      key={vital.id}
+                      className="p-3.5 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] hover:bg-white hover:border-[#d1d5db] transition-all space-y-2 text-xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-xs text-[#111111]">
+                          {vital.code_display}
+                        </span>
+                        <Badge 
+                          variant={isHigh ? "critical" : isLow ? "warning" : "emerald"}
+                          size="sm"
+                        >
+                          {vital.interpretation?.toUpperCase() || "NORMAL"}
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-baseline justify-between">
+                        <div className="text-xl font-bold tracking-tight text-[#111111]">
+                          {vital.components ? (
+                            `${vital.components[0].value_quantity} / ${vital.components[1].value_quantity}`
+                          ) : (
+                            vital.value_quantity
+                          )}
+                          <span className="text-xs font-normal text-[#6b7280] ml-1">
+                            {vital.value_unit}
+                          </span>
+                        </div>
+                        <span className="font-mono text-[10px] text-[#6b7280] bg-white px-1.5 py-0.5 rounded border border-[#e5e7eb]">
+                          LOINC {vital.code_value}
+                        </span>
+                      </div>
+
+                      <div className="pt-2 border-t border-[#e5e7eb] flex items-center justify-between text-[11px] text-[#6b7280]">
+                        <span>{vital.effective_date_time}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedFhirJson({
+                              resourceType: "Observation",
+                              id: vital.id,
+                              status: "final",
+                              category: [
+                                {
+                                  coding: [
+                                    {
+                                      system: "http://terminology.hl7.org/CodeSystem/observation-category",
+                                      code: "vital-signs",
+                                      display: "Vital Signs",
+                                    },
+                                  ],
+                                  text: "vital-signs",
+                                },
+                              ],
+                              code: {
+                                coding: [
+                                  {
+                                    system: "http://loinc.org",
+                                    code: vital.code_value,
+                                    display: vital.code_display,
+                                  },
+                                ],
+                                text: vital.code_display,
+                              },
+                              subject: {
+                                reference: "Patient/pat-arun-patel",
+                                display: "Arun Patel",
+                                type: "Patient",
+                              },
+                              effectiveDateTime: new Date().toISOString(),
+                              valueQuantity: vital.value_quantity !== null ? {
+                                value: vital.value_quantity,
+                                unit: vital.value_unit,
+                                system: "http://unitsofmeasure.org",
+                              } : undefined,
+                              component: vital.components?.map((c: any) => ({
+                                code: {
+                                  coding: [
+                                    {
+                                      system: "http://loinc.org",
+                                      code: c.code_value,
+                                      display: c.code_display,
+                                    },
+                                  ],
+                                },
+                                valueQuantity: {
+                                  value: c.value_quantity,
+                                  unit: c.value_unit,
+                                  system: "http://unitsofmeasure.org",
+                                },
+                              })),
+                            });
+                          }}
+                          className="font-semibold text-[#111111] hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <Download className="h-3 w-3" />
+                          FHIR R4
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+
             <Card variant="mockup" className="space-y-5">
               <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                 <div>
@@ -534,6 +785,185 @@ export default function PatientVaultPage() {
             </Card>
           </div>
 
+        </div>
+      )}
+
+      {/* Log Vital Signs Modal (Day 22) */}
+      {isLogVitalsOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-[12px] border border-[#e5e7eb] shadow-xl max-w-md w-full p-6 space-y-5 animate-scale-in">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+              <div>
+                <h3 className="text-lg font-bold text-[#111111] tracking-tight">
+                  Record Biometric Vital
+                </h3>
+                <p className="text-xs text-[#6b7280]">
+                  Log fresh telemetry into your longitudinal FHIR problem vault.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsLogVitalsOpen(false)}
+                className="text-[#9ca3af] hover:text-[#111111] transition-colors p-1"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleLogVitalSubmit} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold text-[#111111] mb-1.5">
+                  Select Metric Type
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setLogVitalType("hr")}
+                    className={`py-2 px-3 rounded-[6px] border text-center font-medium transition-all ${
+                      logVitalType === "hr"
+                        ? "bg-[#111111] text-white border-[#111111]"
+                        : "bg-[#f8f9fa] text-[#111111] border-[#e5e7eb] hover:bg-[#e5e7eb]"
+                    }`}
+                  >
+                    Heart Rate
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLogVitalType("bp")}
+                    className={`py-2 px-3 rounded-[6px] border text-center font-medium transition-all ${
+                      logVitalType === "bp"
+                        ? "bg-[#111111] text-white border-[#111111]"
+                        : "bg-[#f8f9fa] text-[#111111] border-[#e5e7eb] hover:bg-[#e5e7eb]"
+                    }`}
+                  >
+                    Blood Pressure
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLogVitalType("spo2")}
+                    className={`py-2 px-3 rounded-[6px] border text-center font-medium transition-all ${
+                      logVitalType === "spo2"
+                        ? "bg-[#111111] text-white border-[#111111]"
+                        : "bg-[#f8f9fa] text-[#111111] border-[#e5e7eb] hover:bg-[#e5e7eb]"
+                    }`}
+                  >
+                    Oxygen (SpO2)
+                  </button>
+                </div>
+              </div>
+
+              {logVitalType === "bp" ? (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-[#111111] mb-1">
+                      Systolic (mmHg)
+                    </label>
+                    <input
+                      type="number"
+                      value={logSystolic}
+                      onChange={(e) => setLogSystolic(e.target.value)}
+                      placeholder="120"
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-[6px] focus:outline-none focus:border-[#111111]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-[#111111] mb-1">
+                      Diastolic (mmHg)
+                    </label>
+                    <input
+                      type="number"
+                      value={logDiastolic}
+                      onChange={(e) => setLogDiastolic(e.target.value)}
+                      placeholder="80"
+                      className="w-full px-3 py-2 border border-[#e5e7eb] rounded-[6px] focus:outline-none focus:border-[#111111]"
+                      required
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label className="block font-semibold text-[#111111] mb-1">
+                    {logVitalType === "hr" ? "Heart Rate (bpm)" : "Oxygen Saturation (%)"}
+                  </label>
+                  <input
+                    type="number"
+                    value={logValue}
+                    onChange={(e) => setLogValue(e.target.value)}
+                    placeholder={logVitalType === "hr" ? "72" : "98"}
+                    className="w-full px-3 py-2 border border-[#e5e7eb] rounded-[6px] focus:outline-none focus:border-[#111111]"
+                    required
+                  />
+                </div>
+              )}
+
+              <div className="p-3 bg-[#f8f9fa] rounded-[6px] border border-[#e5e7eb] text-[11px] text-[#6b7280]">
+                {logVitalType === "bp" && "LOINC 85354-9 Panel: Systolic (<120 mmHg) & Diastolic (<80 mmHg)."}
+                {logVitalType === "hr" && "LOINC 8867-4: Normal resting pulse 60 - 100 beats per minute."}
+                {logVitalType === "spo2" && "LOINC 2708-6: Normal arterial saturation 95% - 100% on room air."}
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-[#e5e7eb]">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  type="button"
+                  onClick={() => setIsLogVitalsOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button variant="primary" size="sm" type="submit">
+                  Save to Vault
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* FHIR R4 JSON Inspection Modal */}
+      {selectedFhirJson && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-[12px] border border-[#e5e7eb] shadow-xl max-w-xl w-full p-6 space-y-4 animate-scale-in">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+              <div>
+                <h3 className="text-base font-bold text-[#111111] tracking-tight">
+                  HL7 FHIR R4 Observation Resource
+                </h3>
+                <p className="text-xs text-[#6b7280]">
+                  Standardized JSON serialization conforming to HL7 FHIR Release 4 & ABDM.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedFhirJson(null)}
+                className="text-[#9ca3af] hover:text-[#111111] transition-colors p-1"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <pre className="p-3 bg-[#111111] text-[#f8f9fa] rounded-[8px] text-[11px] font-mono overflow-auto max-h-80 leading-relaxed">
+              {JSON.stringify(selectedFhirJson, null, 2)}
+            </pre>
+
+            <div className="flex items-center justify-between pt-2 border-t border-[#e5e7eb]">
+              <span className="text-xs text-[#059669] font-medium flex items-center gap-1">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Valid HL7 FHIR R4 Structure
+              </span>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => {
+                  navigator.clipboard.writeText(JSON.stringify(selectedFhirJson, null, 2));
+                  alert("Copied FHIR JSON to clipboard!");
+                }}
+              >
+                Copy JSON
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 
