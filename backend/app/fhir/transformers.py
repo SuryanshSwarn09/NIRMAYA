@@ -21,8 +21,12 @@ from app.fhir.schemas import (
     FHIREncounter,
     FHIREncounterParticipant,
     FHIRIdentifier,
+    FHIRObservation,
+    FHIRObservationComponent,
+    FHIRObservationReferenceRange,
     FHIRParticipant,
     FHIRPeriod,
+    FHIRQuantity,
     FHIRReference,
 )
 from app.models.appointment import Appointment
@@ -33,8 +37,12 @@ from app.models.enums import (
     ClinicalStatus,
     ConditionCategory,
     ConditionSeverity,
+    ObservationCategory,
+    ObservationInterpretation,
+    ObservationStatus,
     VerificationStatus,
 )
+from app.models.observation import ClinicalObservation
 
 
 # ============================================================================
@@ -47,11 +55,51 @@ HL7_PARTICIPATION_TYPE_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-Partic
 HL7_CONDITION_CLINICAL_SYSTEM = "http://terminology.hl7.org/CodeSystem/condition-clinical"
 HL7_CONDITION_VER_STATUS_SYSTEM = "http://terminology.hl7.org/CodeSystem/condition-ver-status"
 HL7_CONDITION_CATEGORY_SYSTEM = "http://terminology.hl7.org/CodeSystem/condition-category"
+HL7_OBSERVATION_CATEGORY_SYSTEM = "http://terminology.hl7.org/CodeSystem/observation-category"
+HL7_OBSERVATION_STATUS_SYSTEM = "http://hl7.org/fhir/observation-status"
+HL7_OBSERVATION_INTERPRETATION_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"
 SNOMED_CT_SYSTEM = "http://snomed.info/sct"
+LOINC_SYSTEM = "http://loinc.org"
+UCUM_SYSTEM = "http://unitsofmeasure.org"
 NIRMAYA_APPOINTMENT_SYSTEM = "https://nirmaya.health/fhir/appointment"
 NIRMAYA_ENCOUNTER_SYSTEM = "https://nirmaya.health/fhir/encounter"
 NIRMAYA_CONDITION_SYSTEM = "https://nirmaya.health/fhir/condition"
+NIRMAYA_OBSERVATION_SYSTEM = "https://nirmaya.health/fhir/observation"
 NIRMAYA_CARE_CONTEXT_SYSTEM = "https://nirmaya.health/abdm/care-context"
+
+# Observation interpretation mappings to HL7 v3 ObservationInterpretation concepts
+OBSERVATION_INTERPRETATION_MAPPINGS: Dict[ObservationInterpretation, FHIRCoding] = {
+    ObservationInterpretation.NORMAL: FHIRCoding(
+        system=HL7_OBSERVATION_INTERPRETATION_SYSTEM,
+        code="N",
+        display="Normal",
+    ),
+    ObservationInterpretation.HIGH: FHIRCoding(
+        system=HL7_OBSERVATION_INTERPRETATION_SYSTEM,
+        code="H",
+        display="High",
+    ),
+    ObservationInterpretation.LOW: FHIRCoding(
+        system=HL7_OBSERVATION_INTERPRETATION_SYSTEM,
+        code="L",
+        display="Low",
+    ),
+    ObservationInterpretation.CRITICALLY_HIGH: FHIRCoding(
+        system=HL7_OBSERVATION_INTERPRETATION_SYSTEM,
+        code="HH",
+        display="Critical high",
+    ),
+    ObservationInterpretation.CRITICALLY_LOW: FHIRCoding(
+        system=HL7_OBSERVATION_INTERPRETATION_SYSTEM,
+        code="LL",
+        display="Critical low",
+    ),
+    ObservationInterpretation.ABNORMAL: FHIRCoding(
+        system=HL7_OBSERVATION_INTERPRETATION_SYSTEM,
+        code="A",
+        display="Abnormal",
+    ),
+}
 
 # Condition severity mappings to SNOMED-CT concepts
 CONDITION_SEVERITY_MAPPINGS: Dict[ConditionSeverity, FHIRCoding] = {
@@ -711,6 +759,239 @@ def to_fhir_condition(cond: ClinicalCondition) -> FHIRCondition:
         recorder=recorder_ref,
         note=notes,
     )
+
+
+def to_fhir_observation(obs: ClinicalObservation) -> FHIRObservation:
+    """Transform internal NIRMAYA ClinicalObservation model into standard HL7 FHIR R4 Observation.
+
+    Translates quantitative readings, multi-component panels (Blood Pressure), reference
+    ranges, and clinical interpretation flags into certified FHIR R4 schemas.
+    """
+    # 1. Identifiers
+    identifiers = [
+        FHIRIdentifier(
+            system=NIRMAYA_OBSERVATION_SYSTEM,
+            value=obs.id,
+            use="official",
+        )
+    ]
+
+    # 2. Category
+    category_list = [
+        FHIRCodeableConcept(
+            coding=[
+                FHIRCoding(
+                    system=HL7_OBSERVATION_CATEGORY_SYSTEM,
+                    code=obs.category.value,
+                    display=obs.category.value.replace("-", " ").title(),
+                )
+            ],
+            text=obs.category.value,
+        )
+    ]
+
+    # 3. Code (LOINC)
+    code_cc = FHIRCodeableConcept(
+        coding=[
+            FHIRCoding(
+                system=obs.code_coding_system,
+                code=obs.code_value,
+                display=obs.code_display,
+            )
+        ],
+        text=obs.code_display,
+    )
+
+    # 4. Subject (Patient)
+    patient_display = None
+    if getattr(obs, "patient", None) and getattr(obs.patient, "user", None):
+        patient_display = obs.patient.user.full_name
+    subject_ref = FHIRReference(
+        reference=f"Patient/{obs.patient_id}",
+        display=patient_display,
+        type="Patient",
+    )
+
+    # 5. Encounter
+    encounter_ref = None
+    if obs.encounter_id:
+        encounter_ref = FHIRReference(
+            reference=f"Encounter/{obs.encounter_id}",
+            type="Encounter",
+        )
+
+    # 6. Performer (Doctor)
+    performers: List[FHIRReference] = []
+    if obs.performer_doctor_id:
+        doctor_display = None
+        if getattr(obs, "performer_doctor", None) and getattr(obs.performer_doctor, "user", None):
+            doctor_display = obs.performer_doctor.user.full_name
+        performers.append(
+            FHIRReference(
+                reference=f"Practitioner/{obs.performer_doctor_id}",
+                display=doctor_display,
+                type="Practitioner",
+            )
+        )
+
+    # 7. ValueQuantity (for single quantitative observation)
+    value_quantity = None
+    if obs.value_quantity is not None:
+        value_quantity = FHIRQuantity(
+            value=obs.value_quantity,
+            unit=obs.value_unit,
+            system=obs.value_system or UCUM_SYSTEM,
+            code=obs.value_code,
+        )
+
+    # 8. Reference Range
+    ref_ranges: List[FHIRObservationReferenceRange] = []
+    if (
+        obs.reference_range_low is not None
+        or obs.reference_range_high is not None
+        or obs.reference_range_text is not None
+    ):
+        low_qty = None
+        if obs.reference_range_low is not None:
+            low_qty = FHIRQuantity(
+                value=obs.reference_range_low,
+                unit=obs.value_unit,
+                system=obs.value_system or UCUM_SYSTEM,
+                code=obs.value_code,
+            )
+        high_qty = None
+        if obs.reference_range_high is not None:
+            high_qty = FHIRQuantity(
+                value=obs.reference_range_high,
+                unit=obs.value_unit,
+                system=obs.value_system or UCUM_SYSTEM,
+                code=obs.value_code,
+            )
+        ref_ranges.append(
+            FHIRObservationReferenceRange(
+                low=low_qty,
+                high=high_qty,
+                text=obs.reference_range_text,
+            )
+        )
+
+    # 9. Interpretation
+    interpretations: List[FHIRCodeableConcept] = []
+    if obs.interpretation and obs.interpretation in OBSERVATION_INTERPRETATION_MAPPINGS:
+        interp_coding = OBSERVATION_INTERPRETATION_MAPPINGS[obs.interpretation]
+        interpretations.append(
+            FHIRCodeableConcept(
+                coding=[interp_coding],
+                text=obs.interpretation.value.capitalize(),
+            )
+        )
+
+    # 10. Multi-components (e.g. Systolic & Diastolic BP)
+    components: List[FHIRObservationComponent] = []
+    if obs.components:
+        for c in obs.components:
+            comp_code = FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system=c.get("code_system", LOINC_SYSTEM),
+                        code=c.get("code_value", ""),
+                        display=c.get("code_display", ""),
+                    )
+                ],
+                text=c.get("code_display", ""),
+            )
+            comp_qty = None
+            if c.get("value_quantity") is not None:
+                comp_qty = FHIRQuantity(
+                    value=float(c["value_quantity"]),
+                    unit=c.get("value_unit", "mmHg"),
+                    system=UCUM_SYSTEM,
+                    code=c.get("value_code", "mm[Hg]"),
+                )
+            comp_interps: List[FHIRCodeableConcept] = []
+            c_interp = c.get("interpretation")
+            if c_interp:
+                interp_enum = None
+                for enum_val in ObservationInterpretation:
+                    if enum_val.value == c_interp:
+                        interp_enum = enum_val
+                        break
+                if interp_enum and interp_enum in OBSERVATION_INTERPRETATION_MAPPINGS:
+                    comp_interps.append(
+                        FHIRCodeableConcept(
+                            coding=[OBSERVATION_INTERPRETATION_MAPPINGS[interp_enum]],
+                            text=interp_enum.value.capitalize(),
+                        )
+                    )
+            comp_ref_ranges: List[FHIRObservationReferenceRange] = []
+            if c.get("reference_range_low") is not None or c.get("reference_range_high") is not None:
+                c_low = (
+                    FHIRQuantity(value=float(c["reference_range_low"]), unit=c.get("value_unit"))
+                    if c.get("reference_range_low") is not None
+                    else None
+                )
+                c_high = (
+                    FHIRQuantity(value=float(c["reference_range_high"]), unit=c.get("value_unit"))
+                    if c.get("reference_range_high") is not None
+                    else None
+                )
+                comp_ref_ranges.append(
+                    FHIRObservationReferenceRange(
+                        low=c_low,
+                        high=c_high,
+                        text=c.get("reference_range_text"),
+                    )
+                )
+
+            components.append(
+                FHIRObservationComponent(
+                    code=comp_code,
+                    valueQuantity=comp_qty,
+                    valueString=c.get("value_string"),
+                    interpretation=comp_interps,
+                    referenceRange=comp_ref_ranges,
+                )
+            )
+
+    # 11. Body site & Method
+    body_site = None
+    if obs.body_site:
+        body_site = FHIRCodeableConcept(text=obs.body_site)
+    method = None
+    if obs.method:
+        method = FHIRCodeableConcept(text=obs.method)
+
+    # 12. Notes
+    notes: List[FHIRAnnotation] = []
+    if obs.note:
+        notes.append(
+            FHIRAnnotation(
+                text=obs.note,
+                time=obs.issued_date_time,
+            )
+        )
+
+    return FHIRObservation(
+        id=obs.id,
+        identifier=identifiers,
+        status=obs.status.value,
+        category=category_list,
+        code=code_cc,
+        subject=subject_ref,
+        encounter=encounter_ref,
+        effectiveDateTime=obs.effective_date_time,
+        issued=obs.issued_date_time,
+        performer=performers,
+        valueQuantity=value_quantity,
+        valueString=obs.value_string,
+        interpretation=interpretations,
+        note=notes,
+        bodySite=body_site,
+        method=method,
+        referenceRange=ref_ranges,
+        component=components,
+    )
+
 
 
 

@@ -338,6 +338,164 @@ class FHIRCondition(BaseModel):
 
 
 # ============================================================================
+# HL7 FHIR R4 Observation Resource & Components
+# ============================================================================
+
+
+class FHIRQuantity(BaseModel):
+    """HL7 FHIR Release 4 Quantity datatype.
+
+    Reference: http://hl7.org/fhir/R4/datatypes.html#Quantity
+    """
+
+    value: float = Field(
+        description="Numerical value (with implicit precision)",
+        example=120.0,
+    )
+    unit: Optional[str] = Field(
+        default=None,
+        description="Unit representation (e.g. mmHg, bpm, %)",
+        example="mmHg",
+    )
+    system: Optional[str] = Field(
+        default="http://unitsofmeasure.org",
+        description="System that defines coded unit form (e.g. UCUM)",
+        example="http://unitsofmeasure.org",
+    )
+    code: Optional[str] = Field(
+        default=None,
+        description="Coded form of the unit (UCUM code)",
+        example="mm[Hg]",
+    )
+
+
+class FHIRObservationReferenceRange(BaseModel):
+    """HL7 FHIR Release 4 Observation.referenceRange component."""
+
+    low: Optional[FHIRQuantity] = Field(
+        default=None,
+        description="Low Range limit if relevant",
+    )
+    high: Optional[FHIRQuantity] = Field(
+        default=None,
+        description="High Range limit if relevant",
+    )
+    text: Optional[str] = Field(
+        default=None,
+        description="Text based reference range in an observation",
+        example="60 - 100 /min",
+    )
+
+
+class FHIRObservationComponent(BaseModel):
+    """HL7 FHIR Release 4 Observation.component for compound observations."""
+
+    code: FHIRCodeableConcept = Field(
+        description="Type of component observation (e.g. Systolic BP LOINC 8480-6)",
+    )
+    valueQuantity: Optional[FHIRQuantity] = Field(
+        default=None,
+        description="Actual component quantity result",
+    )
+    valueString: Optional[str] = Field(
+        default=None,
+        description="Actual component string result",
+    )
+    interpretation: List[FHIRCodeableConcept] = Field(
+        default_factory=list,
+        description="High, low, normal, etc. for component",
+    )
+    referenceRange: List[FHIRObservationReferenceRange] = Field(
+        default_factory=list,
+        description="Provides guide for interpretation of component result",
+    )
+
+
+class FHIRObservation(BaseModel):
+    """HL7 FHIR Release 4 Observation Resource.
+
+    Measurements and simple assertions made about a patient, device or other subject.
+    Reference: http://hl7.org/fhir/R4/observation.html
+    """
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    resourceType: Literal["Observation"] = Field(
+        default="Observation",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this observation artifact",
+    )
+    identifier: List[FHIRIdentifier] = Field(
+        default_factory=list,
+        description="Business Identifier for observation",
+    )
+    status: str = Field(
+        default="final",
+        description="registered | preliminary | final | amended | corrected | cancelled | entered-in-error | unknown",
+    )
+    category: List[FHIRCodeableConcept] = Field(
+        default_factory=list,
+        description="Classification of type of observation (vital-signs | laboratory | exam | etc.)",
+    )
+    code: FHIRCodeableConcept = Field(
+        description="Type of observation (code / type)",
+    )
+    subject: FHIRReference = Field(
+        description="Who and/or what the observation is about (Patient)",
+    )
+    encounter: Optional[FHIRReference] = Field(
+        default=None,
+        description="Healthcare event during which this observation is made",
+    )
+    effectiveDateTime: Optional[datetime] = Field(
+        default=None,
+        description="Clinically relevant time/time-period for observation",
+    )
+    issued: Optional[datetime] = Field(
+        default=None,
+        description="Date/Time this version was made available",
+    )
+    performer: List[FHIRReference] = Field(
+        default_factory=list,
+        description="Who is responsible for the observation (Practitioner / Doctor)",
+    )
+    valueQuantity: Optional[FHIRQuantity] = Field(
+        default=None,
+        description="Actual quantitative result",
+    )
+    valueString: Optional[str] = Field(
+        default=None,
+        description="Actual qualitative string result",
+    )
+    interpretation: List[FHIRCodeableConcept] = Field(
+        default_factory=list,
+        description="High, low, normal, etc.",
+    )
+    note: List[FHIRAnnotation] = Field(
+        default_factory=list,
+        description="Comments about the observation",
+    )
+    bodySite: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Observed body part",
+    )
+    method: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="How it was done",
+    )
+    referenceRange: List[FHIRObservationReferenceRange] = Field(
+        default_factory=list,
+        description="Provides guide for interpretation",
+    )
+    component: List[FHIRObservationComponent] = Field(
+        default_factory=list,
+        description="Component results for compound observations (e.g. Systolic & Diastolic BP)",
+    )
+
+
+# ============================================================================
 # FHIR R4 Multi-Resource Collection Bundle
 # ============================================================================
 

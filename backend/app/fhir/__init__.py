@@ -13,8 +13,12 @@ from app.fhir.schemas import (
     FHIREncounter,
     FHIREncounterParticipant,
     FHIRIdentifier,
+    FHIRObservation,
+    FHIRObservationComponent,
+    FHIRObservationReferenceRange,
     FHIRParticipant,
     FHIRPeriod,
+    FHIRQuantity,
     FHIRReference,
 )
 from app.fhir.transformers import (
@@ -23,6 +27,7 @@ from app.fhir.transformers import (
     to_fhir_condition,
     to_fhir_encounter,
     to_fhir_encounter_bundle,
+    to_fhir_observation,
 )
 
 __all__ = [
@@ -38,12 +43,17 @@ __all__ = [
     "FHIREncounter",
     "FHIREncounterParticipant",
     "FHIRIdentifier",
+    "FHIRObservation",
+    "FHIRObservationComponent",
+    "FHIRObservationReferenceRange",
     "FHIRParticipant",
     "FHIRPeriod",
+    "FHIRQuantity",
     "FHIRReference",
     "to_abdm_health_information_artifact",
     "to_fhir_appointment",
     "to_fhir_encounter",
     "to_fhir_encounter_bundle",
     "to_fhir_condition",
+    "to_fhir_observation",
 ]
