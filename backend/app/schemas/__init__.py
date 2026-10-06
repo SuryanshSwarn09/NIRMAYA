@@ -59,6 +59,22 @@ from app.schemas.condition import (
     ConditionUpdate,
 )
 
+from app.schemas.observation import (
+    ObservationBase,
+    ObservationComponentSchema,
+    ObservationCreate,
+    ObservationFilter,
+    ObservationResponse,
+    ObservationUpdate,
+)
+from app.schemas.soap_note import (
+    SoapNoteBase,
+    SoapNoteCreate,
+    SoapNoteFilter,
+    SoapNoteResponse,
+    SoapNoteSignRequest,
+    SoapNoteUpdate,
+)
 from app.schemas.user import (
     UserBase,
     UserCreate,
@@ -114,6 +130,19 @@ __all__ = [
     "ConditionUpdate",
     "ConditionResponse",
     "ConditionFilter",
+    "ObservationBase",
+    "ObservationComponentSchema",
+    "ObservationCreate",
+    "ObservationUpdate",
+    "ObservationResponse",
+    "ObservationFilter",
+    "SoapNoteBase",
+    "SoapNoteCreate",
+    "SoapNoteUpdate",
+    "SoapNoteSignRequest",
+    "SoapNoteResponse",
+    "SoapNoteFilter",
 ]
+
 
 
