@@ -193,3 +193,28 @@ class ObservationInterpretation(str, Enum):
     CRITICALLY_LOW = "critically-low"
     ABNORMAL = "abnormal"
 
+
+class ClinicalNoteType(str, Enum):
+    """Clinical documentation category aligned with HL7 FHIR R4 and LOINC Document Types.
+
+    Reference: https://loinc.org/11506-3/ (Progress note)
+    """
+
+    SOAP = "soap"
+    CONSULTATION = "consultation"
+    PROGRESS_NOTE = "progress-note"
+    DISCHARGE_SUMMARY = "discharge-summary"
+
+
+class ClinicalNoteStatus(str, Enum):
+    """Workflow and signature state of the clinical document aligned with HL7 FHIR R4 CompositionStatus.
+
+    Reference: http://hl7.org/fhir/R4/valueset-composition-status.html
+    """
+
+    PRELIMINARY = "preliminary"
+    FINAL = "final"
+    AMENDED = "amended"
+    ENTERED_IN_ERROR = "entered-in-error"
+
+
