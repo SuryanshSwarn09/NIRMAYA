@@ -38,6 +38,22 @@ from app.services.slot_engine import (
     release_slot_hold,
     sweep_expired_holds,
 )
+from app.services.observation import (
+    record_observation,
+    get_observation_by_id,
+    list_patient_observations,
+    get_latest_vitals_summary,
+    update_observation,
+)
+from app.services.soap_note import (
+    create_soap_note,
+    get_soap_note_by_id,
+    list_patient_soap_notes,
+    update_soap_note,
+    sign_soap_note,
+    delete_soap_note,
+    SoapNoteService,
+)
 
 __all__ = [
     # Patient service
@@ -64,8 +80,6 @@ __all__ = [
     "sweep_expired_holds",
     "hold_slot",
     "release_slot_hold",
-
-
     # Appointment service
     "book_appointment",
     "get_appointment_by_id",
@@ -77,5 +91,18 @@ __all__ = [
     "list_patient_conditions",
     "update_condition",
     "delete_condition",
+    # Observation service
+    "record_observation",
+    "get_observation_by_id",
+    "list_patient_observations",
+    "get_latest_vitals_summary",
+    "update_observation",
+    # SOAP note service
+    "create_soap_note",
+    "get_soap_note_by_id",
+    "list_patient_soap_notes",
+    "update_soap_note",
+    "sign_soap_note",
+    "delete_soap_note",
+    "SoapNoteService",
 ]
-
