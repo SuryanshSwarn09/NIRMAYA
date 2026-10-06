@@ -137,10 +137,9 @@ async def list_patient_soap_notes_endpoint(
 
     return PaginatedResponse(
         success=True,
-        message="Patient clinical notes retrieved successfully",
         data=[SoapNoteResponse.model_validate(n) for n in notes],
-        meta=PaginationMeta(
-            total=total,
+        pagination=PaginationMeta(
+            total_count=total,
             page=page,
             limit=limit,
             total_pages=total_pages,
