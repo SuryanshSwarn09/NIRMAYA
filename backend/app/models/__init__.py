@@ -16,6 +16,8 @@ from app.models.enums import (
     ObservationCategory,
     ObservationInterpretation,
     ObservationStatus,
+    ClinicalNoteType,
+    ClinicalNoteStatus,
     SlotStatus,
     UserRole,
     VerificationStatus,
@@ -23,6 +25,7 @@ from app.models.enums import (
 from app.models.lab import DiagnosticLabFacility
 from app.models.observation import ClinicalObservation
 from app.models.patient import PatientProfile
+from app.models.soap_note import SoapNote
 from app.models.user import User
 
 __all__ = [
@@ -34,6 +37,7 @@ __all__ = [
     "Appointment",
     "ClinicalCondition",
     "ClinicalObservation",
+    "SoapNote",
     "UserRole",
     "Gender",
     "BloodGroup",
@@ -49,5 +53,7 @@ __all__ = [
     "ObservationStatus",
     "ObservationCategory",
     "ObservationInterpretation",
+    "ClinicalNoteType",
+    "ClinicalNoteStatus",
 ]
 

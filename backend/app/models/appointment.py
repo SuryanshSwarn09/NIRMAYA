@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from app.models.doctor import DoctorProfile
     from app.models.observation import ClinicalObservation
     from app.models.patient import PatientProfile
+    from app.models.soap_note import SoapNote
 
 
 class DoctorSlot(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -194,6 +195,10 @@ class Appointment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
     observations: Mapped[List["ClinicalObservation"]] = relationship(
         "ClinicalObservation",
+        back_populates="encounter",
+    )
+    soap_notes: Mapped[List["SoapNote"]] = relationship(
+        "SoapNote",
         back_populates="encounter",
     )
 

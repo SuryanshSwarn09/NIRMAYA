@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from app.models.appointment import Appointment, DoctorSlot
     from app.models.condition import ClinicalCondition
     from app.models.observation import ClinicalObservation
+    from app.models.soap_note import SoapNote
     from app.models.user import User
 
 
@@ -113,6 +114,12 @@ class DoctorProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     performed_observations: Mapped[List["ClinicalObservation"]] = relationship(
         "ClinicalObservation",
         back_populates="performer_doctor",
+    )
+
+    # Structured SOAP clinical notes authored by this doctor
+    authored_soap_notes: Mapped[List["SoapNote"]] = relationship(
+        "SoapNote",
+        back_populates="doctor",
     )
 
     def __repr__(self) -> str:
