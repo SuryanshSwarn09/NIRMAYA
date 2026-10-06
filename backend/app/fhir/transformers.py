@@ -17,10 +17,13 @@ from app.fhir.schemas import (
     FHIRBundleEntry,
     FHIRCodeableConcept,
     FHIRCoding,
+    FHIRComposition,
+    FHIRCompositionSection,
     FHIRCondition,
     FHIREncounter,
     FHIREncounterParticipant,
     FHIRIdentifier,
+    FHIRNarrative,
     FHIRObservation,
     FHIRObservationComponent,
     FHIRObservationReferenceRange,
@@ -34,6 +37,8 @@ from app.models.condition import ClinicalCondition
 from app.models.enums import (
     AppointmentStatus,
     AppointmentType,
+    ClinicalNoteStatus,
+    ClinicalNoteType,
     ClinicalStatus,
     ConditionCategory,
     ConditionSeverity,
@@ -43,6 +48,7 @@ from app.models.enums import (
     VerificationStatus,
 )
 from app.models.observation import ClinicalObservation
+from app.models.soap_note import SoapNote
 
 
 # ============================================================================
@@ -65,6 +71,7 @@ NIRMAYA_APPOINTMENT_SYSTEM = "https://nirmaya.health/fhir/appointment"
 NIRMAYA_ENCOUNTER_SYSTEM = "https://nirmaya.health/fhir/encounter"
 NIRMAYA_CONDITION_SYSTEM = "https://nirmaya.health/fhir/condition"
 NIRMAYA_OBSERVATION_SYSTEM = "https://nirmaya.health/fhir/observation"
+NIRMAYA_COMPOSITION_SYSTEM = "https://nirmaya.health/fhir/composition"
 NIRMAYA_CARE_CONTEXT_SYSTEM = "https://nirmaya.health/abdm/care-context"
 
 # Observation interpretation mappings to HL7 v3 ObservationInterpretation concepts
@@ -991,6 +998,197 @@ def to_fhir_observation(obs: ClinicalObservation) -> FHIRObservation:
         referenceRange=ref_ranges,
         component=components,
     )
+
+
+# ============================================================================
+# HL7 FHIR Release 4 Composition Transformer (Clinical SOAP Notes)
+# ============================================================================
+
+
+def to_fhir_composition(note: SoapNote) -> FHIRComposition:
+    """Transforms a relational SoapNote clinical document into an HL7 FHIR R4 Composition resource.
+
+    Formats standard LOINC narrative sections:
+    - Chief Complaint (LOINC 10154-3)
+    - Subjective narrative (LOINC 61150-9)
+    - Objective examination & observations (LOINC 61149-1)
+    - Assessment & clinical evaluation (LOINC 51848-0)
+    - Plan of care & therapeutics (LOINC 18776-5)
+    """
+    # 1. Subject reference (Patient)
+    patient_display = (
+        getattr(getattr(note, "patient", None), "abha_address", None)
+        or f"Patient {note.patient_id}"
+    )
+    subject_ref = FHIRReference(
+        reference=f"Patient/{note.patient_id}",
+        display=patient_display,
+    )
+
+    # 2. Encounter reference (Encounter)
+    encounter_ref = None
+    if note.encounter_id:
+        encounter_ref = FHIRReference(
+            reference=f"Encounter/{note.encounter_id}",
+            display=f"Encounter {note.encounter_id}",
+        )
+
+    # 3. Practitioner Author reference
+    authors = []
+    if note.doctor_id:
+        doc_display = (
+            getattr(getattr(note, "doctor", None), "registration_number", None)
+            or f"Practitioner {note.doctor_id}"
+        )
+        authors.append(
+            FHIRReference(
+                reference=f"Practitioner/{note.doctor_id}",
+                display=doc_display,
+            )
+        )
+
+    # 4. Note classification LOINC coding
+    type_code = "11506-3"
+    type_display = "Provider-unspecified Progress note"
+    if note.note_type == ClinicalNoteType.CONSULTATION:
+        type_code = "11488-4"
+        type_display = "Consultation note"
+    elif note.note_type == ClinicalNoteType.DISCHARGE_SUMMARY:
+        type_code = "18842-5"
+        type_display = "Discharge summary"
+
+    doc_type = FHIRCodeableConcept(
+        coding=[
+            FHIRCoding(
+                system=LOINC_SYSTEM,
+                code=type_code,
+                display=type_display,
+            )
+        ],
+        text=note.title,
+    )
+
+    doc_category = [
+        FHIRCodeableConcept(
+            coding=[
+                FHIRCoding(
+                    system=LOINC_SYSTEM,
+                    code="LP173421-1",
+                    display="Report",
+                )
+            ],
+            text="Clinical Encounter Documentation",
+        )
+    ]
+
+    # 5. Build structured LOINC sections
+    sections: List[FHIRCompositionSection] = [
+        FHIRCompositionSection(
+            title="Chief Complaint",
+            code=FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system=LOINC_SYSTEM,
+                        code="10154-3",
+                        display="Chief complaint narrative",
+                    )
+                ],
+                text="Chief Complaint",
+            ),
+            text=FHIRNarrative(
+                status="generated",
+                div=f"<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>{note.chief_complaint}</p></div>",
+            ),
+        ),
+        FHIRCompositionSection(
+            title="Subjective",
+            code=FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system=LOINC_SYSTEM,
+                        code="61150-9",
+                        display="Subjective narrative",
+                    )
+                ],
+                text="Subjective",
+            ),
+            text=FHIRNarrative(
+                status="generated",
+                div=f"<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>{note.subjective}</p></div>",
+            ),
+        ),
+        FHIRCompositionSection(
+            title="Objective",
+            code=FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system=LOINC_SYSTEM,
+                        code="61149-1",
+                        display="Objective narrative",
+                    )
+                ],
+                text="Objective",
+            ),
+            text=FHIRNarrative(
+                status="generated",
+                div=f"<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>{note.objective}</p></div>",
+            ),
+        ),
+        FHIRCompositionSection(
+            title="Assessment",
+            code=FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system=LOINC_SYSTEM,
+                        code="51848-0",
+                        display="Evaluation note",
+                    )
+                ],
+                text="Assessment",
+            ),
+            text=FHIRNarrative(
+                status="generated",
+                div=f"<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>{note.assessment}</p></div>",
+            ),
+        ),
+        FHIRCompositionSection(
+            title="Plan",
+            code=FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system=LOINC_SYSTEM,
+                        code="18776-5",
+                        display="Plan of care note",
+                    )
+                ],
+                text="Plan",
+            ),
+            text=FHIRNarrative(
+                status="generated",
+                div=f"<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>{note.plan}</p></div>",
+            ),
+        ),
+    ]
+
+    effective_date = note.signed_at or note.updated_at or note.created_at
+
+    return FHIRComposition(
+        id=note.id,
+        identifier=FHIRIdentifier(
+            system=NIRMAYA_COMPOSITION_SYSTEM,
+            value=note.id,
+        ),
+        status=note.status.value,
+        type=doc_type,
+        category=doc_category,
+        subject=subject_ref,
+        encounter=encounter_ref,
+        date=effective_date,
+        author=authors,
+        title=note.title,
+        section=sections,
+    )
+
 
 
 

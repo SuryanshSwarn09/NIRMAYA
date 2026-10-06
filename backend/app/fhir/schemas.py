@@ -512,6 +512,96 @@ class FHIRBundleEntry(BaseModel):
     )
 
 
+# ============================================================================
+# FHIR R4 Composition Resource (Clinical Notes & Documentation)
+# ============================================================================
+
+
+class FHIRNarrative(BaseModel):
+    """Human-readable XHTML narrative block conforming to HL7 FHIR R4 specs."""
+
+    status: str = Field(
+        default="generated",
+        description="generated | extensions | additional | empty",
+        example="generated",
+    )
+    div: str = Field(
+        description="Limited XHTML div content",
+    )
+
+
+class FHIRCompositionSection(BaseModel):
+    """Composition narrative section representing clinical document components."""
+
+    title: Optional[str] = Field(
+        default=None,
+        description="Label for section (e.g. 'Subjective', 'Objective', 'Assessment', 'Plan')",
+    )
+    code: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Classification of section (e.g. LOINC narrative code)",
+    )
+    text: Optional[FHIRNarrative] = Field(
+        default=None,
+        description="Text summary of the section, for human interpretation",
+    )
+
+
+class FHIRComposition(BaseModel):
+    """HL7 FHIR Release 4 Composition resource model.
+
+    Represents a set of healthcare information that is physically assembled into a single logical package
+    providing a single coherent clinical statement, such as a consultation note or SOAP note.
+    Reference: http://hl7.org/fhir/R4/composition.html
+    """
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    resourceType: Literal["Composition"] = Field(
+        default="Composition",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this clinical composition artifact",
+    )
+    identifier: Optional[FHIRIdentifier] = Field(
+        default=None,
+        description="Version-independent identifier for the Composition",
+    )
+    status: str = Field(
+        description="preliminary | final | amended | entered-in-error",
+        example="final",
+    )
+    type: FHIRCodeableConcept = Field(
+        description="Kind of composition (e.g. LOINC 11506-3 Progress note)",
+    )
+    category: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Categorization of Composition",
+    )
+    subject: FHIRReference = Field(
+        description="Who and/or what the composition is about",
+    )
+    encounter: Optional[FHIRReference] = Field(
+        default=None,
+        description="Context of the Composition",
+    )
+    date: datetime = Field(
+        description="Composition editing / signature time (UTC)",
+    )
+    author: List[FHIRReference] = Field(
+        default_factory=list,
+        description="Who and/or what authored the composition",
+    )
+    title: str = Field(
+        description="Human Readable name/key for the document",
+    )
+    section: List[FHIRCompositionSection] = Field(
+        default_factory=list,
+        description="Composition sections for Chief Complaint, Subjective, Objective, Assessment, Plan",
+    )
+
+
 class FHIRBundle(BaseModel):
     """HL7 FHIR Release 4 Collection or Document Bundle."""
 
