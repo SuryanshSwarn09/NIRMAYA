@@ -11,6 +11,20 @@ export interface APIResponseEnvelope<T = unknown> {
   request_id?: string;
 }
 
+export interface PaginationMeta {
+  total_count: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+  has_next: boolean;
+  has_prev: boolean;
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  pagination: PaginationMeta;
+}
+
 export interface ErrorDetail {
   location?: string;
   message: string;
@@ -523,6 +537,56 @@ class NIRMAYAAPIClient {
     );
   }
 
+  // ==========================================================================
+  // Structured SOAP Clinical Notes Methods
+  // ==========================================================================
+
+  public async createSoapNote(patientId: string, payload: SoapNoteCreate) {
+    return this.post<SoapNote>(
+      `/api/v1/patients/${patientId}/soap-notes`,
+      payload
+    );
+  }
+
+  public async getPatientSoapNotes(
+    patientId: string,
+    params?: {
+      status?: ClinicalNoteStatus;
+      note_type?: ClinicalNoteType;
+      encounter_id?: string;
+      is_signed?: boolean;
+      page?: number;
+      limit?: number;
+    }
+  ) {
+    return this.get<PaginatedResponse<SoapNote>>(
+      `/api/v1/patients/${patientId}/soap-notes`,
+      { params: params as Record<string, string | number | boolean | undefined> }
+    );
+  }
+
+  public async getSoapNoteById(noteId: string) {
+    return this.get<SoapNote>(`/api/v1/soap-notes/${noteId}`);
+  }
+
+  public async updateSoapNote(
+    noteId: string,
+    payload: Partial<SoapNoteCreate>
+  ) {
+    return this.patch<SoapNote>(`/api/v1/soap-notes/${noteId}`, payload);
+  }
+
+  public async signSoapNote(
+    noteId: string,
+    payload?: { comments?: string }
+  ) {
+    return this.post<SoapNote>(`/api/v1/soap-notes/${noteId}/sign`, payload);
+  }
+
+  public async getSoapNoteFhir(noteId: string) {
+    return this.get<Record<string, unknown>>(`/api/v1/soap-notes/${noteId}/fhir`);
+  }
+
   public patch<T>(
     endpoint: string,
     body?: unknown,
@@ -621,6 +685,62 @@ export interface VitalsSummary {
   last_recorded_at?: string;
 }
 
+// ============================================================================
+// Structured SOAP Clinical Notes Types
+// ============================================================================
+
+export type ClinicalNoteType =
+  | "soap"
+  | "consultation"
+  | "progress-note"
+  | "discharge-summary";
+
+export type ClinicalNoteStatus =
+  | "preliminary"
+  | "final"
+  | "amended"
+  | "entered-in-error";
+
+export interface SoapNote {
+  id: string;
+  patient_id: string;
+  doctor_id?: string;
+  encounter_id?: string;
+  note_type: ClinicalNoteType;
+  status: ClinicalNoteStatus;
+  title: string;
+  chief_complaint: string;
+  subjective: string;
+  objective: string;
+  assessment: string;
+  plan: string;
+  primary_diagnosis_code?: string;
+  primary_diagnosis_display?: string;
+  follow_up_instructions?: string;
+  is_signed: boolean;
+  signed_at?: string;
+  signature_hash?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SoapNoteCreate {
+  encounter_id?: string;
+  doctor_id?: string;
+  note_type?: ClinicalNoteType;
+  title?: string;
+  chief_complaint: string;
+  subjective: string;
+  objective: string;
+  assessment: string;
+  plan: string;
+  primary_diagnosis_code?: string;
+  primary_diagnosis_display?: string;
+  follow_up_instructions?: string;
+  status?: ClinicalNoteStatus;
+}
+
 export const apiClient = new NIRMAYAAPIClient();
+
 
 

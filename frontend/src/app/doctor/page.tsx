@@ -24,6 +24,7 @@ import { DoctorSlotManager } from "@/components/appointments";
 
 export default function DoctorEMRPage() {
   const { user } = useAuth();
+  const doctorId = user?.id || "doc-ananya-sharma";
   const [activeTab, setActiveTab] = useState<"queue" | "slots">("queue");
   const [selectedPatient, setSelectedPatient] = useState("Arun Patel");
   const [medication, setMedication] = useState("Atorvastatin 20mg");
@@ -44,7 +45,27 @@ export default function DoctorEMRPage() {
   const [newSpo2, setNewSpo2] = useState("98");
   const [vitalsSaved, setVitalsSaved] = useState(false);
 
-  const doctorId = "doc-ananya-sharma";
+  // Structured SOAP Clinical Documentation (Day 23)
+  const [chiefComplaint, setChiefComplaint] = useState(
+    "Exertional dyspnea and morning fatigue during cardiac rehabilitation"
+  );
+  const [subjectiveNotes, setSubjectiveNotes] = useState(
+    "Patient reports mild exertional shortness of breath when climbing 2 flights of stairs. Denies orthopnea, paroxysmal nocturnal dyspnea, or chest pain. Compliant with prescribed antihypertensives."
+  );
+  const [objectiveNotes, setObjectiveNotes] = useState(
+    "BP 134/86 mmHg, HR 72 bpm regular rhythm, SpO2 98% room air. Dual heart sounds S1 S2 present, no murmurs. JVP normal. Bilateral vesicular breath sounds without crackles or wheezing."
+  );
+  const [assessmentNotes, setAssessmentNotes] = useState(
+    "1. Essential (primary) hypertension, well-compensated.\n2. Exertional Dyspnea NYHA Class I-II, stable.\n3. Lipid Profile surveillance pending."
+  );
+  const [planNotes, setPlanNotes] = useState(
+    "1. Continue current medical regimen: Atorvastatin 20mg nocte and Amlodipine.\n2. Requisition 12-lead resting ECG and Fasting Lipid Panel.\n3. Return for clinical review in 4 weeks."
+  );
+  const [soapPrimaryDx, setSoapPrimaryDx] = useState("I10 - Essential (primary) hypertension");
+  const [isSoapSigned, setIsSoapSigned] = useState(false);
+  const [soapSignatureHash, setSoapSignatureHash] = useState("");
+  const [isViewingSoapFhir, setIsViewingSoapFhir] = useState(false);
+  const [soapTab, setSoapTab] = useState<"s" | "o" | "a" | "p">("s");
 
   const handleSignPrescription = (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +84,14 @@ export default function DoctorEMRPage() {
     setIsRecordingVitals(false);
     setTimeout(() => setVitalsSaved(false), 3000);
   };
+
+  const handleSignSoapNote = (e: React.FormEvent) => {
+    e.preventDefault();
+    const mockHash = "7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069";
+    setIsSoapSigned(true);
+    setSoapSignatureHash(mockHash);
+  };
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-white">
@@ -262,56 +291,208 @@ export default function DoctorEMRPage() {
           {/* Right 8 Columns: Clinical Consultation Note & Digital Prescription Pad */}
           <div className="lg:col-span-8 space-y-6">
             
-            {/* Consultation Note Pad */}
+            {/* Structured SOAP Clinical Documentation Pad (Day 23) */}
             <Card variant="mockup" className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#e5e7eb] gap-2">
                 <div>
-                  <CardTitle className="text-base sm:text-lg">
-                    Clinical Encounter Examination: {selectedPatient}
-                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base sm:text-lg">
+                      Structured SOAP Encounter Note: {selectedPatient}
+                    </CardTitle>
+                    {isSoapSigned ? (
+                      <Badge variant="verified" size="sm">Final & Signed</Badge>
+                    ) : (
+                      <Badge variant="pending" size="sm">Preliminary Draft</Badge>
+                    )}
+                  </div>
                   <CardDescription>
-                    Serializes to HL7 FHIR R4 Encounter & Observation bundles upon signature.
+                    HL7 FHIR R4 Composition • LOINC 11506-3 Narrative Sections
                   </CardDescription>
                 </div>
-                <Badge variant="abdm" size="sm">CareContext Linkable</Badge>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setIsViewingSoapFhir(true)}
+                    className="py-1 px-2.5 rounded-[6px] border border-[#e5e7eb] bg-[#f8f9fa] text-xs font-semibold text-[#111111] hover:bg-[#e5e7eb] transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Code className="h-3.5 w-3.5" />
+                    FHIR Composition
+                  </button>
+                  <Badge variant="abdm" size="sm">CareContext Linkable</Badge>
+                </div>
               </div>
 
-              <div className="space-y-3 text-xs sm:text-sm">
+              {isSoapSigned && (
+                <div className="p-3.5 rounded-[8px] border border-[#a7f3d0] bg-[#ecfdf5] space-y-2 text-xs animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 font-bold text-[#065f46]">
+                      <CheckCircle2 className="h-4 w-4" />
+                      <span>Encounter Finalized & Electronically Signed (SHA-256)</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setIsSoapSigned(false)}
+                      className="text-[11px] underline font-semibold text-[#065f46] cursor-pointer"
+                    >
+                      Amend Note
+                    </button>
+                  </div>
+                  <div className="font-mono text-[11px] text-[#047857] truncate bg-white/60 p-1.5 rounded border border-[#a7f3d0]">
+                    Digest: {soapSignatureHash}
+                  </div>
+                </div>
+              )}
+
+              {/* Chief Complaint & Primary Diagnosis Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                 <div>
                   <label className="block text-xs font-semibold text-[#111111] mb-1">
-                    Subjective Clinical Impression & Symptoms
+                    Chief Complaint (LOINC 10154-3)
                   </label>
-                  <textarea
-                    rows={3}
-                    defaultValue="Patient reports well-managed blood pressure with mild morning fatigue. Denies chest pain or shortness of breath on routine exertion."
-                    className="w-full p-3 rounded-[8px] border border-[#e5e7eb] text-xs sm:text-sm text-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                  <input
+                    type="text"
+                    disabled={isSoapSigned}
+                    value={chiefComplaint}
+                    onChange={(e) => setChiefComplaint(e.target.value)}
+                    className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f8f9fa]"
                   />
                 </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-[#111111] mb-1">
-                      ICD-10 Clinical Coding
-                    </label>
-                    <input
-                      type="text"
-                      defaultValue="I10 (Essential Primary Hypertension)"
-                      className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#111111]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[#111111] mb-1">
-                      Encounter Class
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      defaultValue="Ambulatory Clinic (AMB - ActCode)"
-                      className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] font-mono text-xs text-[#6b7280]"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#111111] mb-1">
+                    Primary Diagnosis Coding (ICD-10 / SNOMED)
+                  </label>
+                  <input
+                    type="text"
+                    disabled={isSoapSigned}
+                    value={soapPrimaryDx}
+                    onChange={(e) => setSoapPrimaryDx(e.target.value)}
+                    className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs font-mono focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f8f9fa]"
+                  />
                 </div>
               </div>
+
+              {/* SOAP Section Selector Tabs */}
+              <div className="flex border-b border-[#e5e7eb] gap-1 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setSoapTab("s")}
+                  className={`py-1.5 px-3 text-xs font-semibold rounded-t-[6px] border-b-2 cursor-pointer transition-all ${
+                    soapTab === "s"
+                      ? "border-[#111111] text-[#111111] bg-[#f8f9fa]"
+                      : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                  }`}
+                >
+                  [S] Subjective (LOINC 61150-9)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSoapTab("o")}
+                  className={`py-1.5 px-3 text-xs font-semibold rounded-t-[6px] border-b-2 cursor-pointer transition-all ${
+                    soapTab === "o"
+                      ? "border-[#111111] text-[#111111] bg-[#f8f9fa]"
+                      : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                  }`}
+                >
+                  [O] Objective (LOINC 61149-1)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSoapTab("a")}
+                  className={`py-1.5 px-3 text-xs font-semibold rounded-t-[6px] border-b-2 cursor-pointer transition-all ${
+                    soapTab === "a"
+                      ? "border-[#111111] text-[#111111] bg-[#f8f9fa]"
+                      : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                  }`}
+                >
+                  [A] Assessment (LOINC 51848-0)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSoapTab("p")}
+                  className={`py-1.5 px-3 text-xs font-semibold rounded-t-[6px] border-b-2 cursor-pointer transition-all ${
+                    soapTab === "p"
+                      ? "border-[#111111] text-[#111111] bg-[#f8f9fa]"
+                      : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                  }`}
+                >
+                  [P] Plan (LOINC 18776-5)
+                </button>
+              </div>
+
+              {/* Active Tab Textarea */}
+              <div className="space-y-3">
+                {soapTab === "s" && (
+                  <div>
+                    <span className="block text-[11px] text-[#6b7280] mb-1">
+                      Patient-reported history of present illness, symptom chronology, onset, lifestyle & risk factors:
+                    </span>
+                    <textarea
+                      rows={4}
+                      disabled={isSoapSigned}
+                      value={subjectiveNotes}
+                      onChange={(e) => setSubjectiveNotes(e.target.value)}
+                      className="w-full p-3 rounded-[8px] border border-[#e5e7eb] text-xs sm:text-sm text-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f8f9fa]"
+                    />
+                  </div>
+                )}
+                {soapTab === "o" && (
+                  <div>
+                    <span className="block text-[11px] text-[#6b7280] mb-1">
+                      Physical examination findings, general condition, cardiovascular examination & vitals review:
+                    </span>
+                    <textarea
+                      rows={4}
+                      disabled={isSoapSigned}
+                      value={objectiveNotes}
+                      onChange={(e) => setObjectiveNotes(e.target.value)}
+                      className="w-full p-3 rounded-[8px] border border-[#e5e7eb] text-xs sm:text-sm text-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f8f9fa]"
+                    />
+                  </div>
+                )}
+                {soapTab === "a" && (
+                  <div>
+                    <span className="block text-[11px] text-[#6b7280] mb-1">
+                      Clinical impression, diagnosis evaluation, disease staging, and differential diagnoses:
+                    </span>
+                    <textarea
+                      rows={4}
+                      disabled={isSoapSigned}
+                      value={assessmentNotes}
+                      onChange={(e) => setAssessmentNotes(e.target.value)}
+                      className="w-full p-3 rounded-[8px] border border-[#e5e7eb] text-xs sm:text-sm text-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f8f9fa]"
+                    />
+                  </div>
+                )}
+                {soapTab === "p" && (
+                  <div>
+                    <span className="block text-[11px] text-[#6b7280] mb-1">
+                      Care management plan, medication regimens, diagnostic lab requisitions, and patient instructions:
+                    </span>
+                    <textarea
+                      rows={4}
+                      disabled={isSoapSigned}
+                      value={planNotes}
+                      onChange={(e) => setPlanNotes(e.target.value)}
+                      className="w-full p-3 rounded-[8px] border border-[#e5e7eb] text-xs sm:text-sm text-[#111111] focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f8f9fa]"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {!isSoapSigned && (
+                <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#e5e7eb]">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="md"
+                    onClick={handleSignSoapNote}
+                    className="cursor-pointer"
+                  >
+                    <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                    Sign & Finalize SOAP Note (SHA-256)
+                  </Button>
+                </div>
+              )}
             </Card>
 
             {/* E-Prescription Generator */}
@@ -507,6 +688,121 @@ export default function DoctorEMRPage() {
                 </Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Inspect HL7 FHIR R4 Composition Modal (Day 23) */}
+      {isViewingSoapFhir && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-[12px] border border-[#e5e7eb] shadow-xl max-w-2xl w-full p-6 space-y-4 animate-scaleUp">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+              <div>
+                <h3 className="text-base font-bold text-[#111111] flex items-center gap-2">
+                  <Code className="h-4 w-4 text-[#111111]" />
+                  HL7 FHIR R4 Composition Resource
+                </h3>
+                <p className="text-xs text-[#6b7280]">
+                  Document Type: LOINC 11506-3 Progress note • Patient: {selectedPatient}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsViewingSoapFhir(false)}
+                className="text-[#9ca3af] hover:text-[#111111] text-lg font-bold p-1 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <pre className="p-3.5 rounded-[8px] bg-[#111111] text-[#f8f9fa] text-xs font-mono overflow-auto max-h-[380px]">
+              {JSON.stringify(
+                {
+                  resourceType: "Composition",
+                  id: "soap-encounter-01",
+                  status: isSoapSigned ? "final" : "preliminary",
+                  type: {
+                    coding: [
+                      {
+                        system: "http://loinc.org",
+                        code: "11506-3",
+                        display: "Provider-unspecified Progress note",
+                      },
+                    ],
+                    text: "Cardiology Follow-up SOAP Note",
+                  },
+                  subject: {
+                    reference: `Patient/${selectedPatient.toLowerCase().replace(" ", "-")}`,
+                    display: selectedPatient,
+                  },
+                  author: [
+                    {
+                      reference: "Practitioner/doc-ananya-sharma",
+                      display: "Dr. Ananya Sharma (DMC-2026-9901)",
+                    },
+                  ],
+                  section: [
+                    {
+                      title: "Chief Complaint",
+                      code: {
+                        coding: [
+                          { system: "http://loinc.org", code: "10154-3", display: "Chief complaint narrative" },
+                        ],
+                      },
+                      text: { status: "generated", div: `<div>${chiefComplaint}</div>` },
+                    },
+                    {
+                      title: "Subjective",
+                      code: {
+                        coding: [
+                          { system: "http://loinc.org", code: "61150-9", display: "Subjective narrative" },
+                        ],
+                      },
+                      text: { status: "generated", div: `<div>${subjectiveNotes}</div>` },
+                    },
+                    {
+                      title: "Objective",
+                      code: {
+                        coding: [
+                          { system: "http://loinc.org", code: "61149-1", display: "Objective narrative" },
+                        ],
+                      },
+                      text: { status: "generated", div: `<div>${objectiveNotes}</div>` },
+                    },
+                    {
+                      title: "Assessment",
+                      code: {
+                        coding: [
+                          { system: "http://loinc.org", code: "51848-0", display: "Evaluation note" },
+                        ],
+                      },
+                      text: { status: "generated", div: `<div>${assessmentNotes}</div>` },
+                    },
+                    {
+                      title: "Plan",
+                      code: {
+                        coding: [
+                          { system: "http://loinc.org", code: "18776-5", display: "Plan of care note" },
+                        ],
+                      },
+                      text: { status: "generated", div: `<div>${planNotes}</div>` },
+                    },
+                  ],
+                },
+                null,
+                2
+              )}
+            </pre>
+
+            <div className="pt-2 flex items-center justify-end border-t border-[#e5e7eb]">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsViewingSoapFhir(false)}
+              >
+                Close Preview
+              </Button>
+            </div>
           </div>
         </div>
       )}

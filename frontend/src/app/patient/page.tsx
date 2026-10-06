@@ -707,6 +707,155 @@ export default function PatientVaultPage() {
               </div>
             </Card>
 
+            {/* Clinical Encounter Documentation & SOAP Notes (Day 23) */}
+            <Card variant="mockup" className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#e5e7eb] gap-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-lg">Clinical Consultation Notes (SOAP)</CardTitle>
+                    <Badge variant="verified">FHIR Composition</Badge>
+                  </div>
+                  <CardDescription>
+                    Structured clinical encounter notes authored and signed by attending physicians.
+                  </CardDescription>
+                </div>
+                <Badge variant="abdm" size="sm">CareContext Linkable</Badge>
+              </div>
+
+              {/* Consultation Note 1 */}
+              <div className="p-4 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] space-y-3 text-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5e7eb] pb-2.5">
+                  <div>
+                    <span className="font-bold text-sm text-[#111111]">
+                      Cardiology Outpatient Consultation
+                    </span>
+                    <span className="text-xs text-[#6b7280] block sm:inline sm:ml-2">
+                      by <span className="font-semibold text-[#111111]">Dr. Ananya Sharma</span> (Chief Cardiologist, AIIMS)
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="verified" size="sm">Signed & Final</Badge>
+                    <span className="font-mono text-[11px] text-[#6b7280]">Today, 10:30 AM</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb]">
+                    <span className="text-[#6b7280] block text-[10px] font-semibold uppercase tracking-wider">
+                      Chief Complaint (LOINC 10154-3)
+                    </span>
+                    <p className="text-[#111111] font-medium mt-0.5">
+                      Exertional dyspnea and morning fatigue during cardiac rehabilitation
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb]">
+                    <span className="text-[#6b7280] block text-[10px] font-semibold uppercase tracking-wider">
+                      Primary Diagnosis (ICD-10)
+                    </span>
+                    <p className="text-[#111111] font-mono font-medium mt-0.5">
+                      I10 - Essential (primary) hypertension
+                    </p>
+                  </div>
+                </div>
+
+                {/* 4 SOAP Blocks */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                  <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb] space-y-1">
+                    <span className="font-semibold text-[#111111] flex items-center gap-1">
+                      <span className="text-[#059669] font-bold">[S]</span> Subjective (LOINC 61150-9)
+                    </span>
+                    <p className="text-[#6b7280]">
+                      Patient reports mild exertional shortness of breath when climbing 2 flights of stairs. Compliant with antihypertensives.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb] space-y-1">
+                    <span className="font-semibold text-[#111111] flex items-center gap-1">
+                      <span className="text-[#0284c7] font-bold">[O]</span> Objective (LOINC 61149-1)
+                    </span>
+                    <p className="text-[#6b7280]">
+                      BP 134/86 mmHg, HR 72 bpm regular rhythm, SpO2 98% room air. Dual heart sounds S1 S2 present, no murmurs.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb] space-y-1">
+                    <span className="font-semibold text-[#111111] flex items-center gap-1">
+                      <span className="text-[#d97706] font-bold">[A]</span> Assessment (LOINC 51848-0)
+                    </span>
+                    <p className="text-[#6b7280]">
+                      Essential hypertension, well-compensated. Exertional Dyspnea NYHA Class I-II, stable.
+                    </p>
+                  </div>
+                  <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb] space-y-1">
+                    <span className="font-semibold text-[#111111] flex items-center gap-1">
+                      <span className="text-[#7c3aed] font-bold">[P]</span> Plan (LOINC 18776-5)
+                    </span>
+                    <p className="text-[#6b7280]">
+                      Continue Atorvastatin 20mg nocte and Amlodipine. Requisition 12-lead ECG and Lipid Panel. Follow-up in 4 weeks.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-[#e5e7eb] flex items-center justify-between text-[11px]">
+                  <span className="font-mono text-[#059669] flex items-center gap-1">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    SHA-256 Attestation: 7f83b165...9069
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedFhirJson({
+                        resourceType: "Composition",
+                        id: "comp-cardio-01",
+                        status: "final",
+                        type: {
+                          coding: [
+                            {
+                              system: "http://loinc.org",
+                              code: "11506-3",
+                              display: "Provider-unspecified Progress note",
+                            },
+                          ],
+                          text: "Cardiology Outpatient Consultation",
+                        },
+                        subject: { reference: "Patient/rajesh-sharma", display: "Rajesh Sharma" },
+                        author: [{ reference: "Practitioner/doc-ananya-sharma", display: "Dr. Ananya Sharma" }],
+                        section: [
+                          {
+                            title: "Chief Complaint",
+                            code: { coding: [{ system: "http://loinc.org", code: "10154-3" }] },
+                            text: { status: "generated", div: "<div>Exertional dyspnea and morning fatigue</div>" },
+                          },
+                          {
+                            title: "Subjective",
+                            code: { coding: [{ system: "http://loinc.org", code: "61150-9" }] },
+                            text: { status: "generated", div: "<div>Patient reports mild exertional shortness of breath.</div>" },
+                          },
+                          {
+                            title: "Objective",
+                            code: { coding: [{ system: "http://loinc.org", code: "61149-1" }] },
+                            text: { status: "generated", div: "<div>BP 134/86 mmHg, HR 72 bpm, SpO2 98%.</div>" },
+                          },
+                          {
+                            title: "Assessment",
+                            code: { coding: [{ system: "http://loinc.org", code: "51848-0" }] },
+                            text: { status: "generated", div: "<div>Essential hypertension, well-compensated.</div>" },
+                          },
+                          {
+                            title: "Plan",
+                            code: { coding: [{ system: "http://loinc.org", code: "18776-5" }] },
+                            text: { status: "generated", div: "<div>Continue Atorvastatin 20mg nocte and Amlodipine.</div>" },
+                          },
+                        ],
+                      });
+                    }}
+                    className="font-semibold text-[#111111] hover:underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <Download className="h-3 w-3" />
+                    Inspect FHIR Composition
+                  </button>
+                </div>
+              </div>
+            </Card>
+
             <Card variant="mockup" className="space-y-5">
               <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                 <div>
