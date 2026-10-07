@@ -3,6 +3,7 @@ from app.api.v1.endpoints import (
     appointments,
     auth,
     conditions,
+    diagnostics,
     doctors,
     health,
     meta,
@@ -21,6 +22,7 @@ api_router.include_router(appointments.router, prefix="/appointments", tags=["Cl
 api_router.include_router(conditions.router, prefix="", tags=["Clinical Conditions & Problem List"])
 api_router.include_router(observations.router, prefix="", tags=["Clinical Observations & Vital Signs"])
 api_router.include_router(soap_notes.router, prefix="", tags=["Clinical SOAP Notes & Encounter Documentation"])
+api_router.include_router(diagnostics.router, prefix="", tags=["Diagnostic Orders & Laboratory Reports"])
 
 
 
