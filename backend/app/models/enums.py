@@ -218,3 +218,75 @@ class ClinicalNoteStatus(str, Enum):
     ENTERED_IN_ERROR = "entered-in-error"
 
 
+class ServiceRequestStatus(str, Enum):
+    """Clinical status of the diagnostic requisition aligned with HL7 FHIR R4 RequestStatus.
+
+    Reference: http://hl7.org/fhir/R4/valueset-request-status.html
+    """
+
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ON_HOLD = "on-hold"
+    REVOKED = "revoked"
+    COMPLETED = "completed"
+    ENTERED_IN_ERROR = "entered-in-error"
+    UNKNOWN = "unknown"
+
+
+class ServiceRequestIntent(str, Enum):
+    """Clinical intent of the service request aligned with HL7 FHIR R4 RequestIntent.
+
+    Reference: http://hl7.org/fhir/R4/valueset-request-intent.html
+    """
+
+    PROPOSAL = "proposal"
+    PLAN = "plan"
+    DIRECTIVE = "directive"
+    ORDER = "order"
+    ORIGINAL_ORDER = "original-order"
+    REFLEX_ORDER = "reflex-order"
+
+
+class ServiceRequestPriority(str, Enum):
+    """Clinical urgency level of the request aligned with HL7 FHIR R4 RequestPriority.
+
+    Reference: http://hl7.org/fhir/R4/valueset-request-priority.html
+    """
+
+    ROUTINE = "routine"
+    URGENT = "urgent"
+    ASAP = "asap"
+    STAT = "stat"
+
+
+class DiagnosticReportStatus(str, Enum):
+    """Lifecycle and verification state of the diagnostic report aligned with HL7 FHIR R4 DiagnosticReportStatus.
+
+    Reference: http://hl7.org/fhir/R4/valueset-diagnostic-report-status.html
+    """
+
+    REGISTERED = "registered"
+    PRELIMINARY = "preliminary"
+    FINAL = "final"
+    AMENDED = "amended"
+    CORRECTED = "corrected"
+    APPENDED = "appended"
+    CANCELLED = "cancelled"
+    ENTERED_IN_ERROR = "entered-in-error"
+    UNKNOWN = "unknown"
+
+
+class SpecimenType(str, Enum):
+    """Biological specimen source aligned with SNOMED-CT specimen types."""
+
+    SERUM = "serum"
+    PLASMA = "plasma"
+    WHOLE_BLOOD = "whole_blood"
+    URINE = "urine"
+    SALIVA = "saliva"
+    TISSUE = "tissue"
+    SWAB = "swab"
+    OTHER = "other"
+
+
+
