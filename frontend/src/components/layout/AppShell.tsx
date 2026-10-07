@@ -32,7 +32,7 @@ export function AppShell({ children }: AppShellProps) {
         {/* 4. Main Page Viewport Container */}
         <main className="flex-1 w-full bg-white">{children}</main>
 
-        {/* 5. Cal.com Dark Footer Closing Surface */}
+        {/* 5. Dark Footer Closing Surface */}
         <Footer />
       </div>
     </AuthProvider>

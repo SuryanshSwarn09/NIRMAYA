@@ -63,7 +63,7 @@ export default function LoginPage() {
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-white">
       <div className="w-full max-w-md space-y-8">
         
-        {/* Cal.com Clean Branding & Header */}
+        {/* Clean Branding & Header */}
         <div className="text-center space-y-2">
           <div className="h-10 w-10 rounded-full overflow-hidden border border-[#e5e7eb] shadow-xs mx-auto mb-2 bg-white flex items-center justify-center">
             <Image
@@ -148,7 +148,7 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          {/* Cal.com Hairline Divider */}
+          {/* Hairline Divider */}
           <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#e5e7eb]" />

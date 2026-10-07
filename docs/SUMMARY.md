@@ -6,6 +6,7 @@
 * [The Healthcare Data Dilemma](vision/problem-statement.md)
 * [The 3-Pillar Unified Network](vision/architecture.md)
 * [System Architecture & Data Flow](ARCHITECTURE.md)
+* [Design System Specification & Tokens](design.md)
 * [Technology Stack & Rationale](vision/tech-stack.md)
 
 ## Part II: Healthcare Interoperability Standards
@@ -33,7 +34,7 @@
     * [Day 11: Supabase Auth & JWT Middleware](journey/month-1/day-11.md)
     * [Day 12: Role-Based Access Control & Security Guards](journey/month-1/day-12.md)
     * [Day 13: Doctor EMR Directory & Clinical Provider Endpoints](journey/month-1/day-13.md)
-    * [Cal.com Modern SaaS UI Transformation](journey/month-1/calcom-design-system-migration.md)
+    * [Modern SaaS UI Transformation](journey/month-1/calcom-design-system-migration.md)
     * [Day 14: Frontend Auth Integration & Clinical Portals](journey/month-1/day-14.md)
     * [Day 15: Security Hardening, Rate Limiting & Diagnostic Gateway](journey/month-1/day-15.md)
     * [Week 3 Retrospective & Executive Metrics](journey/month-1/week-3-review.md)
@@ -42,7 +43,7 @@
     * [Day 16: Appointment Models & Slot Generation Engine](journey/month-1/day-16.md)
     * [Day 17: Booking Concurrency & ACID Row-Level Locking](journey/month-1/day-17.md)
     * [Day 18: HL7 FHIR Encounter Transformers & ABDM Consent Linkage](journey/month-1/day-18.md)
-    * [Day 19: Cal.com Slot Picker UI Integration & Clinical Booking Flow](journey/month-1/day-19.md)
+    * [Day 19: Clinical Slot Picker UI Integration & Clinical Booking Flow](journey/month-1/day-19.md)
     * [Day 20: Month 1 Retrospective, Full Verification & Release v0.1.0](journey/month-1/day-20.md)
     * [Week 4 Retrospective & Encounters Review](journey/month-1/week-4-review.md)
     * [Month 1 Comprehensive Retrospective & Foundation Report](journey/month-1/month-1-retrospective.md)

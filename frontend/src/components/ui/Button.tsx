@@ -22,7 +22,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Cal.com Design System Button Styles
+    // Design System Button Styles
     const variantStyles = {
       primary:
         "bg-[#111111] text-white hover:bg-[#242424] active:bg-[#242424] border border-[#111111] shadow-sm disabled:bg-[#e5e7eb] disabled:border-[#e5e7eb] disabled:text-[#6b7280]",
@@ -36,16 +36,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         "bg-transparent text-[#111111] hover:underline p-0 h-auto font-semibold",
       danger:
         "bg-[#ef4444] text-white hover:bg-[#dc2626] border border-[#ef4444]",
-      // Backwards-compatible alias to Cal.com primary
+      // Backwards-compatible alias to primary
       emerald:
         "bg-[#111111] text-white hover:bg-[#242424] active:bg-[#242424] border border-[#111111] shadow-sm",
     };
 
     const sizeStyles = {
       sm: "h-8 px-3 text-xs rounded-[6px] gap-1.5 font-medium",
-      md: "h-10 px-4 text-sm rounded-[8px] gap-2 font-semibold", // Cal.com standard 40px, 8px radius
+      md: "h-10 px-4 text-sm rounded-[8px] gap-2 font-semibold", // Standard 40px, 8px radius
       lg: "h-11 px-5 text-sm rounded-[8px] gap-2.5 font-semibold",
-      icon: "h-9 w-9 p-0 rounded-full justify-center border border-[#e5e7eb] bg-white text-[#111111] hover:bg-[#f5f5f5]", // Cal.com circular 36px
+      icon: "h-9 w-9 p-0 rounded-full justify-center border border-[#e5e7eb] bg-white text-[#111111] hover:bg-[#f5f5f5]", // Circular 36px
     };
 
     return (

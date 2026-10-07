@@ -28,7 +28,7 @@ export function Badge({
   dot = false,
   ...props
 }: BadgeProps) {
-  // Cal.com Design System Badge & Pastel Palette
+  // Modern Pastel Badge Palette
   const variantStyles = {
     default: "bg-[#f5f5f5] text-[#111111] border-[#e5e7eb]",
     neutral: "bg-[#f5f5f5] text-[#111111] border-[#e5e7eb]",
@@ -63,7 +63,7 @@ export function Badge({
 
   const sizeStyles = {
     sm: "px-2.5 py-0.5 text-[11px] leading-tight font-medium",
-    md: "px-3 py-1 text-xs font-medium", // Cal.com standard 4px 12px pill
+    md: "px-3 py-1 text-xs font-medium", // Standard 4px 12px pill
   };
 
   return (

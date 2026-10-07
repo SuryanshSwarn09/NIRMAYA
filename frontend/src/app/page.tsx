@@ -29,7 +29,7 @@ export default function Home() {
 
   return (
     <div className="space-y-24 pb-20 bg-white">
-      {/* 1. HERO BAND (7/5 Desktop Grid, White Canvas, Cal.com Rhythm) */}
+      {/* 1. HERO BAND (7/5 Desktop Grid, White Canvas, Modern SaaS Rhythm) */}
       <section className="pt-12 pb-16 lg:pt-20 lg:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
@@ -433,7 +433,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. FEATURE CARDS GRID (Clean Cal.com Surfaces, 0 Benchmarking Noise) */}
+      {/* 3. FEATURE CARDS GRID (Clean Modern Surfaces, 0 Benchmarking Noise) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
           <Badge variant="default">Enterprise Guarantees</Badge>

@@ -431,7 +431,7 @@ export default function DiagnosticLabPage() {
         {/* Right 7 Columns: Structured LOINC Builder, Live FHIR JSON & Ledger */}
         <div className="lg:col-span-7 space-y-6">
           
-          {/* Cal.com-Style Navigation Tabs */}
+          {/* Clean Modern Navigation Tabs */}
           <div className="flex items-center justify-between pb-2 border-b border-[#e5e7eb]">
             <div className="flex items-center gap-1 bg-[#f3f4f6] p-1 rounded-lg">
               <button

@@ -12,15 +12,15 @@ export function Card({
   glass = false,
   ...props
 }: CardProps) {
-  // Cal.com Card Styles
+  // Card Styles
   const variantStyles = {
-    // Standard Cal.com feature card: light-gray #f5f5f5, 12px radius, 32px padding
+    // Standard feature card: light-gray #f5f5f5, 12px radius, 32px padding
     feature:
       "rounded-[12px] bg-[#f5f5f5] text-[#111111] p-6 sm:p-8 border border-transparent transition-all duration-150",
-    // Cal.com product mockup card: white #ffffff canvas with hairline border & subtle shadow
+    // Product mockup card: white #ffffff canvas with hairline border & subtle shadow
     mockup:
       "rounded-[12px] bg-white text-[#111111] p-6 border border-[#e5e7eb] shadow-[0_1px_2px_rgba(0,0,0,0.05)]",
-    // Cal.com hero marquee mockup container: 16px radius, hairline border, elevated shadow
+    // Hero marquee mockup container: 16px radius, hairline border, elevated shadow
     "hero-mockup":
       "rounded-[16px] bg-white text-[#111111] p-6 border border-[#e5e7eb] shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
     // Featured dark card (e.g. enterprise or featured tier): #101010

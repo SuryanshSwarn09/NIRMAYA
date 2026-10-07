@@ -10,7 +10,7 @@ interface BrandLogoProps {
 }
 
 /**
- * Cal.com-inspired BrandLogo:
+ * BrandLogo:
  * Renders custom brand icon mark with monochrome wordmark.
  */
 export function BrandLogo({

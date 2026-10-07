@@ -6,7 +6,7 @@ import { FOOTER_SECTIONS } from "@/config/navigation";
 import { ExternalLink, Shield } from "lucide-react";
 
 /**
- * Signature Cal.com Footer:
+ * Signature Modern SaaS Footer:
  * Deep near-black surface (#101010) with muted light text (#a1a1aa).
  * The footer is the ONLY dark surface on the page — visually closing the long-scroll page.
  */

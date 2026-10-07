@@ -13,7 +13,7 @@ export interface SlotHoldCountdownProps {
 }
 
 /**
- * Cal.com-inspired temporary slot hold countdown banner.
+ * Temporary slot hold countdown banner.
  * Reassures patient during intake that their chosen slot is safely locked against concurrent checkout.
  */
 export function SlotHoldCountdown({

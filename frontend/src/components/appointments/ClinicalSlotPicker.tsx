@@ -17,7 +17,7 @@ import { Button, Badge, Card } from "@/components/ui";
 import { apiClient, DoctorSlot, SlotStatus, SlotHoldResponse } from "@/lib/api";
 import { SlotHoldCountdown } from "./SlotHoldCountdown";
 
-export interface CalcomSlotPickerProps {
+export interface ClinicalSlotPickerProps {
   doctorId: string;
   doctorName?: string;
   specialty?: string;
@@ -34,7 +34,7 @@ export interface CalcomSlotPickerProps {
 // Days of week
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
-export function CalcomSlotPicker({
+export function ClinicalSlotPicker({
   doctorId,
   doctorName = "Clinical Specialist",
   specialty = "General Consultation",
@@ -46,7 +46,7 @@ export function CalcomSlotPicker({
   onReleaseHold,
   isHolding = false,
   className = "",
-}: CalcomSlotPickerProps) {
+}: ClinicalSlotPickerProps) {
   // Calendar month view state
   const [currentDate, setCurrentDate] = useState(() => new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(() => {
@@ -120,7 +120,7 @@ export function CalcomSlotPicker({
           if (fetched && fetched.length > 0) {
             setSlots(fetched);
           } else {
-            // Generate clean standard Cal.com clinical consultation slots for selected date
+            // Generate standard clinical consultation slots for selected date
             const generatedFallback = generateDefaultSlots(doctorId, selectedDate);
             setSlots(generatedFallback);
           }
@@ -283,7 +283,7 @@ export function CalcomSlotPicker({
       {/* Main Dual-Column Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-[#e5e7eb]">
         
-        {/* Left Column (7 cols): Cal.com Monthly Date Matrix */}
+        {/* Left Column (7 cols): Monthly Date Matrix */}
         <div className="lg:col-span-7 p-6 sm:p-8 space-y-6">
           
           {/* Month Header and Steppers */}
@@ -390,7 +390,7 @@ export function CalcomSlotPicker({
           </div>
         </div>
 
-        {/* Right Column (5 cols): Cal.com Available Consultation Time Slots */}
+        {/* Right Column (5 cols): Available Consultation Time Slots */}
         <div className="lg:col-span-5 p-6 sm:p-8 space-y-5 bg-[#fafafa]">
           
           <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">

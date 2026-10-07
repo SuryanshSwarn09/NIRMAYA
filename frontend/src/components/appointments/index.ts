@@ -1,8 +1,8 @@
 /**
- * Cal.com-inspired Clinical Appointment & Slot Picker Components for NIRMAYA.
+ * Clinical Appointment & Slot Picker Components for NIRMAYA.
  */
 
 export * from "./SlotHoldCountdown";
-export * from "./CalcomSlotPicker";
+export * from "./ClinicalSlotPicker";
 export * from "./AppointmentBookingModal";
 export * from "./DoctorSlotManager";

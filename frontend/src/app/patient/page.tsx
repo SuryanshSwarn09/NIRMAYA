@@ -28,7 +28,7 @@ import {
   FlaskConical
 } from "lucide-react";
 import { 
-  CalcomSlotPicker, 
+  ClinicalSlotPicker, 
   AppointmentBookingModal 
 } from "@/components/appointments";
 import { 
@@ -386,7 +386,7 @@ export default function PatientVaultPage() {
             },
             {
               id: "book",
-              label: "Schedule Consultation (Cal.com)",
+              label: "Schedule Consultation",
               icon: <Calendar className="h-4 w-4" />,
             },
           ]}
@@ -397,7 +397,7 @@ export default function PatientVaultPage() {
 
       {activeTab === "book" ? (
         /* ========================================================================
-           BOOKING TAB: CAL.COM SLOT PICKER EXPERIENCE
+           BOOKING TAB: CLINICAL SLOT PICKER EXPERIENCE
            ======================================================================== */
         <div className="space-y-8 animate-fade-in">
           
@@ -461,8 +461,8 @@ export default function PatientVaultPage() {
             </div>
           </div>
 
-          {/* Embedded Cal.com Interactive Slot Picker */}
-          <CalcomSlotPicker
+          {/* Embedded Interactive Slot Picker */}
+          <ClinicalSlotPicker
             doctorId={selectedDoctor.id}
             doctorName={selectedDoctor.name}
             specialty={selectedDoctor.specialty}

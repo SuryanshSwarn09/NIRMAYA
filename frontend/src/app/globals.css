@@ -63,7 +63,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Cal.com Geometric Display Typography Classes */
+/* Geometric Display Typography Classes */
 .display-xl {
   font-family: var(--font-sans);
   font-size: clamp(2.5rem, 5vw, 4rem);
