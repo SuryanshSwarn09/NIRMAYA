@@ -20,6 +20,7 @@ from app.fhir.schemas import (
     FHIRComposition,
     FHIRCompositionSection,
     FHIRCondition,
+    FHIRDiagnosticReport,
     FHIREncounter,
     FHIREncounterParticipant,
     FHIRIdentifier,
@@ -31,6 +32,7 @@ from app.fhir.schemas import (
     FHIRPeriod,
     FHIRQuantity,
     FHIRReference,
+    FHIRServiceRequest,
 )
 from app.models.appointment import Appointment
 from app.models.condition import ClinicalCondition
@@ -47,6 +49,7 @@ from app.models.enums import (
     ObservationStatus,
     VerificationStatus,
 )
+from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.observation import ClinicalObservation
 from app.models.soap_note import SoapNote
 
@@ -1188,6 +1191,228 @@ def to_fhir_composition(note: SoapNote) -> FHIRComposition:
         title=note.title,
         section=sections,
     )
+
+
+# ============================================================================
+# ServiceRequest & DiagnosticReport Transformers (Milestone 05-04)
+# ============================================================================
+
+NIRMAYA_SERVICE_REQUEST_SYSTEM = "https://nirmaya.health/fhir/service-request"
+NIRMAYA_DIAGNOSTIC_REPORT_SYSTEM = "https://nirmaya.health/fhir/diagnostic-report"
+
+
+def to_fhir_service_request(order: DiagnosticOrder) -> FHIRServiceRequest:
+    """Transform an internal DiagnosticOrder entity into a standard HL7 FHIR R4 ServiceRequest resource."""
+    patient_display = None
+    if order.patient and order.patient.user:
+        patient_display = order.patient.user.full_name
+
+    subject_ref = FHIRReference(
+        reference=f"Patient/{order.patient_id}",
+        display=patient_display,
+        type="Patient",
+    )
+
+    encounter_ref = None
+    if order.encounter_id:
+        encounter_ref = FHIRReference(
+            reference=f"Encounter/{order.encounter_id}",
+            type="Encounter",
+        )
+
+    requester_ref = None
+    if order.doctor_id:
+        doc_display = None
+        if order.doctor and order.doctor.user:
+            doc_display = order.doctor.user.full_name
+        requester_ref = FHIRReference(
+            reference=f"Practitioner/{order.doctor_id}",
+            display=doc_display,
+            type="Practitioner",
+        )
+
+    reason_codes = None
+    if order.reason_code:
+        reason_codes = [
+            FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system="http://hl7.org/fhir/sid/icd-10",
+                        code=order.reason_code,
+                        display=order.reason_description,
+                    )
+                ],
+                text=order.reason_description or order.reason_code,
+            )
+        ]
+
+    notes = None
+    if order.notes:
+        notes = [{"text": order.notes}]
+
+    return FHIRServiceRequest(
+        id=order.id,
+        identifier=[
+            FHIRIdentifier(
+                system=NIRMAYA_SERVICE_REQUEST_SYSTEM,
+                value=order.id,
+            )
+        ],
+        status=order.status.value,
+        intent=order.intent.value,
+        category=[
+            FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system="http://terminology.hl7.org/CodeSystem/observation-category",
+                        code=order.category,
+                        display=order.category.capitalize(),
+                    )
+                ],
+                text=order.category,
+            )
+        ],
+        priority=order.priority.value,
+        code=FHIRCodeableConcept(
+            coding=[
+                FHIRCoding(
+                    system=order.code_coding_system,
+                    code=order.code_value,
+                    display=order.code_display,
+                )
+            ],
+            text=order.code_display,
+        ),
+        subject=subject_ref,
+        encounter=encounter_ref,
+        authoredOn=order.created_at,
+        requester=requester_ref,
+        reasonCode=reason_codes,
+        note=notes,
+    )
+
+
+def to_fhir_diagnostic_report(
+    report: DiagnosticReport,
+    observations: Optional[List[ClinicalObservation]] = None,
+) -> FHIRDiagnosticReport:
+    """Transform an internal DiagnosticReport entity into a standard HL7 FHIR R4 DiagnosticReport resource."""
+    patient_display = None
+    if report.patient and report.patient.user:
+        patient_display = report.patient.user.full_name
+
+    subject_ref = FHIRReference(
+        reference=f"Patient/{report.patient_id}",
+        display=patient_display,
+        type="Patient",
+    )
+
+    encounter_ref = None
+    if report.encounter_id:
+        encounter_ref = FHIRReference(
+            reference=f"Encounter/{report.encounter_id}",
+            type="Encounter",
+        )
+
+    based_on = None
+    if report.order_id:
+        based_on = [
+            FHIRReference(
+                reference=f"ServiceRequest/{report.order_id}",
+                type="ServiceRequest",
+            )
+        ]
+
+    performer_ref = None
+    if report.performer_id:
+        doc_display = None
+        if report.performer and report.performer.user:
+            doc_display = report.performer.user.full_name
+        performer_ref = [
+            FHIRReference(
+                reference=f"Practitioner/{report.performer_id}",
+                display=doc_display or report.performer_name,
+                type="Practitioner",
+            )
+        ]
+    elif report.performer_name:
+        performer_ref = [
+            FHIRReference(
+                reference="Organization/metropolis-diagnostics",
+                display=report.performer_name,
+                type="Organization",
+            )
+        ]
+
+    # Resolve linked observation references
+    results = None
+    obs_list = observations or getattr(report, "observations", [])
+    if obs_list:
+        results = [
+            FHIRReference(
+                reference=f"Observation/{obs.id}",
+                display=obs.code_display,
+                type="Observation",
+            )
+            for obs in obs_list
+        ]
+
+    conclusion_codes = None
+    if report.conclusion_code:
+        conclusion_codes = [
+            FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system="http://snomed.info/sct",
+                        code=report.conclusion_code,
+                    )
+                ],
+                text=report.conclusion or report.conclusion_code,
+            )
+        ]
+
+    return FHIRDiagnosticReport(
+        id=report.id,
+        identifier=[
+            FHIRIdentifier(
+                system=NIRMAYA_DIAGNOSTIC_REPORT_SYSTEM,
+                value=report.id,
+            )
+        ],
+        basedOn=based_on,
+        status=report.status.value,
+        category=[
+            FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system="http://terminology.hl7.org/CodeSystem/v2-0074",
+                        code=report.category,
+                        display=report.category,
+                    )
+                ],
+                text=report.category,
+            )
+        ],
+        code=FHIRCodeableConcept(
+            coding=[
+                FHIRCoding(
+                    system=report.code_coding_system,
+                    code=report.code_value,
+                    display=report.code_display,
+                )
+            ],
+            text=report.code_display,
+        ),
+        subject=subject_ref,
+        encounter=encounter_ref,
+        effectiveDateTime=report.effective_date_time,
+        issued=report.issued_date_time,
+        performer=performer_ref,
+        result=results,
+        conclusion=report.conclusion,
+        conclusionCode=conclusion_codes,
+    )
+
 
 
 

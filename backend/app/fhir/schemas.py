@@ -602,6 +602,132 @@ class FHIRComposition(BaseModel):
     )
 
 
+class FHIRServiceRequest(BaseModel):
+    """HL7 FHIR Release 4 ServiceRequest resource representing a diagnostic or lab order.
+
+    Reference: http://hl7.org/fhir/R4/servicerequest.html
+    """
+
+    resourceType: Literal["ServiceRequest"] = Field(
+        default="ServiceRequest",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this service request artifact",
+    )
+    identifier: Optional[List[FHIRIdentifier]] = Field(
+        default=None,
+        description="Business identifier for this order",
+    )
+    status: str = Field(
+        description="draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        example="active",
+    )
+    intent: str = Field(
+        description="proposal | plan | directive | order | original-order | reflex-order",
+        example="order",
+    )
+    category: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Classification of service (e.g. laboratory)",
+    )
+    priority: Optional[str] = Field(
+        default="routine",
+        description="routine | urgent | asap | stat",
+    )
+    code: FHIRCodeableConcept = Field(
+        description="Codified diagnostic test or panel requested (LOINC)",
+    )
+    subject: FHIRReference = Field(
+        description="Individual or patient the service is ordered for",
+    )
+    encounter: Optional[FHIRReference] = Field(
+        default=None,
+        description="Encounter in which the request was created",
+    )
+    authoredOn: Optional[datetime] = Field(
+        default=None,
+        description="Date and time the order was authored",
+    )
+    requester: Optional[FHIRReference] = Field(
+        default=None,
+        description="Clinician / practitioner who initiated the request",
+    )
+    reasonCode: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Explanation/justification for why service was requested",
+    )
+    note: Optional[List[Dict[str, str]]] = Field(
+        default=None,
+        description="Comments or preparation notes made about service request",
+    )
+
+
+class FHIRDiagnosticReport(BaseModel):
+    """HL7 FHIR Release 4 DiagnosticReport resource representing findings and lab interpretations.
+
+    Reference: http://hl7.org/fhir/R4/diagnosticreport.html
+    """
+
+    resourceType: Literal["DiagnosticReport"] = Field(
+        default="DiagnosticReport",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this diagnostic report artifact",
+    )
+    identifier: Optional[List[FHIRIdentifier]] = Field(
+        default=None,
+        description="Business identifier for this report",
+    )
+    basedOn: Optional[List[FHIRReference]] = Field(
+        default=None,
+        description="Reference to ServiceRequest order this report fulfills",
+    )
+    status: str = Field(
+        description="registered | preliminary | final | amended | corrected | appended | cancelled | entered-in-error",
+        example="final",
+    )
+    category: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Service category (e.g. LAB, RAD)",
+    )
+    code: FHIRCodeableConcept = Field(
+        description="Name/code for this diagnostic report (LOINC)",
+    )
+    subject: FHIRReference = Field(
+        description="The subject of the report (Patient)",
+    )
+    encounter: Optional[FHIRReference] = Field(
+        default=None,
+        description="Clinical encounter / appointment context",
+    )
+    effectiveDateTime: Optional[datetime] = Field(
+        default=None,
+        description="Clinically relevant time for report (specimen collection/exam time)",
+    )
+    issued: Optional[datetime] = Field(
+        default=None,
+        description="DateTime this version of report was released (UTC)",
+    )
+    performer: Optional[List[FHIRReference]] = Field(
+        default=None,
+        description="Responsible diagnostic facility or pathologist",
+    )
+    result: Optional[List[FHIRReference]] = Field(
+        default=None,
+        description="Observations that are part of this diagnostic report",
+    )
+    conclusion: Optional[str] = Field(
+        default=None,
+        description="Clinical summary / conclusion of results",
+    )
+    conclusionCode: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Codified diagnostic interpretation/conclusion",
+    )
+
+
 class FHIRBundle(BaseModel):
     """HL7 FHIR Release 4 Collection or Document Bundle."""
 
