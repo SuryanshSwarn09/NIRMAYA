@@ -58,7 +58,7 @@ async def _verify_patient_access(
     current_user: User,
 ) -> None:
     """Verify read access for patient health records."""
-    if current_user.role in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB_TECHNICIAN):
+    if current_user.role in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB):
         return
 
     patient = await patient_service.get_patient_by_id(db, patient_id)
@@ -196,7 +196,7 @@ async def update_order_endpoint(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> APIResponse[DiagnosticOrderResponse]:
-    if current_user.role not in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB_TECHNICIAN):
+    if current_user.role not in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB):
         raise PermissionDeniedException("Only clinical staff or lab technicians can update diagnostic orders")
     order = await update_diagnostic_order(db, order_id, payload)
     return APIResponse(
@@ -244,7 +244,7 @@ async def create_report_endpoint(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> APIResponse[DiagnosticReportResponse]:
-    if current_user.role not in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB_TECHNICIAN):
+    if current_user.role not in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB):
         raise PermissionDeniedException("Only authorized laboratory or clinical staff can issue diagnostic reports")
 
     performer_doctor_id = None
@@ -338,7 +338,7 @@ async def update_report_endpoint(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ) -> APIResponse[DiagnosticReportResponse]:
-    if current_user.role not in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB_TECHNICIAN):
+    if current_user.role not in (UserRole.ADMIN, UserRole.DOCTOR, UserRole.LAB):
         raise PermissionDeniedException("Only authorized laboratory or clinical staff can amend diagnostic reports")
     report = await update_diagnostic_report(db, report_id, payload)
     return APIResponse(
