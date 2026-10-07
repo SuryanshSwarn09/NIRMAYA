@@ -18,7 +18,9 @@ import {
   Code,
   Sparkles,
   Video,
-  MapPin
+  MapPin,
+  TestTube2,
+  FlaskConical
 } from "lucide-react";
 import { DoctorSlotManager } from "@/components/appointments";
 
@@ -90,6 +92,102 @@ export default function DoctorEMRPage() {
     const mockHash = "7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069";
     setIsSoapSigned(true);
     setSoapSignatureHash(mockHash);
+  };
+
+  // Diagnostic Lab Orders & Requisitions (Day 24)
+  const LAB_TEST_PRESETS = [
+    {
+      code: "24331-1",
+      display: "Lipid 1996 panel - Serum or Plasma",
+      specimen: "serum" as const,
+      fasting: true,
+    },
+    {
+      code: "4548-4",
+      display: "Hemoglobin A1c/Hemoglobin.total in Blood",
+      specimen: "blood" as const,
+      fasting: false,
+    },
+    {
+      code: "58410-2",
+      display: "Complete Blood Count (CBC) with Automated Differential",
+      specimen: "blood" as const,
+      fasting: false,
+    },
+    {
+      code: "38483-4",
+      display: "Creatinine with GFR [Mass/volume] in Serum or Plasma",
+      specimen: "serum" as const,
+      fasting: false,
+    },
+    {
+      code: "1558-6",
+      display: "Fasting Blood Glucose in Serum or Plasma",
+      specimen: "serum" as const,
+      fasting: true,
+    },
+  ];
+
+  const [selectedLabTestCode, setSelectedLabTestCode] = useState("24331-1");
+  const [labPriority, setLabPriority] = useState<"routine" | "urgent" | "stat">("routine");
+  const [labSpecimen, setLabSpecimen] = useState<"serum" | "blood" | "plasma" | "urine">("serum");
+  const [labFasting, setLabFasting] = useState(true);
+  const [labClinicalReason, setLabClinicalReason] = useState(
+    "Essential hypertension follow-up & cardiovascular risk evaluation"
+  );
+  const [labNotes, setLabNotes] = useState(
+    "12-hour overnight fast requested prior to venipuncture."
+  );
+  const [issuedOrders, setIssuedOrders] = useState([
+    {
+      id: "ord-req-901",
+      code: "24331-1",
+      display: "Lipid 1996 panel - Serum or Plasma",
+      priority: "routine",
+      specimen: "serum",
+      fasting: true,
+      reason: "Essential hypertension follow-up lipid screening",
+      status: "active",
+      authored_on: "Today, 10:20 AM",
+    },
+  ]);
+  const [isViewingOrderFhir, setIsViewingOrderFhir] = useState(false);
+  const [selectedOrderForFhir, setSelectedOrderForFhir] = useState<any>(null);
+  const [orderIssuedSuccess, setOrderIssuedSuccess] = useState(false);
+
+  const handleTestPresetChange = (code: string) => {
+    setSelectedLabTestCode(code);
+    const preset = LAB_TEST_PRESETS.find((p) => p.code === code);
+    if (preset) {
+      setLabSpecimen(preset.specimen);
+      setLabFasting(preset.fasting);
+    }
+  };
+
+  const handleIssueLabOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    const preset = LAB_TEST_PRESETS.find((p) => p.code === selectedLabTestCode) || {
+      code: selectedLabTestCode,
+      display: "Diagnostic Test Requisition",
+      specimen: labSpecimen,
+      fasting: labFasting,
+    };
+
+    const newOrder = {
+      id: `ord-req-${Date.now().toString().slice(-4)}`,
+      code: preset.code,
+      display: preset.display,
+      priority: labPriority,
+      specimen: labSpecimen,
+      fasting: labFasting,
+      reason: labClinicalReason,
+      status: "active",
+      authored_on: "Just now",
+    };
+
+    setIssuedOrders((prev) => [newOrder, ...prev]);
+    setOrderIssuedSuccess(true);
+    setTimeout(() => setOrderIssuedSuccess(false), 4000);
   };
 
 
@@ -575,6 +673,193 @@ export default function DoctorEMRPage() {
               )}
             </Card>
 
+            {/* Diagnostic Lab Test Requisition Pad (Day 24 - ServiceRequest) */}
+            <Card variant="mockup" className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#e5e7eb] gap-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <FlaskConical className="h-4 w-4 text-[#111111]" />
+                    <CardTitle className="text-base sm:text-lg">
+                      Diagnostic Lab Requisition (ServiceRequest)
+                    </CardTitle>
+                    <Badge variant="verified" size="sm">FHIR R4</Badge>
+                  </div>
+                  <CardDescription>
+                    Clinician lab test orders • LOINC standard coding • Direct dispatch to pathology
+                  </CardDescription>
+                </div>
+                <Badge variant="emerald" size="sm">{issuedOrders.length} Requisitions</Badge>
+              </div>
+
+              {orderIssuedSuccess && (
+                <div className="p-3 rounded-[8px] border border-[#a7f3d0] bg-[#ecfdf5] text-xs text-[#065f46] flex items-center justify-between animate-fadeIn">
+                  <div className="flex items-center gap-2 font-medium">
+                    <CheckCircle2 className="h-4 w-4 text-[#059669] shrink-0" />
+                    <span>Lab order authorized & queued for Apollo Diagnostics Central!</span>
+                  </div>
+                  <span className="font-mono text-[11px] text-[#047857]">FHIR ServiceRequest Active</span>
+                </div>
+              )}
+
+              {/* Active Requisitions for Current Encounter */}
+              {issuedOrders.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-[11px] font-bold text-[#6b7280] uppercase tracking-wider block">
+                    Active Orders for {selectedPatient}
+                  </span>
+                  <div className="space-y-2">
+                    {issuedOrders.map((ord) => (
+                      <div
+                        key={ord.id}
+                        className="p-3 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+                      >
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-semibold text-[#111111]">{ord.display}</span>
+                            <Badge variant={ord.priority === "stat" ? "critical" : ord.priority === "urgent" ? "warning" : "default"} size="sm">
+                              {ord.priority.toUpperCase()}
+                            </Badge>
+                            {ord.fasting && (
+                              <span className="text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded font-medium">
+                                Fasting Required
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-[#6b7280]">
+                            LOINC <span className="font-mono text-[#111111]">{ord.code}</span> • Specimen: <span className="capitalize">{ord.specimen}</span> • Reason: {ord.reason}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedOrderForFhir(ord);
+                              setIsViewingOrderFhir(true);
+                            }}
+                            className="py-1 px-2.5 rounded-[6px] border border-[#e5e7eb] bg-white text-[11px] font-semibold text-[#111111] hover:bg-[#f3f4f6] transition-all flex items-center gap-1 cursor-pointer"
+                          >
+                            <Code className="h-3 w-3" />
+                            FHIR JSON
+                          </button>
+                          <Badge variant="emerald" size="sm">DISPATCHED</Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Order Requisition Form */}
+              <form onSubmit={handleIssueLabOrder} className="space-y-3.5 pt-2 border-t border-[#e5e7eb] text-xs sm:text-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#111111] mb-1">
+                      Standard Diagnostic Test (LOINC)
+                    </label>
+                    <select
+                      value={selectedLabTestCode}
+                      onChange={(e) => handleTestPresetChange(e.target.value)}
+                      className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs focus:outline-none focus:ring-1 focus:ring-[#111111] bg-white"
+                    >
+                      {LAB_TEST_PRESETS.map((t) => (
+                        <option key={t.code} value={t.code}>
+                          [{t.code}] {t.display}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-xs font-semibold text-[#111111] mb-1">
+                        Order Priority
+                      </label>
+                      <select
+                        value={labPriority}
+                        onChange={(e) => setLabPriority(e.target.value as any)}
+                        className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs focus:outline-none focus:ring-1 focus:ring-[#111111] bg-white"
+                      >
+                        <option value="routine">Routine</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="stat">STAT (Emergency)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#111111] mb-1">
+                        Specimen Type
+                      </label>
+                      <select
+                        value={labSpecimen}
+                        onChange={(e) => setLabSpecimen(e.target.value as any)}
+                        className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs focus:outline-none focus:ring-1 focus:ring-[#111111] bg-white capitalize"
+                      >
+                        <option value="serum">Serum</option>
+                        <option value="blood">Whole Blood</option>
+                        <option value="plasma">Plasma</option>
+                        <option value="urine">Urine</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#111111] mb-1">
+                      Clinical Reason / Diagnostic Indication
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={labClinicalReason}
+                      onChange={(e) => setLabClinicalReason(e.target.value)}
+                      className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                      placeholder="e.g. Assessment of hyperlipidemia"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#111111] mb-1">
+                      Pathology & Specimen Instructions
+                    </label>
+                    <input
+                      type="text"
+                      value={labNotes}
+                      onChange={(e) => setLabNotes(e.target.value)}
+                      className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs focus:outline-none focus:ring-1 focus:ring-[#111111]"
+                      placeholder="e.g. Fasting 10-12 hours required"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 pt-1">
+                  <input
+                    type="checkbox"
+                    id="labFastingCheckbox"
+                    checked={labFasting}
+                    onChange={(e) => setLabFasting(e.target.checked)}
+                    className="h-4 w-4 rounded border-[#e5e7eb] text-[#111111] focus:ring-[#111111]"
+                  />
+                  <label htmlFor="labFastingCheckbox" className="text-xs text-[#374151] select-none cursor-pointer">
+                    Require 10-12 hour overnight fasting prior to specimen collection
+                  </label>
+                </div>
+
+                <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#e5e7eb]">
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="md"
+                    className="cursor-pointer"
+                  >
+                    <FlaskConical className="h-3.5 w-3.5 mr-1.5" />
+                    Authorize & Dispatch Lab Order (ServiceRequest)
+                  </Button>
+                </div>
+              </form>
+            </Card>
+
           </div>
 
         </div>
@@ -799,6 +1084,105 @@ export default function DoctorEMRPage() {
                 variant="secondary"
                 size="sm"
                 onClick={() => setIsViewingSoapFhir(false)}
+              >
+                Close Preview
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Inspect HL7 FHIR R4 ServiceRequest Modal (Day 24) */}
+      {isViewingOrderFhir && selectedOrderForFhir && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-xs">
+          <div className="bg-white rounded-[12px] border border-[#e5e7eb] shadow-xl max-w-2xl w-full p-6 space-y-4 animate-scaleUp">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
+              <div>
+                <h3 className="text-base font-bold text-[#111111] flex items-center gap-2">
+                  <Code className="h-4 w-4 text-[#111111]" />
+                  HL7 FHIR R4 ServiceRequest Resource
+                </h3>
+                <p className="text-xs text-[#6b7280]">
+                  Requisition ID: {selectedOrderForFhir.id} • LOINC {selectedOrderForFhir.code}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsViewingOrderFhir(false)}
+                className="text-[#9ca3af] hover:text-[#111111] text-lg font-bold p-1 cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <pre className="p-3.5 rounded-[8px] bg-[#111111] text-[#f8f9fa] text-xs font-mono overflow-auto max-h-[380px]">
+              {JSON.stringify(
+                {
+                  resourceType: "ServiceRequest",
+                  id: selectedOrderForFhir.id,
+                  meta: {
+                    profile: ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/ServiceRequest"],
+                  },
+                  status: selectedOrderForFhir.status,
+                  intent: "order",
+                  priority: selectedOrderForFhir.priority,
+                  category: [
+                    {
+                      coding: [
+                        {
+                          system: "http://snomed.info/sct",
+                          code: "108252007",
+                          display: "Laboratory procedure",
+                        },
+                      ],
+                      text: "Laboratory",
+                    },
+                  ],
+                  code: {
+                    coding: [
+                      {
+                        system: "http://loinc.org",
+                        code: selectedOrderForFhir.code,
+                        display: selectedOrderForFhir.display,
+                      },
+                    ],
+                    text: selectedOrderForFhir.display,
+                  },
+                  subject: {
+                    reference: `Patient/${selectedPatient.toLowerCase().replace(" ", "-")}`,
+                    display: selectedPatient,
+                  },
+                  requester: {
+                    reference: "Practitioner/doc-ananya-sharma",
+                    display: "Dr. Ananya Sharma",
+                  },
+                  authoredOn: new Date().toISOString(),
+                  reasonCode: [
+                    {
+                      text: selectedOrderForFhir.reason,
+                    },
+                  ],
+                  specimen: [
+                    {
+                      display: `${selectedOrderForFhir.specimen.toUpperCase()} specimen (${selectedOrderForFhir.fasting ? "12hr fasting" : "routine"})`,
+                    },
+                  ],
+                  note: [
+                    {
+                      text: labNotes,
+                    },
+                  ],
+                },
+                null,
+                2
+              )}
+            </pre>
+
+            <div className="pt-2 flex items-center justify-end border-t border-[#e5e7eb]">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsViewingOrderFhir(false)}
               >
                 Close Preview
               </Button>

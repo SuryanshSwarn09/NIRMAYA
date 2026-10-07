@@ -23,6 +23,8 @@ import {
   Copy,
   Check,
   RefreshCw,
+  Inbox,
+  ArrowRight,
 } from "lucide-react";
 
 interface ObservationItem {
@@ -47,7 +49,42 @@ export default function DiagnosticLabPage() {
   const [isHashing, setIsHashing] = useState(false);
   const [isIngested, setIsIngested] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<"builder" | "fhir" | "ledger">("builder");
+  const [activeTab, setActiveTab] = useState<"builder" | "orders" | "fhir" | "ledger">("builder");
+
+  // Incoming Doctor Requisitions Queue (Day 24)
+  const [requisitions, setRequisitions] = useState([
+    {
+      id: "ord-req-901",
+      patientKey: "arun",
+      patientId: "91-8472-1092-4821",
+      patientName: "Arun Patel",
+      doctor: "Dr. Ananya Sharma (Cardiology)",
+      code: "24331-1",
+      display: "Lipid 1996 panel - Serum or Plasma",
+      priority: "routine",
+      specimen: "serum",
+      fasting: true,
+      reason: "Essential hypertension follow-up lipid screening",
+      status: "active",
+      orderedAt: "Today, 10:20 AM",
+    },
+    {
+      id: "ord-req-902",
+      patientKey: "sunita",
+      patientId: "91-2384-9812-7419",
+      patientName: "Sunita Rao",
+      doctor: "Dr. Rajesh Varma (General Medicine)",
+      code: "4548-4",
+      display: "Hemoglobin A1c in Blood",
+      priority: "urgent",
+      specimen: "blood",
+      fasting: false,
+      reason: "Type 2 Diabetes glycemic monitoring",
+      status: "active",
+      orderedAt: "Today, 09:45 AM",
+    },
+  ]);
+  const [linkedOrderId, setLinkedOrderId] = useState<string | null>("ord-req-901");
 
   // Structured LOINC Observations State
   const [fastingGlucose, setFastingGlucose] = useState<number>(94);
@@ -163,13 +200,21 @@ export default function DiagnosticLabPage() {
           hash: fileSha256,
         },
       ],
+      basedOn: linkedOrderId
+        ? [
+            {
+              reference: `ServiceRequest/${linkedOrderId}`,
+              display: `Clinician Requisition ${linkedOrderId}`,
+            },
+          ]
+        : undefined,
       result: observations.map((obs) => ({
         reference: `Observation/loinc-${obs.loinc}`,
         display: `${obs.name}: ${obs.value} ${obs.unit}`,
       })),
       conclusion: "Lipid profile within normal physiological range. Mild lifestyle monitoring advised.",
     };
-  }, [selectedPatientId, patientName, fileName, fileSha256, observations]);
+  }, [selectedPatientId, patientName, fileName, fileSha256, observations, linkedOrderId]);
 
   // Handle patient switch
   const handlePatientSelect = (val: string) => {
@@ -400,6 +445,19 @@ export default function DiagnosticLabPage() {
                 LOINC Observation Builder
               </button>
               <button
+                onClick={() => setActiveTab("orders")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-1.5 ${
+                  activeTab === "orders"
+                    ? "bg-white text-[#111111] shadow-sm font-semibold"
+                    : "text-[#6b7280] hover:text-[#111111]"
+                }`}
+              >
+                <span>Requisitions Queue</span>
+                <span className="bg-[#111111] text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+                  {requisitions.length}
+                </span>
+              </button>
+              <button
                 onClick={() => setActiveTab("fhir")}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                   activeTab === "fhir"
@@ -432,6 +490,15 @@ export default function DiagnosticLabPage() {
           {/* TAB 1: Structured LOINC Builder */}
           {activeTab === "builder" && (
             <Card variant="mockup" className="space-y-6">
+              {linkedOrderId && (
+                <div className="p-3 bg-[#ecfdf5] border border-[#a7f3d0] rounded-lg text-xs text-[#065f46] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-[#059669] shrink-0" />
+                    <span>Fulfilling Clinician Requisition: <strong>{linkedOrderId}</strong> for {patientName}</span>
+                  </div>
+                  <Badge variant="verified" size="sm">ServiceRequest Linked</Badge>
+                </div>
+              )}
               <div>
                 <CardTitle className="text-lg">Structured Pathology Test Parameters</CardTitle>
                 <CardDescription>
@@ -591,6 +658,84 @@ export default function DiagnosticLabPage() {
                   <ShieldCheck className="h-4 w-4 mr-2" />
                   Emit Signed FHIR Bundle
                 </Button>
+              </div>
+            </Card>
+          )}
+
+          {/* TAB: Doctor Requisitions Queue (Day 24) */}
+          {activeTab === "orders" && (
+            <Card variant="mockup" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg">Clinician Diagnostic Requisitions</CardTitle>
+                  <CardDescription>
+                    Incoming HL7 FHIR ServiceRequest orders dispatched from hospital EMR.
+                  </CardDescription>
+                </div>
+                <Badge variant="emerald">{requisitions.length} Pending Orders</Badge>
+              </div>
+
+              <div className="space-y-3">
+                {requisitions.map((req) => (
+                  <div
+                    key={req.id}
+                    className="p-4 bg-[#f8f9fa] border border-[#e5e7eb] rounded-xl space-y-3"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5e7eb] pb-2.5">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm text-[#111111]">{req.display}</span>
+                          <Badge variant={req.priority === "urgent" ? "warning" : "default"} size="sm">
+                            {req.priority.toUpperCase()}
+                          </Badge>
+                          {req.fasting && (
+                            <span className="text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded font-medium">
+                              Fasting Required
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-[#6b7280] mt-0.5">
+                          Ordered by <span className="font-medium text-[#111111]">{req.doctor}</span> • {req.orderedAt}
+                        </p>
+                      </div>
+                      <span className="font-mono text-xs text-[#059669] bg-[#ecfdf5] px-2 py-1 rounded">
+                        {req.id}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                      <div>
+                        <span className="text-[#6b7280]">Patient:</span>{" "}
+                        <span className="font-semibold text-[#111111]">{req.patientName}</span> (ABHA: {req.patientId})
+                      </div>
+                      <div>
+                        <span className="text-[#6b7280]">LOINC Standard:</span>{" "}
+                        <span className="font-mono text-[#111111]">{req.code}</span> (Specimen: {req.specimen})
+                      </div>
+                      <div className="sm:col-span-2 text-xs text-[#4b5563]">
+                        <span className="text-[#6b7280]">Diagnostic Indication:</span> {req.reason}
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-[#e5e7eb] flex items-center justify-between">
+                      <span className="text-[11px] text-[#6b7280]">Status: ServiceRequest/Active</span>
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => {
+                          setLinkedOrderId(req.id);
+                          setPatientName(req.patientName);
+                          setSelectedPatientId(req.patientId);
+                          setActiveTab("builder");
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <span>Fulfill in LOINC Builder</span>
+                        <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </Card>
           )}

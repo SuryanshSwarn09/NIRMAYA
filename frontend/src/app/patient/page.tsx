@@ -24,7 +24,8 @@ import {
   Plus,
   Thermometer,
   Gauge,
-  X
+  X,
+  FlaskConical
 } from "lucide-react";
 import { 
   CalcomSlotPicker, 
@@ -152,6 +153,89 @@ export default function PatientVaultPage() {
   const [logSystolic, setLogSystolic] = useState("120");
   const [logDiastolic, setLogDiastolic] = useState("80");
   const [selectedFhirJson, setSelectedFhirJson] = useState<any | null>(null);
+
+  // Diagnostic Lab Reports & Service Requests (Day 24)
+  const [labSectionTab, setLabSectionTab] = useState<"reports" | "orders">("reports");
+  const [patientLabReports] = useState([
+    {
+      id: "dr-apollo-0925-01",
+      order_id: "ord-req-901",
+      title: "Comprehensive Lipid & Glycemic Diagnostic Panel",
+      performer: "Apollo Diagnostics Central (HFR-DEL-91024)",
+      code_value: "57021-8",
+      code_display: "CBC and Comprehensive Metabolic Panel",
+      issued_date_time: "Today, 11:15 AM",
+      status: "final",
+      is_abnormal: true,
+      conclusion: "Borderline hypercholesterolemia with optimal fasting glucose. Dietary lipid modulation recommended.",
+      coded_diagnosis_icd10: "E78.5 - Hyperlipidemia, unspecified",
+      observations: [
+        {
+          code_value: "2093-3",
+          code_display: "Total Serum Cholesterol",
+          value_quantity: 215,
+          value_unit: "mg/dL",
+          reference_range_text: "< 200 mg/dL",
+          interpretation: "high",
+        },
+        {
+          code_value: "13457-7",
+          code_display: "LDL Cholesterol (Calculated)",
+          value_quantity: 142,
+          value_unit: "mg/dL",
+          reference_range_text: "< 100 mg/dL",
+          interpretation: "high",
+        },
+        {
+          code_value: "2085-9",
+          code_display: "HDL Cholesterol",
+          value_quantity: 44,
+          value_unit: "mg/dL",
+          reference_range_text: "> 40 mg/dL",
+          interpretation: "normal",
+        },
+        {
+          code_value: "2571-8",
+          code_display: "Serum Triglycerides",
+          value_quantity: 145,
+          value_unit: "mg/dL",
+          reference_range_text: "< 150 mg/dL",
+          interpretation: "normal",
+        },
+        {
+          code_value: "1558-6",
+          code_display: "Fasting Blood Glucose",
+          value_quantity: 94,
+          value_unit: "mg/dL",
+          reference_range_text: "70 - 99 mg/dL",
+          interpretation: "normal",
+        },
+        {
+          code_value: "4548-4",
+          code_display: "Hemoglobin A1c (HbA1c)",
+          value_quantity: 5.4,
+          value_unit: "%",
+          reference_range_text: "< 5.7 %",
+          interpretation: "normal",
+        },
+      ],
+    },
+  ]);
+
+  const [patientLabOrders] = useState([
+    {
+      id: "ord-req-901",
+      code_value: "24331-1",
+      code_display: "Lipid 1996 panel - Serum or Plasma",
+      doctor_name: "Dr. Ananya Sharma (Chief Cardiologist, AIIMS)",
+      priority: "routine",
+      specimen_type: "serum",
+      fasting_required: true,
+      reason_display: "Cardiovascular risk stratification & baseline dyslipidemia surveillance",
+      status: "completed",
+      authored_on: "Today, 10:20 AM",
+    },
+  ]);
 
   // Handle slot hold reservation
   const handleHoldSlot = async (slot: DoctorSlot) => {
@@ -854,6 +938,257 @@ export default function PatientVaultPage() {
                   </button>
                 </div>
               </div>
+            </Card>
+
+            {/* Diagnostic Lab Reports & Service Requests (Day 24 - Milestone 05-04) */}
+            <Card variant="mockup" className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#e5e7eb] gap-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <FlaskConical className="h-4 w-4 text-[#111111]" />
+                    <CardTitle className="text-lg">Diagnostic Lab Reports & Requisitions</CardTitle>
+                    <Badge variant="verified">LOINC & FHIR R4</Badge>
+                  </div>
+                  <CardDescription>
+                    Quantitative laboratory findings, automated abnormal flags, and clinician test orders.
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-1 bg-[#f3f4f6] p-1 rounded-lg">
+                  <button
+                    type="button"
+                    onClick={() => setLabSectionTab("reports")}
+                    className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                      labSectionTab === "reports"
+                        ? "bg-white text-[#111111] shadow-xs"
+                        : "text-[#6b7280] hover:text-[#111111]"
+                    }`}
+                  >
+                    Reports ({patientLabReports.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLabSectionTab("orders")}
+                    className={`px-3 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                      labSectionTab === "orders"
+                        ? "bg-white text-[#111111] shadow-xs"
+                        : "text-[#6b7280] hover:text-[#111111]"
+                    }`}
+                  >
+                    Orders ({patientLabOrders.length})
+                  </button>
+                </div>
+              </div>
+
+              {/* VIEW 1: Lab Reports */}
+              {labSectionTab === "reports" && (
+                <div className="space-y-4">
+                  {patientLabReports.map((report) => (
+                    <div
+                      key={report.id}
+                      className="p-4 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] space-y-3 text-xs"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#e5e7eb] pb-2.5">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-[#111111]">{report.title}</span>
+                            <Badge variant={report.is_abnormal ? "critical" : "emerald"} size="sm">
+                              {report.is_abnormal ? "ABNORMAL / ELEVATED" : "NORMAL"}
+                            </Badge>
+                          </div>
+                          <span className="text-xs text-[#6b7280] mt-0.5 block">
+                            Performed by <span className="font-semibold text-[#111111]">{report.performer}</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="verified" size="sm">{report.status.toUpperCase()}</Badge>
+                          <span className="font-mono text-[11px] text-[#6b7280]">{report.issued_date_time}</span>
+                        </div>
+                      </div>
+
+                      {/* Diagnostic Interpretation Banner */}
+                      <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb] space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] uppercase font-bold text-[#6b7280] tracking-wider">
+                            Pathologist Conclusion & Coding
+                          </span>
+                          <span className="font-mono text-[11px] text-[#b91c1c] font-semibold bg-rose-50 px-1.5 py-0.5 rounded border border-rose-200">
+                            ICD-10: {report.coded_diagnosis_icd10}
+                          </span>
+                        </div>
+                        <p className="text-xs text-[#111111] font-medium">
+                          {report.conclusion}
+                        </p>
+                      </div>
+
+                      {/* Observations Grid */}
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] uppercase font-bold text-[#6b7280] tracking-wider block">
+                          Calibrated Quantitative Observations ({report.observations.length})
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                          {report.observations.map((obs) => {
+                            const isHigh = obs.interpretation === "high";
+                            return (
+                              <div
+                                key={obs.code_value}
+                                className={`p-2.5 rounded-[6px] border text-xs space-y-1 ${
+                                  isHigh
+                                    ? "bg-rose-50/60 border-rose-200 text-[#881337]"
+                                    : "bg-white border-[#e5e7eb] text-[#111111]"
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[10px] font-mono text-[#6b7280]">
+                                    LOINC {obs.code_value}
+                                  </span>
+                                  <Badge variant={isHigh ? "critical" : "emerald"} size="sm">
+                                    {obs.interpretation.toUpperCase()}
+                                  </Badge>
+                                </div>
+                                <div className="font-semibold text-xs truncate" title={obs.code_display}>
+                                  {obs.code_display}
+                                </div>
+                                <div className="flex items-baseline justify-between pt-0.5">
+                                  <span className="font-bold text-sm">
+                                    {obs.value_quantity}{" "}
+                                    <span className="text-[11px] font-normal opacity-75">{obs.value_unit}</span>
+                                  </span>
+                                  <span className="text-[10px] text-[#6b7280] font-mono">
+                                    {obs.reference_range_text}
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Footer & FHIR inspection */}
+                      <div className="pt-2 border-t border-[#e5e7eb] flex items-center justify-between text-[11px]">
+                        <span className="font-mono text-[#059669] flex items-center gap-1">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          Order Linked: {report.order_id}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedFhirJson({
+                              resourceType: "DiagnosticReport",
+                              id: report.id,
+                              meta: {
+                                profile: ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/DiagnosticReportLab"],
+                              },
+                              status: report.status,
+                              category: [
+                                {
+                                  coding: [
+                                    { system: "http://terminology.hl7.org/CodeSystem/v2-0074", code: "LAB", display: "Laboratory" },
+                                  ],
+                                },
+                              ],
+                              code: {
+                                coding: [
+                                  { system: "http://loinc.org", code: report.code_value, display: report.code_display },
+                                ],
+                                text: report.title,
+                              },
+                              subject: { reference: "Patient/pat-arun-patel", display: "Arun Patel" },
+                              effectiveDateTime: new Date().toISOString(),
+                              issued: new Date().toISOString(),
+                              performer: [{ reference: "Organization/HFR-DEL-91024", display: report.performer }],
+                              basedOn: [{ reference: `ServiceRequest/${report.order_id}` }],
+                              result: report.observations.map((o) => ({
+                                reference: `Observation/loinc-${o.code_value}`,
+                                display: `${o.code_display}: ${o.value_quantity} ${o.value_unit}`,
+                              })),
+                              conclusion: report.conclusion,
+                              conclusionCode: [
+                                {
+                                  coding: [
+                                    { system: "http://hl7.org/fhir/sid/icd-10", code: "E78.5", display: "Hyperlipidemia, unspecified" },
+                                  ],
+                                },
+                              ],
+                            });
+                          }}
+                          className="font-semibold text-[#111111] hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <Download className="h-3 w-3" />
+                          Inspect FHIR DiagnosticReport
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* VIEW 2: Doctor Requisitions */}
+              {labSectionTab === "orders" && (
+                <div className="space-y-3">
+                  {patientLabOrders.map((ord) => (
+                    <div
+                      key={ord.id}
+                      className="p-4 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] space-y-2 text-xs"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-[#e5e7eb] pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-sm text-[#111111]">{ord.code_display}</span>
+                          <Badge variant="emerald" size="sm">{ord.status.toUpperCase()}</Badge>
+                          {ord.fasting_required && (
+                            <span className="text-[10px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded font-medium">
+                              Fasting Required
+                            </span>
+                          )}
+                        </div>
+                        <span className="font-mono text-[11px] text-[#6b7280]">{ord.authored_on}</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div>
+                          <span className="text-[#6b7280]">Ordering Clinician:</span>{" "}
+                          <span className="font-semibold text-[#111111]">{ord.doctor_name}</span>
+                        </div>
+                        <div>
+                          <span className="text-[#6b7280]">Specimen Protocol:</span>{" "}
+                          <span className="capitalize font-medium text-[#111111]">{ord.specimen_type}</span>
+                        </div>
+                        <div className="sm:col-span-2">
+                          <span className="text-[#6b7280]">Indication:</span> {ord.reason_display}
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-[#e5e7eb] flex items-center justify-between text-[11px]">
+                        <span className="font-mono text-[#059669]">Requisition ID: {ord.id}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedFhirJson({
+                              resourceType: "ServiceRequest",
+                              id: ord.id,
+                              status: ord.status,
+                              intent: "order",
+                              priority: ord.priority,
+                              code: {
+                                coding: [
+                                  { system: "http://loinc.org", code: ord.code_value, display: ord.code_display },
+                                ],
+                              },
+                              subject: { reference: "Patient/pat-arun-patel", display: "Arun Patel" },
+                              requester: { reference: "Practitioner/doc-ananya-sharma", display: ord.doctor_name },
+                              authoredOn: new Date().toISOString(),
+                              reasonCode: [{ text: ord.reason_display }],
+                            });
+                          }}
+                          className="font-semibold text-[#111111] hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <Download className="h-3 w-3" />
+                          Inspect FHIR ServiceRequest
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </Card>
 
             <Card variant="mockup" className="space-y-5">

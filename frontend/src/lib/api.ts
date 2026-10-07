@@ -587,6 +587,91 @@ class NIRMAYAAPIClient {
     return this.get<Record<string, unknown>>(`/api/v1/soap-notes/${noteId}/fhir`);
   }
 
+  // Diagnostic Orders (ServiceRequest)
+  public async createDiagnosticOrder(
+    patientId: string,
+    payload: DiagnosticOrderCreate
+  ) {
+    return this.post<DiagnosticOrder>(
+      `/api/v1/patients/${patientId}/diagnostic-orders`,
+      payload
+    );
+  }
+
+  public async getPatientDiagnosticOrders(
+    patientId: string,
+    params?: {
+      status?: ServiceRequestStatus;
+      priority?: ServiceRequestPriority;
+      encounter_id?: string;
+      page?: number;
+      limit?: number;
+    }
+  ) {
+    return this.get<PaginatedResponse<DiagnosticOrder>>(
+      `/api/v1/patients/${patientId}/diagnostic-orders`,
+      { params: params as Record<string, string | number | boolean | undefined> }
+    );
+  }
+
+  public async getDiagnosticOrderById(orderId: string) {
+    return this.get<DiagnosticOrder>(`/api/v1/diagnostic-orders/${orderId}`);
+  }
+
+  public async updateDiagnosticOrder(
+    orderId: string,
+    payload: Partial<DiagnosticOrderCreate>
+  ) {
+    return this.patch<DiagnosticOrder>(
+      `/api/v1/diagnostic-orders/${orderId}`,
+      payload
+    );
+  }
+
+  public async getDiagnosticOrderFhir(orderId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/diagnostic-orders/${orderId}/fhir`
+    );
+  }
+
+  // Diagnostic Reports (DiagnosticReport)
+  public async createDiagnosticReport(
+    patientId: string,
+    payload: DiagnosticReportCreate
+  ) {
+    return this.post<DiagnosticReport>(
+      `/api/v1/patients/${patientId}/diagnostic-reports`,
+      payload
+    );
+  }
+
+  public async getPatientDiagnosticReports(
+    patientId: string,
+    params?: {
+      status?: DiagnosticReportStatus;
+      is_abnormal?: boolean;
+      encounter_id?: string;
+      order_id?: string;
+      page?: number;
+      limit?: number;
+    }
+  ) {
+    return this.get<PaginatedResponse<DiagnosticReport>>(
+      `/api/v1/patients/${patientId}/diagnostic-reports`,
+      { params: params as Record<string, string | number | boolean | undefined> }
+    );
+  }
+
+  public async getDiagnosticReportById(reportId: string) {
+    return this.get<DiagnosticReport>(`/api/v1/diagnostic-reports/${reportId}`);
+  }
+
+  public async getDiagnosticReportFhir(reportId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/diagnostic-reports/${reportId}/fhir`
+    );
+  }
+
   public patch<T>(
     endpoint: string,
     body?: unknown,
@@ -738,6 +823,132 @@ export interface SoapNoteCreate {
   primary_diagnosis_display?: string;
   follow_up_instructions?: string;
   status?: ClinicalNoteStatus;
+}
+
+// ============================================================================
+// Diagnostic Lab Orders (ServiceRequest) & Reports (DiagnosticReport) Types
+// ============================================================================
+
+export type ServiceRequestStatus =
+  | "draft"
+  | "active"
+  | "on-hold"
+  | "revoked"
+  | "completed"
+  | "entered-in-error"
+  | "unknown";
+
+export type ServiceRequestIntent =
+  | "proposal"
+  | "plan"
+  | "directive"
+  | "order"
+  | "original-order"
+  | "reflex-order"
+  | "filler-order"
+  | "instance-order"
+  | "option";
+
+export type ServiceRequestPriority = "routine" | "urgent" | "asap" | "stat";
+
+export type DiagnosticReportStatus =
+  | "registered"
+  | "partial"
+  | "preliminary"
+  | "final"
+  | "amended"
+  | "corrected"
+  | "appended"
+  | "cancelled"
+  | "entered-in-error"
+  | "unknown";
+
+export type SpecimenType =
+  | "blood"
+  | "serum"
+  | "plasma"
+  | "urine"
+  | "saliva"
+  | "csf"
+  | "biopsy"
+  | "swab"
+  | "other";
+
+export interface DiagnosticOrder {
+  id: string;
+  patient_id: string;
+  encounter_id?: string;
+  doctor_id?: string;
+  status: ServiceRequestStatus;
+  intent: ServiceRequestIntent;
+  priority: ServiceRequestPriority;
+  code_system: string;
+  code_value: string;
+  code_display: string;
+  category: string;
+  reason_code?: string;
+  reason_display?: string;
+  clinical_notes?: string;
+  specimen_type: SpecimenType;
+  fasting_required: boolean;
+  authored_on: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DiagnosticOrderCreate {
+  encounter_id?: string;
+  doctor_id?: string;
+  status?: ServiceRequestStatus;
+  intent?: ServiceRequestIntent;
+  priority?: ServiceRequestPriority;
+  code_system?: string;
+  code_value: string;
+  code_display: string;
+  category?: string;
+  reason_code?: string;
+  reason_display?: string;
+  clinical_notes?: string;
+  specimen_type?: SpecimenType;
+  fasting_required?: boolean;
+}
+
+export interface DiagnosticReport {
+  id: string;
+  patient_id: string;
+  order_id?: string;
+  encounter_id?: string;
+  performer_doctor_id?: string;
+  status: DiagnosticReportStatus;
+  category: string;
+  code_system: string;
+  code_value: string;
+  code_display: string;
+  effective_date_time: string;
+  issued_date_time: string;
+  conclusion?: string;
+  coded_diagnosis_icd10?: string;
+  is_abnormal: boolean;
+  observations: ClinicalObservation[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DiagnosticReportCreate {
+  order_id?: string;
+  encounter_id?: string;
+  performer_doctor_id?: string;
+  status?: DiagnosticReportStatus;
+  category?: string;
+  code_system?: string;
+  code_value: string;
+  code_display: string;
+  effective_date_time?: string;
+  issued_date_time?: string;
+  conclusion?: string;
+  coded_diagnosis_icd10?: string;
+  is_abnormal?: boolean;
+  observation_ids?: string[];
 }
 
 export const apiClient = new NIRMAYAAPIClient();
