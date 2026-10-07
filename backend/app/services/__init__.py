@@ -54,6 +54,16 @@ from app.services.soap_note import (
     delete_soap_note,
     SoapNoteService,
 )
+from app.services.diagnostic import (
+    create_diagnostic_order,
+    get_diagnostic_order,
+    list_patient_diagnostic_orders,
+    update_diagnostic_order,
+    create_diagnostic_report,
+    get_diagnostic_report,
+    list_patient_diagnostic_reports,
+    update_diagnostic_report,
+)
 
 __all__ = [
     # Patient service
@@ -105,4 +115,13 @@ __all__ = [
     "sign_soap_note",
     "delete_soap_note",
     "SoapNoteService",
+    # Diagnostic service
+    "create_diagnostic_order",
+    "get_diagnostic_order",
+    "list_patient_diagnostic_orders",
+    "update_diagnostic_order",
+    "create_diagnostic_report",
+    "get_diagnostic_report",
+    "list_patient_diagnostic_reports",
+    "update_diagnostic_report",
 ]
