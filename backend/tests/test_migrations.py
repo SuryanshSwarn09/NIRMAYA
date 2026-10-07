@@ -40,7 +40,7 @@ def test_migration_revision_head(alembic_config) -> None:
     heads = script.get_heads()
 
     assert len(heads) == 1
-    assert heads[0] == "0006_soap_notes_schema"
+    assert heads[0] == "0007_diagnostics_schema"
 
 
 def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
@@ -65,6 +65,8 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "clinical_condition",
         "clinical_observation",
         "soap_note",
+        "diagnostic_order",
+        "diagnostic_report",
         "alembic_version",
     }
     assert expected_tables.issubset(table_names), f"Missing tables: {expected_tables - table_names}"
@@ -132,6 +134,7 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "value_unit",
         "components",
         "interpretation",
+        "report_id",
     }.issubset(observation_cols)
 
     # Verify key columns on 'soap_note'
@@ -154,6 +157,36 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "signature_hash",
     }.issubset(soap_cols)
 
+    # Verify key columns on 'diagnostic_order'
+    order_cols = {col["name"] for col in inspector.get_columns("diagnostic_order")}
+    assert {
+        "id",
+        "patient_id",
+        "doctor_id",
+        "encounter_id",
+        "status",
+        "intent",
+        "priority",
+        "category",
+        "code_value",
+        "code_display",
+    }.issubset(order_cols)
+
+    # Verify key columns on 'diagnostic_report'
+    report_cols = {col["name"] for col in inspector.get_columns("diagnostic_report")}
+    assert {
+        "id",
+        "patient_id",
+        "order_id",
+        "encounter_id",
+        "performer_id",
+        "status",
+        "category",
+        "code_value",
+        "code_display",
+        "is_abnormal",
+    }.issubset(report_cols)
+
     engine.dispose()
 
     # 3. Run downgrade to base
@@ -175,6 +208,8 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "clinical_condition",
         "clinical_observation",
         "soap_note",
+        "diagnostic_order",
+        "diagnostic_report",
     }
     assert not core_tables.intersection(remaining_tables), f"Tables not dropped: {core_tables.intersection(remaining_tables)}"
 
