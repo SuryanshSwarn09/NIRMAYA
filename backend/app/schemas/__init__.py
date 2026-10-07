@@ -67,6 +67,18 @@ from app.schemas.observation import (
     ObservationResponse,
     ObservationUpdate,
 )
+from app.schemas.diagnostic import (
+    DiagnosticOrderBase,
+    DiagnosticOrderCreate,
+    DiagnosticOrderFilter,
+    DiagnosticOrderResponse,
+    DiagnosticOrderUpdate,
+    DiagnosticReportBase,
+    DiagnosticReportCreate,
+    DiagnosticReportResponse,
+    DiagnosticReportUpdate,
+    DiagnosticReportWithObservationsResponse,
+)
 from app.schemas.soap_note import (
     SoapNoteBase,
     SoapNoteCreate,
@@ -142,6 +154,16 @@ __all__ = [
     "SoapNoteSignRequest",
     "SoapNoteResponse",
     "SoapNoteFilter",
+    "DiagnosticOrderBase",
+    "DiagnosticOrderCreate",
+    "DiagnosticOrderUpdate",
+    "DiagnosticOrderResponse",
+    "DiagnosticOrderFilter",
+    "DiagnosticReportBase",
+    "DiagnosticReportCreate",
+    "DiagnosticReportUpdate",
+    "DiagnosticReportResponse",
+    "DiagnosticReportWithObservationsResponse",
 ]
 
 
