@@ -1,12 +1,26 @@
-# Welcome to NIRMAYA
+<div align="center">
 
-**NIRMAYA**: **N**etworked **I**nteroperable **R**ecords **M**edical **A**ssets & **Y**our **A**rchives
+![NIRMAYA Logo](assets/icon-192.png)
 
-> A Unified Digital Health Interoperability Platform & Longitudinal Patient Vault built on modern healthcare data standards: **HL7 FHIR Release 4** and the **Ayushman Bharat Digital Mission (ABDM)** ecosystem.
->
-> **Live Deployed Web Portal:** [https://nirmaya-tau.vercel.app/](https://nirmaya-tau.vercel.app/)  
-> **Official GitBook Documentation:** [https://suryanshs-projects.gitbook.io/nirmaya-docs](https://suryanshs-projects.gitbook.io/nirmaya-docs)
+# NIRMAYA: Networked Interoperable Records Medical Assets & Your Archives
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-nirmaya--tau.vercel.app-111111.svg?style=flat&logo=vercel&logoColor=white)](https://nirmaya-tau.vercel.app/)
+[![GitBook](https://img.shields.io/badge/GitBook-Documentation-3884FF.svg?style=flat&logo=gitbook&logoColor=white)](https://suryanshs-projects.gitbook.io/nirmaya-docs)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Next.js](https://img.shields.io/badge/Next.js-15.1-000000.svg?style=flat&logo=next.js&logoColor=white)](https://nextjs.org)
+[![FHIR](https://img.shields.io/badge/HL7-FHIR_R4-E05A47.svg?style=flat)](https://hl7.org/fhir/R4/)
+[![ABDM](https://img.shields.io/badge/ABDM-Simulated_Network-1B365D.svg?style=flat)](https://abdm.gov.in/)
+
+**A Unified Health Interoperability Network & Longitudinal Patient Vault**  
+*Built on HL7 FHIR Release 4 and Simulated Ayushman Bharat Digital Mission (ABDM) Standards*
+
+[Live Demo Portal](https://nirmaya-tau.vercel.app/) • [GitBook Documentation](https://suryanshs-projects.gitbook.io/nirmaya-docs) • [System Architecture](ARCHITECTURE.md) • [Changelog](CHANGELOG.md)
+
+<br/><br/>
+
+<img src="assets/nirmaya-mockup.png" alt="NIRMAYA Modern Clinical Interoperability Platform" width="850" />
+
+</div>
 
 ---
 
