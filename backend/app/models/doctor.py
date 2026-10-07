@@ -9,6 +9,7 @@ from app.models.enums import MedicalSpecialty
 if TYPE_CHECKING:
     from app.models.appointment import Appointment, DoctorSlot
     from app.models.condition import ClinicalCondition
+    from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
     from app.models.observation import ClinicalObservation
     from app.models.soap_note import SoapNote
     from app.models.user import User
@@ -120,6 +121,18 @@ class DoctorProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     authored_soap_notes: Mapped[List["SoapNote"]] = relationship(
         "SoapNote",
         back_populates="doctor",
+    )
+
+    # Diagnostic orders / requisitions requested by this doctor
+    diagnostic_orders: Mapped[List["DiagnosticOrder"]] = relationship(
+        "DiagnosticOrder",
+        back_populates="doctor",
+    )
+
+    # Diagnostic reports verified/performed by this doctor (e.g. Pathologist)
+    performed_diagnostic_reports: Mapped[List["DiagnosticReport"]] = relationship(
+        "DiagnosticReport",
+        back_populates="performer",
     )
 
     def __repr__(self) -> str:

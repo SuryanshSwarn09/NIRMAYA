@@ -18,10 +18,16 @@ from app.models.enums import (
     ObservationStatus,
     ClinicalNoteType,
     ClinicalNoteStatus,
+    ServiceRequestStatus,
+    ServiceRequestIntent,
+    ServiceRequestPriority,
+    DiagnosticReportStatus,
+    SpecimenType,
     SlotStatus,
     UserRole,
     VerificationStatus,
 )
+from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.lab import DiagnosticLabFacility
 from app.models.observation import ClinicalObservation
 from app.models.patient import PatientProfile
@@ -38,6 +44,8 @@ __all__ = [
     "ClinicalCondition",
     "ClinicalObservation",
     "SoapNote",
+    "DiagnosticOrder",
+    "DiagnosticReport",
     "UserRole",
     "Gender",
     "BloodGroup",
@@ -55,5 +63,10 @@ __all__ = [
     "ObservationInterpretation",
     "ClinicalNoteType",
     "ClinicalNoteStatus",
+    "ServiceRequestStatus",
+    "ServiceRequestIntent",
+    "ServiceRequestPriority",
+    "DiagnosticReportStatus",
+    "SpecimenType",
 ]
 

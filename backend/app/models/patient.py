@@ -10,6 +10,7 @@ from app.models.enums import BloodGroup, Gender
 if TYPE_CHECKING:
     from app.models.appointment import Appointment, DoctorSlot
     from app.models.condition import ClinicalCondition
+    from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
     from app.models.observation import ClinicalObservation
     from app.models.soap_note import SoapNote
     from app.models.user import User
@@ -129,6 +130,20 @@ class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # Structured SOAP clinical notes and encounter documentation
     soap_notes: Mapped[List["SoapNote"]] = relationship(
         "SoapNote",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+    )
+
+    # Diagnostic lab service requests / requisitions
+    diagnostic_orders: Mapped[List["DiagnosticOrder"]] = relationship(
+        "DiagnosticOrder",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+    )
+
+    # Diagnostic lab reports issued for patient
+    diagnostic_reports: Mapped[List["DiagnosticReport"]] = relationship(
+        "DiagnosticReport",
         back_populates="patient",
         cascade="all, delete-orphan",
     )

@@ -17,6 +17,7 @@ from app.models.enums import (
 
 if TYPE_CHECKING:
     from app.models.appointment import Appointment
+    from app.models.diagnostic import DiagnosticReport
     from app.models.doctor import DoctorProfile
     from app.models.patient import PatientProfile
 
@@ -51,6 +52,14 @@ class ClinicalObservation(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     performer_doctor_id: Mapped[Optional[str]] = mapped_column(
         String(36),
         ForeignKey("doctor_profile.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+
+    # Diagnostic Report context (Optional link to parent laboratory diagnostic report)
+    report_id: Mapped[Optional[str]] = mapped_column(
+        String(36),
+        ForeignKey("diagnostic_report.id", ondelete="SET NULL"),
         nullable=True,
         index=True,
     )
@@ -186,6 +195,11 @@ class ClinicalObservation(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         "DoctorProfile",
         back_populates="performed_observations",
         foreign_keys=[performer_doctor_id],
+    )
+    diagnostic_report: Mapped[Optional["DiagnosticReport"]] = relationship(
+        "DiagnosticReport",
+        back_populates="observations",
+        foreign_keys=[report_id],
     )
 
     def __repr__(self) -> str:

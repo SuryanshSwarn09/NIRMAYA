@@ -12,6 +12,7 @@ from app.models.enums import AppointmentStatus, AppointmentType, SlotStatus
 
 if TYPE_CHECKING:
     from app.models.condition import ClinicalCondition
+    from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
     from app.models.doctor import DoctorProfile
     from app.models.observation import ClinicalObservation
     from app.models.patient import PatientProfile
@@ -199,6 +200,14 @@ class Appointment(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
     soap_notes: Mapped[List["SoapNote"]] = relationship(
         "SoapNote",
+        back_populates="encounter",
+    )
+    diagnostic_orders: Mapped[List["DiagnosticOrder"]] = relationship(
+        "DiagnosticOrder",
+        back_populates="encounter",
+    )
+    diagnostic_reports: Mapped[List["DiagnosticReport"]] = relationship(
+        "DiagnosticReport",
         back_populates="encounter",
     )
 
