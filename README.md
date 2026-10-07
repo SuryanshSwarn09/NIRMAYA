@@ -1,6 +1,8 @@
-# NIRMAYA: Networked Interoperable Records Medical Assets & Your Archives
-
 <div align="center">
+
+![Git-doc logo](frontend/public/icon-192.png)
+
+# NIRMAYA: Networked Interoperable Records Medical Assets & Your Archives
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-nirmaya--tau.vercel.app-111111.svg?style=flat&logo=vercel&logoColor=white)](https://nirmaya-tau.vercel.app/)
 [![GitBook](https://img.shields.io/badge/GitBook-Documentation-3884FF.svg?style=flat&logo=gitbook&logoColor=white)](https://suryanshs-projects.gitbook.io/nirmaya-docs)
@@ -15,14 +17,13 @@
 **A Unified Health Interoperability Network & Longitudinal Patient Vault**  
 *Built on HL7 FHIR Release 4 and Simulated Ayushman Bharat Digital Mission (ABDM) Standards*
 
-[ Live Demo Portal](https://nirmaya-tau.vercel.app/) • [ GitBook Documentation](https://suryanshs-projects.gitbook.io/nirmaya-docs) • [System Architecture](docs/ARCHITECTURE.md) • [Changelog](docs/CHANGELOG.md) • [API Swagger Docs](http://localhost:8000/docs)
+[Live Demo Portal](https://nirmaya-tau.vercel.app/) • [GitBook Documentation](https://suryanshs-projects.gitbook.io/nirmaya-docs) • [System Architecture](docs/ARCHITECTURE.md) • [Changelog](docs/CHANGELOG.md) • [API Swagger Docs](http://localhost:8000/docs)
 
 <br/><br/>
 
 <img src="docs/assets/nirmaya-mockup.png" alt="NIRMAYA Modern Clinical Interoperability Platform" width="850" />
 
 </div>
-
 
 ---
 
@@ -69,7 +70,7 @@ graph TD
 ## 3. Technology Stack
 
 | Layer | Technologies | Role & Architectural Rationale |
-|---|---|---|
+| --- | --- | --- |
 | **Frontend** | Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS v4, Framer Motion | Server-rendered clinical views, responsive layouts, micro-animations |
 | **Backend** | FastAPI (Python 3.11/3.12), Pydantic v2, Uvicorn ASGI | High-throughput async routing, strict FHIR validation, sub-ms telemetry |
 | **Database** | PostgreSQL 16 via SQLAlchemy 2.0 (ORM) & Alembic | ACID relational integrity, row-level locking for appointment slots |
@@ -81,17 +82,21 @@ graph TD
 ## 4. Quickstart Guide
 
 ### Prerequisites
+
 - Python >= 3.11
 - Node.js >= 18
 - Git
 
 ### 1. Run Pre-flight System Diagnostics
+
 ```bash
 python scripts/doctor.py
 ```
 
 ### 2. Single-Command Concurrent Launch
+
 **Windows (PowerShell):**
+
 ```powershell
 npm run dev
 # Or directly:
@@ -99,6 +104,7 @@ npm run dev
 ```
 
 **POSIX / Linux / macOS (Bash):**
+
 ```bash
 npm run dev:bash
 # Or directly:
@@ -106,6 +112,7 @@ npm run dev:bash
 ```
 
 ### 3. Service Endpoints
+
 - **Live Deployed Web Portal:** [https://nirmaya-tau.vercel.app/](https://nirmaya-tau.vercel.app/)
 - **Official GitBook Documentation:** [https://suryanshs-projects.gitbook.io/nirmaya-docs](https://suryanshs-projects.gitbook.io/nirmaya-docs)
 - **Local Frontend Web Portal:** [http://localhost:3000](http://localhost:3000)
@@ -113,7 +120,6 @@ npm run dev:bash
 - **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
 - **FHIR Capabilities Statement:** [http://localhost:8000/api/v1/meta](http://localhost:8000/api/v1/meta)
 - **System Health & Telemetry:** [http://localhost:8000/api/v1/health](http://localhost:8000/api/v1/health)
-
 
 ---
 
