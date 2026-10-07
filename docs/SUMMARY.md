@@ -51,6 +51,7 @@
     * [Day 21: Clinical Condition & Problem List Schemas](journey/month-2/day-21.md)
     * [Day 22: Vital Signs & LOINC Telemetry Engine](journey/month-2/day-22.md)
     * [Day 23: Structured SOAP Clinical Notes & Encounter Documentation](journey/month-2/day-23.md)
+    * [Day 24: Diagnostic Lab Orders & Results](journey/month-2/day-24.md)
 
 ## Appendix
 * [Comprehensive Changelog](CHANGELOG.md)
