@@ -55,5 +55,6 @@
     * [Day 24: Diagnostic Lab Orders & Results](journey/month-2/day-24.md)
 
 ## Appendix
+* [Interim Project Report (Month 1 Review)](reports/interim-project-report-month-1.md)
 * [Comprehensive Changelog](CHANGELOG.md)
 
