@@ -23,11 +23,12 @@ import {
   FlaskConical
 } from "lucide-react";
 import { DoctorSlotManager } from "@/components/appointments";
+import { ProblemListPanel, VitalsTelemetryPanel } from "@/components/clinical";
 
 export default function DoctorEMRPage() {
   const { user } = useAuth();
   const doctorId = user?.id || "doc-ananya-sharma";
-  const [activeTab, setActiveTab] = useState<"queue" | "slots">("queue");
+  const [activeTab, setActiveTab] = useState<"queue" | "problems" | "vitals" | "slots">("queue");
   const [selectedPatient, setSelectedPatient] = useState("Arun Patel");
   const [medication, setMedication] = useState("Atorvastatin 20mg");
   const [dosage, setDosage] = useState("Once daily at bedtime");
@@ -234,13 +235,23 @@ export default function DoctorEMRPage() {
               icon: <Stethoscope className="h-4 w-4" />,
             },
             {
+              id: "problems",
+              label: "Longitudinal Problems",
+              icon: <FileText className="h-4 w-4" />,
+            },
+            {
+              id: "vitals",
+              label: "Vitals & Telemetry",
+              icon: <Activity className="h-4 w-4" />,
+            },
+            {
               id: "slots",
               label: "Availability & Slot Engine",
               icon: <Calendar className="h-4 w-4" />,
             },
           ]}
           activeId={activeTab}
-          onChange={(id) => setActiveTab(id as "queue" | "slots")}
+          onChange={(id) => setActiveTab(id as "queue" | "problems" | "vitals" | "slots")}
         />
       </div>
 
@@ -252,6 +263,22 @@ export default function DoctorEMRPage() {
           <DoctorSlotManager
             doctorId={doctorId}
             doctorName={user?.fullName || "Dr. Ananya Sharma"}
+          />
+        </div>
+      ) : activeTab === "problems" ? (
+        <div className="animate-fade-in max-w-5xl mx-auto">
+          <ProblemListPanel
+            patientId="pat-arun-patel"
+            patientName={selectedPatient}
+            isDoctorView={true}
+          />
+        </div>
+      ) : activeTab === "vitals" ? (
+        <div className="animate-fade-in max-w-5xl mx-auto">
+          <VitalsTelemetryPanel
+            patientId="pat-arun-patel"
+            patientName={selectedPatient}
+            isDoctorView={true}
           />
         </div>
       ) : (

@@ -482,6 +482,53 @@ class NIRMAYAAPIClient {
   }
 
   // ==========================================================================
+  // Clinical Conditions & Longitudinal Problem List
+  // ==========================================================================
+
+  public async recordCondition(patientId: string, payload: ConditionCreate) {
+    return this.post<ClinicalCondition>(
+      `/api/v1/patients/${patientId}/conditions`,
+      payload
+    );
+  }
+
+  public async getPatientConditions(
+    patientId: string,
+    params?: {
+      clinical_status?: ClinicalStatus;
+      verification_status?: VerificationStatus;
+      category?: ConditionCategory;
+      severity?: ConditionSeverity;
+      encounter_id?: string;
+      page?: number;
+      limit?: number;
+    }
+  ) {
+    return this.get<PaginatedResponse<ClinicalCondition>>(
+      `/api/v1/patients/${patientId}/conditions`,
+      { params: params as Record<string, string | number | boolean | undefined> }
+    );
+  }
+
+  public async getConditionById(conditionId: string) {
+    return this.get<ClinicalCondition>(`/api/v1/conditions/${conditionId}`);
+  }
+
+  public async updateCondition(
+    conditionId: string,
+    payload: Partial<ConditionCreate>
+  ) {
+    return this.patch<ClinicalCondition>(
+      `/api/v1/conditions/${conditionId}`,
+      payload
+    );
+  }
+
+  public async getConditionFhir(conditionId: string) {
+    return this.get<Record<string, unknown>>(`/api/v1/conditions/${conditionId}/fhir`);
+  }
+
+  // ==========================================================================
   // Clinical Observations & Vital Signs Telemetry
   // ==========================================================================
 
@@ -683,6 +730,68 @@ class NIRMAYAAPIClient {
       ...options,
     });
   }
+}
+
+// ============================================================================
+// Clinical Conditions & Problem List Types
+// ============================================================================
+
+export type ClinicalStatus =
+  | "active"
+  | "recurrence"
+  | "relapse"
+  | "inactive"
+  | "remission"
+  | "resolved";
+
+export type VerificationStatus =
+  | "unconfirmed"
+  | "provisional"
+  | "differential"
+  | "confirmed"
+  | "refuted"
+  | "entered-in-error";
+
+export type ConditionCategory =
+  | "problem-list-item"
+  | "encounter-diagnosis"
+  | "chronic-condition";
+
+export type ConditionSeverity = "mild" | "moderate" | "severe";
+
+export interface ClinicalCondition {
+  id: string;
+  patient_id: string;
+  encounter_id?: string;
+  recorder_doctor_id?: string;
+  clinical_status: ClinicalStatus;
+  verification_status: VerificationStatus;
+  category: ConditionCategory;
+  severity?: ConditionSeverity;
+  code_coding_system: string;
+  code_value: string;
+  code_display: string;
+  body_site?: string;
+  onset_date_time?: string;
+  abatement_date_time?: string;
+  note?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ConditionCreate {
+  encounter_id?: string;
+  clinical_status?: ClinicalStatus;
+  verification_status?: VerificationStatus;
+  category?: ConditionCategory;
+  severity?: ConditionSeverity;
+  code_coding_system?: string;
+  code_value: string;
+  code_display: string;
+  body_site?: string;
+  onset_date_time?: string;
+  abatement_date_time?: string;
+  note?: string;
 }
 
 // ============================================================================

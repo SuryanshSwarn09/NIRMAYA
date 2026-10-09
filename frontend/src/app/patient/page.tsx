@@ -31,6 +31,7 @@ import {
   ClinicalSlotPicker, 
   AppointmentBookingModal 
 } from "@/components/appointments";
+import { ProblemListPanel } from "@/components/clinical";
 import { 
   apiClient, 
   DoctorSlot, 
@@ -68,7 +69,7 @@ const CLINICIANS = [
 
 export default function PatientVaultPage() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"records" | "book">("records");
+  const [activeTab, setActiveTab] = useState<"records" | "problems" | "book">("records");
   const [consentActive, setConsentActive] = useState(true);
 
   // Selected Clinician for Booking
@@ -385,13 +386,18 @@ export default function PatientVaultPage() {
               icon: <ShieldCheck className="h-4 w-4" />,
             },
             {
+              id: "problems",
+              label: "Problem List & Conditions",
+              icon: <Stethoscope className="h-4 w-4" />,
+            },
+            {
               id: "book",
               label: "Schedule Consultation",
               icon: <Calendar className="h-4 w-4" />,
             },
           ]}
           activeId={activeTab}
-          onChange={(id) => setActiveTab(id as "records" | "book")}
+          onChange={(id) => setActiveTab(id as "records" | "problems" | "book")}
         />
       </div>
 
@@ -487,6 +493,14 @@ export default function PatientVaultPage() {
             activeHold={activeHold}
             onHoldRelease={handleReleaseHold}
             onSuccess={handleBookingSuccess}
+          />
+        </div>
+      ) : activeTab === "problems" ? (
+        <div className="animate-fade-in max-w-5xl mx-auto space-y-6">
+          <ProblemListPanel
+            patientId={user?.id || "pat-arun-patel"}
+            patientName={user?.fullName || "Arun Patel"}
+            isDoctorView={false}
           />
         </div>
       ) : (
