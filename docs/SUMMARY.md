@@ -53,6 +53,8 @@
     * [Day 22: Vital Signs & LOINC Telemetry Engine](journey/month-2/day-22.md)
     * [Day 23: Structured SOAP Clinical Notes & Encounter Documentation](journey/month-2/day-23.md)
     * [Day 24: Diagnostic Lab Orders & Results](journey/month-2/day-24.md)
+    * [Day 25: E2E Clinical Verification & Frontend Integration](journey/month-2/day-25.md)
+    * [Week 5 Retrospective & Clinical Architecture Review](journey/month-2/week-5-review.md)
 
 ## Appendix
 * [Interim Project Report (Month 1 Review)](reports/interim-project-report-month-1.md)
