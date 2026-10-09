@@ -26,6 +26,7 @@ import {
   Inbox,
   ArrowRight,
 } from "lucide-react";
+import { DiagnosticOrderTracker } from "@/components/clinical";
 
 interface ObservationItem {
   loinc: string;
@@ -49,7 +50,7 @@ export default function DiagnosticLabPage() {
   const [isHashing, setIsHashing] = useState(false);
   const [isIngested, setIsIngested] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<"builder" | "orders" | "fhir" | "ledger">("builder");
+  const [activeTab, setActiveTab] = useState<"builder" | "orders" | "tracker" | "fhir" | "ledger">("builder");
 
   // Incoming Doctor Requisitions Queue (Day 24)
   const [requisitions, setRequisitions] = useState([
@@ -458,6 +459,16 @@ export default function DiagnosticLabPage() {
                 </span>
               </button>
               <button
+                onClick={() => setActiveTab("tracker")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                  activeTab === "tracker"
+                    ? "bg-white text-[#111111] shadow-sm font-semibold"
+                    : "text-[#6b7280] hover:text-[#111111]"
+                }`}
+              >
+                End-to-End Tracker
+              </button>
+              <button
                 onClick={() => setActiveTab("fhir")}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                   activeTab === "fhir"
@@ -738,6 +749,17 @@ export default function DiagnosticLabPage() {
                 ))}
               </div>
             </Card>
+          )}
+
+          {/* TAB: End-to-End Diagnostic Tracker */}
+          {activeTab === "tracker" && (
+            <div className="space-y-4">
+              <DiagnosticOrderTracker
+                patientId={selectedPatientId}
+                patientName={patientName}
+                isLabView={true}
+              />
+            </div>
           )}
 
           {/* TAB 2: Live FHIR R4 DiagnosticReport JSON */}

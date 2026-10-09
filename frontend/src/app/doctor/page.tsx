@@ -20,15 +20,21 @@ import {
   Video,
   MapPin,
   TestTube2,
-  FlaskConical
+  FlaskConical,
+  ShieldCheck
 } from "lucide-react";
 import { DoctorSlotManager } from "@/components/appointments";
-import { ProblemListPanel, VitalsTelemetryPanel } from "@/components/clinical";
+import { 
+  ProblemListPanel, 
+  VitalsTelemetryPanel, 
+  SoapNoteEditor, 
+  DiagnosticOrderTracker 
+} from "@/components/clinical";
 
 export default function DoctorEMRPage() {
   const { user } = useAuth();
   const doctorId = user?.id || "doc-ananya-sharma";
-  const [activeTab, setActiveTab] = useState<"queue" | "problems" | "vitals" | "slots">("queue");
+  const [activeTab, setActiveTab] = useState<"queue" | "soap" | "diagnostics" | "problems" | "vitals" | "slots">("queue");
   const [selectedPatient, setSelectedPatient] = useState("Arun Patel");
   const [medication, setMedication] = useState("Atorvastatin 20mg");
   const [dosage, setDosage] = useState("Once daily at bedtime");
@@ -235,9 +241,19 @@ export default function DoctorEMRPage() {
               icon: <Stethoscope className="h-4 w-4" />,
             },
             {
+              id: "soap",
+              label: "SOAP Documentation",
+              icon: <FileText className="h-4 w-4" />,
+            },
+            {
+              id: "diagnostics",
+              label: "Lab Requisitions",
+              icon: <FlaskConical className="h-4 w-4" />,
+            },
+            {
               id: "problems",
               label: "Longitudinal Problems",
-              icon: <FileText className="h-4 w-4" />,
+              icon: <ShieldCheck className="h-4 w-4" />,
             },
             {
               id: "vitals",
@@ -251,7 +267,7 @@ export default function DoctorEMRPage() {
             },
           ]}
           activeId={activeTab}
-          onChange={(id) => setActiveTab(id as "queue" | "problems" | "vitals" | "slots")}
+          onChange={(id) => setActiveTab(id as typeof activeTab)}
         />
       </div>
 
@@ -263,6 +279,24 @@ export default function DoctorEMRPage() {
           <DoctorSlotManager
             doctorId={doctorId}
             doctorName={user?.fullName || "Dr. Ananya Sharma"}
+          />
+        </div>
+      ) : activeTab === "soap" ? (
+        <div className="animate-fade-in max-w-5xl mx-auto">
+          <SoapNoteEditor
+            patientId="pat-arun-patel"
+            patientName={selectedPatient}
+            doctorId={doctorId}
+            doctorName={user?.fullName || "Dr. Ananya Sharma"}
+          />
+        </div>
+      ) : activeTab === "diagnostics" ? (
+        <div className="animate-fade-in max-w-5xl mx-auto">
+          <DiagnosticOrderTracker
+            patientId="pat-arun-patel"
+            patientName={selectedPatient}
+            doctorId={doctorId}
+            isDoctorView={true}
           />
         </div>
       ) : activeTab === "problems" ? (
