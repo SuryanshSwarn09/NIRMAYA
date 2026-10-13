@@ -33,9 +33,12 @@ from app.fhir.schemas import (
     FHIRQuantity,
     FHIRReference,
     FHIRServiceRequest,
+    FHIRMedication,
+    FHIRMedicationIngredient,
 )
 from app.models.appointment import Appointment
 from app.models.condition import ClinicalCondition
+from app.models.medication import Medication
 from app.models.enums import (
     AppointmentStatus,
     AppointmentType,
@@ -76,6 +79,10 @@ NIRMAYA_CONDITION_SYSTEM = "https://nirmaya.health/fhir/condition"
 NIRMAYA_OBSERVATION_SYSTEM = "https://nirmaya.health/fhir/observation"
 NIRMAYA_COMPOSITION_SYSTEM = "https://nirmaya.health/fhir/composition"
 NIRMAYA_CARE_CONTEXT_SYSTEM = "https://nirmaya.health/abdm/care-context"
+RXNORM_SYSTEM = "http://www.nlm.nih.gov/research/umls/rxnorm"
+WHO_ATC_SYSTEM = "http://www.whocc.no/atc"
+NIRMAYA_MEDICATION_SYSTEM = "https://nirmaya.health/fhir/medication"
+NIRMAYA_DIAGNOSTIC_REPORT_SYSTEM = "https://nirmaya.health/fhir/diagnostic-report"
 
 # Observation interpretation mappings to HL7 v3 ObservationInterpretation concepts
 OBSERVATION_INTERPRETATION_MAPPINGS: Dict[ObservationInterpretation, FHIRCoding] = {
@@ -1411,6 +1418,96 @@ def to_fhir_diagnostic_report(
         result=results,
         conclusion=report.conclusion,
         conclusionCode=conclusion_codes,
+    )
+
+
+def to_fhir_medication(medication: Medication) -> FHIRMedication:
+    """Transform internal Medication entity into HL7 FHIR Release 4 Medication resource.
+
+    Conforms to HL7 FHIR R4 Medication and ABDM NRCeS Medication profile:
+    - Identifiers: internal UUID and RxNorm Concept Unique Identifier (RxCUI)
+    - Codings: RxNorm, WHO-ATC, and SNOMED-CT clinical drug concepts
+    - Form: SNOMED-CT dose form hierarchies
+    - Ingredients: Active pharmaceutical ingredients and strength
+    """
+    codings = [
+        FHIRCoding(
+            system=RXNORM_SYSTEM,
+            code=medication.rxnorm_code,
+            display=medication.rxnorm_display or medication.name,
+        )
+    ]
+    if medication.atc_code:
+        codings.append(
+            FHIRCoding(
+                system=WHO_ATC_SYSTEM,
+                code=medication.atc_code,
+                display=medication.atc_display or medication.generic_name,
+            )
+        )
+    if medication.snomed_code:
+        codings.append(
+            FHIRCoding(
+                system=SNOMED_CT_SYSTEM,
+                code=medication.snomed_code,
+                display=medication.snomed_display or medication.generic_name,
+            )
+        )
+
+    form_concept = None
+    if medication.form:
+        form_concept = FHIRCodeableConcept(
+            coding=[
+                FHIRCoding(
+                    system=SNOMED_CT_SYSTEM,
+                    code=medication.form.value,
+                    display=medication.form.value.capitalize(),
+                )
+            ],
+            text=medication.form.value.capitalize(),
+        )
+
+    ingredients = []
+    if medication.active_ingredient:
+        ingredients.append(
+            FHIRMedicationIngredient(
+                itemCodeableConcept=FHIRCodeableConcept(
+                    coding=[
+                        FHIRCoding(
+                            system=RXNORM_SYSTEM,
+                            code=medication.rxnorm_code,
+                            display=medication.active_ingredient,
+                        )
+                    ],
+                    text=medication.active_ingredient,
+                ),
+                isActive=True,
+                strength={
+                    "text": medication.strength,
+                },
+            )
+        )
+
+    return FHIRMedication(
+        id=medication.id,
+        identifier=[
+            FHIRIdentifier(
+                system=NIRMAYA_MEDICATION_SYSTEM,
+                value=medication.id,
+            ),
+            FHIRIdentifier(
+                system=RXNORM_SYSTEM,
+                value=medication.rxnorm_code,
+                use="official",
+            ),
+        ],
+        code=FHIRCodeableConcept(
+            coding=codings,
+            text=medication.name,
+        ),
+        status=medication.status.value,
+        form=form_concept,
+        ingredient=ingredients if ingredients else None,
     )
 
 

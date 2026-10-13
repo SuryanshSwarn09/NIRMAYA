@@ -17,15 +17,21 @@ from app.fhir.transformers import (
     to_fhir_appointment,
     to_fhir_encounter,
     to_fhir_encounter_bundle,
+    to_fhir_medication,
 )
 from app.main import app
 from app.models.appointment import Appointment, DoctorSlot
 from app.models.doctor import DoctorProfile
+from app.models.medication import Medication
 from app.models.enums import (
+    AdministrationRoute,
     AppointmentStatus,
     AppointmentType,
+    FormularyTier,
     Gender,
     MedicalSpecialty,
+    MedicationForm,
+    MedicationStatus,
     SlotStatus,
     UserRole,
 )
@@ -541,3 +547,51 @@ async def test_api_fhir_access_control_guards(fhir_test_env) -> None:
     )
     assert admin_res.status_code == 200
     assert admin_res.json()["data"]["resourceType"] == "Bundle"
+
+
+def test_to_fhir_medication_transformer() -> None:
+    """Verify bidirectional serialization of Medication model into FHIR R4 Medication."""
+    med = Medication(
+        id="med-metformin-500",
+        name="Metformin 500mg Oral Tablet",
+        generic_name="Metformin Hydrochloride",
+        brand_name="Glucophage",
+        rxnorm_code="860975",
+        rxnorm_display="Metformin hydrochloride 500 MG Oral Tablet",
+        atc_code="A10BA02",
+        atc_display="Metformin",
+        snomed_code="387048002",
+        snomed_display="Metformin hydrochloride",
+        form=MedicationForm.TABLET,
+        route=AdministrationRoute.ORAL,
+        strength="500 mg",
+        active_ingredient="Metformin",
+        is_prescription_required=True,
+        is_controlled_substance=False,
+        formulary_tier=FormularyTier.TIER_1_GENERIC,
+        status=MedicationStatus.ACTIVE,
+    )
+
+    fhir_med = to_fhir_medication(med)
+
+    assert fhir_med.resourceType == "Medication"
+    assert fhir_med.id == "med-metformin-500"
+    assert fhir_med.status == "active"
+    assert len(fhir_med.identifier) == 2
+    assert fhir_med.identifier[0].value == "med-metformin-500"
+    assert fhir_med.identifier[1].value == "860975"
+    assert fhir_med.code.text == "Metformin 500mg Oral Tablet"
+
+    systems = {coding.system for coding in fhir_med.code.coding}
+    assert "http://www.nlm.nih.gov/research/umls/rxnorm" in systems
+    assert "http://www.whocc.no/atc" in systems
+    assert "http://snomed.info/sct" in systems
+
+    assert fhir_med.form is not None
+    assert fhir_med.form.text == "Tablet"
+
+    assert fhir_med.ingredient is not None
+    assert len(fhir_med.ingredient) == 1
+    assert fhir_med.ingredient[0].itemCodeableConcept.text == "Metformin"
+    assert fhir_med.ingredient[0].strength["text"] == "500 mg"
+

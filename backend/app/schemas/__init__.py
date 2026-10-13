@@ -95,7 +95,17 @@ from app.schemas.user import (
 )
 
 
+from app.schemas.medication import (
+    MedicationBase,
+    MedicationCreate,
+    MedicationUpdate,
+    MedicationResponse,
+    MedicationListResponse,
+    TherapeuticClassSummary,
+)
+
 __all__ = [
+
     "APIResponse",
     "ErrorDetail",
     "ErrorResponse",
@@ -164,6 +174,12 @@ __all__ = [
     "DiagnosticReportUpdate",
     "DiagnosticReportResponse",
     "DiagnosticReportWithObservationsResponse",
+    "MedicationBase",
+    "MedicationCreate",
+    "MedicationUpdate",
+    "MedicationResponse",
+    "MedicationListResponse",
+    "TherapeuticClassSummary",
 ]
 
 

@@ -728,6 +728,63 @@ class FHIRDiagnosticReport(BaseModel):
     )
 
 
+# ============================================================================
+# FHIR R4 Medication Resource
+# ============================================================================
+
+
+class FHIRMedicationIngredient(BaseModel):
+    """Active ingredient or substance component of a medication."""
+
+    itemCodeableConcept: FHIRCodeableConcept = Field(
+        description="Codified substance or clinical active ingredient",
+    )
+    isActive: bool = Field(
+        default=True,
+        description="Whether ingredient affects physiological action",
+    )
+    strength: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Quantity of substance present in medication",
+    )
+
+
+class FHIRMedication(BaseModel):
+    """HL7 FHIR Release 4 Medication resource representing clinical pharmaceuticals.
+
+    Reference: http://hl7.org/fhir/R4/medication.html
+    NRCeS Profile: https://nrces.in/ndhm/fhir/r4/StructureDefinition/Medication
+    """
+
+    resourceType: Literal["Medication"] = Field(
+        default="Medication",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this medication resource",
+    )
+    identifier: Optional[List[FHIRIdentifier]] = Field(
+        default=None,
+        description="Business identifiers (e.g. RxCUI, NDC)",
+    )
+    code: FHIRCodeableConcept = Field(
+        description="Codes that identify this medication (RxNorm, WHO-ATC, SNOMED-CT)",
+    )
+    status: str = Field(
+        default="active",
+        description="active | inactive | entered-in-error",
+        example="active",
+    )
+    form: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Powder | tablets | capsule | syrup | injection etc.",
+    )
+    ingredient: Optional[List[FHIRMedicationIngredient]] = Field(
+        default=None,
+        description="Active or inactive pharmaceutical substances",
+    )
+
+
 class FHIRBundle(BaseModel):
     """HL7 FHIR Release 4 Collection or Document Bundle."""
 
