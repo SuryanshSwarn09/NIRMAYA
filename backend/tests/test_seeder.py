@@ -38,7 +38,8 @@ async def test_seed_database_success(async_db) -> None:
         assert result["patients_seeded"] == 3
         assert result["doctors_seeded"] == 3
         assert result["labs_seeded"] == 3
-        assert result["total_seeded"] == 19
+        assert result["medications_seeded"] == 30
+        assert result["total_seeded"] == 49
 
         # Verify persisted counts in database
         user_count = await session.scalar(select(func.count(User.id)))
@@ -58,7 +59,8 @@ async def test_seed_database_idempotent(async_db) -> None:
     async with async_db() as session:
         # First execution
         first_run = await seed_database(session, reset=False)
-        assert first_run["total_seeded"] == 19
+        assert first_run["total_seeded"] == 49
+        assert first_run["medications_seeded"] == 30
 
         # Second execution (idempotent run)
         second_run = await seed_database(session, reset=False)
@@ -67,6 +69,7 @@ async def test_seed_database_idempotent(async_db) -> None:
         assert second_run["patients_seeded"] == 0
         assert second_run["doctors_seeded"] == 0
         assert second_run["labs_seeded"] == 0
+        assert second_run["medications_seeded"] == 0
 
         # Verify counts remained untouched
         user_count = await session.scalar(select(func.count(User.id)))
@@ -87,7 +90,9 @@ async def test_seed_database_reset_mode(async_db) -> None:
         assert reset_result["cleared_stats"]["patients_deleted"] == 3
         assert reset_result["cleared_stats"]["doctors_deleted"] == 3
         assert reset_result["cleared_stats"]["labs_deleted"] == 3
-        assert reset_result["total_seeded"] == 19
+        assert reset_result["cleared_stats"]["medications_deleted"] == 30
+        assert reset_result["medications_seeded"] == 30
+        assert reset_result["total_seeded"] == 49
 
         # Verify post-reset counts
         user_count = await session.scalar(select(func.count(User.id)))
