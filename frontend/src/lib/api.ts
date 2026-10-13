@@ -719,6 +719,47 @@ class NIRMAYAAPIClient {
     );
   }
 
+  // Medication Formulary
+  public async listMedications(params?: {
+    q?: string;
+    form?: MedicationForm;
+    route?: AdministrationRoute;
+    tier?: FormularyTier;
+    atc_prefix?: string;
+    is_prescription_required?: boolean;
+    is_controlled_substance?: boolean;
+    status?: MedicationStatus;
+    page?: number;
+    limit?: number;
+    offset?: number;
+  }) {
+    return this.get<PaginatedResponse<Medication>>(
+      "/api/v1/medications",
+      { params: params as Record<string, string | number | boolean | undefined> }
+    );
+  }
+
+  public async getMedicationById(id: string) {
+    return this.get<Medication>(`/api/v1/medications/${id}`);
+  }
+
+  public async getMedicationFhir(id: string) {
+    return this.get<Record<string, unknown>>(`/api/v1/medications/${id}/fhir`);
+  }
+
+  public async getTherapeuticClasses() {
+    return this.get<TherapeuticClassSummary[]>("/api/v1/medications/classes");
+  }
+
+  public async createMedication(payload: MedicationCreate) {
+    return this.post<Medication>("/api/v1/medications", payload);
+  }
+
+  public async updateMedication(id: string, payload: Partial<MedicationCreate>) {
+    return this.patch<Medication>(`/api/v1/medications/${id}`, payload);
+  }
+
+
   public patch<T>(
     endpoint: string,
     body?: unknown,
@@ -1061,6 +1102,105 @@ export interface DiagnosticReportCreate {
 }
 
 export const apiClient = new NIRMAYAAPIClient();
+
+// ============================================================================
+// Medication Formulary & Catalog Types
+// ============================================================================
+
+export type MedicationForm =
+  | "tablet"
+  | "capsule"
+  | "syrup"
+  | "injection"
+  | "inhaler"
+  | "drops"
+  | "ointment"
+  | "patch"
+  | "suspension"
+  | "solution"
+  | "powder"
+  | "other";
+
+export type AdministrationRoute =
+  | "oral"
+  | "intravenous"
+  | "intramuscular"
+  | "subcutaneous"
+  | "inhalation"
+  | "topical"
+  | "ophthalmic"
+  | "otic"
+  | "nasal"
+  | "rectal"
+  | "sublingual"
+  | "transdermal"
+  | "other";
+
+export type FormularyTier =
+  | "tier_1_generic"
+  | "tier_2_preferred_brand"
+  | "tier_3_non_preferred_brand"
+  | "tier_4_specialty"
+  | "tier_5_otc";
+
+export type MedicationStatus = "active" | "inactive" | "entered-in-error";
+
+export interface Medication {
+  id: string;
+  name: string;
+  generic_name: string;
+  brand_name?: string;
+  rxnorm_code: string;
+  rxnorm_display?: string;
+  atc_code?: string;
+  atc_display?: string;
+  snomed_code?: string;
+  snomed_display?: string;
+  form: MedicationForm;
+  route: AdministrationRoute;
+  strength: string;
+  active_ingredient: string;
+  is_prescription_required: boolean;
+  is_controlled_substance: boolean;
+  formulary_tier: FormularyTier;
+  status: MedicationStatus;
+  description?: string;
+  contraindications_summary?: string;
+  storage_instructions?: string;
+  package_info?: Record<string, unknown>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MedicationCreate {
+  name: string;
+  generic_name: string;
+  brand_name?: string;
+  rxnorm_code: string;
+  rxnorm_display?: string;
+  atc_code?: string;
+  atc_display?: string;
+  snomed_code?: string;
+  snomed_display?: string;
+  form?: MedicationForm;
+  route?: AdministrationRoute;
+  strength: string;
+  active_ingredient: string;
+  is_prescription_required?: boolean;
+  is_controlled_substance?: boolean;
+  formulary_tier?: FormularyTier;
+  status?: MedicationStatus;
+  description?: string;
+  contraindications_summary?: string;
+  storage_instructions?: string;
+  package_info?: Record<string, unknown>;
+}
+
+export interface TherapeuticClassSummary {
+  atc_prefix: string;
+  name: string;
+  medication_count: number;
+}
 
 
 

@@ -21,20 +21,22 @@ import {
   MapPin,
   TestTube2,
   FlaskConical,
-  ShieldCheck
+  ShieldCheck,
+  Pill
 } from "lucide-react";
 import { DoctorSlotManager } from "@/components/appointments";
 import { 
   ProblemListPanel, 
   VitalsTelemetryPanel, 
   SoapNoteEditor, 
-  DiagnosticOrderTracker 
+  DiagnosticOrderTracker,
+  MedicationCatalogBrowser
 } from "@/components/clinical";
 
 export default function DoctorEMRPage() {
   const { user } = useAuth();
   const doctorId = user?.id || "doc-ananya-sharma";
-  const [activeTab, setActiveTab] = useState<"queue" | "soap" | "diagnostics" | "problems" | "vitals" | "slots">("queue");
+  const [activeTab, setActiveTab] = useState<"queue" | "soap" | "diagnostics" | "problems" | "vitals" | "slots" | "medications">("queue");
   const [selectedPatient, setSelectedPatient] = useState("Arun Patel");
   const [medication, setMedication] = useState("Atorvastatin 20mg");
   const [dosage, setDosage] = useState("Once daily at bedtime");
@@ -265,6 +267,11 @@ export default function DoctorEMRPage() {
               label: "Availability & Slot Engine",
               icon: <Calendar className="h-4 w-4" />,
             },
+            {
+              id: "medications",
+              label: "Medication Formulary",
+              icon: <Pill className="h-4 w-4" />,
+            },
           ]}
           activeId={activeTab}
           onChange={(id) => setActiveTab(id as typeof activeTab)}
@@ -314,6 +321,10 @@ export default function DoctorEMRPage() {
             patientName={selectedPatient}
             isDoctorView={true}
           />
+        </div>
+      ) : activeTab === "medications" ? (
+        <div className="animate-fade-in max-w-5xl mx-auto">
+          <MedicationCatalogBrowser />
         </div>
       ) : (
         /* ========================================================================
