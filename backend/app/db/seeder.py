@@ -18,9 +18,11 @@ async def clear_database(session: AsyncSession) -> Dict[str, int]:
     """Truncate all core entities in reverse foreign key order."""
     from app.models.doctor import DoctorProfile
     from app.models.lab import DiagnosticLabFacility
+    from app.models.medication import Medication
     from app.models.patient import PatientProfile
     from app.models.user import User
 
+    meds_deleted = (await session.execute(delete(Medication))).rowcount or 0
     labs_deleted = (await session.execute(delete(DiagnosticLabFacility))).rowcount or 0
     doctors_deleted = (await session.execute(delete(DoctorProfile))).rowcount or 0
     patients_deleted = (await session.execute(delete(PatientProfile))).rowcount or 0
@@ -32,6 +34,7 @@ async def clear_database(session: AsyncSession) -> Dict[str, int]:
         "patients_deleted": patients_deleted,
         "doctors_deleted": doctors_deleted,
         "labs_deleted": labs_deleted,
+        "medications_deleted": meds_deleted,
     }
 
 
@@ -121,6 +124,10 @@ async def seed_database(session: AsyncSession, reset: bool = False) -> Dict[str,
             session.add(facility)
             seeded_labs += 1
 
+    # 5. Clinical Medication Formulary
+    from app.services.medication import seed_medications_if_empty
+    seeded_medications = await seed_medications_if_empty(session)
+
     await session.commit()
 
     return {
@@ -131,5 +138,6 @@ async def seed_database(session: AsyncSession, reset: bool = False) -> Dict[str,
         "patients_seeded": seeded_patients,
         "doctors_seeded": seeded_doctors,
         "labs_seeded": seeded_labs,
-        "total_seeded": seeded_users + seeded_patients + seeded_doctors + seeded_labs,
+        "medications_seeded": seeded_medications,
+        "total_seeded": seeded_users + seeded_patients + seeded_doctors + seeded_labs + seeded_medications,
     }

@@ -68,6 +68,7 @@ async def run_seeder(database_url: Optional[str] = None, reset: bool = False, in
         print(f"    - Patients Created: {result['patients_seeded']}")
         print(f"    - Doctors Created:  {result['doctors_seeded']}")
         print(f"    - Labs Created:     {result['labs_seeded']}")
+        print(f"    - Meds Seeded:      {result.get('medications_seeded', 0)}")
         print(f"    - Total Processed:  {result['total_seeded']}")
 
         print(f"\n{GREEN}{BOLD}[SUCCESS] Database seeding completed successfully!{RESET}\n")

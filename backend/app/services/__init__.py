@@ -64,6 +64,14 @@ from app.services.diagnostic import (
     list_patient_diagnostic_reports,
     update_diagnostic_report,
 )
+from app.services.medication import (
+    create_medication,
+    get_medication_by_id,
+    get_therapeutic_classes,
+    search_medications,
+    seed_medications_if_empty,
+    update_medication,
+)
 
 __all__ = [
     # Patient service
@@ -124,4 +132,11 @@ __all__ = [
     "get_diagnostic_report",
     "list_patient_diagnostic_reports",
     "update_diagnostic_report",
+    # Medication service
+    "create_medication",
+    "get_medication_by_id",
+    "get_therapeutic_classes",
+    "search_medications",
+    "seed_medications_if_empty",
+    "update_medication",
 ]
