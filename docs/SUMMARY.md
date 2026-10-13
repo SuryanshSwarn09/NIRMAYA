@@ -55,6 +55,8 @@
     * [Day 24: Diagnostic Lab Orders & Results](journey/month-2/day-24.md)
     * [Day 25: E2E Clinical Verification & Frontend Integration](journey/month-2/day-25.md)
     * [Week 5 Retrospective & Clinical Architecture Review](journey/month-2/week-5-review.md)
+  * [Week 6: Medication Management, e-Prescriptions & Pharmacy Integration](journey/month-2/week-6.md)
+    * [Day 26: Medication Catalog & Formulary Engine](journey/month-2/day-26.md)
 
 ## Appendix
 * [Interim Project Report (Month 1 Review)](reports/interim-project-report-month-1.md)

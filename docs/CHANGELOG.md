@@ -648,6 +648,35 @@
 - Detailed retrospective and metrics documented in `docs/journey/month-2/week-5-review.md`.
 
 ---
+
+### Week 6: Medication Management, e-Prescriptions & Pharmacy Integration
+
+#### Day 26 (Mon) - Milestone 06-01: Medication Catalog & Formulary Engine
+- **Focus:** Pharmacological Models, RxNorm / WHO-ATC / SNOMED-CT Codings, Alembic Migration `0008`, HL7 FHIR R4 `Medication` Schemas & Transformers, Curated 30-Drug Formulary Engine, REST Search/Export APIs, and Next.js Clinical Formulary Browser.
+- **Executed Micro-Commits:**
+  1. `f3a718c: feat(models): define medication catalog enums, formulary models, and alembic migration 0008`
+  2. `be268ab: feat(fhir): implement hl7 fhir r4 medication resource schemas and transformers`
+  3. `93ccc98: feat(services): implement medication formulary query engine and clinical seed dataset`
+  4. `8a11e58: feat(api): expose rest endpoints for medication catalog search, details, and fhir export`
+  5. `3b1c2e1: feat(frontend): implement clinical medication catalog browser and fhir medication inspector`
+  6. `docs(journey): author week 6 roadmap, day 26 engineering log, summary registration, and changelog update`
+- **Key Deliverables:**
+  - Defined clinical medication enumerations in `backend/app/models/enums.py`: `MedicationForm`, `AdministrationRoute`, `FormularyTier`, and `MedicationStatus`.
+  - Created `Medication` relational model in `backend/app/models/medication.py` with multi-terminology indexes (`rxnorm_code`, `atc_code`, `snomed_code`), dosage form, strengths, and regulatory fields.
+  - Authored Alembic database migration `backend/alembic/versions/2026_10_13_0008_medication_catalog_schema.py`.
+  - Implemented `FHIRMedication` and `FHIRMedicationIngredient` schemas in `backend/app/fhir/schemas.py` and canonical `to_fhir_medication` transformer in `backend/app/fhir/transformers.py`.
+  - Built `MedicationService` in `backend/app/services/medication.py` with full-text tokenized search, category filtering, dosage form filtering, and 30 curated clinical seeds.
+  - Mounted REST endpoints under `/api/v1/medications`, `/api/v1/medications/{id}`, `/api/v1/medications/{id}/fhir`, and `/api/v1/medications/classes`.
+  - Built Cal.com-inspired Next.js `MedicationCatalogBrowser` in `frontend/src/components/clinical/MedicationCatalogBrowser.tsx` with live search, tier badges, coding chips, and interactive FHIR R4 JSON modal inspector.
+  - Integrated into Doctor EMR (`/doctor`) as the "Medication Formulary" clinical navigation tab.
+- **Verification:**
+  - Dedicated unit and integration tests: **10/10 tests passing** in `backend/tests/test_medications.py`.
+  - Automated full test suite: **201/201 tests passing (100%)** across 34 test files in 26.68s.
+  - TypeScript compilation: **0 errors** (`npx tsc --noEmit`).
+  - Next.js frontend routes verified.
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.2.0` reserved for Day 40 close).
+
+---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
 
