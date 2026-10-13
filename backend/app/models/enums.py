@@ -289,4 +289,61 @@ class SpecimenType(str, Enum):
     OTHER = "other"
 
 
+class MedicationForm(str, Enum):
+    """Dose formulation of the medication aligned with SNOMED-CT dose form hierarchies."""
+
+    TABLET = "tablet"
+    CAPSULE = "capsule"
+    SYRUP = "syrup"
+    INJECTION = "injection"
+    INHALER = "inhaler"
+    DROPS = "drops"
+    OINTMENT = "ointment"
+    PATCH = "patch"
+    SUSPENSION = "suspension"
+    SOLUTION = "solution"
+    POWDER = "powder"
+    OTHER = "other"
+
+
+class AdministrationRoute(str, Enum):
+    """Physiological administration route aligned with HL7 FHIR R4 RouteOfAdministration and SNOMED-CT."""
+
+    ORAL = "oral"
+    INTRAVENOUS = "intravenous"
+    INTRAMUSCULAR = "intramuscular"
+    SUBCUTANEOUS = "subcutaneous"
+    INHALATION = "inhalation"
+    TOPICAL = "topical"
+    OPHTHALMIC = "ophthalmic"
+    OTIC = "otic"
+    NASAL = "nasal"
+    RECTAL = "rectal"
+    SUBLINGUAL = "sublingual"
+    TRANSDERMAL = "transdermal"
+    OTHER = "other"
+
+
+class FormularyTier(str, Enum):
+    """Formulary tier and insurance coverage categorization."""
+
+    TIER_1_GENERIC = "tier_1_generic"
+    TIER_2_PREFERRED_BRAND = "tier_2_preferred_brand"
+    TIER_3_NON_PREFERRED_BRAND = "tier_3_non_preferred_brand"
+    TIER_4_SPECIALTY = "tier_4_specialty"
+    TIER_5_OTC = "tier_5_otc"
+
+
+class MedicationStatus(str, Enum):
+    """Catalog and active availability status aligned with HL7 FHIR R4 MedicationStatus.
+
+    Reference: http://hl7.org/fhir/R4/valueset-medication-status.html
+    """
+
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    ENTERED_IN_ERROR = "entered-in-error"
+
+
+
 

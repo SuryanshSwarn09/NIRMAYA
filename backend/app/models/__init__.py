@@ -23,12 +23,17 @@ from app.models.enums import (
     ServiceRequestPriority,
     DiagnosticReportStatus,
     SpecimenType,
+    MedicationForm,
+    AdministrationRoute,
+    FormularyTier,
+    MedicationStatus,
     SlotStatus,
     UserRole,
     VerificationStatus,
 )
 from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.lab import DiagnosticLabFacility
+from app.models.medication import Medication
 from app.models.observation import ClinicalObservation
 from app.models.patient import PatientProfile
 from app.models.soap_note import SoapNote
@@ -68,5 +73,10 @@ __all__ = [
     "ServiceRequestPriority",
     "DiagnosticReportStatus",
     "SpecimenType",
+    "Medication",
+    "MedicationForm",
+    "AdministrationRoute",
+    "FormularyTier",
+    "MedicationStatus",
 ]
 
