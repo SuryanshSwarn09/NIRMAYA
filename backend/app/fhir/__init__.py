@@ -27,6 +27,10 @@ from app.fhir.schemas import (
     FHIRDiagnosticReport,
     FHIRMedication,
     FHIRMedicationIngredient,
+    FHIRDosageInstruction,
+    FHIRDispenseRequest,
+    FHIRSubstitution,
+    FHIRMedicationRequest,
 )
 from app.fhir.transformers import (
     to_abdm_health_information_artifact,
@@ -37,6 +41,7 @@ from app.fhir.transformers import (
     to_fhir_encounter,
     to_fhir_encounter_bundle,
     to_fhir_medication,
+    to_fhir_medication_request,
     to_fhir_observation,
     to_fhir_service_request,
 )
@@ -68,6 +73,10 @@ __all__ = [
     "FHIRServiceRequest",
     "FHIRMedication",
     "FHIRMedicationIngredient",
+    "FHIRDosageInstruction",
+    "FHIRDispenseRequest",
+    "FHIRSubstitution",
+    "FHIRMedicationRequest",
     "to_abdm_health_information_artifact",
     "to_fhir_appointment",
     "to_fhir_composition",
@@ -75,6 +84,7 @@ __all__ = [
     "to_fhir_encounter_bundle",
     "to_fhir_condition",
     "to_fhir_medication",
+    "to_fhir_medication_request",
     "to_fhir_observation",
     "to_fhir_service_request",
     "to_fhir_diagnostic_report",

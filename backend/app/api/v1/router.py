@@ -7,6 +7,7 @@ from app.api.v1.endpoints import (
     doctors,
     health,
     medications,
+    medication_requests,
     meta,
     observations,
     patients,
@@ -25,6 +26,7 @@ api_router.include_router(observations.router, prefix="", tags=["Clinical Observ
 api_router.include_router(soap_notes.router, prefix="", tags=["Clinical SOAP Notes & Encounter Documentation"])
 api_router.include_router(diagnostics.router, prefix="", tags=["Diagnostic Orders & Laboratory Reports"])
 api_router.include_router(medications.router, prefix="", tags=["Medications"])
+api_router.include_router(medication_requests.router, prefix="", tags=["Electronic Prescriptions & Medication Requests"])
 
 
 
