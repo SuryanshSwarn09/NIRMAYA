@@ -60,6 +60,7 @@
     * [Day 27: e-Prescription Authoring & HL7 FHIR R4 MedicationRequest Engine](journey/month-2/day-27.md)
 
 ## Fundamental FAQ
+* [Finalized System Architecture & Ecosystem Specification](faq/finalized-system-architecture.md)
 * [Medical Practitioner Credentialing & Verification](faq/medical-practitioner-verification.md)
 
 ## Appendix
