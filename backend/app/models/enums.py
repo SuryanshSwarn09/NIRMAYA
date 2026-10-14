@@ -345,5 +345,48 @@ class MedicationStatus(str, Enum):
     ENTERED_IN_ERROR = "entered-in-error"
 
 
+class MedicationRequestStatus(str, Enum):
+    """Lifecycle status of a medication prescription aligned with HL7 FHIR R4 MedicationrequestStatus.
+
+    Reference: http://hl7.org/fhir/R4/valueset-medicationrequest-status.html
+    """
+
+    DRAFT = "draft"
+    ACTIVE = "active"
+    ON_HOLD = "on-hold"
+    CANCELLED = "cancelled"
+    COMPLETED = "completed"
+    ENTERED_IN_ERROR = "entered-in-error"
+    STOPPED = "stopped"
+
+
+class MedicationRequestIntent(str, Enum):
+    """Intent of the medication prescription aligned with HL7 FHIR R4 medicationrequest-intent.
+
+    Reference: http://hl7.org/fhir/R4/valueset-medicationrequest-intent.html
+    """
+
+    PROPOSAL = "proposal"
+    PLAN = "plan"
+    ORDER = "order"
+    ORIGINAL_ORDER = "original-order"
+    REFLEX_ORDER = "reflex-order"
+    FILLER_ORDER = "filler-order"
+    INSTANCE_ORDER = "instance-order"
+    OPTION = "option"
+
+
+class MedicationRequestPriority(str, Enum):
+    """Clinical priority of the prescription aligned with HL7 FHIR R4 RequestPriority.
+
+    Reference: http://hl7.org/fhir/R4/valueset-request-priority.html
+    """
+
+    ROUTINE = "routine"
+    URGENT = "urgent"
+    ASAP = "asap"
+    STAT = "stat"
+
+
 
 

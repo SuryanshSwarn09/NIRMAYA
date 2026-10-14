@@ -27,6 +27,9 @@ from app.models.enums import (
     AdministrationRoute,
     FormularyTier,
     MedicationStatus,
+    MedicationRequestStatus,
+    MedicationRequestIntent,
+    MedicationRequestPriority,
     SlotStatus,
     UserRole,
     VerificationStatus,
@@ -34,6 +37,7 @@ from app.models.enums import (
 from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.lab import DiagnosticLabFacility
 from app.models.medication import Medication
+from app.models.medication_request import MedicationRequest
 from app.models.observation import ClinicalObservation
 from app.models.patient import PatientProfile
 from app.models.soap_note import SoapNote
@@ -78,5 +82,9 @@ __all__ = [
     "AdministrationRoute",
     "FormularyTier",
     "MedicationStatus",
+    "MedicationRequest",
+    "MedicationRequestStatus",
+    "MedicationRequestIntent",
+    "MedicationRequestPriority",
 ]
 

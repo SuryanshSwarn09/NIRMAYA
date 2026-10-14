@@ -7,7 +7,7 @@ Directly models the HL7 FHIR Release 4 Medication resource and ABDM NRCeS Medica
 - Formulary: Generic, Preferred Brand, Non-Preferred Brand, Specialty, OTC tiers
 """
 
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List, TYPE_CHECKING
 from sqlalchemy import (
     Boolean,
     Enum,
@@ -15,7 +15,7 @@ from sqlalchemy import (
     String,
     Text,
 )
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import (
@@ -24,6 +24,9 @@ from app.models.enums import (
     FormularyTier,
     MedicationStatus,
 )
+
+if TYPE_CHECKING:
+    from app.models.medication_request import MedicationRequest
 
 
 class Medication(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -179,6 +182,12 @@ class Medication(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     package_info: Mapped[Optional[Dict[str, Any]]] = mapped_column(
         JSON,
         nullable=True,
+    )
+
+    # Electronic prescriptions for this medication
+    prescriptions: Mapped[List["MedicationRequest"]] = relationship(
+        "MedicationRequest",
+        back_populates="medication",
     )
 
     def __repr__(self) -> str:

@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from app.models.observation import ClinicalObservation
     from app.models.soap_note import SoapNote
     from app.models.user import User
+    from app.models.medication_request import MedicationRequest
 
 
 class DoctorProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -133,6 +134,12 @@ class DoctorProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     performed_diagnostic_reports: Mapped[List["DiagnosticReport"]] = relationship(
         "DiagnosticReport",
         back_populates="performer",
+    )
+
+    # Electronic prescriptions authored by this doctor
+    authored_prescriptions: Mapped[List["MedicationRequest"]] = relationship(
+        "MedicationRequest",
+        back_populates="doctor",
     )
 
     def __repr__(self) -> str:

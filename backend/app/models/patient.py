@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from app.models.observation import ClinicalObservation
     from app.models.soap_note import SoapNote
     from app.models.user import User
+    from app.models.medication_request import MedicationRequest
 
 
 
@@ -144,6 +145,13 @@ class PatientProfile(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     # Diagnostic lab reports issued for patient
     diagnostic_reports: Mapped[List["DiagnosticReport"]] = relationship(
         "DiagnosticReport",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+    )
+
+    # Electronic prescriptions & medication requests
+    prescriptions: Mapped[List["MedicationRequest"]] = relationship(
+        "MedicationRequest",
         back_populates="patient",
         cascade="all, delete-orphan",
     )
