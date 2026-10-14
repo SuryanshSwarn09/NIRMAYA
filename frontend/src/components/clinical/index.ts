@@ -3,3 +3,4 @@ export { VitalsTelemetryPanel } from "./VitalsTelemetryPanel";
 export { SoapNoteEditor } from "./SoapNoteEditor";
 export { DiagnosticOrderTracker } from "./DiagnosticOrderTracker";
 export { MedicationCatalogBrowser } from "./MedicationCatalogBrowser";
+export { PrescriptionAuthoringPad } from "./PrescriptionAuthoringPad";

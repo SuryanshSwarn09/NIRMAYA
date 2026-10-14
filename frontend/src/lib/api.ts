@@ -759,6 +759,77 @@ class NIRMAYAAPIClient {
     return this.patch<Medication>(`/api/v1/medications/${id}`, payload);
   }
 
+  // ==========================================================================
+  // Electronic Prescriptions (MedicationRequest) Methods
+  // ==========================================================================
+
+  public async createPrescription(
+    patientId: string,
+    payload: MedicationRequestCreatePayload
+  ) {
+    return this.post<MedicationRequest>(
+      `/api/v1/patients/${patientId}/prescriptions`,
+      payload
+    );
+  }
+
+  public async getPatientPrescriptions(
+    patientId: string,
+    params?: {
+      status?: MedicationRequestStatus;
+      is_signed?: boolean;
+      doctor_id?: string;
+      encounter_id?: string;
+      page?: number;
+      limit?: number;
+    }
+  ) {
+    return this.get<PaginatedResponse<MedicationRequest>>(
+      `/api/v1/patients/${patientId}/prescriptions`,
+      { params: params as Record<string, string | number | boolean | undefined> }
+    );
+  }
+
+  public async getPrescriptionById(prescriptionId: string) {
+    return this.get<MedicationRequest>(`/api/v1/prescriptions/${prescriptionId}`);
+  }
+
+  public async updatePrescription(
+    prescriptionId: string,
+    payload: MedicationRequestUpdatePayload
+  ) {
+    return this.patch<MedicationRequest>(
+      `/api/v1/prescriptions/${prescriptionId}`,
+      payload
+    );
+  }
+
+  public async signPrescription(
+    prescriptionId: string,
+    payload?: { signature_notes?: string }
+  ) {
+    return this.post<MedicationRequest>(
+      `/api/v1/prescriptions/${prescriptionId}/sign`,
+      payload || {}
+    );
+  }
+
+  public async cancelPrescription(
+    prescriptionId: string,
+    cancellationReason: string
+  ) {
+    return this.post<MedicationRequest>(
+      `/api/v1/prescriptions/${prescriptionId}/cancel`,
+      { cancellation_reason: cancellationReason }
+    );
+  }
+
+  public async getPrescriptionFhir(prescriptionId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/prescriptions/${prescriptionId}/fhir`
+    );
+  }
+
 
   public patch<T>(
     endpoint: string,
@@ -1200,6 +1271,114 @@ export interface TherapeuticClassSummary {
   atc_prefix: string;
   name: string;
   medication_count: number;
+}
+
+export type MedicationRequestStatus =
+  | "draft"
+  | "active"
+  | "on-hold"
+  | "cancelled"
+  | "completed"
+  | "entered-in-error"
+  | "stopped";
+
+export type MedicationRequestIntent =
+  | "proposal"
+  | "plan"
+  | "order"
+  | "original-order"
+  | "reflex-order"
+  | "filler-order"
+  | "instance-order"
+  | "option";
+
+export type MedicationRequestPriority = "routine" | "urgent" | "asap" | "stat";
+
+export interface MedicationRequest {
+  id: string;
+  patient_id: string;
+  doctor_id?: string;
+  encounter_id?: string;
+  medication_id: string;
+  status: MedicationRequestStatus;
+  intent: MedicationRequestIntent;
+  priority: MedicationRequestPriority;
+  dosage_text: string;
+  dose_quantity?: number;
+  dose_unit?: string;
+  route?: AdministrationRoute;
+  frequency?: number;
+  period?: number;
+  period_unit?: string;
+  as_needed: boolean;
+  as_needed_reason?: string;
+  additional_instructions?: string;
+  dispense_quantity?: number;
+  dispense_unit?: string;
+  expected_supply_duration_days?: number;
+  number_of_repeats_allowed: number;
+  validity_period_start?: string;
+  validity_period_end?: string;
+  allow_generic_substitution: boolean;
+  substitution_reason?: string;
+  reason_code?: string;
+  reason_reference_id?: string;
+  note?: string;
+  authored_on: string;
+  is_signed: boolean;
+  signed_at?: string;
+  signature_hash?: string;
+  cancellation_reason?: string;
+  created_at: string;
+  updated_at: string;
+  medication?: Medication;
+}
+
+export interface MedicationRequestCreatePayload {
+  medication_id: string;
+  encounter_id?: string;
+  intent?: MedicationRequestIntent;
+  priority?: MedicationRequestPriority;
+  dosage_text: string;
+  dose_quantity?: number;
+  dose_unit?: string;
+  route?: AdministrationRoute;
+  frequency?: number;
+  period?: number;
+  period_unit?: string;
+  as_needed?: boolean;
+  as_needed_reason?: string;
+  additional_instructions?: string;
+  dispense_quantity?: number;
+  dispense_unit?: string;
+  expected_supply_duration_days?: number;
+  number_of_repeats_allowed?: number;
+  validity_period_start?: string;
+  validity_period_end?: string;
+  allow_generic_substitution?: boolean;
+  substitution_reason?: string;
+  reason_code?: string;
+  reason_reference_id?: string;
+  note?: string;
+}
+
+export interface MedicationRequestUpdatePayload {
+  dosage_text?: string;
+  dose_quantity?: number;
+  dose_unit?: string;
+  route?: AdministrationRoute;
+  frequency?: number;
+  period?: number;
+  period_unit?: string;
+  as_needed?: boolean;
+  as_needed_reason?: string;
+  additional_instructions?: string;
+  dispense_quantity?: number;
+  dispense_unit?: string;
+  expected_supply_duration_days?: number;
+  number_of_repeats_allowed?: number;
+  allow_generic_substitution?: boolean;
+  note?: string;
 }
 
 

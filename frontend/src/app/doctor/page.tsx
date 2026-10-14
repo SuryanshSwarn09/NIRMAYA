@@ -30,13 +30,14 @@ import {
   VitalsTelemetryPanel, 
   SoapNoteEditor, 
   DiagnosticOrderTracker,
-  MedicationCatalogBrowser
+  MedicationCatalogBrowser,
+  PrescriptionAuthoringPad
 } from "@/components/clinical";
 
 export default function DoctorEMRPage() {
   const { user } = useAuth();
   const doctorId = user?.id || "doc-ananya-sharma";
-  const [activeTab, setActiveTab] = useState<"queue" | "soap" | "diagnostics" | "problems" | "vitals" | "slots" | "medications">("queue");
+  const [activeTab, setActiveTab] = useState<"queue" | "soap" | "diagnostics" | "problems" | "vitals" | "slots" | "medications" | "prescriptions">("queue");
   const [selectedPatient, setSelectedPatient] = useState("Arun Patel");
   const [medication, setMedication] = useState("Atorvastatin 20mg");
   const [dosage, setDosage] = useState("Once daily at bedtime");
@@ -272,6 +273,11 @@ export default function DoctorEMRPage() {
               label: "Medication Formulary",
               icon: <Pill className="h-4 w-4" />,
             },
+            {
+              id: "prescriptions",
+              label: "e-Prescriptions",
+              icon: <FileText className="h-4 w-4" />,
+            },
           ]}
           activeId={activeTab}
           onChange={(id) => setActiveTab(id as typeof activeTab)}
@@ -325,6 +331,15 @@ export default function DoctorEMRPage() {
       ) : activeTab === "medications" ? (
         <div className="animate-fade-in max-w-5xl mx-auto">
           <MedicationCatalogBrowser />
+        </div>
+      ) : activeTab === "prescriptions" ? (
+        <div className="animate-fade-in max-w-5xl mx-auto">
+          <PrescriptionAuthoringPad
+            patientId="pat-arun-patel"
+            patientName={selectedPatient}
+            doctorId={doctorId}
+            doctorName={user?.fullName || "Dr. Ananya Sharma"}
+          />
         </div>
       ) : (
         /* ========================================================================
@@ -665,85 +680,13 @@ export default function DoctorEMRPage() {
               )}
             </Card>
 
-            {/* E-Prescription Generator */}
-            <Card variant="mockup" className="space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
-                <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-[#111111]" />
-                  <CardTitle className="text-base">Digital Prescription (MedicationRequest)</CardTitle>
-                </div>
-                <Badge variant="emerald" size="sm">FHIR Encoded</Badge>
-              </div>
-
-              {issuedPrescription ? (
-                <div className="p-4 rounded-[8px] border border-[#a7f3d0] bg-[#ecfdf5] space-y-3 text-xs sm:text-sm animate-fade-in">
-                  <div className="flex items-center gap-2 text-[#065f46] font-bold">
-                    <CheckCircle2 className="h-5 w-5" />
-                    <span>Prescription Signed & Synced to ABHA Health Locker</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <span className="text-[#065f46]/70">Medication</span>
-                      <p className="font-semibold text-[#065f46]">{medication}</p>
-                    </div>
-                    <div>
-                      <span className="text-[#065f46]/70">Dosage</span>
-                      <p className="font-semibold text-[#065f46]">{dosage}</p>
-                    </div>
-                  </div>
-                  <div className="pt-2 border-t border-[#a7f3d0] flex items-center justify-between text-[11px] text-[#065f46]">
-                    <span>Digital Signature: SHA-256 Verified (HPR-91024)</span>
-                    <button
-                      type="button"
-                      onClick={() => setIssuedPrescription(false)}
-                      className="underline font-semibold cursor-pointer"
-                    >
-                      Issue Another
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleSignPrescription} className="space-y-3.5 text-xs sm:text-sm">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-semibold text-[#111111] mb-1">
-                        Prescribed Medication & Strength
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={medication}
-                        onChange={(e) => setMedication(e.target.value)}
-                        className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#111111]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-semibold text-[#111111] mb-1">
-                        Dosage & Frequency Instructions
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={dosage}
-                        onChange={(e) => setDosage(e.target.value)}
-                        className="w-full p-2.5 rounded-[8px] border border-[#e5e7eb] text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-[#111111]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-2 flex items-center justify-end gap-3 border-t border-[#e5e7eb]">
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      size="md"
-                    >
-                      <Send className="h-3.5 w-3.5 mr-1.5" />
-                      Sign & Transmit to Patient ABHA
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </Card>
+            {/* E-Prescription Generator (MedicationRequest Engine - Day 27) */}
+            <PrescriptionAuthoringPad
+              patientId="pat-arun-patel"
+              patientName={selectedPatient}
+              doctorId={doctorId}
+              doctorName={user?.fullName || "Dr. Ananya Sharma"}
+            />
 
             {/* Diagnostic Lab Test Requisition Pad (Day 24 - ServiceRequest) */}
             <Card variant="mockup" className="space-y-4">
