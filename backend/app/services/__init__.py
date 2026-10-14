@@ -72,6 +72,15 @@ from app.services.medication import (
     seed_medications_if_empty,
     update_medication,
 )
+from app.services.medication_request import (
+    cancel_prescription,
+    create_prescription,
+    get_prescription_by_id,
+    list_prescriptions,
+    mark_entered_in_error,
+    sign_prescription,
+    update_prescription,
+)
 
 __all__ = [
     # Patient service
@@ -139,4 +148,12 @@ __all__ = [
     "search_medications",
     "seed_medications_if_empty",
     "update_medication",
+    # MedicationRequest / Prescription service
+    "create_prescription",
+    "get_prescription_by_id",
+    "update_prescription",
+    "sign_prescription",
+    "cancel_prescription",
+    "mark_entered_in_error",
+    "list_prescriptions",
 ]
