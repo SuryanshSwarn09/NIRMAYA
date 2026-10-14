@@ -59,6 +59,9 @@
     * [Day 26: Medication Catalog & Formulary Engine](journey/month-2/day-26.md)
     * [Day 27: e-Prescription Authoring & HL7 FHIR R4 MedicationRequest Engine](journey/month-2/day-27.md)
 
+## Fundamental FAQ
+* [Medical Practitioner Credentialing & Verification](faq/medical-practitioner-verification.md)
+
 ## Appendix
 * [Interim Project Report (Month 1 Review)](reports/interim-project-report-month-1.md)
 * [Comprehensive Changelog](CHANGELOG.md)
