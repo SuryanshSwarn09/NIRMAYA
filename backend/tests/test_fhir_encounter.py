@@ -18,11 +18,13 @@ from app.fhir.transformers import (
     to_fhir_encounter,
     to_fhir_encounter_bundle,
     to_fhir_medication,
+    to_fhir_medication_request,
 )
 from app.main import app
 from app.models.appointment import Appointment, DoctorSlot
 from app.models.doctor import DoctorProfile
 from app.models.medication import Medication
+from app.models.medication_request import MedicationRequest
 from app.models.enums import (
     AdministrationRoute,
     AppointmentStatus,
@@ -32,6 +34,9 @@ from app.models.enums import (
     MedicalSpecialty,
     MedicationForm,
     MedicationStatus,
+    MedicationRequestStatus,
+    MedicationRequestIntent,
+    MedicationRequestPriority,
     SlotStatus,
     UserRole,
 )
@@ -594,4 +599,111 @@ def test_to_fhir_medication_transformer() -> None:
     assert len(fhir_med.ingredient) == 1
     assert fhir_med.ingredient[0].itemCodeableConcept.text == "Metformin"
     assert fhir_med.ingredient[0].strength["text"] == "500 mg"
+
+
+def test_to_fhir_medication_request_transformer() -> None:
+    """Verify bidirectional serialization of MedicationRequest into FHIR R4 MedicationRequest."""
+    med = Medication(
+        id="med-atorvastatin-20",
+        name="Atorvastatin 20mg Oral Tablet",
+        generic_name="Atorvastatin Calcium",
+        brand_name="Lipitor",
+        rxnorm_code="855332",
+        rxnorm_display="Atorvastatin 20 MG Oral Tablet",
+        atc_code="C10AA05",
+        snomed_code="387584000",
+        form=MedicationForm.TABLET,
+        route=AdministrationRoute.ORAL,
+        strength="20 mg",
+        active_ingredient="Atorvastatin",
+        is_prescription_required=True,
+        formulary_tier=FormularyTier.TIER_1_GENERIC,
+        status=MedicationStatus.ACTIVE,
+    )
+
+    rx = MedicationRequest(
+        id="rx-test-001",
+        patient_id="pat-arun-patel",
+        doctor_id="doc-ananya-sharma",
+        encounter_id="appt-encounter-101",
+        medication_id=med.id,
+        status=MedicationRequestStatus.ACTIVE,
+        intent=MedicationRequestIntent.ORDER,
+        priority=MedicationRequestPriority.ROUTINE,
+        dosage_text="Take 1 tablet orally once daily at bedtime for 30 days",
+        dose_quantity=20.0,
+        dose_unit="mg",
+        route=AdministrationRoute.ORAL,
+        frequency=1,
+        period=1.0,
+        period_unit="d",
+        as_needed=False,
+        additional_instructions="Take at bedtime. Avoid grapefruit juice.",
+        dispense_quantity=30.0,
+        dispense_unit="tablets",
+        expected_supply_duration_days=30,
+        number_of_repeats_allowed=1,
+        validity_period_start=datetime(2026, 10, 14, 10, 0, tzinfo=timezone.utc),
+        validity_period_end=datetime(2026, 11, 14, 10, 0, tzinfo=timezone.utc),
+        allow_generic_substitution=True,
+        reason_code="I10",
+        reason_reference_id="cond-htn-001",
+        note="Primary prevention of cardiovascular events in hypertensive patient.",
+        authored_on=datetime(2026, 10, 14, 10, 0, tzinfo=timezone.utc),
+        is_signed=True,
+        signed_at=datetime(2026, 10, 14, 10, 5, tzinfo=timezone.utc),
+        signature_hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    )
+
+    fhir_rx = to_fhir_medication_request(rx, medication=med)
+
+    assert fhir_rx.resourceType == "MedicationRequest"
+    assert fhir_rx.id == "rx-test-001"
+    assert fhir_rx.status == "active"
+    assert fhir_rx.intent == "order"
+    assert fhir_rx.priority == "routine"
+    assert fhir_rx.meta is not None
+    assert "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Prescription" in fhir_rx.meta["profile"]
+
+    # Identifier check
+    id_values = [i.value for i in fhir_rx.identifier]
+    assert "rx-test-001" in id_values
+    assert "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855" in id_values
+
+    # Subject & Requester
+    assert fhir_rx.subject.reference == "Patient/pat-arun-patel"
+    assert fhir_rx.requester.reference == "Practitioner/doc-ananya-sharma"
+    assert fhir_rx.encounter.reference == "Encounter/appt-encounter-101"
+
+    # Medication references and codings
+    assert fhir_rx.medicationReference.reference == "Medication/med-atorvastatin-20"
+    systems = {coding.system for coding in fhir_rx.medicationCodeableConcept.coding}
+    assert "http://www.nlm.nih.gov/research/umls/rxnorm" in systems
+    assert "http://www.whocc.no/atc" in systems
+    assert "http://snomed.info/sct" in systems
+
+    # Dosage Instruction
+    assert len(fhir_rx.dosageInstruction) == 1
+    dosage = fhir_rx.dosageInstruction[0]
+    assert dosage.text == "Take 1 tablet orally once daily at bedtime for 30 days"
+    assert dosage.timing["repeat"]["frequency"] == 1
+    assert dosage.asNeededBoolean is False
+    assert dosage.route.text == "Oral"
+    assert dosage.doseAndRate[0]["doseQuantity"]["value"] == 20.0
+    assert dosage.doseAndRate[0]["doseQuantity"]["unit"] == "mg"
+    assert dosage.additionalInstruction[0].text == "Take at bedtime. Avoid grapefruit juice."
+
+    # Dispense Request
+    assert fhir_rx.dispenseRequest is not None
+    assert fhir_rx.dispenseRequest.numberOfRepeatsAllowed == 1
+    assert fhir_rx.dispenseRequest.quantity["value"] == 30.0
+    assert fhir_rx.dispenseRequest.quantity["unit"] == "tablets"
+    assert fhir_rx.dispenseRequest.expectedSupplyDuration["value"] == 30
+
+    # Substitution & Reason
+    assert fhir_rx.substitution.allowedBoolean is True
+    assert fhir_rx.reasonCode[0].text == "I10"
+    assert fhir_rx.reasonReference[0].reference == "Condition/cond-htn-001"
+    assert fhir_rx.note[0].text == "Primary prevention of cardiovascular events in hypertensive patient."
+
 

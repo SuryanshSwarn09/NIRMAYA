@@ -785,6 +785,164 @@ class FHIRMedication(BaseModel):
     )
 
 
+# ============================================================================
+# FHIR R4 MedicationRequest Resource
+# ============================================================================
+
+
+class FHIRDosageInstruction(BaseModel):
+    """FHIR R4 Dosage specification for medication administration."""
+
+    text: Optional[str] = Field(
+        default=None,
+        description="Free text dosage instructions",
+        example="Take 1 tablet orally twice daily with meals for 14 days",
+    )
+    timing: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="When medication should be administered",
+    )
+    asNeededBoolean: Optional[bool] = Field(
+        default=None,
+        description="Take as needed (PRN)",
+    )
+    asNeededCodeableConcept: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Condition or trigger for taking medication PRN",
+    )
+    route: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="How drug should enter body",
+    )
+    doseAndRate: Optional[List[Dict[str, Any]]] = Field(
+        default=None,
+        description="Amount of medication administered per dose",
+    )
+    additionalInstruction: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Supplemental instructions or warnings",
+    )
+
+
+class FHIRDispenseRequest(BaseModel):
+    """FHIR R4 Medication supply and dispense authorization details."""
+
+    validityPeriod: Optional[FHIRPeriod] = Field(
+        default=None,
+        description="Time period supply is authorized for",
+    )
+    numberOfRepeatsAllowed: Optional[int] = Field(
+        default=0,
+        description="Number of authorized refills",
+    )
+    quantity: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Amount of medication to supply per dispense",
+    )
+    expectedSupplyDuration: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Number of days supply per dispense",
+    )
+
+
+class FHIRSubstitution(BaseModel):
+    """FHIR R4 Generic or bioequivalent substitution allowance."""
+
+    allowedBoolean: bool = Field(
+        default=True,
+        description="Whether substitution is allowed by prescriber",
+    )
+    reason: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Why substitution was authorized or prohibited",
+    )
+
+
+class FHIRMedicationRequest(BaseModel):
+    """HL7 FHIR Release 4 MedicationRequest resource representing an electronic prescription.
+
+    Reference: http://hl7.org/fhir/R4/medicationrequest.html
+    NRCeS Profile: https://nrces.in/ndhm/fhir/r4/StructureDefinition/Prescription
+    """
+
+    resourceType: Literal["MedicationRequest"] = Field(
+        default="MedicationRequest",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this medication request resource",
+    )
+    meta: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Metadata about the resource (profile, security, tags)",
+    )
+    identifier: Optional[List[FHIRIdentifier]] = Field(
+        default=None,
+        description="Business identifiers of this prescription",
+    )
+    status: str = Field(
+        description="active | on-hold | cancelled | completed | entered-in-error | stopped | draft | unknown",
+        example="active",
+    )
+    intent: str = Field(
+        default="order",
+        description="proposal | plan | order | original-order | reflex-order | filler-order | instance-order | option",
+        example="order",
+    )
+    priority: Optional[str] = Field(
+        default="routine",
+        description="routine | urgent | asap | stat",
+        example="routine",
+    )
+    medicationReference: Optional[FHIRReference] = Field(
+        default=None,
+        description="Reference to a Medication resource",
+    )
+    medicationCodeableConcept: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Codified clinical medication or active ingredient",
+    )
+    subject: FHIRReference = Field(
+        description="Patient or group the prescription is authored for",
+    )
+    encounter: Optional[FHIRReference] = Field(
+        default=None,
+        description="Encounter / Appointment context in which prescription was written",
+    )
+    authoredOn: Optional[str] = Field(
+        default=None,
+        description="When request was initially authored (ISO-8601 UTC)",
+    )
+    requester: Optional[FHIRReference] = Field(
+        default=None,
+        description="Clinician / Practitioner who authored the prescription",
+    )
+    reasonCode: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Clinical condition or symptom indication for the medication",
+    )
+    reasonReference: Optional[List[FHIRReference]] = Field(
+        default=None,
+        description="Reference to a Condition resource explaining the reason",
+    )
+    note: Optional[List[FHIRAnnotation]] = Field(
+        default=None,
+        description="Prescriber clinical annotations or comments",
+    )
+    dosageInstruction: Optional[List[FHIRDosageInstruction]] = Field(
+        default=None,
+        description="Structured instructions on how medication should be taken",
+    )
+    dispenseRequest: Optional[FHIRDispenseRequest] = Field(
+        default=None,
+        description="Medication supply and pharmacy dispense authorization",
+    )
+    substitution: Optional[FHIRSubstitution] = Field(
+        default=None,
+        description="Generic substitution permissions and rationale",
+    )
+
+
 class FHIRBundle(BaseModel):
     """HL7 FHIR Release 4 Collection or Document Bundle."""
 

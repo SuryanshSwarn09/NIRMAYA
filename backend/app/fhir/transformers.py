@@ -35,10 +35,15 @@ from app.fhir.schemas import (
     FHIRServiceRequest,
     FHIRMedication,
     FHIRMedicationIngredient,
+    FHIRDosageInstruction,
+    FHIRDispenseRequest,
+    FHIRSubstitution,
+    FHIRMedicationRequest,
 )
 from app.models.appointment import Appointment
 from app.models.condition import ClinicalCondition
 from app.models.medication import Medication
+from app.models.medication_request import MedicationRequest
 from app.models.enums import (
     AppointmentStatus,
     AppointmentType,
@@ -83,6 +88,8 @@ RXNORM_SYSTEM = "http://www.nlm.nih.gov/research/umls/rxnorm"
 WHO_ATC_SYSTEM = "http://www.whocc.no/atc"
 NIRMAYA_MEDICATION_SYSTEM = "https://nirmaya.health/fhir/medication"
 NIRMAYA_DIAGNOSTIC_REPORT_SYSTEM = "https://nirmaya.health/fhir/diagnostic-report"
+NIRMAYA_PRESCRIPTION_SYSTEM = "https://nirmaya.health/fhir/medication-request"
+NRCES_PRESCRIPTION_PROFILE = "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Prescription"
 
 # Observation interpretation mappings to HL7 v3 ObservationInterpretation concepts
 OBSERVATION_INTERPRETATION_MAPPINGS: Dict[ObservationInterpretation, FHIRCoding] = {
@@ -1509,6 +1516,280 @@ def to_fhir_medication(medication: Medication) -> FHIRMedication:
         form=form_concept,
         ingredient=ingredients if ingredients else None,
     )
+
+
+# ============================================================================
+# Transformer: HL7 FHIR R4 MedicationRequest & ABDM NRCeS Prescription
+# ============================================================================
+
+
+def to_fhir_medication_request(
+    prescription: MedicationRequest,
+    medication: Optional[Medication] = None,
+) -> FHIRMedicationRequest:
+    """Transform an internal MedicationRequest entity into a canonical HL7 FHIR R4 MedicationRequest.
+
+    Conforms to:
+    - HL7 FHIR R4 MedicationRequest (http://hl7.org/fhir/R4/medicationrequest.html)
+    - ABDM NRCeS Prescription StructureDefinition profile (https://nrces.in/ndhm/fhir/r4/StructureDefinition/Prescription)
+    """
+    effective_med = medication or prescription.medication
+
+    # Codings for medication
+    med_codings: List[FHIRCoding] = []
+    med_text = "Prescribed Medication"
+    if effective_med:
+        med_text = effective_med.name
+        if effective_med.rxnorm_code:
+            med_codings.append(
+                FHIRCoding(
+                    system=RXNORM_SYSTEM,
+                    code=effective_med.rxnorm_code,
+                    display=effective_med.rxnorm_display or effective_med.name,
+                )
+            )
+        if effective_med.atc_code:
+            med_codings.append(
+                FHIRCoding(
+                    system=WHO_ATC_SYSTEM,
+                    code=effective_med.atc_code,
+                    display=effective_med.atc_display or effective_med.generic_name,
+                )
+            )
+        if effective_med.snomed_code:
+            med_codings.append(
+                FHIRCoding(
+                    system=SNOMED_CT_SYSTEM,
+                    code=effective_med.snomed_code,
+                    display=effective_med.snomed_display or effective_med.generic_name,
+                )
+            )
+
+    med_concept = FHIRCodeableConcept(
+        coding=med_codings,
+        text=med_text,
+    )
+
+    # Identifiers
+    identifiers = [
+        FHIRIdentifier(
+            system=NIRMAYA_PRESCRIPTION_SYSTEM,
+            value=prescription.id,
+            use="official",
+        )
+    ]
+    if prescription.signature_hash:
+        identifiers.append(
+            FHIRIdentifier(
+                system="https://nirmaya.health/fhir/digital-signature",
+                value=prescription.signature_hash,
+                use="secondary",
+            )
+        )
+
+    # Subject & Requester References
+    subject_ref = FHIRReference(
+        reference=f"Patient/{prescription.patient_id}",
+        display=prescription.patient.user.full_name if (prescription.patient and getattr(prescription.patient, "user", None)) else None,
+        type="Patient",
+    )
+
+    requester_ref = None
+    if prescription.doctor_id:
+        doc_display = None
+        if prescription.doctor and getattr(prescription.doctor, "user", None):
+            doc_display = f"Dr. {prescription.doctor.user.full_name}"
+        requester_ref = FHIRReference(
+            reference=f"Practitioner/{prescription.doctor_id}",
+            display=doc_display,
+            type="Practitioner",
+        )
+
+    encounter_ref = None
+    if prescription.encounter_id:
+        encounter_ref = FHIRReference(
+            reference=f"Encounter/{prescription.encounter_id}",
+            type="Encounter",
+        )
+
+    # Dosage Instruction
+    dosage_instructions: List[FHIRDosageInstruction] = []
+    dose_and_rate = None
+    if prescription.dose_quantity is not None:
+        dose_and_rate = [
+            {
+                "type": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/dose-rate-type",
+                            "code": "ordered",
+                            "display": "Ordered",
+                        }
+                    ]
+                },
+                "doseQuantity": {
+                    "value": prescription.dose_quantity,
+                    "unit": prescription.dose_unit or "unit",
+                    "system": UCUM_SYSTEM,
+                    "code": prescription.dose_unit or "1",
+                },
+            }
+        ]
+
+    timing_dict = None
+    if prescription.frequency is not None:
+        timing_dict = {
+            "repeat": {
+                "frequency": prescription.frequency,
+                "period": prescription.period or 1.0,
+                "periodUnit": prescription.period_unit or "d",
+            }
+        }
+
+    route_concept = None
+    if prescription.route:
+        route_concept = FHIRCodeableConcept(
+            coding=[
+                FHIRCoding(
+                    system=SNOMED_CT_SYSTEM,
+                    code=prescription.route.value,
+                    display=prescription.route.value.capitalize(),
+                )
+            ],
+            text=prescription.route.value.capitalize(),
+        )
+
+    as_needed_concept = None
+    if prescription.as_needed and prescription.as_needed_reason:
+        as_needed_concept = FHIRCodeableConcept(
+            text=prescription.as_needed_reason,
+        )
+
+    additional_instructions = None
+    if prescription.additional_instructions:
+        additional_instructions = [
+            FHIRCodeableConcept(
+                text=prescription.additional_instructions,
+            )
+        ]
+
+    dosage_instructions.append(
+        FHIRDosageInstruction(
+            text=prescription.dosage_text,
+            timing=timing_dict,
+            asNeededBoolean=prescription.as_needed,
+            asNeededCodeableConcept=as_needed_concept,
+            route=route_concept,
+            doseAndRate=dose_and_rate,
+            additionalInstruction=additional_instructions,
+        )
+    )
+
+    # Dispense Request
+    dispense_request = None
+    if prescription.dispense_quantity is not None or prescription.expected_supply_duration_days is not None:
+        validity_period = None
+        if prescription.validity_period_start or prescription.validity_period_end:
+            validity_period = FHIRPeriod(
+                start=prescription.validity_period_start,
+                end=prescription.validity_period_end,
+            )
+
+        quantity_dict = None
+        if prescription.dispense_quantity is not None:
+            quantity_dict = {
+                "value": prescription.dispense_quantity,
+                "unit": prescription.dispense_unit or "tablets",
+                "system": UCUM_SYSTEM,
+                "code": prescription.dispense_unit or "1",
+            }
+
+        supply_duration = None
+        if prescription.expected_supply_duration_days is not None:
+            supply_duration = {
+                "value": prescription.expected_supply_duration_days,
+                "unit": "days",
+                "system": UCUM_SYSTEM,
+                "code": "d",
+            }
+
+        dispense_request = FHIRDispenseRequest(
+            validityPeriod=validity_period,
+            numberOfRepeatsAllowed=prescription.number_of_repeats_allowed,
+            quantity=quantity_dict,
+            expectedSupplyDuration=supply_duration,
+        )
+
+    # Substitution
+    substitution = FHIRSubstitution(
+        allowedBoolean=prescription.allow_generic_substitution,
+        reason=FHIRCodeableConcept(text=prescription.substitution_reason) if prescription.substitution_reason else None,
+    )
+
+    # Reason code / reference
+    reason_codes = None
+    if prescription.reason_code:
+        reason_codes = [
+            FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system="http://hl7.org/fhir/sid/icd-10",
+                        code=prescription.reason_code,
+                        display=prescription.reason_code,
+                    )
+                ],
+                text=prescription.reason_code,
+            )
+        ]
+
+    reason_refs = None
+    if prescription.reason_reference_id:
+        reason_refs = [
+            FHIRReference(
+                reference=f"Condition/{prescription.reason_reference_id}",
+                type="Condition",
+            )
+        ]
+
+    # Clinical notes
+    notes = None
+    if prescription.note:
+        notes = [
+            FHIRAnnotation(
+                text=prescription.note,
+                time=prescription.authored_on,
+            )
+        ]
+
+    return FHIRMedicationRequest(
+        id=prescription.id,
+        meta={
+            "profile": [NRCES_PRESCRIPTION_PROFILE],
+            "versionId": "1",
+            "lastUpdated": prescription.updated_at.isoformat() if prescription.updated_at else datetime.now(timezone.utc).isoformat(),
+        },
+        identifier=identifiers,
+        status=prescription.status.value,
+        intent=prescription.intent.value,
+        priority=prescription.priority.value,
+        medicationCodeableConcept=med_concept,
+        medicationReference=FHIRReference(
+            reference=f"Medication/{prescription.medication_id}",
+            display=med_text,
+            type="Medication",
+        ),
+        subject=subject_ref,
+        encounter=encounter_ref,
+        authoredOn=prescription.authored_on.isoformat() if prescription.authored_on else None,
+        requester=requester_ref,
+        reasonCode=reason_codes,
+        reasonReference=reason_refs,
+        note=notes,
+        dosageInstruction=dosage_instructions,
+        dispenseRequest=dispense_request,
+        substitution=substitution,
+    )
+
 
 
 

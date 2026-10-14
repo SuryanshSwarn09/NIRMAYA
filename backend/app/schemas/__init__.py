@@ -103,6 +103,15 @@ from app.schemas.medication import (
     MedicationListResponse,
     TherapeuticClassSummary,
 )
+from app.schemas.medication_request import (
+    MedicationRequestBase,
+    MedicationRequestCreate,
+    MedicationRequestUpdate,
+    MedicationRequestSignRequest,
+    MedicationRequestCancelRequest,
+    MedicationRequestResponse,
+    MedicationRequestFilter,
+)
 
 __all__ = [
 
@@ -180,6 +189,13 @@ __all__ = [
     "MedicationResponse",
     "MedicationListResponse",
     "TherapeuticClassSummary",
+    "MedicationRequestBase",
+    "MedicationRequestCreate",
+    "MedicationRequestUpdate",
+    "MedicationRequestSignRequest",
+    "MedicationRequestCancelRequest",
+    "MedicationRequestResponse",
+    "MedicationRequestFilter",
 ]
 
 
