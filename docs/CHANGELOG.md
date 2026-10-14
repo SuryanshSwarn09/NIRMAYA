@@ -676,6 +676,32 @@
   - Next.js frontend routes verified.
   - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.2.0` reserved for Day 40 close).
 
+#### Day 27 (Tue) - Milestone 06-02: e-Prescription Authoring & HL7 FHIR R4 MedicationRequest Engine
+- **Focus:** `MedicationRequest` Relational Entity, Alembic Migration `0009`, HL7 FHIR R4 `MedicationRequest` Schemas & Transformers, SHA-256 Digital Signature Engine, REST Prescribing Endpoints, and Clinician/Patient Frontend Prescribing Interfaces.
+- **Executed Micro-Commits:**
+  1. `a28e674: feat(models): define medication request enums, relational entity, and alembic migration 0009`
+  2. `ad47040: feat(fhir): implement hl7 fhir r4 medicationrequest schemas and transformers`
+  3. `3ff357c: feat(services): implement prescription authoring engine with sha-256 digital signature`
+  4. `a972aa6: feat(api): expose rest endpoints for e-prescription authoring, signing, and fhir export`
+  5. `b310ef4: feat(frontend): implement clinical prescription authoring pad and patient rx viewer`
+  6. `docs(journey): author day 27 engineering log, update week 6 roadmap, summary, and changelog`
+- **Key Deliverables:**
+  - Defined clinical prescribing enumerations in `backend/app/models/enums.py`: `MedicationRequestStatus`, `MedicationRequestIntent`, and `MedicationRequestPriority`.
+  - Created `MedicationRequest` relational model in `backend/app/models/medication_request.py` with foreign keys to Patient, Doctor, Appointment, and Medication, structured dosage instructions, dispense constraints, generic substitution governance, and digital signature columns.
+  - Authored Alembic database migration `backend/alembic/versions/2026_10_14_0009_medication_request_schema.py`.
+  - Implemented `FHIRDosageInstruction`, `FHIRDispenseRequest`, `FHIRSubstitution`, and `FHIRMedicationRequest` schemas in `backend/app/fhir/schemas.py`.
+  - Built canonical `to_fhir_medication_request` transformer in `backend/app/fhir/transformers.py` conforming to the ABDM NRCeS Prescription structure definition.
+  - Created prescription authoring engine in `backend/app/services/medication_request.py` with drafting, update protection, SHA-256 digital signing, cancellation audit trails, and pagination.
+  - Exposed REST endpoints in `backend/app/api/v1/endpoints/medication_requests.py` for authoring, updating, cryptographically signing, cancelling, and FHIR exporting prescriptions.
+  - Developed Cal.com-inspired `PrescriptionAuthoringPad` in `frontend/src/components/clinical/PrescriptionAuthoringPad.tsx` and integrated into Doctor EMR (`/doctor`).
+  - Added "Prescriptions & Rx" tab with active e-prescriptions dashboard, digital signature digest verification, and live FHIR R4 modal in Patient Portal (`/patient`).
+- **Verification:**
+  - Dedicated unit and integration tests: **11/11 tests passing** in `backend/tests/test_medication_requests.py`.
+  - FHIR Transformers: **13/13 tests passing** in `backend/tests/test_fhir_encounter.py`.
+  - Automated full test suite: **212/212 tests passing (100%)** across 35 test files in 28.51s.
+  - TypeScript compilation: **0 errors** (`npx tsc --noEmit`).
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.2.0` reserved for Day 40 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 

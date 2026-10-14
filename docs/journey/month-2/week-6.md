@@ -9,7 +9,7 @@
 | Day | Focus Area | Key Deliverables | Status |
 |---|---|---|---|
 | **Day 26 (Mon)** | Medication Catalog & Formulary Engine | `Medication` model, RxNorm / WHO-ATC / SNOMED-CT terminology codings, Alembic migration `0008_medication_catalog_schema`, FHIR R4 `Medication` transformer, 30 curated clinical seeds, REST search endpoints, and Next.js Formulary Browser | **Completed** |
-| **Day 27 (Tue)** | e-Prescription Authoring & MedicationRequest | Structured dosage instructions, frequency timing, route of administration, duration, dispense request constraints, FHIR R4 `MedicationRequest` schemas, digital signature linkage | Planned |
+| **Day 27 (Tue)** | e-Prescription Authoring & MedicationRequest | Structured dosage instructions, frequency timing, route of administration, duration, dispense request constraints, FHIR R4 MedicationRequest schemas, digital signature linkage, and patient prescription vault | **Completed** |
 | **Day 28 (Wed)** | Drug-Drug Interaction & Safety Engine | Rule-based clinical decision support (CDS), contraindication detection, allergy cross-matching, severity alerts (critical, major, moderate) | Planned |
 | **Day 29 (Thu)** | Pharmacy Dispense & Fulfillment Workflow | `MedicationDispense` lifecycle (`preparation` $\rightarrow$ `in-progress` $\rightarrow$ `completed`), batch numbers, expiration tracking, substitution logic, pharmacy console integration | Planned |
 | **Day 30 (Fri)** | Week 6 Review & e-Prescription E2E Loop | Multi-role end-to-end integration tests (`test_week_6_e2e_verification.py`), patient medication cabinet, QR-verifiable e-prescription vouchers, Next.js build validation, executive retrospective | Planned |
