@@ -81,6 +81,7 @@
 * [Finalized System Architecture & Ecosystem Specification](faq/finalized-system-architecture.md)
 * [Medical Practitioner Credentialing & Verification](faq/medical-practitioner-verification.md)
 
-## Appendix
+## Reports & Case Studies
 * [Interim Project Report (Month 1 Review)](reports/interim-project-report-month-1.md)
+* [Engineering Case Study: Vercel Monorepo Deployment Failures](reports/case-study-vercel-deployment-failure.md)
 * [Comprehensive Changelog](CHANGELOG.md)
