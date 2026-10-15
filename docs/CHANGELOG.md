@@ -702,6 +702,25 @@
   - TypeScript compilation: **0 errors** (`npx tsc --noEmit`).
   - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone tag `v0.2.0` reserved for Day 40 close).
 
+#### Day 28 (Wed) - Milestone 06-03: Drug-Drug Interaction (DDI) & Clinical Safety Engine
+- **Focus:** Clinical Decision Support (CDS) Rules Matrix, Severity Tiers (`critical`, `major`, `moderate`), Allergy & Hypersensitivity Cross-Reactivity, Condition Contraindications, REST Safety Check API, and Clinician Override Governance.
+- **Executed Micro-Commits:**
+  1. `623d8bb: feat(cds): implement drug-drug interaction matrix and contraindication rule engine`
+  2. `351d299: feat(cds): implement allergy cross-sensitivity and condition contraindication evaluation`
+  3. `88186c1: feat(api): expose prescription safety check endpoint and clinician override audit log`
+  4. `docs(journey): author day 28 engineering log, update summary, and changelog`
+- **Key Deliverables:**
+  - Codified 10 high-risk clinical DDI interaction rules in `backend/app/services/cds_rules.py` (Warfarin + NSAIDs, ACEi + Spironolactone, Metformin + Contrast, Clopidogrel + Omeprazole, SSRIs + Tramadol, Statins + CYP3A4 inhibitors, Methotrexate + Penicillins, Levothyroxine + Cations, Digoxin + Amiodarone, Fluoroquinolones + Theophylline).
+  - Implemented class-based allergy matching for beta-lactams, sulfonamides, and NSAIDs.
+  - Implemented condition contraindication rules for Chronic Kidney Disease, Peptic Ulcer Disease, and Severe Asthma.
+  - Defined Pydantic v2 schemas in `backend/app/schemas/cds.py`: `SafetyAlert`, `SafetyCheckRequest`, `SafetyCheckResponse`, `ClinicianOverrideRequest`.
+  - Built `CDSSafetyService` in `backend/app/services/cds_safety.py` evaluating candidate drugs against patient active prescriptions and problem list diagnoses.
+  - Exposed REST endpoint `POST /api/v1/patients/{patient_id}/prescriptions/safety-check` in `backend/app/api/v1/endpoints/medication_requests.py`.
+- **Verification:**
+  - Dedicated unit and integration tests: **5/5 tests passing** in `backend/tests/test_cds_safety.py`.
+  - Automated full test suite: **218/218 tests passing (100%)** across 36 test files in 39.57s.
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Alpha tags `alpha.w5` and `alpha.w6` scheduled for Week 6 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
