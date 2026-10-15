@@ -830,6 +830,54 @@ class NIRMAYAAPIClient {
     );
   }
 
+  // ==========================================================================
+  // Clinical Decision Support (CDS) Safety Engine
+  // ==========================================================================
+
+  public async evaluatePrescriptionSafety(
+    patientId: string,
+    payload: SafetyCheckPayload
+  ) {
+    return this.post<SafetyCheckResponse>(
+      `/api/v1/patients/${patientId}/prescriptions/safety-check`,
+      payload
+    );
+  }
+
+  // ==========================================================================
+  // Pharmacy Medication Dispense & Fulfillment
+  // ==========================================================================
+
+  public async dispensePrescription(
+    prescriptionId: string,
+    payload: MedicationDispenseCreatePayload
+  ) {
+    return this.post<MedicationDispense>(
+      `/api/v1/prescriptions/${prescriptionId}/dispense`,
+      payload
+    );
+  }
+
+  public async getDispensations(params?: {
+    patient_id?: string;
+    prescription_id?: string;
+    lot_number?: string;
+    status?: MedicationDispenseStatus;
+    skip?: number;
+    limit?: number;
+  }) {
+    return this.get<PaginatedResponse<MedicationDispense>>(
+      `/api/v1/dispensations`,
+      { params: params as Record<string, string | number | boolean | undefined> }
+    );
+  }
+
+  public async getDispenseFhir(dispenseId: string) {
+    return this.get<Record<string, unknown>>(
+      `/api/v1/dispensations/${dispenseId}/fhir`
+    );
+  }
+
 
   public patch<T>(
     endpoint: string,
@@ -1381,5 +1429,93 @@ export interface MedicationRequestUpdatePayload {
   note?: string;
 }
 
+// ============================================================================
+// Clinical Decision Support (CDS) Safety Engine Types
+// ============================================================================
 
+export type CDSSeverity = "critical" | "major" | "moderate";
 
+export type CDSAlertType = "drug-drug" | "drug-allergy" | "drug-condition";
+
+export interface SafetyAlert {
+  rule_id: string;
+  alert_type: CDSAlertType;
+  severity: CDSSeverity;
+  title: string;
+  offending_entity: string;
+  mechanism: string;
+  recommendation: string;
+}
+
+export interface SafetyCheckResponse {
+  passed: boolean;
+  has_critical_alerts: boolean;
+  requires_override: boolean;
+  alerts: SafetyAlert[];
+  patient_id?: string;
+  evaluated_at?: string;
+}
+
+export interface SafetyCheckPayload {
+  medication_id: string;
+  dosage_text?: string;
+  supplemental_allergies?: string[];
+  supplemental_conditions?: string[];
+}
+
+// ============================================================================
+// Pharmacy Medication Dispense & Fulfillment Types
+// ============================================================================
+
+export type MedicationDispenseStatus =
+  | "preparation"
+  | "in-progress"
+  | "cancelled"
+  | "on-hold"
+  | "completed"
+  | "entered-in-error"
+  | "stopped"
+  | "declined"
+  | "unknown";
+
+export interface MedicationDispense {
+  id: string;
+  dispense_number: string;
+  prescription_id: string;
+  patient_id: string;
+  medication_id: string;
+  dispenser_user_id: string;
+  status: MedicationDispenseStatus;
+  quantity_dispensed: number;
+  dispense_unit: string;
+  days_supply?: number;
+  dispensed_at: string;
+  lot_number?: string;
+  expiration_date?: string;
+  was_substituted: boolean;
+  substitution_type?: string;
+  substitution_reason?: string;
+  pharmacist_notes?: string;
+  patient_instructions?: string;
+  dispenser_name?: string;
+  medication_name?: string;
+  created_at: string;
+  updated_at: string;
+  prescription?: MedicationRequest;
+  medication?: Medication;
+}
+
+export interface MedicationDispenseCreatePayload {
+  prescription_id?: string;
+  medication_id?: string;
+  quantity_dispensed: number;
+  dispense_unit: string;
+  days_supply?: number;
+  lot_number?: string;
+  expiration_date?: string;
+  was_substituted?: boolean;
+  substitution_type?: string;
+  substitution_reason?: string;
+  pharmacist_notes?: string;
+  patient_instructions?: string;
+}
