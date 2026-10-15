@@ -81,6 +81,13 @@ from app.services.medication_request import (
     sign_prescription,
     update_prescription,
 )
+from app.services.cds_rules import (
+    CDSSeverity,
+    CDSAlertType,
+    evaluate_drug_drug_interactions,
+    evaluate_allergy_cross_sensitivity,
+    evaluate_condition_contraindications,
+)
 
 __all__ = [
     # Patient service
@@ -156,4 +163,10 @@ __all__ = [
     "cancel_prescription",
     "mark_entered_in_error",
     "list_prescriptions",
+    # CDS rules
+    "CDSSeverity",
+    "CDSAlertType",
+    "evaluate_drug_drug_interactions",
+    "evaluate_allergy_cross_sensitivity",
+    "evaluate_condition_contraindications",
 ]
