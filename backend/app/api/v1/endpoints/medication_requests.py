@@ -25,9 +25,14 @@ from app.schemas.medication_request import (
     MedicationRequestSignRequest,
     MedicationRequestUpdate,
 )
+from app.schemas.cds import (
+    SafetyCheckRequest,
+    SafetyCheckResponse,
+)
 from app.services import (
     cancel_prescription,
     create_prescription,
+    evaluate_prescription_safety,
     get_prescription_by_id,
     list_prescriptions,
     sign_prescription,
@@ -268,3 +273,30 @@ async def export_prescription_fhir_endpoint(
     await _verify_prescription_read_access(db, prescription.patient_id, current_user)
 
     return to_fhir_medication_request(prescription)
+
+
+@router.post(
+    "/patients/{patient_id}/prescriptions/safety-check",
+    response_model=APIResponse[SafetyCheckResponse],
+    summary="Evaluate candidate prescription for clinical safety & interactions",
+    description="Cross-references candidate drug against active patient medications (DDI), allergies, and conditions.",
+)
+async def evaluate_prescription_safety_endpoint(
+    patient_id: str,
+    payload: SafetyCheckRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    await _verify_prescription_read_access(db, patient_id, current_user)
+    report = await evaluate_prescription_safety(
+        db=db,
+        patient_id=patient_id,
+        medication_id=payload.medication_id,
+        supplemental_allergies=payload.supplemental_allergies,
+        supplemental_conditions=payload.supplemental_conditions,
+    )
+    return APIResponse(
+        success=True,
+        message="Prescription safety check evaluated successfully",
+        data=report,
+    )
