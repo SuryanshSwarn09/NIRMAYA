@@ -92,6 +92,12 @@ from app.services.cds_safety import (
     CDSSafetyService,
     evaluate_prescription_safety,
 )
+from app.services.medication_dispense import (
+    create_dispense,
+    get_dispense_by_id,
+    list_dispensations,
+    update_dispense,
+)
 
 __all__ = [
     # Patient service
@@ -175,4 +181,9 @@ __all__ = [
     "evaluate_condition_contraindications",
     "CDSSafetyService",
     "evaluate_prescription_safety",
+    # MedicationDispense service
+    "create_dispense",
+    "get_dispense_by_id",
+    "list_dispensations",
+    "update_dispense",
 ]
