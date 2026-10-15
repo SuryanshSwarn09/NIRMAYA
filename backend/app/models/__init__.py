@@ -30,6 +30,7 @@ from app.models.enums import (
     MedicationRequestStatus,
     MedicationRequestIntent,
     MedicationRequestPriority,
+    MedicationDispenseStatus,
     SlotStatus,
     UserRole,
     VerificationStatus,
@@ -38,6 +39,7 @@ from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.lab import DiagnosticLabFacility
 from app.models.medication import Medication
 from app.models.medication_request import MedicationRequest
+from app.models.medication_dispense import MedicationDispense
 from app.models.observation import ClinicalObservation
 from app.models.patient import PatientProfile
 from app.models.soap_note import SoapNote
@@ -86,5 +88,7 @@ __all__ = [
     "MedicationRequestStatus",
     "MedicationRequestIntent",
     "MedicationRequestPriority",
+    "MedicationDispense",
+    "MedicationDispenseStatus",
 ]
 

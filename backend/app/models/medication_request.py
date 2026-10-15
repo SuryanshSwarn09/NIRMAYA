@@ -10,7 +10,7 @@ Directly models the HL7 FHIR Release 4 MedicationRequest resource and ABDM NRCeS
 """
 
 from datetime import datetime, timezone
-from typing import Optional, TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 from sqlalchemy import (
     Boolean,
     DateTime,
@@ -37,6 +37,7 @@ if TYPE_CHECKING:
     from app.models.appointment import Appointment
     from app.models.medication import Medication
     from app.models.condition import ClinicalCondition
+    from app.models.medication_dispense import MedicationDispense
 
 
 class MedicationRequest(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -270,6 +271,12 @@ class MedicationRequest(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     )
     reason_condition: Mapped[Optional["ClinicalCondition"]] = relationship(
         "ClinicalCondition",
+        lazy="selectin",
+    )
+    dispensations: Mapped[List["MedicationDispense"]] = relationship(
+        "MedicationDispense",
+        back_populates="prescription",
+        cascade="all, delete-orphan",
         lazy="selectin",
     )
 

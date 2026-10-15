@@ -40,7 +40,7 @@ def test_migration_revision_head(alembic_config) -> None:
     heads = script.get_heads()
 
     assert len(heads) == 1
-    assert heads[0] == "0009_medication_request_schema"
+    assert heads[0] == "0010_medication_dispense_schema"
 
 
 def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
@@ -69,6 +69,7 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "diagnostic_report",
         "medication",
         "medication_request",
+        "medication_dispense",
         "alembic_version",
     }
     assert expected_tables.issubset(table_names), f"Missing tables: {expected_tables - table_names}"
@@ -220,6 +221,23 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "signature_hash",
     }.issubset(rx_cols)
 
+    # Verify key columns on 'medication_dispense'
+    disp_cols = {col["name"] for col in inspector.get_columns("medication_dispense")}
+    assert {
+        "id",
+        "dispense_number",
+        "prescription_id",
+        "patient_id",
+        "medication_id",
+        "dispenser_id",
+        "status",
+        "quantity_dispensed",
+        "dispense_unit",
+        "lot_number",
+        "expiration_date",
+        "was_substituted",
+    }.issubset(disp_cols)
+
     engine.dispose()
 
     # 3. Run downgrade to base
@@ -245,6 +263,7 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "diagnostic_report",
         "medication",
         "medication_request",
+        "medication_dispense",
     }
     assert not core_tables.intersection(remaining_tables), f"Tables not dropped: {core_tables.intersection(remaining_tables)}"
 

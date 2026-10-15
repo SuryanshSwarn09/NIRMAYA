@@ -404,5 +404,22 @@ class CDSAlertType(str, Enum):
     DRUG_CONDITION = "drug-condition"
 
 
+class MedicationDispenseStatus(str, Enum):
+    """Fulfillment lifecycle status for HL7 FHIR Release 4 MedicationDispense.
+
+    Reference: http://hl7.org/fhir/R4/valueset-medicationdispense-status.html
+    """
+
+    PREPARATION = "preparation"
+    IN_PROGRESS = "in-progress"
+    CANCELLED = "cancelled"
+    ON_HOLD = "on-hold"
+    COMPLETED = "completed"
+    ENTERED_IN_ERROR = "entered-in-error"
+    STOPPED = "stopped"
+    DECLINED = "declined"
+    UNKNOWN = "unknown"
+
+
 
 
