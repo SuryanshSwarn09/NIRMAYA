@@ -7,24 +7,9 @@ Defines the knowledge base and rule evaluation engines for:
 """
 
 from dataclasses import dataclass
-from enum import Enum
 from typing import List, Optional, Set
 
-
-class CDSSeverity(str, Enum):
-    """Clinical Decision Support Alert Severity Tiers."""
-
-    CRITICAL = "critical"  # Contraindicated, life-threatening, immediate clinical intervention required.
-    MAJOR = "major"  # Serious adverse event risk, organ toxicity, or severe clinical compromise.
-    MODERATE = "moderate"  # Monitoring, dose adjustment, or temporal spacing required.
-
-
-class CDSAlertType(str, Enum):
-    """Classification of clinical safety alert."""
-
-    DRUG_DRUG = "drug-drug"
-    DRUG_ALLERGY = "drug-allergy"
-    DRUG_CONDITION = "drug-condition"
+from app.models.enums import CDSAlertType, CDSSeverity
 
 
 @dataclass(frozen=True)

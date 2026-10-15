@@ -88,6 +88,10 @@ from app.services.cds_rules import (
     evaluate_allergy_cross_sensitivity,
     evaluate_condition_contraindications,
 )
+from app.services.cds_safety import (
+    CDSSafetyService,
+    evaluate_prescription_safety,
+)
 
 __all__ = [
     # Patient service
@@ -169,4 +173,6 @@ __all__ = [
     "evaluate_drug_drug_interactions",
     "evaluate_allergy_cross_sensitivity",
     "evaluate_condition_contraindications",
+    "CDSSafetyService",
+    "evaluate_prescription_safety",
 ]

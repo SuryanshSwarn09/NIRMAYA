@@ -388,5 +388,21 @@ class MedicationRequestPriority(str, Enum):
     STAT = "stat"
 
 
+class CDSSeverity(str, Enum):
+    """Clinical Decision Support Alert Severity Tiers."""
+
+    CRITICAL = "critical"
+    MAJOR = "major"
+    MODERATE = "moderate"
+
+
+class CDSAlertType(str, Enum):
+    """Classification of clinical decision support safety alerts."""
+
+    DRUG_DRUG = "drug-drug"
+    DRUG_ALLERGY = "drug-allergy"
+    DRUG_CONDITION = "drug-condition"
+
+
 
 
