@@ -52,6 +52,7 @@
     * [Day 27: e-Prescription Authoring & HL7 FHIR R4 MedicationRequest Engine](journey/month-2/day-27.md)
     * [Day 28: Drug-Drug Interaction (DDI) & Clinical Safety Engine](journey/month-2/day-28.md)
     * [Day 29: Pharmacy Dispense & Fulfillment Lifecycle](journey/month-2/day-29.md)
+    * [Day 30: Multi-Role E2E Closed-Loop Verification & Week 6 Close](journey/month-2/day-30.md)
   * [Week 7: Patient Portal Frontend, ABHA Card & Telemedicine](journey/month-2/week-7.md)
   * [Week 8: Doctor EMR Workspace, SOAP UX & Release v0.2.0](journey/month-2/week-8.md)
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
@@ -76,6 +77,7 @@
 * [Week 4 Retrospective & Encounters Review](journey/month-1/week-4-review.md)
 * [Month 1 Comprehensive Retrospective & Foundation Report](journey/month-1/month-1-retrospective.md)
 * [Week 5 Retrospective & Clinical Architecture Review](journey/month-2/week-5-review.md)
+* [Week 6 Retrospective & Pharmacy Architecture Review](journey/month-2/week-6-review.md)
 
 ## Fundamental FAQ
 * [Finalized System Architecture & Ecosystem Specification](faq/finalized-system-architecture.md)
