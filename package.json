@@ -8,6 +8,7 @@
     "dev:bash": "bash ./scripts/run-dev.sh",
     "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "cd backend && python -m uvicorn app.main:app --reload --port 8000",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
     "build:frontend": "npm --prefix frontend run build",
     "test:backend": "cd backend && python -m pytest -v",
     "test": "npm --prefix frontend run build && cd backend && python -m pytest",
