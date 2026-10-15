@@ -716,13 +716,31 @@
   - Defined Pydantic v2 schemas in `backend/app/schemas/cds.py`: `SafetyAlert`, `SafetyCheckRequest`, `SafetyCheckResponse`, `ClinicianOverrideRequest`.
   - Built `CDSSafetyService` in `backend/app/services/cds_safety.py` evaluating candidate drugs against patient active prescriptions and problem list diagnoses.
   - Exposed REST endpoint `POST /api/v1/patients/{patient_id}/prescriptions/safety-check` in `backend/app/api/v1/endpoints/medication_requests.py`.
+#### Day 29 (Thu) - Milestone 06-04: Pharmacy Dispense & Fulfillment Lifecycle
+- **Focus:** `MedicationDispense` Relational Entity, Alembic Migration `0010`, HL7 FHIR Release 4 `MedicationDispense` Schemas & Transformers, Batch Lot & Expiration Tracking, Refill Quota Governance, Generic Substitution Surveillance, and Pharmacy REST API.
+- **Executed Micro-Commits:**
+  1. `06011de: feat(models): define medication dispense relational entity and alembic migration 0010`
+  2. `212c1a5: feat(fhir): implement medication dispense schemas, transformers, and DTOs`
+  3. `290fb56: feat(pharmacy): implement medication dispense service, fulfillment endpoints, and test suite`
+  4. `docs(journey): author day 29 engineering log, update summary, and changelog`
+- **Key Deliverables:**
+  - Defined `MedicationDispenseStatus` in `backend/app/models/enums.py` aligning with HL7 FHIR R4 value set.
+  - Engineered `MedicationDispense` relational entity in `backend/app/models/medication_dispense.py` with foreign keys to `medication_request`, `patient_profile`, `medication`, and `user` (dispenser).
+  - Authored Alembic database migration `backend/alembic/versions/2026_10_15_0010_medication_dispense_schema.py` and validated rollbacks.
+  - Implemented `FHIRMedicationDispensePerformer`, `FHIRMedicationDispenseSubstitution`, and `FHIRMedicationDispense` models in `backend/app/fhir/schemas.py`.
+  - Built canonical `to_fhir_medication_dispense` transformer in `backend/app/fhir/transformers.py` conforming to the ABDM NRCeS MedicationDispense structure definition.
+  - Created domain service layer in `backend/app/services/medication_dispense.py` enforcing digital signature attestation, authorized refill quota limits, auto-completion, generic substitution authorization, and batch lot/expiry tracking.
+  - Exposed REST endpoints in `backend/app/api/v1/endpoints/medication_dispenses.py` for fulfilling prescriptions, listing history, batch lot queries, and HL7 FHIR R4 JSON export.
 - **Verification:**
-  - Dedicated unit and integration tests: **5/5 tests passing** in `backend/tests/test_cds_safety.py`.
-  - Automated full test suite: **218/218 tests passing (100%)** across 36 test files in 39.57s.
-  - **Tag Discipline Honored:** Strictly zero release tags created today (Alpha tags `alpha.w5` and `alpha.w6` scheduled for Week 6 close).
+  - Dedicated unit and integration tests: **6/6 tests passing** in `backend/tests/test_medication_dispense.py`.
+  - FHIR Serialization tests: **14/14 tests passing** in `backend/tests/test_fhir_encounter.py`.
+  - Migration tests: **2/2 tests passing** in `backend/tests/test_migrations.py`.
+  - Automated full backend test suite: **225/225 tests passing (100%)** across 37 test files in 2m22s.
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Alpha tags `v0.2.0-alpha.w5` and `v0.2.0-alpha.w6` scheduled for Week 6 close).
 
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
 

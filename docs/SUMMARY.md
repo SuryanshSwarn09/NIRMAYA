@@ -51,6 +51,7 @@
     * [Day 26: Medication Catalog & Formulary Engine](journey/month-2/day-26.md)
     * [Day 27: e-Prescription Authoring & HL7 FHIR R4 MedicationRequest Engine](journey/month-2/day-27.md)
     * [Day 28: Drug-Drug Interaction (DDI) & Clinical Safety Engine](journey/month-2/day-28.md)
+    * [Day 29: Pharmacy Dispense & Fulfillment Lifecycle](journey/month-2/day-29.md)
   * [Week 7: Patient Portal Frontend, ABHA Card & Telemedicine](journey/month-2/week-7.md)
   * [Week 8: Doctor EMR Workspace, SOAP UX & Release v0.2.0](journey/month-2/week-8.md)
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
