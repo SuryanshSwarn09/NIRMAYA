@@ -39,11 +39,15 @@ from app.fhir.schemas import (
     FHIRDispenseRequest,
     FHIRSubstitution,
     FHIRMedicationRequest,
+    FHIRMedicationDispense,
+    FHIRMedicationDispensePerformer,
+    FHIRMedicationDispenseSubstitution,
 )
 from app.models.appointment import Appointment
 from app.models.condition import ClinicalCondition
 from app.models.medication import Medication
 from app.models.medication_request import MedicationRequest
+from app.models.medication_dispense import MedicationDispense
 from app.models.enums import (
     AppointmentStatus,
     AppointmentType,
@@ -90,6 +94,9 @@ NIRMAYA_MEDICATION_SYSTEM = "https://nirmaya.health/fhir/medication"
 NIRMAYA_DIAGNOSTIC_REPORT_SYSTEM = "https://nirmaya.health/fhir/diagnostic-report"
 NIRMAYA_PRESCRIPTION_SYSTEM = "https://nirmaya.health/fhir/medication-request"
 NRCES_PRESCRIPTION_PROFILE = "https://nrces.in/ndhm/fhir/r4/StructureDefinition/Prescription"
+NIRMAYA_DISPENSE_SYSTEM = "https://nirmaya.health/fhir/medication-dispense"
+NRCES_MEDICATION_DISPENSE_PROFILE = "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationDispense"
+HL7_SUBSTITUTION_TYPE_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-substanceAdminSubstitution"
 
 # Observation interpretation mappings to HL7 v3 ObservationInterpretation concepts
 OBSERVATION_INTERPRETATION_MAPPINGS: Dict[ObservationInterpretation, FHIRCoding] = {
@@ -1789,6 +1796,247 @@ def to_fhir_medication_request(
         dispenseRequest=dispense_request,
         substitution=substitution,
     )
+
+
+# ============================================================================
+# Transformer: HL7 FHIR R4 MedicationDispense & ABDM NRCeS Fulfillment
+# ============================================================================
+
+
+def to_fhir_medication_dispense(
+    dispense: MedicationDispense,
+    medication: Optional[Medication] = None,
+    prescription: Optional[MedicationRequest] = None,
+) -> FHIRMedicationDispense:
+    """Transform an internal MedicationDispense entity into a canonical HL7 FHIR R4 MedicationDispense resource.
+
+    Conforms to:
+    - HL7 FHIR R4 MedicationDispense (http://hl7.org/fhir/R4/medicationdispense.html)
+    - ABDM NRCeS MedicationDispense profile (https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationDispense)
+    - Full traceability of batch lot numbers, expiration dates, dispensing practitioner, and generic substitution.
+    """
+    effective_med = medication or dispense.medication
+    effective_rx = prescription or dispense.prescription
+
+    # 1. Medication Coding
+    med_codings: List[FHIRCoding] = []
+    med_text = "Dispensed Medication"
+    if effective_med:
+        med_text = effective_med.name
+        if effective_med.rxnorm_code:
+            med_codings.append(
+                FHIRCoding(
+                    system=RXNORM_SYSTEM,
+                    code=effective_med.rxnorm_code,
+                    display=effective_med.rxnorm_display or effective_med.name,
+                )
+            )
+        if effective_med.atc_code:
+            med_codings.append(
+                FHIRCoding(
+                    system=WHO_ATC_SYSTEM,
+                    code=effective_med.atc_code,
+                    display=effective_med.atc_display or effective_med.generic_name,
+                )
+            )
+        if effective_med.snomed_code:
+            med_codings.append(
+                FHIRCoding(
+                    system=SNOMED_CT_SYSTEM,
+                    code=effective_med.snomed_code,
+                    display=effective_med.snomed_display or effective_med.generic_name,
+                )
+            )
+
+    med_concept = FHIRCodeableConcept(
+        coding=med_codings,
+        text=med_text,
+    )
+
+    # 2. Identifiers
+    identifiers = [
+        FHIRIdentifier(
+            system=NIRMAYA_DISPENSE_SYSTEM,
+            value=dispense.dispense_number,
+            use="official",
+        ),
+        FHIRIdentifier(
+            system="https://nirmaya.health/fhir/dispense-id",
+            value=dispense.id,
+            use="secondary",
+        ),
+    ]
+
+    # 3. Subject Reference (Patient)
+    patient_display = None
+    if dispense.patient and getattr(dispense.patient, "user", None):
+        patient_display = dispense.patient.user.full_name
+    subject_ref = FHIRReference(
+        reference=f"Patient/{dispense.patient_id}",
+        display=patient_display,
+        type="Patient",
+    )
+
+    # 4. Authorizing Prescription
+    authorizing_rx = [
+        FHIRReference(
+            reference=f"MedicationRequest/{dispense.prescription_id}",
+            type="MedicationRequest",
+        )
+    ]
+
+    # 5. Dispensing Performer (Pharmacist / Practitioner)
+    performers = None
+    if dispense.dispenser_id:
+        dispenser_display = None
+        if dispense.dispenser:
+            dispenser_display = dispense.dispenser.full_name
+        performers = [
+            FHIRMedicationDispensePerformer(
+                actor=FHIRReference(
+                    reference=f"Practitioner/{dispense.dispenser_id}",
+                    display=dispenser_display,
+                    type="Practitioner",
+                ),
+                function=FHIRCodeableConcept(
+                    coding=[
+                        FHIRCoding(
+                            system=HL7_PARTICIPATION_TYPE_SYSTEM,
+                            code="PROV",
+                            display="Provider / Dispenser",
+                        )
+                    ],
+                    text="Dispensing Pharmacist",
+                ),
+            )
+        ]
+
+    # 6. Quantity Dispensed
+    quantity_dict = {
+        "value": dispense.quantity_dispensed,
+        "unit": dispense.dispense_unit,
+        "system": UCUM_SYSTEM,
+        "code": dispense.dispense_unit,
+    }
+
+    # 7. Days Supply
+    days_supply_dict = None
+    if dispense.days_supply is not None:
+        days_supply_dict = {
+            "value": dispense.days_supply,
+            "unit": "days",
+            "system": UCUM_SYSTEM,
+            "code": "d",
+        }
+
+    # 8. Substitution Audit
+    if dispense.was_substituted:
+        sub_type_code = dispense.substitution_type or "G"
+        sub_type_display = "Generic Composition" if sub_type_code == "G" else sub_type_code
+        sub_reasons = None
+        if dispense.substitution_reason:
+            sub_reasons = [
+                FHIRCodeableConcept(
+                    text=dispense.substitution_reason,
+                )
+            ]
+        substitution = FHIRMedicationDispenseSubstitution(
+            wasSubstituted=True,
+            type=FHIRCodeableConcept(
+                coding=[
+                    FHIRCoding(
+                        system=HL7_SUBSTITUTION_TYPE_SYSTEM,
+                        code=sub_type_code,
+                        display=sub_type_display,
+                    )
+                ],
+                text=sub_type_display,
+            ),
+            reason=sub_reasons,
+        )
+    else:
+        substitution = FHIRMedicationDispenseSubstitution(
+            wasSubstituted=False,
+        )
+
+    # 9. Dosage Instruction
+    dosage_instructions = None
+    instruction_text = dispense.dosage_instruction or (effective_rx.dosage_text if effective_rx else None)
+    if instruction_text:
+        dosage_instructions = [
+            FHIRDosageInstruction(
+                text=instruction_text,
+            )
+        ]
+
+    # 10. Notes
+    notes = None
+    if dispense.pharmacist_notes:
+        notes = [
+            FHIRAnnotation(
+                text=dispense.pharmacist_notes,
+                time=dispense.when_handed_over or datetime.now(timezone.utc),
+            )
+        ]
+
+    return FHIRMedicationDispense(
+        id=dispense.id,
+        meta={
+            "profile": [NRCES_MEDICATION_DISPENSE_PROFILE],
+            "versionId": "1",
+            "lastUpdated": (
+                dispense.updated_at.isoformat()
+                if dispense.updated_at
+                else datetime.now(timezone.utc).isoformat()
+            ),
+        },
+        identifier=identifiers,
+        status=dispense.status.value,
+        statusReasonCodeableConcept=(
+            FHIRCodeableConcept(text=dispense.status_reason)
+            if dispense.status_reason
+            else None
+        ),
+        medicationCodeableConcept=med_concept,
+        medicationReference=FHIRReference(
+            reference=f"Medication/{dispense.medication_id}",
+            display=med_text,
+            type="Medication",
+        ),
+        subject=subject_ref,
+        context=(
+            FHIRReference(
+                reference=f"Encounter/{effective_rx.encounter_id}",
+                type="Encounter",
+            )
+            if effective_rx and getattr(effective_rx, "encounter_id", None)
+            else None
+        ),
+        performer=performers,
+        authorizingPrescription=authorizing_rx,
+        quantity=quantity_dict,
+        daysSupply=days_supply_dict,
+        whenPrepared=(
+            dispense.when_prepared.isoformat()
+            if dispense.when_prepared
+            else None
+        ),
+        whenHandedOver=(
+            dispense.when_handed_over.isoformat()
+            if dispense.when_handed_over
+            else None
+        ),
+        dosageInstruction=dosage_instructions,
+        substitution=substitution,
+        note=notes,
+        lotNumber=dispense.lot_number,
+        expirationDate=(
+            dispense.expiration_date.isoformat()
+            if dispense.expiration_date
+            else None
+        ),
+    )
+
 
 
 

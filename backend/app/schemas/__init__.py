@@ -118,9 +118,15 @@ from app.schemas.cds import (
     SafetyCheckResponse,
     ClinicianOverrideRequest,
 )
+from app.schemas.medication_dispense import (
+    MedicationDispenseBase,
+    MedicationDispenseCreate,
+    MedicationDispenseUpdate,
+    MedicationDispenseResponse,
+    MedicationDispenseFilter,
+)
 
 __all__ = [
-
     "APIResponse",
     "ErrorDetail",
     "ErrorResponse",
@@ -206,6 +212,11 @@ __all__ = [
     "SafetyCheckRequest",
     "SafetyCheckResponse",
     "ClinicianOverrideRequest",
+    "MedicationDispenseBase",
+    "MedicationDispenseCreate",
+    "MedicationDispenseUpdate",
+    "MedicationDispenseResponse",
+    "MedicationDispenseFilter",
 ]
 
 

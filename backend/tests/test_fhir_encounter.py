@@ -18,6 +18,7 @@ from app.fhir.transformers import (
     to_fhir_encounter,
     to_fhir_encounter_bundle,
     to_fhir_medication,
+    to_fhir_medication_dispense,
     to_fhir_medication_request,
 )
 from app.main import app
@@ -25,6 +26,7 @@ from app.models.appointment import Appointment, DoctorSlot
 from app.models.doctor import DoctorProfile
 from app.models.medication import Medication
 from app.models.medication_request import MedicationRequest
+from app.models.medication_dispense import MedicationDispense
 from app.models.enums import (
     AdministrationRoute,
     AppointmentStatus,
@@ -37,6 +39,7 @@ from app.models.enums import (
     MedicationRequestStatus,
     MedicationRequestIntent,
     MedicationRequestPriority,
+    MedicationDispenseStatus,
     SlotStatus,
     UserRole,
 )
@@ -705,5 +708,97 @@ def test_to_fhir_medication_request_transformer() -> None:
     assert fhir_rx.reasonCode[0].text == "I10"
     assert fhir_rx.reasonReference[0].reference == "Condition/cond-htn-001"
     assert fhir_rx.note[0].text == "Primary prevention of cardiovascular events in hypertensive patient."
+
+
+def test_to_fhir_medication_dispense_transformer():
+    """Test transformation of MedicationDispense relational entity into HL7 FHIR R4 MedicationDispense."""
+    med = Medication(
+        id="med-atorvastatin-20",
+        name="Atorvastatin 20mg",
+        generic_name="Atorvastatin Calcium",
+        brand_name="Lipitor",
+        rxnorm_code="859088",
+        rxnorm_display="Atorvastatin 20 MG Oral Tablet",
+        atc_code="C10AA05",
+        atc_display="atorvastatin",
+        snomed_code="387584000",
+        snomed_display="Atorvastatin-containing product",
+        form=MedicationForm.TABLET,
+        strength="20 mg",
+        active_ingredient="Atorvastatin Calcium",
+        status=MedicationStatus.ACTIVE,
+    )
+
+    rx = MedicationRequest(
+        id="rx-test-001",
+        patient_id="pat-arun-patel",
+        doctor_id="doc-ananya-sharma",
+        encounter_id="appt-encounter-101",
+        medication_id="med-atorvastatin-20",
+        status=MedicationRequestStatus.ACTIVE,
+        intent=MedicationRequestIntent.ORDER,
+        priority=MedicationRequestPriority.ROUTINE,
+        dosage_text="Take 1 tablet orally once daily at bedtime for 30 days",
+    )
+
+    dispense = MedicationDispense(
+        id="disp-test-001",
+        dispense_number="DISP-2026-00001",
+        prescription_id="rx-test-001",
+        patient_id="pat-arun-patel",
+        medication_id="med-atorvastatin-20",
+        dispenser_id="usr-pharm-01",
+        status=MedicationDispenseStatus.COMPLETED,
+        quantity_dispensed=30.0,
+        dispense_unit="tablets",
+        days_supply=30,
+        lot_number="LOT-2026-A1",
+        expiration_date=date(2027, 6, 30),
+        when_prepared=datetime(2026, 10, 15, 8, 30, tzinfo=timezone.utc),
+        when_handed_over=datetime(2026, 10, 15, 9, 0, tzinfo=timezone.utc),
+        was_substituted=True,
+        substitution_type="G",
+        substitution_reason="Formulary generic equivalent supplied",
+        dosage_instruction="Take 1 tablet orally once daily at bedtime with water",
+        pharmacist_notes="Verified against DDI safety checks; patient counseled.",
+    )
+
+    fhir_dispense = to_fhir_medication_dispense(dispense, medication=med, prescription=rx)
+
+    assert fhir_dispense.resourceType == "MedicationDispense"
+    assert fhir_dispense.id == "disp-test-001"
+    assert fhir_dispense.status == "completed"
+    assert fhir_dispense.meta is not None
+    assert "https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationDispense" in fhir_dispense.meta["profile"]
+
+    # Identifiers
+    id_vals = [i.value for i in fhir_dispense.identifier]
+    assert "DISP-2026-00001" in id_vals
+    assert "disp-test-001" in id_vals
+
+    # Authorizing prescription & Subject & Performer
+    assert fhir_dispense.authorizingPrescription[0].reference == "MedicationRequest/rx-test-001"
+    assert fhir_dispense.subject.reference == "Patient/pat-arun-patel"
+    assert fhir_dispense.performer[0].actor.reference == "Practitioner/usr-pharm-01"
+
+    # Quantities & Days Supply
+    assert fhir_dispense.quantity["value"] == 30.0
+    assert fhir_dispense.quantity["unit"] == "tablets"
+    assert fhir_dispense.daysSupply["value"] == 30
+    assert fhir_dispense.daysSupply["unit"] == "days"
+
+    # Batch Tracking
+    assert fhir_dispense.lotNumber == "LOT-2026-A1"
+    assert fhir_dispense.expirationDate == "2027-06-30"
+
+    # Substitution
+    assert fhir_dispense.substitution.wasSubstituted is True
+    assert fhir_dispense.substitution.type.coding[0].code == "G"
+    assert fhir_dispense.substitution.reason[0].text == "Formulary generic equivalent supplied"
+
+    # Dosage & Notes
+    assert fhir_dispense.dosageInstruction[0].text == "Take 1 tablet orally once daily at bedtime with water"
+    assert fhir_dispense.note[0].text == "Verified against DDI safety checks; patient counseled."
+
 
 

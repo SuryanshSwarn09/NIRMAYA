@@ -943,6 +943,147 @@ class FHIRMedicationRequest(BaseModel):
     )
 
 
+# ============================================================================
+# FHIR R4 MedicationDispense Resource
+# ============================================================================
+
+
+class FHIRMedicationDispensePerformer(BaseModel):
+    """Actor performing or verifying the pharmaceutical dispensing action."""
+
+    actor: FHIRReference = Field(
+        description="Individual who was performing or verifying the dispense",
+    )
+    function: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Who performed the dispense and what they did",
+    )
+
+
+class FHIRMedicationDispenseSubstitution(BaseModel):
+    """Deals with generic or formulary drug substitution performed by pharmacy."""
+
+    wasSubstituted: bool = Field(
+        default=False,
+        description="Whether a substitution was or was not performed on the dispense",
+    )
+    type: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Code signifying whether a different or equivalent drug was dispensed",
+    )
+    reason: Optional[List[FHIRCodeableConcept]] = Field(
+        default=None,
+        description="Why was the substitution made",
+    )
+    responsibleParty: Optional[List[FHIRReference]] = Field(
+        default=None,
+        description="Who is responsible for the substitution",
+    )
+
+
+class FHIRMedicationDispense(BaseModel):
+    """HL7 FHIR Release 4 MedicationDispense resource representing medication fulfillment.
+
+    Reference: http://hl7.org/fhir/R4/medicationdispense.html
+    NRCeS Profile: https://nrces.in/ndhm/fhir/r4/StructureDefinition/MedicationDispense
+    """
+
+    resourceType: Literal["MedicationDispense"] = Field(
+        default="MedicationDispense",
+        description="Resource type name constant",
+    )
+    id: str = Field(
+        description="Logical id of this medication dispense resource",
+    )
+    meta: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Metadata about the resource (profile, security, tags)",
+    )
+    identifier: Optional[List[FHIRIdentifier]] = Field(
+        default=None,
+        description="Business identifiers of this medication dispense",
+    )
+    partOf: Optional[List[FHIRReference]] = Field(
+        default=None,
+        description="Event that dispense is part of",
+    )
+    status: str = Field(
+        description="preparation | in-progress | cancelled | on-hold | completed | entered-in-error | stopped | declined | unknown",
+        example="completed",
+    )
+    statusReasonCodeableConcept: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Why a dispense was not completed or changed",
+    )
+    category: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Type of medication dispense (e.g. community, inpatient, outpatient)",
+    )
+    medicationReference: Optional[FHIRReference] = Field(
+        default=None,
+        description="Reference to the dispensed Medication resource",
+    )
+    medicationCodeableConcept: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Codified dispensed pharmaceutical product",
+    )
+    subject: FHIRReference = Field(
+        description="Patient for whom the medication was dispensed",
+    )
+    context: Optional[FHIRReference] = Field(
+        default=None,
+        description="Encounter associated with the dispense event",
+    )
+    performer: Optional[List[FHIRMedicationDispensePerformer]] = Field(
+        default=None,
+        description="Who performed the dispense",
+    )
+    authorizingPrescription: Optional[List[FHIRReference]] = Field(
+        default=None,
+        description="MedicationRequest authorization prescription that is fulfilled",
+    )
+    type: Optional[FHIRCodeableConcept] = Field(
+        default=None,
+        description="Trial fill, partial fill, emergency fill, etc.",
+    )
+    quantity: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Amount dispensed in UCUM units",
+    )
+    daysSupply: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Amount of medication expressed as a timing amount",
+    )
+    whenPrepared: Optional[str] = Field(
+        default=None,
+        description="When product was packaged and reviewed (ISO-8601 UTC)",
+    )
+    whenHandedOver: Optional[str] = Field(
+        default=None,
+        description="When product was given to patient or recipient (ISO-8601 UTC)",
+    )
+    dosageInstruction: Optional[List[FHIRDosageInstruction]] = Field(
+        default=None,
+        description="How the medication should be taken by patient",
+    )
+    substitution: Optional[FHIRMedicationDispenseSubstitution] = Field(
+        default=None,
+        description="Generic or formulary substitution details",
+    )
+    note: Optional[List[FHIRAnnotation]] = Field(
+        default=None,
+        description="Pharmacist annotations or fulfillment comments",
+    )
+    lotNumber: Optional[str] = Field(
+        default=None,
+        description="Lot number of the dispensed drug batch",
+    )
+    expirationDate: Optional[str] = Field(
+        default=None,
+        description="Expiry date of the dispensed drug (YYYY-MM-DD)",
+    )
+
+
 class FHIRBundle(BaseModel):
     """HL7 FHIR Release 4 Collection or Document Bundle."""
 
