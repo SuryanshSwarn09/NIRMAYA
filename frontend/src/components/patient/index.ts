@@ -8,3 +8,6 @@ export * from "./PatientModals";
 export * from "./DigitalAbhaCard";
 export * from "./AbhaCardExportModal";
 export * from "./AbhaQrVerificationModal";
+export * from "./PatientConditionCard";
+export * from "./PatientConditionUpdateModal";
+export * from "./PatientProblemsTab";
