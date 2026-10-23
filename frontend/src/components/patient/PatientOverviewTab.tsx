@@ -22,13 +22,23 @@ import {
   Stethoscope
 } from "lucide-react";
 import { Appointment, MedicationRequest } from "@/lib/api";
+import { DigitalAbhaCard } from "./DigitalAbhaCard";
 
 export interface PatientOverviewTabProps {
   abhaId?: string;
   abhaAddress?: string;
   patientName?: string;
+  gender?: string;
+  dob?: string;
+  mobile?: string;
   bloodGroup?: string;
   stateNode?: string;
+  distName?: string;
+  emergencyContact?: string;
+  organDonor?: boolean;
+  qrPayload?: string;
+  onOpenExport?: () => void;
+  onOpenVerify?: () => void;
   consentActive: boolean;
   onToggleConsent: (active: boolean) => void;
   scheduledAppointments: Appointment[];
@@ -43,8 +53,17 @@ export function PatientOverviewTab({
   abhaId = "91-8472-1092-4821",
   abhaAddress = "arun.patel@abdm",
   patientName = "Arun Patel",
+  gender = "Male",
+  dob = "1990-06-04",
+  mobile = "+91 98*** **421",
   bloodGroup = "O Positive (O+)",
   stateNode = "NCT of Delhi",
+  distName = "South Delhi",
+  emergencyContact = "Pooja Patel (+91 98*** **991)",
+  organDonor = true,
+  qrPayload,
+  onOpenExport,
+  onOpenVerify,
   consentActive,
   onToggleConsent,
   scheduledAppointments,
@@ -65,46 +84,23 @@ export function PatientOverviewTab({
           ======================================================================== */}
       <div className="lg:col-span-5 space-y-6">
         
-        {/* ABHA National Health Card Preview */}
-        <Card variant="mockup" className="space-y-5 bg-[#f8f9fa] border-[#e5e7eb]">
-          <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
-            <div className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-full bg-[#111111] text-white flex items-center justify-center font-bold text-xs">
-                N
-              </div>
-              <span className="text-xs font-bold tracking-tight text-[#111111] uppercase">
-                Ayushman Bharat Health Card
-              </span>
-            </div>
-            <Badge variant="emerald" size="sm">ABDM Verified</Badge>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-[8px] bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] shadow-xs shrink-0">
-              <QrCode className="h-10 w-10 text-[#111111]" />
-            </div>
-            <div className="overflow-hidden">
-              <div className="text-xs text-[#6b7280]">ABHA Health ID Number</div>
-              <div className="text-base sm:text-lg font-bold text-[#111111] tracking-wider font-mono truncate">
-                {abhaId}
-              </div>
-              <div className="text-xs text-[#374151] mt-0.5 truncate">
-                {abhaAddress} • Male, 34 Yrs
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 pt-3 border-t border-[#e5e7eb] text-xs">
-            <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb]">
-              <div className="text-[#6b7280]">Blood Group</div>
-              <div className="font-semibold text-[#111111]">{bloodGroup}</div>
-            </div>
-            <div className="p-2.5 rounded-[6px] bg-white border border-[#e5e7eb]">
-              <div className="text-[#6b7280]">State Node</div>
-              <div className="font-semibold text-[#111111]">{stateNode}</div>
-            </div>
-          </div>
-        </Card>
+        {/* Authentic Digital ABHA ID Card Canvas with 3D Flip & Vector QR */}
+        <DigitalAbhaCard
+          abhaId={abhaId}
+          abhaAddress={abhaAddress}
+          patientName={patientName}
+          gender={gender}
+          dob={dob}
+          mobile={mobile}
+          bloodGroup={bloodGroup}
+          stateNode={stateNode}
+          distName={distName}
+          emergencyContact={emergencyContact}
+          organDonor={organDonor}
+          qrPayload={qrPayload}
+          onOpenExport={onOpenExport}
+          onOpenVerify={onOpenVerify}
+        />
 
         {/* Active Consent Delegation Panel */}
         <Card variant="mockup" className="space-y-4">

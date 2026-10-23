@@ -10,6 +10,8 @@ import {
   PatientPrescriptionsTab, 
   PatientRecordsTab, 
   PatientModals,
+  AbhaCardExportModal,
+  AbhaQrVerificationModal,
   PatientTabId 
 } from "@/components/patient";
 import { 
@@ -57,6 +59,69 @@ export default function PatientVaultPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<PatientTabId>("overview");
   const [consentActive, setConsentActive] = useState(true);
+
+  // ABHA ID Card & QR Verification States (Day 32)
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
+  const [abhaCardData, setAbhaCardData] = useState<{
+    abhaId: string;
+    abhaAddress: string;
+    patientName: string;
+    gender: string;
+    dob: string;
+    mobile: string;
+    bloodGroup: string;
+    stateNode: string;
+    distName: string;
+    emergencyContact: string;
+    organDonor: boolean;
+    qrPayload: string;
+  }>({
+    abhaId: user?.abhaId || "91-8472-1092-4821",
+    abhaAddress: "arun.patel@abdm",
+    patientName: user?.fullName || "Arun Patel",
+    gender: "Male",
+    dob: "1990-06-04",
+    mobile: "+91 98*** **421",
+    bloodGroup: "O Positive (O+)",
+    stateNode: "NCT of Delhi",
+    distName: "South Delhi",
+    emergencyContact: "Pooja Patel (+91 98*** **991)",
+    organDonor: true,
+    qrPayload: "",
+  });
+
+  // Attempt to load official ABHA card from backend if patient profile exists
+  useEffect(() => {
+    async function loadAbhaCard() {
+      try {
+        const patientId = user?.id || "pat-arun-patel";
+        const res = await apiClient.getPatientAbhaCard(patientId);
+        if (res && res.card_data) {
+          setAbhaCardData({
+            abhaId: res.card_data.abha_number || "91-8472-1092-4821",
+            abhaAddress: res.card_data.abha_address || "arun.patel@abdm",
+            patientName: res.card_data.name || user?.fullName || "Arun Patel",
+            gender: res.card_data.gender === "M" ? "Male" : res.card_data.gender === "F" ? "Female" : "Other",
+            dob: res.card_data.date_of_birth || "1990-06-04",
+            mobile: res.card_data.mobile || "+91 98*** **421",
+            bloodGroup: res.card_data.blood_group || "O Positive (O+)",
+            stateNode: res.card_data.state || "NCT of Delhi",
+            distName: res.card_data.district || "South Delhi",
+            emergencyContact: res.card_data.emergency_contact_name 
+              ? `${res.card_data.emergency_contact_name} (${res.card_data.emergency_contact_phone || ""})`
+              : "Pooja Patel (+91 98*** **991)",
+            organDonor: true,
+            qrPayload: res.qr_payload || "",
+          });
+        }
+      } catch (err) {
+        // Fallback gracefully to default seeded identity
+        console.info("Using local ABDM card identity", err);
+      }
+    }
+    loadAbhaCard();
+  }, [user?.id, user?.fullName, user?.abhaId]);
 
   // E-Prescriptions & Medication Tracker State (Day 27 & Day 29)
   const [prescriptions, setPrescriptions] = useState<MedicationRequest[]>([]);
@@ -396,11 +461,20 @@ export default function PatientVaultPage() {
       {/* 4. Active Tab Views */}
       {activeTab === "overview" && (
         <PatientOverviewTab
-          abhaId={user?.abhaId || "91-8472-1092-4821"}
-          abhaAddress="arun.patel@abdm"
-          patientName={user?.fullName || "Arun Patel"}
-          bloodGroup="O Positive (O+)"
-          stateNode="NCT of Delhi"
+          abhaId={abhaCardData.abhaId}
+          abhaAddress={abhaCardData.abhaAddress}
+          patientName={abhaCardData.patientName}
+          gender={abhaCardData.gender}
+          dob={abhaCardData.dob}
+          mobile={abhaCardData.mobile}
+          bloodGroup={abhaCardData.bloodGroup}
+          stateNode={abhaCardData.stateNode}
+          distName={abhaCardData.distName}
+          emergencyContact={abhaCardData.emergencyContact}
+          organDonor={abhaCardData.organDonor}
+          qrPayload={abhaCardData.qrPayload}
+          onOpenExport={() => setIsExportModalOpen(true)}
+          onOpenVerify={() => setIsVerifyModalOpen(true)}
           consentActive={consentActive}
           onToggleConsent={setConsentActive}
           scheduledAppointments={scheduledAppointments}
@@ -551,6 +625,22 @@ export default function PatientVaultPage() {
         onCloseFhirModal={() => setSelectedFhirJson(null)}
         viewingFhirRx={viewingFhirRx}
         onCloseFhirRxModal={() => setViewingFhirRx(null)}
+      />
+
+      {/* ABHA ID Card High-Res Export & Print Modal */}
+      <AbhaCardExportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        cardData={abhaCardData}
+      />
+
+      {/* ABDM Cryptographic QR Code Verification & Inspector Modal */}
+      <AbhaQrVerificationModal
+        isOpen={isVerifyModalOpen}
+        onClose={() => setIsVerifyModalOpen(false)}
+        defaultQrPayload={abhaCardData.qrPayload}
+        patientName={abhaCardData.patientName}
+        abhaId={abhaCardData.abhaId}
       />
 
     </div>
