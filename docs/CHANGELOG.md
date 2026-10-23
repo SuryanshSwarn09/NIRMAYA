@@ -844,6 +844,47 @@
   - Next.js 15 Production Build: **11/11 static pages generated with 0 errors** (`npm run build`, `/patient`: 30.7 kB).
   - **Tag Discipline Honored:** Strictly zero release tags created today (Alpha tag `v0.2.0-alpha.w7` reserved for Day 35 Week 7 close).
 
+#### Day 33 (Wed) - Milestone 07-03: Problem List & Active Conditions UI
+- **Focus:** SNOMED-CT / ICD-10 Dual Ontology Mapping, Patient Self-Care Guidance, Severity Badges, Modular `PatientProblemsTab`, Patient Symptom Progress Tracking & Self-Reporting, and HL7 FHIR R4 Condition Inspector.
+- **Executed Micro-Commits (Strict 7-Commit Schedule):**
+  1. `36bf7f1: feat(api): expand patient conditions client and snomed-ct terminology mappings`
+  2. `c2f1541: feat(frontend): implement patient condition card component with snomed and fhir tokens`
+  3. `6b5590f: feat(frontend): implement condition symptom update and patient self-report modal`
+  4. `437d569: feat(frontend): create modular patient problems tab with search, status filtering, and stats`
+  5. `5d65c57: feat(frontend): integrate patient problems tab and live condition data into patient vault`
+  6. `8536169: test(backend): verify condition api access control, fhir serialization, and filtering`
+  7. `docs(journey): author day 33 engineering log, update summary, and changelog`
+- **Key Deliverables:**
+  - **Clinical Terminology & Semantic Mapping (`frontend/src/lib/conditions.ts`):**
+    - Bidirectional dictionary mapping clinical concepts between SNOMED-CT (`http://snomed.info/sct`) and ICD-10 (`http://hl7.org/fhir/sid/icd-10`).
+    - Plain-language patient summaries, actionable self-care guidelines (DASH diet, diabetic foot checks, peak flow monitoring), and explicit clinical monitoring targets (e.g. clinic BP < 130/80 mmHg, HbA1c < 7.0%).
+    - Dynamic visual badge configuration utilities for clinical severity (`critical`, `warning`, `emerald`, `neutral`) and clinical lifecycle status.
+  - **Patient Condition Card Component (`frontend/src/components/patient/PatientConditionCard.tsx`):**
+    - Cal.com-inspired layout with dual SNOMED-CT & ICD-10 badge chips.
+    - Prominent diagnosis title, category chip, onset date, and verification status badge.
+    - Patient guidance section with lifestyle advice bullets and clinical monitoring targets.
+    - Clinical documentation note display with physician attribution.
+    - Interactive action cluster: "Inspect FHIR Condition" and "Log Symptom Update".
+  - **Patient Symptom Progress & Self-Report Modal (`frontend/src/components/patient/PatientConditionUpdateModal.tsx`):**
+    - Structured intake modal for perceived severity (Mild, Moderate, Severe) and symptom trajectory tracking (Improved, Stable, Worsened).
+    - Biometric and subjective observations textarea with validation.
+    - "Flag for Clinician Review at Next Encounter" option with RBAC protection.
+  - **Modular Patient Problems Tab (`frontend/src/components/patient/PatientProblemsTab.tsx`):**
+    - 4 summary health metric cards: Active Diagnoses, Chronic Conditions, Resolved / Remission, and Standard Ontology.
+    - Interactive search input matching condition names, SNOMED, or ICD codes.
+    - Segmented status filter pills (`all`, `active`, `chronic`, `resolved`) and severity dropdown filter.
+    - Filter-sensitive empty states with one-click filter reset.
+  - **Patient Vault Integration (`frontend/src/app/patient/page.tsx`):**
+    - Replaced generic clinical wrapper with dedicated `PatientProblemsTab`.
+    - Live condition data synchronization via `apiClient.getPatientConditions(patientId)` with rich baseline chronic condition seeds.
+    - Dynamic condition badge counters wired into `PatientMetricsBar` and `PatientNavTabs`.
+    - Integrated FHIR Condition resource inspector modal.
+- **Verification:**
+  - Backend Automated Test Suite: **10/10 tests passing in `tests/test_conditions.py` (100% green)**; full suite: **234 / 234 passed**.
+  - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **11/11 static pages generated with 0 errors** (`npm run build`, `/patient`: 37.1 kB).
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Alpha tag `v0.2.0-alpha.w7` reserved for Day 35 Week 7 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
