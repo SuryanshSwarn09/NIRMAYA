@@ -5,3 +5,6 @@ export * from "./PatientOverviewTab";
 export * from "./PatientPrescriptionsTab";
 export * from "./PatientRecordsTab";
 export * from "./PatientModals";
+export * from "./DigitalAbhaCard";
+export * from "./AbhaCardExportModal";
+export * from "./AbhaQrVerificationModal";

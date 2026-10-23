@@ -878,6 +878,21 @@ class NIRMAYAAPIClient {
     );
   }
 
+  // ==========================================================================
+  // ABDM Digital ABHA ID Card & QR Verification
+  // ==========================================================================
+
+  public async getPatientAbhaCard(patientId: string) {
+    return this.get<AbhaCardApiResponse>(`/api/v1/patients/${patientId}/abha-card`);
+  }
+
+  public async verifyAbhaQr(qrString: string) {
+    return this.post<AbhaQrVerificationApiResponse>(
+      `/api/v1/patients/verify-abha-qr`,
+      { qr_string: qrString }
+    );
+  }
+
 
   public patch<T>(
     endpoint: string,
@@ -1518,4 +1533,43 @@ export interface MedicationDispenseCreatePayload {
   substitution_reason?: string;
   pharmacist_notes?: string;
   patient_instructions?: string;
+}
+
+// ============================================================================
+// ABDM Digital ABHA ID Card Models
+// ============================================================================
+
+export interface AbhaCardDataPayload {
+  patient_id: string;
+  abha_number: string;
+  abha_address: string;
+  name: string;
+  gender: string;
+  date_of_birth?: string | null;
+  year_of_birth?: number | null;
+  blood_group: string;
+  mobile?: string | null;
+  address?: string | null;
+  district?: string | null;
+  state?: string | null;
+  pincode?: string | null;
+  emergency_contact_name?: string | null;
+  emergency_contact_phone?: string | null;
+  emergency_contact_relation?: string | null;
+  kyc_status: string;
+  auth_methods: string[];
+}
+
+export interface AbhaCardApiResponse {
+  card_data: AbhaCardDataPayload;
+  qr_payload: string;
+  signature: string;
+  issued_at: string;
+}
+
+export interface AbhaQrVerificationApiResponse {
+  is_valid: boolean;
+  message: string;
+  claims?: Record<string, any> | null;
+  verified_at: string;
 }
