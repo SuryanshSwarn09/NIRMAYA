@@ -19,7 +19,13 @@ from app.schemas.patient import (
     PatientProfileResponse,
     PatientProfileUpdate,
 )
+from app.schemas.abha_card import (
+    AbhaCardResponse,
+    AbhaQrVerificationRequest,
+    AbhaQrVerificationResponse,
+)
 from app.services import patient as patient_service
+from app.services.abha_card import generate_abha_card_data, verify_abha_qr_payload
 
 router = APIRouter()
 
@@ -122,6 +128,24 @@ async def get_patient_by_abha_identifier(
     )
 
 
+@router.post(
+    "/verify-abha-qr",
+    response_model=APIResponse[AbhaQrVerificationResponse],
+    summary="Cryptographically verify an ABDM ABHA QR code string",
+    description="Validates HMAC-SHA256 signature, decodes claims, and verifies digital provenance.",
+)
+async def verify_abha_qr(
+    verification_in: AbhaQrVerificationRequest,
+    current_user: User = Depends(get_current_user),
+) -> APIResponse[AbhaQrVerificationResponse]:
+    """Verify digital signature on a scanned or uploaded ABDM QR code payload."""
+    result = verify_abha_qr_payload(verification_in.qr_string)
+    return APIResponse(
+        message=result.message,
+        data=result,
+    )
+
+
 @router.get(
     "/{patient_id}",
     response_model=APIResponse[PatientProfileResponse],
@@ -139,6 +163,27 @@ async def get_patient(
     return APIResponse(
         message="Patient profile retrieved successfully",
         data=PatientProfileResponse.model_validate(patient),
+    )
+
+
+@router.get(
+    "/{patient_id}/abha-card",
+    response_model=APIResponse[AbhaCardResponse],
+    summary="Generate digital ABHA ID Card attributes and signed QR payload",
+    description="Constructs official ABDM card claims, HMAC-SHA256 signature, and vector QR payload string.",
+)
+async def get_patient_abha_card(
+    patient_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[AbhaCardResponse]:
+    """Generate demographic card attributes and signed QR code payload for a patient."""
+    patient = await verify_patient_access(patient_id=patient_id, current_user=current_user, db=db)
+    card_response = generate_abha_card_data(patient=patient, user=patient.user)
+
+    return APIResponse(
+        message="Digital ABHA ID Card generated and cryptographically signed successfully",
+        data=card_response,
     )
 
 
