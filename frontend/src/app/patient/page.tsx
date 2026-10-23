@@ -12,6 +12,7 @@ import {
   PatientModals,
   AbhaCardExportModal,
   AbhaQrVerificationModal,
+  PatientProblemsTab,
   PatientTabId 
 } from "@/components/patient";
 import { 
@@ -25,7 +26,8 @@ import {
   DoctorSlot, 
   SlotHoldResponse, 
   Appointment, 
-  MedicationRequest 
+  MedicationRequest,
+  ClinicalCondition 
 } from "@/lib/api";
 
 const CLINICIANS = [
@@ -129,6 +131,70 @@ export default function PatientVaultPage() {
   const [viewingFhirRx, setViewingFhirRx] = useState<Record<string, any> | null>(null);
   const [fetchingFhirId, setFetchingFhirId] = useState<string | null>(null);
 
+  // Longitudinal Problem List & Active Conditions State (Day 33)
+  const [conditions, setConditions] = useState<ClinicalCondition[]>([
+    {
+      id: "cond-101",
+      patient_id: "pat-arun-patel",
+      clinical_status: "active",
+      verification_status: "confirmed",
+      category: "chronic-condition",
+      severity: "moderate",
+      code_coding_system: "http://snomed.info/sct",
+      code_value: "38341003",
+      code_display: "Essential hypertension (disorder)",
+      onset_date_time: "2024-03-15T09:00:00Z",
+      note: "Baseline BP 138-142 / 88-92 mmHg. On Lisinopril 10mg daily and DASH diet.",
+      created_at: "2024-03-15T09:00:00Z",
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "cond-102",
+      patient_id: "pat-arun-patel",
+      clinical_status: "active",
+      verification_status: "confirmed",
+      category: "problem-list-item",
+      severity: "mild",
+      code_coding_system: "http://snomed.info/sct",
+      code_value: "55822004",
+      code_display: "Hyperlipidemia (disorder)",
+      onset_date_time: "2024-06-10T11:30:00Z",
+      note: "Elevated fasting triglycerides and direct LDL. On Atorvastatin 20mg daily.",
+      created_at: "2024-06-10T11:30:00Z",
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "cond-103",
+      patient_id: "pat-arun-patel",
+      clinical_status: "active",
+      verification_status: "confirmed",
+      category: "chronic-condition",
+      severity: "moderate",
+      code_coding_system: "http://snomed.info/sct",
+      code_value: "44054006",
+      code_display: "Type 2 diabetes mellitus (disorder)",
+      onset_date_time: "2023-11-20T14:15:00Z",
+      note: "HbA1c 6.8%. Managed with Metformin 500mg BD and carbohydrate portion control.",
+      created_at: "2023-11-20T14:15:00Z",
+      updated_at: new Date().toISOString(),
+    },
+  ]);
+  const [loadingConditions, setLoadingConditions] = useState(false);
+
+  const loadConditions = async () => {
+    try {
+      setLoadingConditions(true);
+      const res = await apiClient.getPatientConditions(user?.id || "pat-arun-patel");
+      if (res && res.items && res.items.length > 0) {
+        setConditions(res.items);
+      }
+    } catch (err) {
+      console.info("Using local problem list conditions", err);
+    } finally {
+      setLoadingConditions(false);
+    }
+  };
+
   const loadPrescriptions = async () => {
     try {
       setLoadingPrescriptions(true);
@@ -145,6 +211,7 @@ export default function PatientVaultPage() {
 
   useEffect(() => {
     loadPrescriptions();
+    loadConditions();
   }, [user?.id]);
 
   // Selected Clinician for Booking (Day 19)
@@ -425,6 +492,104 @@ export default function PatientVaultPage() {
     }
   };
 
+  const handleConditionUpdated = async (condId: string, updateData: any) => {
+    try {
+      await apiClient.updateCondition(condId, {
+        severity: updateData.severity,
+        note: updateData.patientNote,
+      });
+    } catch (err) {
+      console.info("Could not sync symptom update with backend, updating local state", err);
+    }
+    setConditions((prev) =>
+      prev.map((c) =>
+        c.id === condId
+          ? {
+              ...c,
+              severity: updateData.severity,
+              note: `${c.note ? c.note + " | " : ""}[Patient Log: ${updateData.trend}] ${updateData.patientNote}`,
+              updated_at: new Date().toISOString(),
+            }
+          : c
+      )
+    );
+  };
+
+  const handleViewFhirCondition = async (cond: ClinicalCondition) => {
+    try {
+      const fhirData = await apiClient.getConditionFhir(cond.id);
+      setSelectedFhirJson(fhirData);
+    } catch {
+      // Valid HL7 FHIR R4 Condition representation fallback
+      setSelectedFhirJson({
+        resourceType: "Condition",
+        id: cond.id,
+        meta: {
+          profile: ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Condition"],
+          versionId: "1",
+          lastUpdated: cond.updated_at,
+        },
+        clinicalStatus: {
+          coding: [
+            {
+              system: "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              code: cond.clinical_status,
+              display: cond.clinical_status.toUpperCase(),
+            },
+          ],
+        },
+        verificationStatus: {
+          coding: [
+            {
+              system: "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              code: cond.verification_status,
+              display: cond.verification_status.toUpperCase(),
+            },
+          ],
+        },
+        category: [
+          {
+            coding: [
+              {
+                system: "http://terminology.hl7.org/CodeSystem/condition-category",
+                code: cond.category,
+                display: cond.category,
+              },
+            ],
+          },
+        ],
+        severity: cond.severity
+          ? {
+              coding: [
+                {
+                  system: "http://snomed.info/sct",
+                  code: cond.severity === "severe" ? "24484000" : cond.severity === "moderate" ? "6736007" : "255604002",
+                  display: cond.severity.toUpperCase(),
+                },
+              ],
+            }
+          : undefined,
+        code: {
+          coding: [
+            {
+              system: cond.code_coding_system,
+              code: cond.code_value,
+              display: cond.code_display,
+            },
+          ],
+          text: cond.code_display,
+        },
+        subject: {
+          reference: `Patient/${cond.patient_id}`,
+          display: user?.fullName || "Arun Patel",
+        },
+        onsetDateTime: cond.onset_date_time,
+        recordedDate: cond.created_at,
+        note: cond.note ? [{ text: cond.note }] : undefined,
+      });
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-white min-h-screen">
       
@@ -442,7 +607,7 @@ export default function PatientVaultPage() {
       <PatientMetricsBar
         activePrescriptionsCount={prescriptions.length}
         upcomingAppointmentsCount={scheduledAppointments.length}
-        conditionsCount={2}
+        conditionsCount={conditions.filter((c) => c.clinical_status === "active").length}
         latestBpText="134/86 mmHg"
         latestSpo2Text="98%"
         latestVitalsStatus="abnormal"
@@ -455,7 +620,7 @@ export default function PatientVaultPage() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         prescriptionsBadgeCount={prescriptions.length}
-        conditionsBadgeCount={2}
+        conditionsBadgeCount={conditions.filter((c) => c.clinical_status === "active").length}
       />
 
       {/* 4. Active Tab Views */}
@@ -497,13 +662,13 @@ export default function PatientVaultPage() {
       )}
 
       {activeTab === "problems" && (
-        <div className="animate-fade-in max-w-5xl mx-auto space-y-6">
-          <ProblemListPanel
-            patientId={user?.id || "pat-arun-patel"}
-            patientName={user?.fullName || "Arun Patel"}
-            isDoctorView={false}
-          />
-        </div>
+        <PatientProblemsTab
+          conditions={conditions}
+          loading={loadingConditions}
+          onRefresh={loadConditions}
+          onViewFhir={handleViewFhirCondition}
+          onConditionUpdated={handleConditionUpdated}
+        />
       )}
 
       {activeTab === "records" && (
