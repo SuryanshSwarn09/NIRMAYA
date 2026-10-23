@@ -523,3 +523,59 @@ async def test_condition_timeline_validation(condition_test_env):
         headers=headers,
     )
     assert res.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_patient_updates_condition_symptom_notes(condition_test_env):
+    """Patient logs symptom progress note and severity update on their own condition with RBAC protection."""
+    client, session_factory = condition_test_env
+    async with session_factory() as session:
+        actors = await seed_clinical_actors(session)
+
+    pat1_id = actors["pat1_profile"].id
+    pat1_user = actors["user_pat1"]
+    pat2_user = actors["user_pat2"]
+    doc_user = actors["user_doc"]
+
+    # 1. Doctor creates baseline condition for patient 1
+    post_res = await client.post(
+        f"/api/v1/patients/{pat1_id}/conditions",
+        json={
+            "clinical_status": "active",
+            "verification_status": "confirmed",
+            "category": "chronic-condition",
+            "severity": "moderate",
+            "code_coding_system": "http://snomed.info/sct",
+            "code_value": "38341003",
+            "code_display": "Essential hypertension",
+            "note": "Initial clinical diagnosis.",
+        },
+        headers=auth_header_for(doc_user),
+    )
+    assert post_res.status_code == 201
+    cond_id = post_res.json()["data"]["id"]
+
+    # 2. Patient 1 logs symptom note and updates perceived severity
+    patch_res = await client.patch(
+        f"/api/v1/conditions/{cond_id}",
+        json={
+            "severity": "mild",
+            "note": "[Patient Log: stable] Morning BP averaged 128/82 mmHg. Well tolerated.",
+        },
+        headers=auth_header_for(pat1_user),
+    )
+    assert patch_res.status_code == 200
+    updated_data = patch_res.json()["data"]
+    assert updated_data["severity"] == "mild"
+    assert "Morning BP averaged 128/82" in updated_data["note"]
+
+    # 3. Patient 2 (unauthorized outsider) attempts to update patient 1's condition -> 403 Forbidden
+    unauthorized_res = await client.patch(
+        f"/api/v1/conditions/{cond_id}",
+        json={
+            "severity": "severe",
+            "note": "Malicious tampering attempt",
+        },
+        headers=auth_header_for(pat2_user),
+    )
+    assert unauthorized_res.status_code == 403
