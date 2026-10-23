@@ -54,6 +54,7 @@
     * [Day 29: Pharmacy Dispense & Fulfillment Lifecycle](journey/month-2/day-29.md)
     * [Day 30: Multi-Role E2E Closed-Loop Verification & Week 6 Close](journey/month-2/day-30.md)
   * [Week 7: Patient Portal Frontend, ABHA Card & Telemedicine](journey/month-2/week-7.md)
+    * [Day 31: Patient Portal App Shell & Modular Layout](journey/month-2/day-31.md)
   * [Week 8: Doctor EMR Workspace, SOAP UX & Release v0.2.0](journey/month-2/week-8.md)
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
   * [Week 9: ABDM Milestone 1 - ABHA Creation & Verification](journey/month-3/week-9.md)

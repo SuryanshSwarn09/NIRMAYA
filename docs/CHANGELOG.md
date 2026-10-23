@@ -776,6 +776,33 @@
     - Major milestone tag `v0.2.0` strictly deferred until Day 40 Month 2 close.
 
 ---
+
+### Week 7: Patient Portal Frontend, ABHA Card & Telemedicine
+
+#### Day 31 (Mon) - Milestone 07-01: Patient Portal App Shell & Modular Layout Refactor
+- **Focus:** Monolith Decomposition (1,732 lines down to 435 lines), Cal.com Clinical Layout System, Modular Component Hierarchy (`PatientHeader`, `PatientMetricsBar`, `PatientNavTabs`, `PatientOverviewTab`, `PatientPrescriptionsTab`, `PatientRecordsTab`, `PatientModals`), Next.js 15 Static Page Generation, and Full Platform Verification.
+- **Executed Micro-Commits:**
+  1. `feat(frontend): scaffold cal.com patient portal component hierarchy and metrics bar`
+  2. `refactor(frontend): decompose monolithic patient vault into modular cal.com tabs and modals`
+  3. `docs(journey): author day 31 engineering log, register summary, and update changelog`
+- **Key Deliverables:**
+  - Decomposed monolithic `frontend/src/app/patient/page.tsx` (1,732 lines) into 7 single-responsibility components under `frontend/src/components/patient/`:
+    - `PatientHeader.tsx`: Patient initials avatar, verified ABHA badge pill (`Self-Sovereign`), active encryption indicator, and responsive action cluster (`Export FHIR Bundle`, `Book Consultation` / `Back to Dashboard`).
+    - `PatientMetricsBar.tsx`: 4 Cal.com product metric cards tracking Active e-Prescriptions, Scheduled Encounters, Diagnosed Problem List, and Latest Physiological Vitals (Blood Pressure & SpO2) with interactive navigation triggers.
+    - `PatientNavTabs.tsx`: Segmented `NavPillGroup` with smooth active pill transitions between `Overview`, `Prescriptions & Rx`, `Problem List & Conditions`, `Health Records & Labs`, and `Schedule Consultation`.
+    - `PatientOverviewTab.tsx`: 12-column responsive dashboard featuring Ayushman Bharat National Health Card preview, live ABDM Consent Manager delegation with revocation controls, upcoming clinical consultations with CareContext linkage, recent e-prescriptions snapshot, and recent biometric vitals snapshot.
+    - `PatientPrescriptionsTab.tsx`: Dedicated e-prescription tracking view with structured dosage directions, dispense metrics, repeat refill quotas, generic substitution authorization, and clinician SHA-256 digital signature attestations.
+    - `PatientRecordsTab.tsx`: Observational telemetry table with LOINC codes, structured SOAP Consultation Notes (Subjective, Objective, Assessment, Plan), and diagnostic lab reports with quantitative observation grids.
+    - `PatientModals.tsx`: Calibrated biometric measurements intake modal (Heart Rate, Blood Pressure, SpO2) and dual FHIR JSON inspectors (Observation, Composition, DiagnosticReport, ServiceRequest, and MedicationRequest).
+    - `index.ts`: Barrel export interface.
+  - Streamlined `frontend/src/app/patient/page.tsx` from 1,732 lines to ~435 lines of clean state orchestration.
+- **Verification:**
+  - TypeScript Compilation: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **11/11 static pages generated with 0 errors** (`npm --prefix frontend run build`, `/patient`: 13.3 kB).
+  - Backend Automated Test Suite: **228/228 tests passing (100%)** across 38 test files in 76.89s (`pytest -q`).
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Alpha tag `v0.2.0-alpha.w7` reserved for Day 35 Week 7 close).
+
+---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
 
