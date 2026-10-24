@@ -11,3 +11,6 @@ export * from "./AbhaQrVerificationModal";
 export * from "./PatientConditionCard";
 export * from "./PatientConditionUpdateModal";
 export * from "./PatientProblemsTab";
+export * from "./BloodPressureChart";
+export * from "./VitalsMetricChart";
+export * from "./PatientVitalsTelemetry";
