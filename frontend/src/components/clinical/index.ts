@@ -1,6 +1,13 @@
 export { ProblemListPanel } from "./ProblemListPanel";
 export { VitalsTelemetryPanel } from "./VitalsTelemetryPanel";
-export { SoapNoteEditor } from "./SoapNoteEditor";
+export { 
+  SoapNoteEditor, 
+  type SoapNoteEditorProps, 
+  type SoapTemplate, 
+  NOTE_TEMPLATES, 
+  CHIEF_COMPLAINT_PRESETS, 
+  ICD10_DIAGNOSIS_PRESETS 
+} from "./SoapNoteEditor";
 export { DiagnosticOrderTracker } from "./DiagnosticOrderTracker";
 export { MedicationCatalogBrowser } from "./MedicationCatalogBrowser";
 export { PrescriptionAuthoringPad } from "./PrescriptionAuthoringPad";
