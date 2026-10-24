@@ -6,3 +6,4 @@ export { MedicationCatalogBrowser } from "./MedicationCatalogBrowser";
 export { PrescriptionAuthoringPad } from "./PrescriptionAuthoringPad";
 export { CDSAlertBanner } from "./CDSAlertBanner";
 export { PharmacyDispenseModal } from "./PharmacyDispenseModal";
+export { ClinicianConsultationQueue, type QueueAppointment } from "./ClinicianConsultationQueue";
