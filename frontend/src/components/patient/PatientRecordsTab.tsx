@@ -18,9 +18,12 @@ import {
   FileText, 
   Clock 
 } from "lucide-react";
+import { VitalsTimeSeriesPoint } from "@/lib/vitals";
+import { PatientVitalsTelemetry } from "./PatientVitalsTelemetry";
 
 export interface PatientRecordsTabProps {
   vitalsList: any[];
+  timeSeriesData?: VitalsTimeSeriesPoint[];
   patientLabReports: any[];
   patientLabOrders: any[];
   onOpenLogVitals: () => void;
@@ -29,6 +32,7 @@ export interface PatientRecordsTabProps {
 
 export function PatientRecordsTab({
   vitalsList,
+  timeSeriesData = [],
   patientLabReports,
   patientLabOrders,
   onOpenLogVitals,
@@ -39,140 +43,13 @@ export function PatientRecordsTab({
   return (
     <div className="animate-fade-in max-w-5xl mx-auto space-y-6">
 
-      {/* 1. Vital Signs & Clinical Telemetry Panel */}
-      <Card variant="mockup" className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-[#e5e7eb] gap-2">
-          <div>
-            <div className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-[#111111]" />
-              <CardTitle className="text-lg">Vital Signs & Biometric Telemetry</CardTitle>
-              <Badge variant="verified">LOINC & FHIR R4</Badge>
-            </div>
-            <CardDescription className="mt-1">
-              Longitudinal physiological telemetry and patient self-measurements.
-            </CardDescription>
-          </div>
-          <Button 
-            variant="secondary" 
-            size="sm"
-            onClick={onOpenLogVitals}
-            className="cursor-pointer text-xs self-start sm:self-auto"
-          >
-            <Plus className="h-3.5 w-3.5 mr-1" />
-            Log Vital Sign
-          </Button>
-        </div>
-
-        {/* Vitals Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {vitalsList.map((vital) => {
-            const isHigh = vital.interpretation === "high" || vital.interpretation === "critically-high";
-            const isLow = vital.interpretation === "low" || vital.interpretation === "critically-low";
-
-            return (
-              <div
-                key={vital.id}
-                className="p-3.5 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] hover:bg-white hover:border-[#d1d5db] transition-all space-y-2 text-xs shadow-xs"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-xs text-[#111111]">
-                    {vital.code_display}
-                  </span>
-                  <Badge 
-                    variant={isHigh ? "critical" : isLow ? "warning" : "emerald"}
-                    size="sm"
-                  >
-                    {vital.interpretation?.toUpperCase() || "NORMAL"}
-                  </Badge>
-                </div>
-
-                <div className="flex items-baseline justify-between">
-                  <div className="text-xl font-bold tracking-tight text-[#111111]">
-                    {vital.components ? (
-                      `${vital.components[0].value_quantity} / ${vital.components[1].value_quantity}`
-                    ) : (
-                      vital.value_quantity
-                    )}
-                    <span className="text-xs font-normal text-[#6b7280] ml-1">
-                      {vital.value_unit}
-                    </span>
-                  </div>
-                  <span className="font-mono text-[10px] text-[#6b7280] bg-white px-1.5 py-0.5 rounded border border-[#e5e7eb]">
-                    LOINC {vital.code_value}
-                  </span>
-                </div>
-
-                <div className="pt-2 border-t border-[#e5e7eb] flex items-center justify-between text-[11px] text-[#6b7280]">
-                  <span>{vital.effective_date_time}</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onInspectFhir({
-                        resourceType: "Observation",
-                        id: vital.id,
-                        status: "final",
-                        category: [
-                          {
-                            coding: [
-                              {
-                                system: "http://terminology.hl7.org/CodeSystem/observation-category",
-                                code: "vital-signs",
-                                display: "Vital Signs",
-                              },
-                            ],
-                            text: "vital-signs",
-                          },
-                        ],
-                        code: {
-                          coding: [
-                            {
-                              system: "http://loinc.org",
-                              code: vital.code_value,
-                              display: vital.code_display,
-                            },
-                          ],
-                          text: vital.code_display,
-                        },
-                        subject: {
-                          reference: "Patient/pat-arun-patel",
-                          display: "Arun Patel",
-                          type: "Patient",
-                        },
-                        effectiveDateTime: new Date().toISOString(),
-                        valueQuantity: vital.value_quantity !== null ? {
-                          value: vital.value_quantity,
-                          unit: vital.value_unit,
-                          system: "http://unitsofmeasure.org",
-                        } : undefined,
-                        component: vital.components?.map((c: any) => ({
-                          code: {
-                            coding: [
-                              {
-                                system: "http://loinc.org",
-                                code: c.code_value,
-                                display: c.code_display,
-                              },
-                            ],
-                          },
-                          valueQuantity: {
-                            value: c.value_quantity,
-                            unit: c.value_unit,
-                            system: "http://unitsofmeasure.org",
-                          },
-                        })),
-                      });
-                    }}
-                    className="font-semibold text-[#111111] hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <Download className="h-3 w-3" />
-                    FHIR R4
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </Card>
+      {/* 1. Vital Signs & Clinical Telemetry Dashboard */}
+      <PatientVitalsTelemetry
+        timeSeriesData={timeSeriesData}
+        recordsList={vitalsList}
+        onOpenLogModal={onOpenLogVitals}
+        onInspectFhir={onInspectFhir}
+      />
 
       {/* 2. Clinical Encounter Documentation & SOAP Notes */}
       <Card variant="mockup" className="space-y-4">

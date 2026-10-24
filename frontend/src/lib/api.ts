@@ -893,7 +893,6 @@ class NIRMAYAAPIClient {
     );
   }
 
-
   public patch<T>(
     endpoint: string,
     body?: unknown,

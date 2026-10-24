@@ -30,6 +30,16 @@ import {
   MedicationRequest,
   ClinicalCondition 
 } from "@/lib/api";
+import {
+  VitalsTimeSeriesPoint,
+  evaluateBloodPressure,
+  evaluateHeartRate,
+  evaluateSpo2,
+  evaluateBmi,
+  evaluateTemperature,
+  calculateBmi,
+  LOINC_CODES,
+} from "@/lib/vitals";
 
 const CLINICIANS = [
   {
@@ -240,7 +250,102 @@ export default function PatientVaultPage() {
     },
   ]);
 
-  // Vitals & Observational Telemetry State (Day 22)
+  // Longitudinal Vitals Time Series (7-Day Telemetry Trajectory)
+  const [vitalsTimeSeries, setVitalsTimeSeries] = useState<VitalsTimeSeriesPoint[]>([
+    {
+      timestamp: "2026-10-18T09:00:00Z",
+      dateLabel: "18 Oct",
+      fullDateTime: "18 Oct 2026, 09:00 AM",
+      systolic: 138,
+      diastolic: 88,
+      heartRate: 78,
+      spo2: 97,
+      weight: 73.2,
+      bmi: 24.5,
+      temperature: 98.4,
+      interpretation: "high",
+    },
+    {
+      timestamp: "2026-10-19T09:15:00Z",
+      dateLabel: "19 Oct",
+      fullDateTime: "19 Oct 2026, 09:15 AM",
+      systolic: 136,
+      diastolic: 86,
+      heartRate: 75,
+      spo2: 98,
+      weight: 73.0,
+      bmi: 24.4,
+      temperature: 98.6,
+      interpretation: "high",
+    },
+    {
+      timestamp: "2026-10-20T08:45:00Z",
+      dateLabel: "20 Oct",
+      fullDateTime: "20 Oct 2026, 08:45 AM",
+      systolic: 132,
+      diastolic: 84,
+      heartRate: 74,
+      spo2: 98,
+      weight: 72.8,
+      bmi: 24.3,
+      temperature: 98.5,
+      interpretation: "high",
+    },
+    {
+      timestamp: "2026-10-21T09:30:00Z",
+      dateLabel: "21 Oct",
+      fullDateTime: "21 Oct 2026, 09:30 AM",
+      systolic: 130,
+      diastolic: 82,
+      heartRate: 72,
+      spo2: 99,
+      weight: 72.6,
+      bmi: 24.3,
+      temperature: 98.6,
+      interpretation: "high",
+    },
+    {
+      timestamp: "2026-10-22T08:30:00Z",
+      dateLabel: "22 Oct",
+      fullDateTime: "22 Oct 2026, 08:30 AM",
+      systolic: 128,
+      diastolic: 82,
+      heartRate: 71,
+      spo2: 98,
+      weight: 72.5,
+      bmi: 24.2,
+      temperature: 98.4,
+      interpretation: "normal",
+    },
+    {
+      timestamp: "2026-10-23T09:00:00Z",
+      dateLabel: "23 Oct",
+      fullDateTime: "23 Oct 2026, 09:00 AM",
+      systolic: 126,
+      diastolic: 80,
+      heartRate: 70,
+      spo2: 99,
+      weight: 72.4,
+      bmi: 24.2,
+      temperature: 98.6,
+      interpretation: "normal",
+    },
+    {
+      timestamp: "2026-10-24T10:15:00Z",
+      dateLabel: "24 Oct",
+      fullDateTime: "24 Oct 2026, 10:15 AM",
+      systolic: 134,
+      diastolic: 86,
+      heartRate: 72,
+      spo2: 98,
+      weight: 72.3,
+      bmi: 24.1,
+      temperature: 98.6,
+      interpretation: "high",
+    },
+  ]);
+
+  // Current Observational Telemetry Snapshot (Day 22 & 34)
   const [vitalsList, setVitalsList] = useState<any[]>([
     {
       id: "obs-bp-01",
@@ -280,11 +385,11 @@ export default function PatientVaultPage() {
       id: "obs-bmi-01",
       code_value: "39156-5",
       code_display: "Body Mass Index (BMI)",
-      value_quantity: 24.2,
+      value_quantity: 24.1,
       value_unit: "kg/m²",
       interpretation: "normal",
       reference_range_text: "18.5 - 24.9 kg/m²",
-      effective_date_time: "Sep 28, 2026",
+      effective_date_time: "Today, 10:15 AM",
     },
   ]);
 
@@ -430,56 +535,206 @@ export default function PatientVaultPage() {
     setSelectedSlot(null);
   };
 
-  // Vitals Logging Submission
-  const handleLogVitalSubmit = (e: React.FormEvent) => {
+  // Enhanced Vitals Logging Submission with LOINC Clinical Evaluation
+  const handleLogVitalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (logVitalType === "hr") {
-      const val = parseFloat(logValue) || 72;
-      const interp = val > 100 ? "high" : val < 60 ? "low" : "normal";
-      const newObs = {
-        id: `obs-hr-${Date.now()}`,
-        code_value: "8867-4",
-        code_display: "Heart Rate",
-        value_quantity: val,
-        value_unit: "/min",
-        interpretation: interp,
-        reference_range_text: "60 - 100 /min",
-        effective_date_time: "Just now (Self-reported)",
-      };
-      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== "8867-4")]);
-    } else if (logVitalType === "bp") {
+    const nowIso = new Date().toISOString();
+    const dateLabel = "Today";
+    const fullDateTime = "Today, Just now";
+    const patientId = user?.id || "pat-arun-patel";
+
+    if (logVitalType === "bp") {
       const sys = parseFloat(logSystolic) || 120;
       const dia = parseFloat(logDiastolic) || 80;
-      const interp = sys > 130 || dia > 85 ? "high" : sys < 90 || dia < 60 ? "low" : "normal";
+      const evalResult = evaluateBloodPressure(sys, dia);
       const newObs = {
         id: `obs-bp-${Date.now()}`,
-        code_value: "85354-9",
+        code_value: LOINC_CODES.BLOOD_PRESSURE_PANEL,
         code_display: "Blood Pressure Panel",
         value_quantity: null,
         value_unit: "mmHg",
-        interpretation: interp,
+        interpretation: evalResult.interpretation,
         components: [
-          { code_value: "8480-6", code_display: "Systolic", value_quantity: sys, value_unit: "mmHg", interpretation: interp },
-          { code_value: "8462-4", code_display: "Diastolic", value_quantity: dia, value_unit: "mmHg", interpretation: interp },
+          { code_value: LOINC_CODES.SYSTOLIC_BP, code_display: "Systolic", value_quantity: sys, value_unit: "mmHg", interpretation: evalResult.interpretation },
+          { code_value: LOINC_CODES.DIASTOLIC_BP, code_display: "Diastolic", value_quantity: dia, value_unit: "mmHg", interpretation: evalResult.interpretation },
         ],
         effective_date_time: "Just now (Self-reported)",
-        method: "Home monitor",
+        method: "Home digital cuff",
       };
-      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== "85354-9")]);
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== LOINC_CODES.BLOOD_PRESSURE_PANEL)]);
+      setVitalsTimeSeries((prev) => [
+        ...prev,
+        {
+          timestamp: nowIso,
+          dateLabel,
+          fullDateTime,
+          systolic: sys,
+          diastolic: dia,
+          interpretation: evalResult.interpretation,
+        },
+      ]);
+      try {
+        await apiClient.recordObservation(patientId, {
+          category: "vital-signs",
+          code_value: LOINC_CODES.BLOOD_PRESSURE_PANEL,
+          code_display: "Blood Pressure Panel",
+          value_unit: "mmHg",
+          interpretation: evalResult.interpretation,
+          components: [
+            { code_system: "http://loinc.org", code_value: LOINC_CODES.SYSTOLIC_BP, code_display: "Systolic blood pressure", value_quantity: sys, value_unit: "mmHg" },
+            { code_system: "http://loinc.org", code_value: LOINC_CODES.DIASTOLIC_BP, code_display: "Diastolic blood pressure", value_quantity: dia, value_unit: "mmHg" },
+          ],
+        });
+      } catch (err) {
+        console.info("Recorded locally in memory", err);
+      }
+    } else if (logVitalType === "hr") {
+      const val = parseFloat(logValue) || 72;
+      const evalResult = evaluateHeartRate(val);
+      const newObs = {
+        id: `obs-hr-${Date.now()}`,
+        code_value: LOINC_CODES.HEART_RATE,
+        code_display: "Heart Rate",
+        value_quantity: val,
+        value_unit: "/min",
+        interpretation: evalResult.interpretation,
+        reference_range_text: "60 - 100 /min",
+        effective_date_time: "Just now (Self-reported)",
+      };
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== LOINC_CODES.HEART_RATE)]);
+      setVitalsTimeSeries((prev) => [
+        ...prev,
+        {
+          timestamp: nowIso,
+          dateLabel,
+          fullDateTime,
+          heartRate: val,
+          interpretation: evalResult.interpretation,
+        },
+      ]);
+      try {
+        await apiClient.recordObservation(patientId, {
+          category: "vital-signs",
+          code_value: LOINC_CODES.HEART_RATE,
+          code_display: "Heart rate",
+          value_quantity: val,
+          value_unit: "/min",
+          interpretation: evalResult.interpretation,
+        });
+      } catch (err) {
+        console.info("Recorded locally in memory", err);
+      }
     } else if (logVitalType === "spo2") {
       const val = parseFloat(logValue) || 98;
-      const interp = val < 95 ? "low" : "normal";
+      const evalResult = evaluateSpo2(val);
       const newObs = {
         id: `obs-spo2-${Date.now()}`,
-        code_value: "2708-6",
+        code_value: LOINC_CODES.OXYGEN_SATURATION,
         code_display: "Oxygen Saturation (SpO2)",
         value_quantity: val,
         value_unit: "%",
-        interpretation: interp,
+        interpretation: evalResult.interpretation,
         reference_range_text: "95 - 100 %",
         effective_date_time: "Just now (Self-reported)",
       };
-      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== "2708-6")]);
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== LOINC_CODES.OXYGEN_SATURATION)]);
+      setVitalsTimeSeries((prev) => [
+        ...prev,
+        {
+          timestamp: nowIso,
+          dateLabel,
+          fullDateTime,
+          spo2: val,
+          interpretation: evalResult.interpretation,
+        },
+      ]);
+      try {
+        await apiClient.recordObservation(patientId, {
+          category: "vital-signs",
+          code_value: LOINC_CODES.OXYGEN_SATURATION,
+          code_display: "Oxygen saturation in Arterial blood",
+          value_quantity: val,
+          value_unit: "%",
+          interpretation: evalResult.interpretation,
+        });
+      } catch (err) {
+        console.info("Recorded locally in memory", err);
+      }
+    } else if (logVitalType === "weight") {
+      const wt = parseFloat(logWeight || logValue) || 72;
+      const ht = parseFloat(logHeight || "175") || 175;
+      const bmi = calculateBmi(wt, ht);
+      const evalResult = evaluateBmi(bmi);
+      const newObs = {
+        id: `obs-bmi-${Date.now()}`,
+        code_value: LOINC_CODES.BODY_MASS_INDEX,
+        code_display: "Body Mass Index (BMI)",
+        value_quantity: bmi,
+        value_unit: "kg/m²",
+        interpretation: evalResult.interpretation,
+        reference_range_text: "18.5 - 24.9 kg/m²",
+        effective_date_time: "Just now (Self-reported)",
+      };
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== LOINC_CODES.BODY_MASS_INDEX)]);
+      setVitalsTimeSeries((prev) => [
+        ...prev,
+        {
+          timestamp: nowIso,
+          dateLabel,
+          fullDateTime,
+          weight: wt,
+          bmi,
+          interpretation: evalResult.interpretation,
+        },
+      ]);
+      try {
+        await apiClient.recordObservation(patientId, {
+          category: "vital-signs",
+          code_value: LOINC_CODES.BODY_MASS_INDEX,
+          code_display: "Body mass index (BMI)",
+          value_quantity: bmi,
+          value_unit: "kg/m2",
+          interpretation: evalResult.interpretation,
+        });
+      } catch (err) {
+        console.info("Recorded locally in memory", err);
+      }
+    } else if (logVitalType === "temp") {
+      const temp = parseFloat(logTemp || logValue) || 98.6;
+      const evalResult = evaluateTemperature(temp);
+      const newObs = {
+        id: `obs-temp-${Date.now()}`,
+        code_value: LOINC_CODES.BODY_TEMPERATURE,
+        code_display: "Body Temperature",
+        value_quantity: temp,
+        value_unit: "°F",
+        interpretation: evalResult.interpretation,
+        reference_range_text: "97.8 - 99.0 °F",
+        effective_date_time: "Just now (Self-reported)",
+      };
+      setVitalsList((prev) => [newObs, ...prev.filter((v) => v.code_value !== LOINC_CODES.BODY_TEMPERATURE)]);
+      setVitalsTimeSeries((prev) => [
+        ...prev,
+        {
+          timestamp: nowIso,
+          dateLabel,
+          fullDateTime,
+          temperature: temp,
+          interpretation: evalResult.interpretation,
+        },
+      ]);
+      try {
+        await apiClient.recordObservation(patientId, {
+          category: "vital-signs",
+          code_value: LOINC_CODES.BODY_TEMPERATURE,
+          code_display: "Body temperature",
+          value_quantity: temp,
+          value_unit: "[degF]",
+          interpretation: evalResult.interpretation,
+        });
+      } catch (err) {
+        console.info("Recorded locally in memory", err);
+      }
     }
     setIsLogVitalsOpen(false);
   };
@@ -608,16 +863,32 @@ export default function PatientVaultPage() {
       />
 
       {/* 2. Cal.com Metrics Overview Bar */}
-      <PatientMetricsBar
-        activePrescriptionsCount={prescriptions.length}
-        upcomingAppointmentsCount={scheduledAppointments.length}
-        conditionsCount={conditions.filter((c) => c.clinical_status === "active").length}
-        latestBpText="134/86 mmHg"
-        latestSpo2Text="98%"
-        latestVitalsStatus="abnormal"
-        onSelectTab={setActiveTab}
-        onOpenLogVitals={() => setIsLogVitalsOpen(true)}
-      />
+      {(() => {
+        const latestBpObs = vitalsList.find((v) => v.code_value === "85354-9" || v.code_value === LOINC_CODES.BLOOD_PRESSURE_PANEL);
+        const dynamicBpText = latestBpObs?.components && latestBpObs.components.length >= 2
+          ? `${latestBpObs.components[0].value_quantity}/${latestBpObs.components[1].value_quantity} mmHg`
+          : "134/86 mmHg";
+        const latestSpo2Obs = vitalsList.find((v) => v.code_value === "2708-6" || v.code_value === LOINC_CODES.OXYGEN_SATURATION);
+        const dynamicSpo2Text = latestSpo2Obs?.value_quantity ? `${latestSpo2Obs.value_quantity}%` : "98%";
+        const dynamicStatus: "normal" | "abnormal" =
+          latestBpObs?.interpretation === "high" || latestBpObs?.interpretation === "critically-high" ||
+          latestSpo2Obs?.interpretation === "low" || latestSpo2Obs?.interpretation === "critically-low"
+            ? "abnormal"
+            : "normal";
+
+        return (
+          <PatientMetricsBar
+            activePrescriptionsCount={prescriptions.length}
+            upcomingAppointmentsCount={scheduledAppointments.length}
+            conditionsCount={conditions.filter((c) => c.clinical_status === "active").length}
+            latestBpText={dynamicBpText}
+            latestSpo2Text={dynamicSpo2Text}
+            latestVitalsStatus={dynamicStatus}
+            onSelectTab={setActiveTab}
+            onOpenLogVitals={() => setIsLogVitalsOpen(true)}
+          />
+        );
+      })()}
 
       {/* 3. Cal.com Segmented Nav-Pill-Group */}
       <PatientNavTabs
@@ -678,6 +949,7 @@ export default function PatientVaultPage() {
       {activeTab === "records" && (
         <PatientRecordsTab
           vitalsList={vitalsList}
+          timeSeriesData={vitalsTimeSeries}
           patientLabReports={patientLabReports}
           patientLabOrders={patientLabOrders}
           onOpenLogVitals={() => setIsLogVitalsOpen(true)}

@@ -326,23 +326,47 @@ export function PatientOverviewTab({
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-            {vitalsList.slice(0, 4).map((obs) => (
-              <div
-                key={obs.id}
-                className="p-3 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] space-y-1"
-              >
-                <span className="text-[11px] text-[#6b7280] block truncate">
-                  {obs.code_display}
-                </span>
-                <div className="font-bold text-[#111111] text-sm">
-                  {obs.components ? "134/86" : obs.value_quantity}{" "}
-                  <span className="text-[11px] font-normal text-[#6b7280]">{obs.value_unit}</span>
+            {vitalsList.slice(0, 4).map((obs) => {
+              const displayVal = obs.components && obs.components.length >= 2
+                ? `${obs.components[0].value_quantity}/${obs.components[1].value_quantity}`
+                : obs.value_quantity !== null && obs.value_quantity !== undefined
+                ? obs.value_quantity
+                : "--";
+              const isHigh = obs.interpretation === "high" || obs.interpretation === "critically-high";
+              const isLow = obs.interpretation === "low" || obs.interpretation === "critically-low";
+
+              return (
+                <div
+                  key={obs.id}
+                  className="p-3 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] hover:bg-white hover:border-[#d1d5db] transition-all space-y-1.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] text-[#6b7280] font-medium truncate max-w-[90px]">
+                      {obs.code_display}
+                    </span>
+                    <span
+                      className={`text-[9px] font-semibold px-1.5 py-0.5 rounded ${
+                        isHigh
+                          ? "bg-[#fef2f2] text-[#991b1b]"
+                          : isLow
+                          ? "bg-[#fffbeb] text-[#92400e]"
+                          : "bg-[#ecfdf5] text-[#065f46]"
+                      }`}
+                    >
+                      {obs.interpretation?.toUpperCase() || "NORMAL"}
+                    </span>
+                  </div>
+                  <div className="font-bold text-[#111111] text-base tracking-tight">
+                    {displayVal}{" "}
+                    <span className="text-[11px] font-normal text-[#6b7280]">{obs.value_unit}</span>
+                  </div>
+                  <div className="text-[10px] text-[#9ca3af] flex items-center justify-between pt-1 border-t border-[#f3f4f6]">
+                    <span>{obs.effective_date_time}</span>
+                    <span className="font-mono text-[9px]">LOINC {obs.code_value}</span>
+                  </div>
                 </div>
-                <div className="text-[10px] text-[#9ca3af]">
-                  {obs.effective_date_time}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
 
