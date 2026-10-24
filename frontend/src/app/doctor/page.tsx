@@ -40,6 +40,7 @@ import {
   INITIAL_MOCK_QUEUE
 } from "@/components/clinical";
 import { TelemedicineReadinessModal } from "@/components/patient";
+import { SoapNote } from "@/lib/api";
 
 const PATIENT_PROFILES: Record<string, PatientDemographics> = {
   "Arun Patel": {
@@ -198,6 +199,8 @@ export default function DoctorEMRPage() {
   const [selectedAppointment, setSelectedAppointment] = useState<QueueAppointment>(INITIAL_MOCK_QUEUE[0]);
   const [selectedPatientName, setSelectedPatientName] = useState<string>("Arun Patel");
   const [isTelemedicineModalOpen, setIsTelemedicineModalOpen] = useState(false);
+  const [signedNotes, setSignedNotes] = useState<Record<string, SoapNote>>({});
+  const [noteAttestationSuccess, setNoteAttestationSuccess] = useState<string | null>(null);
 
   // Active patient profile derived from selected appointment or selected name
   const activePatient: PatientDemographics = 
@@ -222,6 +225,17 @@ export default function DoctorEMRPage() {
       setSelectedPatientName(appt.patientName);
     }
     setIsTelemedicineModalOpen(true);
+  };
+
+  const handleNoteSigned = (note: SoapNote) => {
+    setSignedNotes((prev) => ({
+      ...prev,
+      [activePatient.id]: note,
+    }));
+    setNoteAttestationSuccess(
+      `Encounter SOAP documentation for ${activePatient.name} has been cryptographically signed and sealed under IMC standards.`
+    );
+    setTimeout(() => setNoteAttestationSuccess(null), 6000);
   };
 
   return (
@@ -283,12 +297,36 @@ export default function DoctorEMRPage() {
           />
         </div>
       ) : activeTab === "soap" ? (
-        <div className="animate-fade-in max-w-5xl mx-auto">
+        <div className="animate-fade-in max-w-5xl mx-auto space-y-4">
+          {noteAttestationSuccess && (
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center justify-between animate-in fade-in">
+              <div className="flex items-center gap-2 font-medium">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <span>{noteAttestationSuccess}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab("medications")}
+                className="underline font-semibold hover:text-emerald-950 flex items-center gap-1"
+              >
+                <span>Proceed to e-Prescriptions</span>
+                <ArrowRight className="h-3 w-3" />
+              </button>
+            </div>
+          )}
           <SoapNoteEditor
+            key={activePatient.id}
             patientId={activePatient.id}
             patientName={activePatient.name}
             doctorId={doctorId}
             doctorName={doctorName}
+            doctorSpecialty="Consultant Physician / Cardiology"
+            doctorRegNumber="MCI-2015-84920"
+            encounterId={selectedAppointment?.id}
+            initialNote={signedNotes[activePatient.id]}
+            prefilledVitals={activePatient.latestVitals}
+            prefilledConditions={activePatient.primaryConditions}
+            onNoteSigned={handleNoteSigned}
           />
         </div>
       ) : activeTab === "diagnostics" ? (

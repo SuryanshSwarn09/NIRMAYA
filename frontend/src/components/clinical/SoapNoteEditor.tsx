@@ -113,6 +113,19 @@ export interface SoapNoteEditorProps {
   doctorRegNumber?: string;
   encounterId?: string;
   initialNote?: Partial<SoapNote>;
+  prefilledVitals?: {
+    bp?: string;
+    hr?: string;
+    spo2?: string;
+    bmi?: string;
+    temperature?: string;
+    recordedAt?: string;
+  };
+  prefilledConditions?: Array<{
+    code: string;
+    display: string;
+    severity?: string;
+  }>;
   isReadOnly?: boolean;
   onNoteSigned?: (note: SoapNote) => void;
   onNoteSaved?: (note: SoapNote) => void;
@@ -127,6 +140,8 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
   doctorRegNumber = "MCI-2015-84920",
   encounterId,
   initialNote,
+  prefilledVitals,
+  prefilledConditions,
   isReadOnly = false,
   onNoteSigned,
   onNoteSaved,
@@ -214,6 +229,25 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
       setAssessment((prev) => 
         prev ? `${prev}\n• ${diagLine}` : `• ${diagLine}`
       );
+    }
+  };
+
+  const handleImportVitals = () => {
+    if (isSigned || isReadOnly || !prefilledVitals) return;
+    const vitalsSummary = `Telemetry Vitals (${prefilledVitals.recordedAt || "Latest"}): BP ${prefilledVitals.bp || "N/A"}, HR ${prefilledVitals.hr || "N/A"}, SpO2 ${prefilledVitals.spo2 || "N/A"}, Temp ${prefilledVitals.temperature || "N/A"}, BMI ${prefilledVitals.bmi || "N/A"}.`;
+    if (!objective.includes("Telemetry Vitals")) {
+      setObjective((prev) => prev ? `${vitalsSummary}\n\n${prev}` : vitalsSummary);
+    }
+  };
+
+  const handleImportConditions = () => {
+    if (isSigned || isReadOnly || !prefilledConditions || prefilledConditions.length === 0) return;
+    const condLines = prefilledConditions
+      .map((c, i) => `${i + 1}. ${c.display} (${c.code}) - ${c.severity || "active"}`)
+      .join("\n");
+    if (!assessment.includes("Active Problem List Summary")) {
+      const block = `Active Problem List Summary:\n${condLines}`;
+      setAssessment((prev) => prev ? `${block}\n\n${prev}` : block);
     }
   };
 
@@ -633,9 +667,21 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                 <span>Objective Examination & Physical Findings (LOINC 61149-1)</span>
                 {isSigned && <Lock className="h-3 w-3 text-[#10b981]" />}
               </label>
-              <span className="text-[11px] text-[#6b7280]">
-                Telemetry vitals & physical examination
-              </span>
+              <div className="flex items-center gap-2">
+                {prefilledVitals && !isSigned && !isReadOnly && (
+                  <button
+                    type="button"
+                    onClick={handleImportVitals}
+                    className="px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors flex items-center gap-1"
+                  >
+                    <Activity className="h-3 w-3 text-blue-600" />
+                    Import Active Vitals
+                  </button>
+                )}
+                <span className="text-[11px] text-[#6b7280]">
+                  Telemetry vitals & physical examination
+                </span>
+              </div>
             </div>
             <textarea
               rows={4}
@@ -659,9 +705,21 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                 <span>Assessment & Differential Diagnoses (LOINC 51848-0)</span>
                 {isSigned && <Lock className="h-3 w-3 text-[#10b981]" />}
               </label>
-              <span className="text-[11px] text-[#6b7280]">
-                Clinical synthesis & ICD-10 codings
-              </span>
+              <div className="flex items-center gap-2">
+                {prefilledConditions && prefilledConditions.length > 0 && !isSigned && !isReadOnly && (
+                  <button
+                    type="button"
+                    onClick={handleImportConditions}
+                    className="px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors flex items-center gap-1"
+                  >
+                    <ClipboardList className="h-3 w-3 text-blue-600" />
+                    Import Problem List
+                  </button>
+                )}
+                <span className="text-[11px] text-[#6b7280]">
+                  Clinical synthesis & ICD-10 codings
+                </span>
+              </div>
             </div>
 
             {/* ICD-10 Quick Tagger */}
