@@ -389,3 +389,223 @@ async def test_week_7_e2e_condition_fhir_r4_canonical_export(week_7_e2e_client):
     assert fhir["verificationStatus"]["coding"][0]["code"] == "confirmed"
     assert fhir["code"]["coding"][0]["code"] == "44054006"
     assert fhir["subject"]["reference"] == f"Patient/{pat_id}"
+
+
+# ==============================================================================
+# Milestone 07-04: LOINC Vitals Telemetry Intake & AHA Physiological Evaluations
+# ==============================================================================
+
+@pytest.mark.asyncio
+async def test_week_7_e2e_vitals_telemetry_intake_and_loinc_evaluation(week_7_e2e_client):
+    """E2E flow: Ingest LOINC multi-component blood pressure and vital signs panel."""
+    client, session_factory = week_7_e2e_client
+    async with session_factory() as session:
+        actors = await seed_week_7_clinical_actors(session)
+
+    pat_id = actors["patient_profile"].id
+    pat_header = auth_header_for(actors["user_patient"])
+    doc_header = auth_header_for(actors["user_doctor"])
+
+    # 1. Clinician documents Dual-Component Blood Pressure (LOINC 85354-9)
+    bp_payload = {
+        "status": "final",
+        "category": "vital-signs",
+        "code_coding_system": "http://loinc.org",
+        "code_value": "85354-9",
+        "code_display": "Blood pressure panel with all children optional",
+        "components": [
+            {
+                "code_system": "http://loinc.org",
+                "code_value": "8480-6",
+                "code_display": "Systolic blood pressure",
+                "value_quantity": 138.0,
+                "value_unit": "mmHg",
+                "value_code": "mm[Hg]",
+                "reference_range_low": 90.0,
+                "reference_range_high": 120.0,
+                "interpretation": "high",
+            },
+            {
+                "code_system": "http://loinc.org",
+                "code_value": "8462-4",
+                "code_display": "Diastolic blood pressure",
+                "value_quantity": 88.0,
+                "value_unit": "mmHg",
+                "value_code": "mm[Hg]",
+                "reference_range_low": 60.0,
+                "reference_range_high": 80.0,
+                "interpretation": "high",
+            },
+        ],
+        "interpretation": "high",
+        "body_site": "Right arm",
+        "method": "Automated cuff oscillometric",
+        "note": "AHA Stage 1 Hypertension reading during telemed pre-flight intake.",
+    }
+    bp_resp = await client.post(
+        f"/api/v1/patients/{pat_id}/observations",
+        json=bp_payload,
+        headers=doc_header,
+    )
+    assert bp_resp.status_code == 201
+    bp_data = bp_resp.json()["data"]
+    assert bp_data["code_value"] == "85354-9"
+    assert len(bp_data["components"]) == 2
+    assert bp_data["interpretation"] == "high"
+
+    # 2. Ingest Oxygen Saturation SpO2 (LOINC 2708-6)
+    spo2_payload = {
+        "status": "final",
+        "category": "vital-signs",
+        "code_coding_system": "http://loinc.org",
+        "code_value": "2708-6",
+        "code_display": "Oxygen saturation in Arterial blood by Pulse oximetry",
+        "value_quantity": 98.0,
+        "value_unit": "%",
+        "value_code": "%",
+        "reference_range_low": 95.0,
+        "reference_range_high": 100.0,
+        "interpretation": "normal",
+        "method": "Pulse Oximetry",
+    }
+    spo2_resp = await client.post(
+        f"/api/v1/patients/{pat_id}/observations",
+        json=spo2_payload,
+        headers=pat_header,
+    )
+    assert spo2_resp.status_code == 201
+
+    # 3. Ingest Heart Rate (LOINC 8867-4)
+    hr_payload = {
+        "status": "final",
+        "category": "vital-signs",
+        "code_coding_system": "http://loinc.org",
+        "code_value": "8867-4",
+        "code_display": "Heart rate",
+        "value_quantity": 74.0,
+        "value_unit": "/min",
+        "value_code": "/min",
+        "reference_range_low": 60.0,
+        "reference_range_high": 100.0,
+        "interpretation": "normal",
+    }
+    hr_resp = await client.post(
+        f"/api/v1/patients/{pat_id}/observations",
+        json=hr_payload,
+        headers=pat_header,
+    )
+    assert hr_resp.status_code == 201
+
+    # 4. Fetch Latest Vitals Summary Panel
+    summary_resp = await client.get(
+        f"/api/v1/patients/{pat_id}/observations/vitals/latest",
+        headers=pat_header,
+    )
+    assert summary_resp.status_code == 200
+    summary = summary_resp.json()["data"]
+    assert summary["blood_pressure"] is not None
+    assert summary["blood_pressure"]["code_value"] == "85354-9"
+    assert summary["oxygen_saturation"] is not None
+    assert summary["oxygen_saturation"]["value_quantity"] == 98.0
+    assert summary["heart_rate"] is not None
+    assert summary["heart_rate"]["value_quantity"] == 74.0
+
+
+@pytest.mark.asyncio
+async def test_week_7_e2e_vitals_fhir_r4_observation_export(week_7_e2e_client):
+    """Verify that vital sign observations export as canonical HL7 FHIR R4 Observations."""
+    client, session_factory = week_7_e2e_client
+    async with session_factory() as session:
+        actors = await seed_week_7_clinical_actors(session)
+
+    pat_id = actors["patient_profile"].id
+    doc_header = auth_header_for(actors["user_doctor"])
+
+    # Create Blood Pressure observation
+    bp_resp = await client.post(
+        f"/api/v1/patients/{pat_id}/observations",
+        json={
+            "status": "final",
+            "category": "vital-signs",
+            "code_coding_system": "http://loinc.org",
+            "code_value": "85354-9",
+            "code_display": "Blood pressure panel with all children optional",
+            "components": [
+                {
+                    "code_system": "http://loinc.org",
+                    "code_value": "8480-6",
+                    "code_display": "Systolic blood pressure",
+                    "value_quantity": 120.0,
+                    "value_unit": "mmHg",
+                },
+                {
+                    "code_system": "http://loinc.org",
+                    "code_value": "8462-4",
+                    "code_display": "Diastolic blood pressure",
+                    "value_quantity": 80.0,
+                    "value_unit": "mmHg",
+                },
+            ],
+            "interpretation": "normal",
+        },
+        headers=doc_header,
+    )
+    assert bp_resp.status_code == 201
+    bp_id = bp_resp.json()["data"]["id"]
+
+    # Export FHIR R4 Observation
+    fhir_resp = await client.get(f"/api/v1/observations/{bp_id}/fhir", headers=doc_header)
+    assert fhir_resp.status_code == 200
+    fhir_data = fhir_resp.json()
+
+    assert fhir_data["resourceType"] == "Observation"
+    assert fhir_data["id"] == bp_id
+    assert fhir_data["status"] == "final"
+    assert fhir_data["category"][0]["coding"][0]["code"] == "vital-signs"
+    assert fhir_data["code"]["coding"][0]["code"] == "85354-9"
+    assert fhir_data["subject"]["reference"] == f"Patient/{pat_id}"
+    assert len(fhir_data["component"]) == 2
+    assert fhir_data["component"][0]["code"]["coding"][0]["code"] == "8480-6"
+    assert fhir_data["component"][0]["valueQuantity"]["value"] == 120.0
+    assert fhir_data["component"][1]["code"]["coding"][0]["code"] == "8462-4"
+    assert fhir_data["component"][1]["valueQuantity"]["value"] == 80.0
+
+
+# ==============================================================================
+# Milestone 07-05: RBAC & Tenant Isolation Guardrails Across Patient Vault
+# ==============================================================================
+
+@pytest.mark.asyncio
+async def test_week_7_e2e_patient_vault_cross_tenant_rbac_isolation(week_7_e2e_client):
+    """Verify strict multi-tenant boundary: Vikram Malhotra cannot access Arun Patel's records."""
+    client, session_factory = week_7_e2e_client
+    async with session_factory() as session:
+        actors = await seed_week_7_clinical_actors(session)
+
+    arun_pat_id = actors["patient_profile"].id
+    unauth_header = auth_header_for(actors["user_unauth"])
+    pat_header = auth_header_for(actors["user_patient"])
+
+    # 1. Attempt to view Arun Patel's ABHA ID Card -> 403 Forbidden
+    card_resp = await client.get(f"/api/v1/patients/{arun_pat_id}/abha-card", headers=unauth_header)
+    assert card_resp.status_code == 403
+
+    # 2. Attempt to list Arun Patel's Problem List Conditions -> 403 Forbidden
+    cond_resp = await client.get(f"/api/v1/patients/{arun_pat_id}/conditions", headers=unauth_header)
+    assert cond_resp.status_code == 403
+
+    # 3. Attempt to fetch Arun Patel's Vitals Telemetry -> 403 Forbidden
+    vitals_resp = await client.get(f"/api/v1/patients/{arun_pat_id}/observations", headers=unauth_header)
+    assert vitals_resp.status_code == 403
+
+    # 4. Attempt to fetch Arun Patel's Latest Vitals Summary -> 403 Forbidden
+    summary_resp = await client.get(
+        f"/api/v1/patients/{arun_pat_id}/observations/vitals/latest",
+        headers=unauth_header,
+    )
+    assert summary_resp.status_code == 403
+
+    # 5. Legitimate Subject Patient Arun Patel has authorized 200 OK access
+    auth_card_resp = await client.get(f"/api/v1/patients/{arun_pat_id}/abha-card", headers=pat_header)
+    assert auth_card_resp.status_code == 200
+
