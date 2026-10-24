@@ -20,8 +20,10 @@ import {
   X,
   Activity,
   Calendar,
-  Sparkles
+  Sparkles,
+  HelpCircle
 } from "lucide-react";
+import { useAccessibility } from "@/context/AccessibilityContext";
 
 interface ProblemListPanelProps {
   patientId: string;
@@ -69,6 +71,27 @@ const COMMON_CONDITION_PRESETS = [
   },
 ];
 
+function getConditionPlainExplanation(code: string, display: string): string {
+  const c = (code || "").toUpperCase();
+  const d = (display || "").toLowerCase();
+  if (c.startsWith("I10") || d.includes("hypertension")) {
+    return "High Blood Pressure: Heart pumps blood with elevated force through arteries. Well managed with low sodium salt, walking, and prescribed tablets.";
+  }
+  if (c.startsWith("E11") || d.includes("diabetes")) {
+    return "Type 2 Diabetes: Body needs help processing sugars into everyday energy. Managed with mindful meals, regular walks, and routine blood tests.";
+  }
+  if (c.startsWith("E78") || d.includes("hyperlipidemia") || d.includes("cholesterol")) {
+    return "Elevated Blood Fats: Higher levels of cholesterol or lipids in circulation. Dietary care and statins help maintain clear blood vessels.";
+  }
+  if (c.startsWith("I25") || d.includes("atherosclerotic") || d.includes("coronary")) {
+    return "Heart Artery Health: Blood vessels supplying heart muscle are tracked closely to prevent blockages through regular activity and medicine.";
+  }
+  if (c.startsWith("J45") || d.includes("asthma")) {
+    return "Asthma: Airways can get sensitive during changes in weather or dust. Inhalers keep breathing easy and open.";
+  }
+  return "Diagnosed medical condition being followed by your care team to provide personalized and proactive health support.";
+}
+
 export const ProblemListPanel: React.FC<ProblemListPanelProps> = ({
   patientId,
   patientName = "Patient",
@@ -76,6 +99,8 @@ export const ProblemListPanel: React.FC<ProblemListPanelProps> = ({
   initialConditions,
   onConditionAdded,
 }) => {
+  const { jargonHelper } = useAccessibility();
+
   const [conditions, setConditions] = useState<ClinicalCondition[]>(
     initialConditions || [
       {
@@ -247,6 +272,16 @@ export const ProblemListPanel: React.FC<ProblemListPanelProps> = ({
                 <p className="text-xs text-[#4b5563] mt-2.5 pt-2.5 border-t border-[#f3f4f6] line-clamp-2">
                   {cond.note}
                 </p>
+              )}
+
+              {jargonHelper && (
+                <div className="mt-2.5 p-2.5 rounded-lg bg-[#eff6ff] border border-[#bfdbfe] text-xs text-[#1e40af] flex items-start gap-2">
+                  <Sparkles className="h-4 w-4 shrink-0 mt-0.5 text-[#2563eb]" />
+                  <div>
+                    <span className="font-semibold text-[#1e3a8a]">Patient & Family Guide: </span>
+                    <span className="text-[#1d4ed8]">{getConditionPlainExplanation(cond.code_value, cond.code_display)}</span>
+                  </div>
+                </div>
               )}
 
               <div className="flex items-center justify-between mt-3 pt-2 text-[11px] text-[#6b7280] border-t border-[#f3f4f6]">

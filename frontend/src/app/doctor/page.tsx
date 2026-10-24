@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button, Badge, Card, CardTitle, CardDescription } from "@/components/ui";
 import { useAuth } from "@/context/AuthContext";
@@ -202,6 +202,39 @@ export default function DoctorEMRPage() {
   const [signedNotes, setSignedNotes] = useState<Record<string, SoapNote>>({});
   const [noteAttestationSuccess, setNoteAttestationSuccess] = useState<string | null>(null);
   const [prescriptionSuccess, setPrescriptionSuccess] = useState<string | null>(null);
+
+  // Clinician Keyboard Ergonomics: Alt+1..Alt+6 (and fast number keys outside form inputs)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      const isInput = target && (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable ||
+        target.tagName === "SELECT"
+      );
+
+      const tabMap: Record<string, ClinicalTabType> = {
+        "1": "queue",
+        "2": "soap",
+        "3": "prescriptions",
+        "4": "diagnostics",
+        "5": "problems",
+        "6": "vitals",
+      };
+
+      if (e.altKey && tabMap[e.key]) {
+        e.preventDefault();
+        setActiveTab(tabMap[e.key]);
+      } else if (!e.altKey && !e.ctrlKey && !e.metaKey && !isInput && tabMap[e.key]) {
+        // Fast tab switch for active clinician when browsing panels
+        setActiveTab(tabMap[e.key]);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Active patient profile derived from selected appointment or selected name
   const activePatient: PatientDemographics = 

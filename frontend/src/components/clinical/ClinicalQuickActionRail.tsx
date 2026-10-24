@@ -41,37 +41,44 @@ export function ClinicalQuickActionRail({
     label: string;
     icon: React.ReactNode;
     badge?: string;
+    shortcut?: string;
   }> = [
     {
       id: "queue",
       label: "Consultation Queue",
       icon: <Calendar className="h-4 w-4" />,
+      shortcut: "1",
     },
     {
       id: "soap",
       label: "SOAP Note",
       icon: <FileText className="h-4 w-4" />,
+      shortcut: "2",
     },
     {
       id: "prescriptions",
       label: "e-Prescriptions",
       icon: <Pill className="h-4 w-4" />,
       badge: "DDI Guard",
+      shortcut: "3",
     },
     {
       id: "diagnostics",
       label: "Lab Orders",
       icon: <FlaskConical className="h-4 w-4" />,
+      shortcut: "4",
     },
     {
       id: "problems",
       label: "Problem List",
       icon: <Heart className="h-4 w-4" />,
+      shortcut: "5",
     },
     {
       id: "vitals",
       label: "Vitals Telemetry",
       icon: <Activity className="h-4 w-4" />,
+      shortcut: "6",
     },
   ];
 
@@ -92,9 +99,21 @@ export function ClinicalQuickActionRail({
                   ? "bg-[#111111] text-white shadow-xs"
                   : "bg-white text-[#4B5563] hover:text-[#111827] hover:bg-[#F9FAFB]"
               }`}
+              title={`Switch to ${act.label} (Alt+${act.shortcut})`}
             >
               {act.icon}
               <span>{act.label}</span>
+              {act.shortcut && (
+                <kbd
+                  className={`hidden md:inline-block font-mono text-[9px] px-1 py-0.5 rounded border select-none ${
+                    isActive
+                      ? "border-white/30 text-white/80 bg-white/10"
+                      : "border-[#E5E7EB] text-[#9CA3AF] bg-[#F9FAFB]"
+                  }`}
+                >
+                  {act.shortcut}
+                </kbd>
+              )}
               {act.badge && (
                 <span
                   className={`text-[9px] uppercase px-1 py-0.2 rounded font-bold ${

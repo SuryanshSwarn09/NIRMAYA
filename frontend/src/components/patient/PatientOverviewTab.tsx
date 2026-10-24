@@ -20,10 +20,14 @@ import {
   ShieldCheck,
   CheckCircle2,
   Stethoscope,
-  Video
+  Video,
+  Sparkles,
+  Info,
+  HelpCircle
 } from "lucide-react";
 import { Appointment, MedicationRequest } from "@/lib/api";
 import { DigitalAbhaCard } from "./DigitalAbhaCard";
+import { useAccessibility } from "@/context/AccessibilityContext";
 
 export interface PatientOverviewTabProps {
   abhaId?: string;
@@ -76,8 +80,30 @@ export function PatientOverviewTab({
   onViewFhirPrescription,
   onStartTelemedicine,
 }: PatientOverviewTabProps) {
+  const { jargonHelper } = useAccessibility();
+
   // Most recent 2 prescriptions
   const recentPrescriptions = prescriptions.slice(0, 2);
+
+  const getVitalPlainExplanation = (display: string, code: string): string => {
+    const lower = (display || "").toLowerCase();
+    if (lower.includes("blood pressure") || code === "85354-9") {
+      return "Target: ~120/80 mmHg. Measures pressure inside blood vessels.";
+    }
+    if (lower.includes("heart rate") || lower.includes("pulse") || code === "8867-4") {
+      return "Target: 60-100 bpm. Heartbeats per minute at rest.";
+    }
+    if (lower.includes("oxygen") || lower.includes("spo2") || code === "2708-6" || code === "59408-5") {
+      return "Target: 95-100%. Blood oxygen saturation level.";
+    }
+    if (lower.includes("temperature") || code === "8310-5") {
+      return "Target: ~98.6°F / 37°C. Body heat equilibrium.";
+    }
+    if (lower.includes("respiratory") || code === "9279-1") {
+      return "Target: 12-20 breaths per min.";
+    }
+    return "Monitored vital telemetry for clinical health tracking.";
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade-in">
@@ -120,6 +146,15 @@ export function PatientOverviewTab({
           <CardDescription>
             You maintain total cryptographic ownership. Delegations grant time-bound access to clinical history.
           </CardDescription>
+
+          {jargonHelper && (
+            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-start gap-2">
+              <Sparkles className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+              <span>
+                <strong>Your Privacy Shield:</strong> Doctors only see the health records needed for your current visit. You can turn this off anytime.
+              </span>
+            </div>
+          )}
 
           {consentActive ? (
             <div className="p-3.5 rounded-[8px] border border-[#e5e7eb] bg-[#f8f9fa] space-y-3">
@@ -175,6 +210,21 @@ export function PatientOverviewTab({
           RIGHT 7 COLUMNS: Scheduled Encounters, Prescriptions & Vitals Snapshots
           ======================================================================== */}
       <div className="lg:col-span-7 space-y-6">
+
+        {/* Elder & Caregiver Friendly Plain-Language Reassurance Banner */}
+        {jargonHelper && (
+          <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50 text-xs text-emerald-950 flex items-start gap-3 shadow-xs">
+            <Sparkles className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="font-bold text-emerald-950 text-sm">
+                Elder & Caregiver Friendly Mode Active
+              </p>
+              <p className="text-emerald-800 leading-relaxed text-xs">
+                Medical terms, clinical dosage instructions, and biometric measurements are translated into simple everyday words to help you and your family navigate care confidently.
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Scheduled Encounters Section */}
         <Card variant="mockup" className="space-y-4">
@@ -310,6 +360,15 @@ export function PatientOverviewTab({
                     <span>•</span>
                     <span className="text-[#059669]">Digitally Signed</span>
                   </div>
+
+                  {jargonHelper && (
+                    <div className="p-2 rounded-md bg-[#f0fdf4] border border-[#bbf7d0] text-[11px] text-[#166534] flex items-center gap-1.5">
+                      <HelpCircle className="h-3.5 w-3.5 text-[#16a34a] shrink-0" />
+                      <span>
+                        <strong>Family Guide:</strong> Take as prescribed with a full glass of water. Do not stop midway without speaking to Dr. Sharma.
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -321,7 +380,14 @@ export function PatientOverviewTab({
           <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
             <div className="flex items-center gap-2">
               <Activity className="h-4 w-4 text-[#111111]" />
-              <CardTitle className="text-base">Recent Biometric Vitals (LOINC)</CardTitle>
+              <div>
+                <CardTitle className="text-base">Recent Biometric Vitals</CardTitle>
+                {jargonHelper && (
+                  <p className="text-[11px] text-emerald-700 font-medium">
+                    Showing healthy target ranges and plain-language definitions
+                  </p>
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <button
@@ -340,7 +406,7 @@ export function PatientOverviewTab({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {vitalsList.slice(0, 4).map((obs) => {
               const displayVal = obs.components && obs.components.length >= 2
                 ? `${obs.components[0].value_quantity}/${obs.components[1].value_quantity}`
@@ -353,10 +419,10 @@ export function PatientOverviewTab({
               return (
                 <div
                   key={obs.id}
-                  className="p-3 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] hover:bg-white hover:border-[#d1d5db] transition-all space-y-1.5"
+                  className="p-3.5 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] hover:bg-white hover:border-[#d1d5db] transition-all space-y-2"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[11px] text-[#6b7280] font-medium truncate max-w-[90px]">
+                    <span className="text-xs text-[#111111] font-semibold truncate max-w-[120px]">
                       {obs.code_display}
                     </span>
                     <span
@@ -371,14 +437,21 @@ export function PatientOverviewTab({
                       {obs.interpretation?.toUpperCase() || "NORMAL"}
                     </span>
                   </div>
-                  <div className="font-bold text-[#111111] text-base tracking-tight">
+                  <div className="font-bold text-[#111111] text-lg tracking-tight">
                     {displayVal}{" "}
-                    <span className="text-[11px] font-normal text-[#6b7280]">{obs.value_unit}</span>
+                    <span className="text-xs font-normal text-[#6b7280]">{obs.value_unit}</span>
                   </div>
-                  <div className="text-[10px] text-[#9ca3af] flex items-center justify-between pt-1 border-t border-[#f3f4f6]">
-                    <span>{obs.effective_date_time}</span>
-                    <span className="font-mono text-[9px]">LOINC {obs.code_value}</span>
-                  </div>
+
+                  {jargonHelper ? (
+                    <div className="text-[10px] text-emerald-800 bg-emerald-50/70 p-1.5 rounded border border-emerald-100">
+                      {getVitalPlainExplanation(obs.code_display, obs.code_value)}
+                    </div>
+                  ) : (
+                    <div className="text-[10px] text-[#9ca3af] flex items-center justify-between pt-1 border-t border-[#f3f4f6]">
+                      <span>{obs.effective_date_time}</span>
+                      <span className="font-mono text-[9px]">LOINC {obs.code_value}</span>
+                    </div>
+                  )}
                 </div>
               );
             })}

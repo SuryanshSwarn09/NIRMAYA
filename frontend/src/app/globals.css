@@ -122,3 +122,95 @@ body {
 .animate-pulse-subtle {
   animation: pulse-subtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* ==========================================================================
+   ACCESSIBILITY & APPROACHABILITY STYLES (WCAG AAA Standards)
+   ========================================================================== */
+
+/* Universal Focus Visible Indicators (3px ring for keyboard accessibility) */
+:focus-visible {
+  outline: 3px solid #0891b2 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* Touch Targets: minimum 44px on interactive controls for elderly / tremor ease */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Font Size Scaling Classes (Controlled via AccessibilityContext) */
+html.font-size-large {
+  font-size: 112.5%; /* 18px base */
+}
+
+html.font-size-xl {
+  font-size: 125%; /* 20px base */
+}
+
+html.font-size-large p,
+html.font-size-large span,
+html.font-size-large button,
+html.font-size-large input,
+html.font-size-large label {
+  line-height: 1.6;
+}
+
+html.font-size-xl p,
+html.font-size-xl span,
+html.font-size-xl button,
+html.font-size-xl input,
+html.font-size-xl label {
+  line-height: 1.7;
+}
+
+/* High Contrast Mode (WCAG AAA 7:1+ Contrast) */
+html.high-contrast {
+  --color-primary: #000000;
+  --color-ink: #000000;
+  --color-body: #000000;
+  --color-muted: #1f2937;
+  --color-hairline: #000000;
+  --border: #000000;
+  filter: contrast(110%);
+}
+
+html.high-contrast :focus-visible {
+  outline: 3px solid #000000 !important;
+  outline-offset: 3px !important;
+}
+
+html.high-contrast .border {
+  border-color: #000000 !important;
+}
+
+html.high-contrast [class*="text-[#6b7280]"],
+html.high-contrast [class*="text-[#4b5563]"],
+html.high-contrast [class*="text-[#374151]"],
+html.high-contrast .text-muted-foreground {
+  color: #000000 !important;
+  font-weight: 500;
+}
+
+/* Accessible Skip Link */
+.skip-to-content {
+  position: absolute;
+  top: -9999px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111111;
+  color: #ffffff;
+  padding: 8px 16px;
+  z-index: 99999;
+  border-radius: 0 0 8px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
