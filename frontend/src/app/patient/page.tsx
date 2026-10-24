@@ -13,7 +13,8 @@ import {
   AbhaCardExportModal,
   AbhaQrVerificationModal,
   PatientProblemsTab,
-  PatientTabId 
+  PatientTabId,
+  VitalMetricType
 } from "@/components/patient";
 import { 
   ClinicalSlotPicker, 
@@ -289,10 +290,13 @@ export default function PatientVaultPage() {
 
   // Vitals Logging & FHIR Modals State
   const [isLogVitalsOpen, setIsLogVitalsOpen] = useState(false);
-  const [logVitalType, setLogVitalType] = useState<"hr" | "bp" | "spo2">("hr");
+  const [logVitalType, setLogVitalType] = useState<VitalMetricType>("hr");
   const [logValue, setLogValue] = useState("75");
   const [logSystolic, setLogSystolic] = useState("120");
   const [logDiastolic, setLogDiastolic] = useState("80");
+  const [logWeight, setLogWeight] = useState("72");
+  const [logHeight, setLogHeight] = useState("175");
+  const [logTemp, setLogTemp] = useState("98.6");
   const [selectedFhirJson, setSelectedFhirJson] = useState<any | null>(null);
 
   // Diagnostic Lab Reports & Orders (Day 24)
@@ -785,6 +789,12 @@ export default function PatientVaultPage() {
         setLogSystolic={setLogSystolic}
         logDiastolic={logDiastolic}
         setLogDiastolic={setLogDiastolic}
+        logWeight={logWeight}
+        setLogWeight={setLogWeight}
+        logHeight={logHeight}
+        setLogHeight={setLogHeight}
+        logTemp={logTemp}
+        setLogTemp={setLogTemp}
         onLogVitalSubmit={handleLogVitalSubmit}
         selectedFhirJson={selectedFhirJson}
         onCloseFhirModal={() => setSelectedFhirJson(null)}
