@@ -10,7 +10,14 @@ export {
 } from "./SoapNoteEditor";
 export { DiagnosticOrderTracker } from "./DiagnosticOrderTracker";
 export { MedicationCatalogBrowser } from "./MedicationCatalogBrowser";
-export { PrescriptionAuthoringPad } from "./PrescriptionAuthoringPad";
+export { 
+  PrescriptionAuthoringPad, 
+  type PrescriptionAuthoringPadProps,
+  FORMULARY_PRESETS,
+  DOSAGE_PRESETS_BY_DRUG,
+  MEAL_TIMINGS,
+  DURATION_PRESETS
+} from "./PrescriptionAuthoringPad";
 export { CDSAlertBanner } from "./CDSAlertBanner";
 export { PharmacyDispenseModal } from "./PharmacyDispenseModal";
 export { ClinicianConsultationQueue, type QueueAppointment, INITIAL_MOCK_QUEUE } from "./ClinicianConsultationQueue";
