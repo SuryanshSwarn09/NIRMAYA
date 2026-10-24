@@ -1,5 +1,13 @@
 "use client";
 
+/**
+ * Clinician Consultation Queue Component (Day 36 Milestone 08-01).
+ * 
+ * Provides real-time appointment queue management with status tabs (Today's Queue, Waiting,
+ * In Consultation, Completed), encounter type filters (Teleconsultation vs In-Clinic),
+ * search capabilities, and encounter lifecycle transitions.
+ * Conforms to the Cal.com design system tokens (white canvas, subtle borders, high contrast).
+ */
 import React, { useState, useMemo } from "react";
 import { 
   Calendar, 
