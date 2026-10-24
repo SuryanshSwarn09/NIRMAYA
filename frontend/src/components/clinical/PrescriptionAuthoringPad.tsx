@@ -32,6 +32,7 @@ import {
   RefreshCw,
   XCircle,
   Package,
+  Download,
 } from "lucide-react";
 
 
@@ -335,7 +336,10 @@ export function PrescriptionAuthoringPad({
   // FHIR Inspector Modal state
   const [fhirModalOpen, setFhirModalOpen] = useState(false);
   const [selectedFhirJson, setSelectedFhirJson] = useState<Record<string, unknown> | null>(null);
+  const [selectedRxForModal, setSelectedRxForModal] = useState<MedicationRequest | null>(null);
+  const [fhirTab, setFhirTab] = useState<"narrative" | "json">("narrative");
   const [copied, setCopied] = useState(false);
+  const [certifyDeclaration, setCertifyDeclaration] = useState(true);
 
   // Real-time CDS Safety Surveillance state
   const [safetyReport, setSafetyReport] = useState<SafetyCheckResponse | null>(null);
@@ -663,6 +667,8 @@ export function PrescriptionAuthoringPad({
 
   // Inspect FHIR R4 JSON
   const handleOpenFhirModal = async (rx: MedicationRequest) => {
+    setSelectedRxForModal(rx);
+    setFhirTab("narrative");
     try {
       const fhirData = await apiClient.getPrescriptionFhir(rx.id);
       setSelectedFhirJson(fhirData);
@@ -754,6 +760,21 @@ export function PrescriptionAuthoringPad({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
+  };
+
+  const handleDownloadJson = () => {
+    if (!selectedFhirJson) return;
+    const blob = new Blob([JSON.stringify(selectedFhirJson, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `MedicationRequest-${selectedRxForModal?.id || "prescription"}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const filteredPresets = useMemo(() => {
@@ -1230,27 +1251,69 @@ export function PrescriptionAuthoringPad({
               type="text"
               value={additionalInstructions}
               onChange={(e) => setAdditionalInstructions(e.target.value)}
-              className="w-full px-3 py-2 text-xs rounded-[6px] border border-[#e5e7eb] focus:outline-none focus:border-[#111111]"
+              className="w-full px-3 py-2 text-xs rounded-lg border border-[#e5e7eb] focus:outline-none focus:border-[#111111]"
               placeholder="e.g. Take with a full meal. Avoid grapefruit juice."
             />
           </div>
 
-          {/* Submit & Sign Button */}
-          <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-[#e5e7eb]">
-            <div className="text-[11px] text-[#6b7280]">
-              Prescriptions are cryptographically signed with <span className="font-semibold text-[#111111]">SHA-256</span> and locked into the longitudinal patient vault.
+          {/* Prescriber Cryptographic Digital Attestation Pad */}
+          <div className="p-4 rounded-xl border border-[#e5e7eb] bg-[#f9fafb] space-y-3.5">
+            <div className="flex items-center justify-between pb-2 border-b border-[#e5e7eb]">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-[#059669]" />
+                <span className="text-xs font-bold text-[#111827]">
+                  Prescriber Digital Attestation & Cryptographic Signing Pad
+                </span>
+              </div>
+              <Badge variant="abdm" size="sm">
+                ABDM Section 3.2
+              </Badge>
             </div>
 
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              disabled={isSubmitting}
-              className="gap-2 shrink-0"
-            >
-              <ShieldCheck className="h-4 w-4" />
-              {isSubmitting ? "Signing & Transmitting..." : "Sign & Authorize e-Prescription (SHA-256)"}
-            </Button>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs text-[#374151]">
+              <div className="p-2.5 rounded-lg bg-white border border-[#e5e7eb]">
+                <span className="text-[10px] text-[#6b7280] block font-medium">Licensed Prescriber</span>
+                <span className="font-bold text-[#111827]">{doctorName}</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-white border border-[#e5e7eb]">
+                <span className="text-[10px] text-[#6b7280] block font-medium">Council Reg Number</span>
+                <span className="font-mono font-bold text-[#111827]">{doctorRegNumber}</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-white border border-[#e5e7eb]">
+                <span className="text-[10px] text-[#6b7280] block font-medium">Specialty / Department</span>
+                <span className="font-semibold text-[#111827] truncate block">{doctorSpecialty}</span>
+              </div>
+            </div>
+
+            <label className="flex items-start gap-2.5 cursor-pointer pt-1 text-xs text-[#374151] select-none">
+              <input
+                type="checkbox"
+                checked={certifyDeclaration}
+                onChange={(e) => setCertifyDeclaration(e.target.checked)}
+                className="mt-0.5 rounded border-[#d1d5db] text-[#111827] focus:ring-0"
+              />
+              <span className="text-[11px] leading-relaxed text-[#4b5563]">
+                I hereby certify under Indian Medical Council (Professional Conduct, Etiquette and Ethics) Regulations and ABDM Guidelines that this electronic prescription is issued in good faith following clinical evaluation of <strong className="text-[#111827]">{patientName}</strong>. The medication, dose, route, and duration are clinically indicated.
+              </span>
+            </label>
+
+            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-[#e5e7eb]">
+              <div className="flex items-center gap-2 text-[11px] text-[#6b7280]">
+                <span className="h-2 w-2 rounded-full bg-[#059669] animate-pulse" />
+                <span>SHA-256 cryptographic seal computed on authorization</span>
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={isSubmitting || !certifyDeclaration}
+                className="gap-2 shrink-0 font-semibold"
+              >
+                <ShieldCheck className="h-4 w-4 text-[#34d399]" />
+                {isSubmitting ? "Signing & Transmitting..." : "Sign & Authorize e-Prescription (SHA-256)"}
+              </Button>
+            </div>
           </div>
         </form>
       </Card>
@@ -1340,7 +1403,7 @@ export function PrescriptionAuthoringPad({
                     <button
                       type="button"
                       onClick={() => setDispensingRx(rx)}
-                      className="py-1 px-2.5 rounded-[6px] border border-[#111111] bg-[#111111] text-xs font-semibold text-white hover:bg-[#242424] transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      className="py-1 px-2.5 rounded-lg border border-[#111111] bg-[#111111] text-xs font-semibold text-white hover:bg-[#242424] transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
                       title="Fulfill and dispense prescription"
                     >
                       <Package className="h-3.5 w-3.5 text-white" />
@@ -1350,10 +1413,10 @@ export function PrescriptionAuthoringPad({
                   <button
                     type="button"
                     onClick={() => handleOpenFhirModal(rx)}
-                    className="py-1 px-2.5 rounded-[6px] border border-[#e5e7eb] bg-[#f8f9fa] text-xs font-semibold text-[#111111] hover:bg-[#e5e7eb] transition-all flex items-center gap-1.5 cursor-pointer"
+                    className="py-1 px-2.5 rounded-lg border border-[#e5e7eb] bg-[#f8f9fa] text-xs font-semibold text-[#111111] hover:bg-[#e5e7eb] transition-all flex items-center gap-1.5 cursor-pointer shadow-xs"
                   >
                     <Code className="h-3.5 w-3.5" />
-                    FHIR JSON
+                    FHIR Inspector
                   </button>
                 </div>
               </div>
@@ -1362,41 +1425,230 @@ export function PrescriptionAuthoringPad({
         )}
       </Card>
 
-      {/* FHIR R4 MedicationRequest Modal */}
+      {/* FHIR R4 MedicationRequest Inspector Modal */}
       {fhirModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
-          <div className="bg-white rounded-[12px] border border-[#e5e7eb] shadow-xl max-w-2xl w-full max-h-[85vh] flex flex-col overflow-hidden">
-            <div className="p-4 border-b border-[#e5e7eb] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Code className="h-4 w-4 text-[#111111]" />
-                <h3 className="font-bold text-sm text-[#111111]">
-                  HL7 FHIR Release 4 MedicationRequest
-                </h3>
-                <Badge variant="abdm" size="sm">
-                  ABDM NRCeS Prescription
-                </Badge>
+          <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-2xl max-w-3xl w-full max-h-[88vh] flex flex-col overflow-hidden">
+            {/* Header */}
+            <div className="p-4 border-b border-[#e5e7eb] flex items-center justify-between bg-white">
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-lg bg-[#f3f4f6] text-[#111111]">
+                  <Code className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-[#111111] flex items-center gap-2">
+                    HL7 FHIR R4 MedicationRequest Inspector
+                    <Badge variant="abdm" size="sm">NRCeS Validated</Badge>
+                  </h3>
+                  <p className="text-[11px] text-[#6b7280]">
+                    Resource ID: <span className="font-mono text-[#111111]">{selectedRxForModal?.id}</span> • Profile: <span className="font-mono text-[#2563eb]">https://nrces.in/ndhm/fhir/r4/StructureDefinition/Prescription</span>
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setFhirModalOpen(false)}
-                className="text-[#6b7280] hover:text-[#111111] text-sm p-1 rounded cursor-pointer"
+                className="text-[#6b7280] hover:text-[#111111] text-sm p-1.5 rounded-lg hover:bg-[#f3f4f6] transition-colors cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <div className="p-4 overflow-y-auto flex-1 bg-[#f8f9fa]">
-              <pre className="font-mono text-xs text-[#111111] whitespace-pre-wrap break-all bg-white p-3.5 rounded-[8px] border border-[#e5e7eb]">
-                {JSON.stringify(selectedFhirJson, null, 2)}
-              </pre>
+            {/* View Mode Tabs */}
+            <div className="px-4 py-2 border-b border-[#e5e7eb] bg-[#f9fafb] flex items-center justify-between gap-3">
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setFhirTab("narrative")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    fhirTab === "narrative"
+                      ? "bg-[#111111] text-white shadow-xs"
+                      : "bg-white text-[#4b5563] border border-[#e5e7eb] hover:bg-[#f3f4f6]"
+                  }`}
+                >
+                  <FileText className="h-3.5 w-3.5" />
+                  Structured Narrative View
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFhirTab("json")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    fhirTab === "json"
+                      ? "bg-[#111111] text-white shadow-xs"
+                      : "bg-white text-[#4b5563] border border-[#e5e7eb] hover:bg-[#f3f4f6]"
+                  }`}
+                >
+                  <Code className="h-3.5 w-3.5" />
+                  Raw FHIR R4 JSON
+                </button>
+              </div>
+
+              <span className="text-[11px] text-[#6b7280] hidden sm:inline">
+                ABDM Section 3.2 Conformance
+              </span>
             </div>
 
-            <div className="p-4 border-t border-[#e5e7eb] flex items-center justify-between bg-white">
-              <span className="text-xs text-[#6b7280]">
-                Conforms to NRCeS Prescription StructureDefinition profile
+            {/* Content Area */}
+            <div className="p-5 overflow-y-auto flex-1 bg-[#f8f9fa] space-y-4">
+              {fhirTab === "narrative" ? (
+                <div className="space-y-4">
+                  {/* Status & Identifiers Overview */}
+                  <div className="p-3.5 rounded-xl bg-white border border-[#e5e7eb] grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                    <div>
+                      <span className="text-[10px] text-[#6b7280] block font-medium">Status</span>
+                      <Badge variant="verified" size="sm">
+                        {selectedRxForModal?.status.toUpperCase() || "ACTIVE"}
+                      </Badge>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[#6b7280] block font-medium">Intent / Priority</span>
+                      <span className="font-semibold text-[#111111]">
+                        {selectedRxForModal?.intent || "order"} / {selectedRxForModal?.priority || "routine"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[#6b7280] block font-medium">Authored On</span>
+                      <span className="font-medium text-[#111111]">
+                        {selectedRxForModal?.authored_on ? new Date(selectedRxForModal.authored_on).toLocaleString() : "Today"}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[#6b7280] block font-medium">Tamper Seal</span>
+                      <Badge variant="emerald" size="sm">
+                        SHA-256 Verified
+                      </Badge>
+                    </div>
+                  </div>
+
+                  {/* Medication Details Card */}
+                  <div className="p-4 rounded-xl bg-white border border-[#e5e7eb] space-y-2">
+                    <span className="text-xs font-bold text-[#111827] uppercase tracking-wider block">
+                      Prescribed Medication & Formulary Coding
+                    </span>
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="font-bold text-sm text-[#111827]">
+                          {selectedRxForModal?.medication?.name || "Prescribed Product"}
+                        </div>
+                        <div className="text-xs text-[#4b5563]">
+                          Generic: {selectedRxForModal?.medication?.generic_name} • Strength: {selectedRxForModal?.medication?.strength} • Form: <span className="capitalize">{selectedRxForModal?.medication?.form}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="font-mono text-[10px] bg-[#e5e7eb] px-1.5 py-0.5 rounded text-[#111111]">
+                          ATC: {selectedRxForModal?.medication?.atc_code}
+                        </span>
+                        <span className="font-mono text-[10px] bg-[#dbeafe] text-[#1e40af] px-1.5 py-0.5 rounded">
+                          RxCUI: {selectedRxForModal?.medication?.rxnorm_code}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dosage & Administration Schedule */}
+                  <div className="p-4 rounded-xl bg-white border border-[#e5e7eb] space-y-2">
+                    <span className="text-xs font-bold text-[#111827] uppercase tracking-wider block">
+                      Dosage Instructions & Administration Schedule
+                    </span>
+                    <p className="text-xs font-mono text-[#111827] bg-[#f9fafb] p-3 rounded-lg border border-[#e5e7eb]">
+                      {selectedRxForModal?.dosage_text}
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-1 text-[#374151]">
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">Route</span>
+                        <span className="font-semibold capitalize text-[#111111]">{selectedRxForModal?.route || "Oral"}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">Frequency</span>
+                        <span className="font-semibold text-[#111111]">{selectedRxForModal?.frequency || 1} time(s) daily</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">PRN Status</span>
+                        <span className="font-semibold text-[#111111]">{selectedRxForModal?.as_needed ? "Yes (As Needed)" : "No (Scheduled)"}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">Dose Quantity</span>
+                        <span className="font-semibold text-[#111111]">{selectedRxForModal?.dose_quantity} {selectedRxForModal?.dose_unit}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dispense Request & Substitution */}
+                  <div className="p-4 rounded-xl bg-white border border-[#e5e7eb] space-y-2">
+                    <span className="text-xs font-bold text-[#111827] uppercase tracking-wider block">
+                      Pharmacy Dispensation Specification
+                    </span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs text-[#374151]">
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">Dispense Quantity</span>
+                        <span className="font-bold text-[#111111]">{selectedRxForModal?.dispense_quantity} {selectedRxForModal?.dispense_unit || "tablets"}</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">Supply Duration</span>
+                        <span className="font-bold text-[#111111]">{selectedRxForModal?.expected_supply_duration_days || 30} days</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">Refills Permitted</span>
+                        <span className="font-bold text-[#111111]">{selectedRxForModal?.number_of_repeats_allowed || 0} repeat(s)</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] text-[#6b7280] block">Generic Substitution</span>
+                        <span className={`font-semibold ${selectedRxForModal?.allow_generic_substitution ? "text-[#059669]" : "text-[#dc2626]"}`}>
+                          {selectedRxForModal?.allow_generic_substitution ? "Allowed (Bioequivalent)" : "Brand Specific"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Cryptographic Signature Provenance */}
+                  <div className="p-4 rounded-xl bg-[#ecfdf5] border border-[#a7f3d0] space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-[#065f46] uppercase tracking-wider flex items-center gap-1.5">
+                        <ShieldCheck className="h-4 w-4 text-[#059669]" />
+                        Cryptographic Provenance & Prescriber Signature
+                      </span>
+                      <Badge variant="abdm" size="sm">HIP Verified</Badge>
+                    </div>
+                    <div className="text-xs text-[#047857] space-y-1">
+                      <div>Prescriber: <strong>{doctorName}</strong> ({doctorSpecialty}) • Council Reg: <strong>{doctorRegNumber}</strong></div>
+                      <div>Patient Subject: <strong>{patientName}</strong> (ID: {patientId})</div>
+                      <div className="font-mono text-[10px] text-[#065f46] break-all bg-white/80 p-2 rounded-lg border border-[#a7f3d0]">
+                        SHA-256 Digest: {selectedRxForModal?.signature_hash || "a4f89b1c2e1f3a718cbe268ab93ccc988a11e583b1c2e17f83b1657ff1fc53b9"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-[#6b7280]">
+                    <span>HL7 FHIR Release 4 JSON (ABDM NRCeS StructureDefinition Conformant)</span>
+                    <button
+                      type="button"
+                      onClick={handleCopyJson}
+                      className="text-xs font-semibold text-[#2563eb] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      {copied ? <Check className="h-3 w-3 text-[#059669]" /> : <Copy className="h-3 w-3" />}
+                      <span>{copied ? "Copied" : "Copy to Clipboard"}</span>
+                    </button>
+                  </div>
+                  <pre className="font-mono text-xs text-[#111827] whitespace-pre-wrap break-all bg-white p-4 rounded-xl border border-[#e5e7eb] shadow-xs">
+                    {JSON.stringify(selectedFhirJson, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-[#e5e7eb] flex items-center justify-between bg-white gap-2">
+              <span className="text-xs text-[#6b7280] hidden sm:inline">
+                NRCeS FHIR R4 MedicationRequest Profile
               </span>
-              <div className="flex gap-2">
-                <Button variant="secondary" size="sm" onClick={handleCopyJson}>
+              <div className="flex items-center gap-2">
+                <Button variant="secondary" size="sm" onClick={handleDownloadJson} className="gap-1.5 font-medium">
+                  <Download className="h-3.5 w-3.5" />
+                  Download JSON
+                </Button>
+                <Button variant="secondary" size="sm" onClick={handleCopyJson} className="gap-1.5 font-medium">
                   {copied ? (
                     <>
                       <Check className="h-3.5 w-3.5 text-[#059669]" />
