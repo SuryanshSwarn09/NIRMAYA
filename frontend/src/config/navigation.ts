@@ -63,6 +63,15 @@ export const FOOTER_SECTIONS = [
     ],
   },
   {
+    title: "Governance & Legal",
+    links: [
+      { label: "Privacy Policy (DPDP Act)", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "ABDM Consent Framework", href: "/patient" },
+      { label: "National Health Portal", href: "https://www.nhp.gov.in/" },
+    ],
+  },
+  {
     title: "Academic Project",
     links: [
       { label: "GitBook Documentation", href: "https://suryanshs-projects.gitbook.io/nirmaya-docs" },

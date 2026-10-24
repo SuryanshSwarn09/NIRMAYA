@@ -16,7 +16,8 @@ import {
   User as UserIcon,
   Heart,
   MapPin,
-  Phone
+  Phone,
+  Landmark
 } from "lucide-react";
 import { generateQrSvgString, encodeAbdmQrPayload } from "@/lib/qr";
 
@@ -277,7 +278,9 @@ export function AbhaCardExportModal({
                   </div>
                   <div className="p-3 border-b border-[#f3f4f6] flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <div className="h-5 w-5 rounded-full bg-[#111111] text-white flex items-center justify-center text-[9px] font-bold">🏛️</div>
+                      <div className="h-5 w-5 rounded-[4px] bg-[#111111] text-white flex items-center justify-center text-[9px] font-bold">
+                        <Landmark className="h-3 w-3 text-white" />
+                      </div>
                       <span className="text-[10px] font-bold text-[#111111] tracking-tight">ABHA ID Card • Govt of India</span>
                     </div>
                     <span className="text-[9px] text-[#059669] font-bold">ABDM</span>

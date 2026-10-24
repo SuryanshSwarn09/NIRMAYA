@@ -36,19 +36,18 @@ export default function Home() {
             
             {/* Left 7 Columns: Editorial Headline & 2 Primary CTAs */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#f8f9fa] border border-[#e5e7eb] text-xs font-medium text-[#111111]">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#f8f9fa] border border-[#e5e7eb] text-xs font-medium text-[#111111]">
                 <span className="h-2 w-2 rounded-full bg-[#10b981]" />
                 <span>ABDM & HL7 FHIR R4 Interoperable</span>
               </div>
 
               <h1 className="display-xl text-[#111111]">
-                The interoperable health network,{" "}
-                <span className="text-[#6b7280]">finally simplified.</span>
+                HL7 FHIR R4 & ABDM Digital Health Network Infrastructure
               </h1>
 
               <p className="text-base sm:text-lg text-[#374151] leading-relaxed max-w-2xl font-normal">
                 NIRMAYA unifies longitudinal patient vaults, clinical provider EMRs, and diagnostic laboratories 
-                into an interoperable, consent-driven network anchored on HL7 FHIR R4.
+                into an interoperable, consent-driven network anchored on HL7 FHIR R4 and the Ayushman Bharat Digital Mission (ABDM).
               </p>
 
               {/* 2 Focused Primary CTAs (No clutter) */}
@@ -90,7 +89,7 @@ export default function Home() {
                 {/* Doctor Chrome Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-[#f5f5f5] border border-[#e5e7eb] flex items-center justify-center font-bold text-sm text-[#111111]">
+                    <div className="h-10 w-10 rounded-[8px] bg-[#f5f5f5] border border-[#e5e7eb] flex items-center justify-center font-bold text-sm text-[#111111]">
                       AS
                     </div>
                     <div>
@@ -449,7 +448,7 @@ export default function Home() {
           {/* Card 1: Self-Sovereign Consent */}
           <Card variant="feature" className="p-6 flex flex-col justify-between">
             <div>
-              <div className="h-10 w-10 rounded-full bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
+              <div className="h-10 w-10 rounded-[8px] bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
                 <Lock className="h-5 w-5" />
               </div>
               <CardTitle>Self-Sovereign Consent</CardTitle>
@@ -462,7 +461,7 @@ export default function Home() {
           {/* Card 2: FHIR R4 Bundle Compliance */}
           <Card variant="feature" className="p-6 flex flex-col justify-between">
             <div>
-              <div className="h-10 w-10 rounded-full bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
+              <div className="h-10 w-10 rounded-[8px] bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
                 <FileText className="h-5 w-5" />
               </div>
               <CardTitle>HL7 FHIR R4 Standards</CardTitle>
@@ -475,7 +474,7 @@ export default function Home() {
           {/* Card 3: Tamper-Evident Security */}
           <Card variant="feature" className="p-6 flex flex-col justify-between">
             <div>
-              <div className="h-10 w-10 rounded-full bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
+              <div className="h-10 w-10 rounded-[8px] bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
                 <ShieldCheck className="h-5 w-5" />
               </div>
               <CardTitle>Tamper-Evident Records</CardTitle>

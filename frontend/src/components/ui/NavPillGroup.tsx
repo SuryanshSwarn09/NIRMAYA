@@ -34,7 +34,7 @@ export function NavPillGroup({
     <div
       role="tablist"
       className={cn(
-        "inline-flex items-center p-1.5 rounded-full bg-[#f8f9fa] border border-[#e5e7eb] max-w-full overflow-x-auto",
+        "inline-flex items-center p-1 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] max-w-full overflow-x-auto",
         className
       )}
     >
@@ -47,9 +47,9 @@ export function NavPillGroup({
             aria-selected={isActive}
             onClick={() => onChange(item.id)}
             className={cn(
-              "flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-full transition-all duration-150 select-none whitespace-nowrap cursor-pointer",
+              "flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-[6px] transition-all duration-150 select-none whitespace-nowrap cursor-pointer",
               isActive
-                ? "bg-white text-[#111111] font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
+                ? "bg-white text-[#111111] font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.08)] border border-[#e5e7eb]"
                 : "text-[#6b7280] hover:text-[#111111] hover:bg-black/[0.02]"
             )}
           >
@@ -67,7 +67,7 @@ export function NavPillGroup({
             {item.badge && (
               <span
                 className={cn(
-                  "text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-full leading-none",
+                  "text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-[4px] leading-none",
                   isActive
                     ? "bg-[#111111] text-white"
                     : "bg-[#e5e7eb] text-[#374151]"

@@ -33,6 +33,7 @@ import {
   XCircle,
   Package,
   Download,
+  X,
 } from "lucide-react";
 
 
@@ -1450,7 +1451,7 @@ export function PrescriptionAuthoringPad({
                 onClick={() => setFhirModalOpen(false)}
                 className="text-[#6b7280] hover:text-[#111111] text-sm p-1.5 rounded-lg hover:bg-[#f3f4f6] transition-colors cursor-pointer"
               >
-                ✕
+                <X className="h-4 w-4" />
               </button>
             </div>
 

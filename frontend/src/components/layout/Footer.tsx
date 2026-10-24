@@ -8,17 +8,17 @@ import { ExternalLink, Shield } from "lucide-react";
 /**
  * Signature Modern SaaS Footer:
  * Deep near-black surface (#101010) with muted light text (#a1a1aa).
- * The footer is the ONLY dark surface on the page — visually closing the long-scroll page.
+ * The footer is the dedicated dark surface on the page: visually grounding the application.
  */
 export function Footer() {
   return (
     <footer className="bg-[#101010] text-[#a1a1aa] border-t border-[#1a1a1a] transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 lg:gap-10">
           {/* Brand Identity & Mission Statement */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center overflow-hidden border border-[#262626]">
+              <div className="h-8 w-8 rounded-[8px] bg-white flex items-center justify-center overflow-hidden border border-[#262626]">
                 <Image
                   src="/logo.png"
                   alt="NIRMAYA Logo"
@@ -31,7 +31,7 @@ export function Footer() {
               <span className="font-bold text-white text-lg tracking-tight">
                 nirmaya
               </span>
-              <span className="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-full bg-[#1a1a1a] text-[#a1a1aa] border border-[#262626]">
+              <span className="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-[4px] bg-[#1a1a1a] text-[#a1a1aa] border border-[#262626]">
                 Network
               </span>
             </div>
@@ -43,13 +43,13 @@ export function Footer() {
             </p>
 
             <div className="flex flex-wrap items-center gap-2 pt-2">
-              <span className="text-xs px-2.5 py-1 rounded-full bg-[#1a1a1a] text-[#e4e4e7] border border-[#262626]">
+              <span className="text-xs px-2.5 py-1 rounded-[4px] bg-[#1a1a1a] text-[#e4e4e7] border border-[#262626]">
                 HL7 FHIR R4
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-[#1a1a1a] text-[#e4e4e7] border border-[#262626]">
+              <span className="text-xs px-2.5 py-1 rounded-[4px] bg-[#1a1a1a] text-[#e4e4e7] border border-[#262626]">
                 ABHA Verified
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-[#1a1a1a] text-[#e4e4e7] border border-[#262626]">
+              <span className="text-xs px-2.5 py-1 rounded-[4px] bg-[#1a1a1a] text-[#e4e4e7] border border-[#262626]">
                 Consent Driven
               </span>
             </div>
@@ -97,16 +97,20 @@ export function Footer() {
           <div className="flex items-center gap-2">
             <Shield className="h-4 w-4 text-[#a1a1aa]" />
             <span>
-              &copy; {new Date().getFullYear()} NIRMAYA Health Network. Final Year Major Project in Health Informatics.
+              &copy; {new Date().getFullYear()} NIRMAYA Health Network. Open Health Informatics Architecture.
             </span>
           </div>
 
           <div className="flex items-center gap-4 text-[#71717a]">
-            <span>FastAPI 0.115+</span>
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
             <span>•</span>
-            <span>Next.js 15 App Router</span>
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms & Conditions
+            </Link>
             <span>•</span>
-            <span>PostgreSQL 16 & Supabase</span>
+            <span>DPDP Act 2023</span>
           </div>
         </div>
       </div>

@@ -45,7 +45,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       sm: "h-8 px-3 text-xs rounded-[6px] gap-1.5 font-medium",
       md: "h-10 px-4 text-sm rounded-[8px] gap-2 font-semibold", // Standard 40px, 8px radius
       lg: "h-11 px-5 text-sm rounded-[8px] gap-2.5 font-semibold",
-      icon: "h-9 w-9 p-0 rounded-full justify-center border border-[#e5e7eb] bg-white text-[#111111] hover:bg-[#f5f5f5]", // Circular 36px
+      icon: "h-9 w-9 p-0 rounded-[8px] justify-center border border-[#e5e7eb] bg-white text-[#111111] hover:bg-[#f5f5f5]", // Cal.com 36px geometric button
     };
 
     return (

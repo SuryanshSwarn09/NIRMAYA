@@ -262,8 +262,9 @@ export function TelemedicineReadinessModal({
                   </span>
                 </div>
 
-                <p className="text-[10px] text-[#059669] font-medium">
-                  ✓ High-Definition Consultation Supported
+                <p className="text-[10px] text-[#059669] font-medium flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3 text-[#059669] shrink-0" />
+                  <span>High-Definition Consultation Supported</span>
                 </p>
               </div>
             </div>

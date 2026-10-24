@@ -339,9 +339,9 @@ export const PharmacyDispenseModal: React.FC<PharmacyDispenseModalProps> = ({
                 </div>
 
                 {!allowSub && (
-                  <p className="text-[11px] text-amber-800 bg-amber-50 p-2 rounded-lg border border-amber-200/80">
-                    ⚠️ The prescriber has explicitly restricted this prescription to "Dispense As
-                    Written". Generic substitution is prohibited by clinical policy.
+                  <p className="text-[11px] text-amber-800 bg-amber-50 p-2 rounded-lg border border-amber-200/80 flex items-center gap-1.5">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                    <span>The prescriber has explicitly restricted this prescription to &quot;Dispense As Written&quot;. Generic substitution is prohibited by clinical policy.</span>
                   </p>
                 )}
 

@@ -15,7 +15,8 @@ import {
   MapPin, 
   User as UserIcon,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Landmark
 } from "lucide-react";
 import { generateQrSvgString, encodeAbdmQrPayload, AbdmQrClaims } from "@/lib/qr";
 
@@ -154,8 +155,8 @@ export function DigitalAbhaCard({
             <div className="px-5 pt-3.5 pb-2.5 flex items-center justify-between border-b border-[#f3f4f6] bg-[#fafafa]">
               <div className="flex items-center gap-2.5">
                 {/* Government Emblem Symbol */}
-                <div className="h-8 w-8 rounded-full bg-[#111111] text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0 ring-2 ring-white">
-                  <span>🏛️</span>
+                <div className="h-8 w-8 rounded-[8px] bg-[#111111] text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0 border border-[#262626]">
+                  <Landmark className="h-4 w-4 text-white" />
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-bold tracking-wider text-[#6b7280]">
@@ -178,13 +179,13 @@ export function DigitalAbhaCard({
             <div className="p-4 sm:p-5 grid grid-cols-12 gap-3.5 items-center">
               {/* Photo & Hologram */}
               <div className="col-span-3 flex flex-col items-center justify-center">
-                <div className="relative h-20 w-20 rounded-[12px] bg-[#f3f4f6] border border-[#e5e7eb] overflow-hidden flex items-center justify-center shadow-inner">
-                  <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-b from-gray-100 to-gray-200 text-[#4b5563]">
+                <div className="relative h-20 w-20 rounded-[8px] bg-[#f3f4f6] border border-[#e5e7eb] overflow-hidden flex items-center justify-center shadow-inner">
+                  <div className="h-full w-full flex flex-col items-center justify-center bg-[#f3f4f6] text-[#4b5563]">
                     <UserIcon className="h-10 w-10 text-[#9ca3af]" />
                   </div>
-                  {/* Subtle Security Hologram Badge */}
-                  <div className="absolute bottom-1 right-1 h-5 w-5 rounded-full bg-gradient-to-tr from-amber-400 via-pink-400 to-cyan-400 opacity-80 flex items-center justify-center text-[9px] shadow-xs">
-                    <Sparkles className="h-3 w-3 text-white" />
+                  {/* Security Authenticity Seal */}
+                  <div className="absolute bottom-1 right-1 h-5 w-5 rounded-[4px] bg-[#111111] border border-[#374151] flex items-center justify-center shadow-xs">
+                    <ShieldCheck className="h-3 w-3 text-[#10b981]" />
                   </div>
                 </div>
                 <span className="text-[9px] font-semibold text-[#6b7280] mt-1 uppercase tracking-wider">
@@ -318,8 +319,15 @@ export function DigitalAbhaCard({
                 <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
                   Organ Donor Status
                 </span>
-                <span className="text-xs font-bold text-[#059669]">
-                  {organDonor ? "✓ Registered Donor (NHO)" : "Not Registered"}
+                <span className="text-xs font-bold text-[#059669] flex items-center gap-1">
+                  {organDonor ? (
+                    <>
+                      <Check className="h-3.5 w-3.5 text-[#059669]" />
+                      <span>Registered Donor (NHO)</span>
+                    </>
+                  ) : (
+                    <span>Not Registered</span>
+                  )}
                 </span>
               </div>
 

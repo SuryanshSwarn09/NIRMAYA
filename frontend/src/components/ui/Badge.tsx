@@ -69,7 +69,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border transition-colors select-none",
+        "inline-flex items-center gap-1.5 rounded-[6px] border transition-colors select-none",
         variantStyles[variant],
         sizeStyles[size],
         className
