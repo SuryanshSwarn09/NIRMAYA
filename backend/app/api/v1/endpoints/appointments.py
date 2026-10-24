@@ -110,8 +110,16 @@ async def list_user_appointments(
             patient_id = patient.id
         else:
             return PaginatedResponse(
+                success=True,
                 data=[],
-                meta=PaginationMeta(total=0, limit=limit, offset=offset, has_more=False),
+                pagination=PaginationMeta(
+                    total_count=0,
+                    page=1,
+                    limit=limit,
+                    total_pages=0,
+                    has_next=False,
+                    has_prev=False,
+                ),
             )
     elif current_user.role == UserRole.DOCTOR:
         doctor = await doctor_service.get_doctor_by_user_id(db, current_user.id)
@@ -119,8 +127,16 @@ async def list_user_appointments(
             doctor_id = doctor.id
         else:
             return PaginatedResponse(
+                success=True,
                 data=[],
-                meta=PaginationMeta(total=0, limit=limit, offset=offset, has_more=False),
+                pagination=PaginationMeta(
+                    total_count=0,
+                    page=1,
+                    limit=limit,
+                    total_pages=0,
+                    has_next=False,
+                    has_prev=False,
+                ),
             )
 
     items, total = await appointment_service.list_appointments(
@@ -134,13 +150,19 @@ async def list_user_appointments(
         offset=offset,
     )
 
+    page = (offset // limit) + 1
+    total_pages = (total + limit - 1) // limit if total > 0 else 0
+
     return PaginatedResponse(
+        success=True,
         data=items,
-        meta=PaginationMeta(
-            total=total,
+        pagination=PaginationMeta(
+            total_count=total,
+            page=page,
             limit=limit,
-            offset=offset,
-            has_more=(offset + limit) < total,
+            total_pages=total_pages,
+            has_next=page < total_pages,
+            has_prev=page > 1,
         ),
     )
 
