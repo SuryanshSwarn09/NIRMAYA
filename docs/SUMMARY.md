@@ -60,6 +60,7 @@
     * [Day 34: Vitals Telemetry & Observational Charts](journey/month-2/day-34.md)
     * [Day 35: E2E Patient Portal Verification & Week 7 Close](journey/month-2/day-35.md)
   * [Week 8: Doctor EMR Workspace, SOAP UX & Release v0.2.0](journey/month-2/week-8.md)
+    * [Day 36: Clinician Queue & Consultation Workspace](journey/month-2/day-36.md)
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
   * [Week 9: ABDM Milestone 1 - ABHA Creation & Verification](journey/month-3/week-9.md)
   * [Week 10: ABDM Milestone 2 - HIP Discovery & Care Contexts](journey/month-3/week-10.md)

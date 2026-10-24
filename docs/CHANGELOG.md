@@ -966,6 +966,42 @@
   - Next.js 15 Production Build: **11/11 static pages generated with 0 errors** (`npm run build`).
   - **Release Tag Created:** `v0.2.0-alpha.w7` successfully tagged and pushed to remote repository marking the completion of Week 7. Major milestone release `v0.2.0` strictly deferred until Day 40 Month 2 close.
 
+### Week 8: Doctor EMR Workspace, SOAP UX & Release v0.2.0
+
+#### Day 36 (Mon) - Milestone 08-01: Clinician Queue & Consultation Workspace
+- **Focus:** Real-Time Clinician Consultation Queue, Cal.com Styled Patient Clinical Demographic Banner, Clinical Quick-Action Rail, EMR Cockpit Integration, Backend Pagination Schema Alignment, and Automated Queue Test Suite.
+- **Executed Micro-Commits (Strict 7-Commit Schedule):**
+  1. `86b6ed1: feat(frontend): implement clinician appointment queue with real-time status management`
+  2. `ad0dfaa: feat(frontend): implement calcom styled patient clinical demographic banner and quick action rail`
+  3. `e900537: feat(frontend): integrate consultation queue and patient banner into doctor emr workspace`
+  4. `19afa8c: test(backend): implement automated test suite for clinician appointment queue and encounter transitions`
+  5. `809ede2: test(backend): validate 100% green test pass across backend test suite`
+  6. `ccc9630: build(frontend): validate next.js 15 production build and typecheck`
+  7. `docs(journey): author day 36 engineering log, update summary, and changelog`
+- **Key Deliverables:**
+  - **Clinician Consultation Queue (`frontend/src/components/clinical/ClinicianConsultationQueue.tsx`):**
+    - Metric summary cards: Today's Queue, Waiting Room, In Active Consultation, Completed encounters.
+    - Live search by patient name, 14-digit ABHA ID, and clinical reason.
+    - Status tabs (`all`, `waiting`, `in_progress`, `completed`) and encounter type filter (Teleconsultation vs In-Clinic).
+    - "Call Patient / Start Consult" workflow with encounter status progression and active workspace binding.
+  - **Patient Clinical Demographic Banner (`frontend/src/components/clinical/PatientDemographicBanner.tsx`):**
+    - Cal.com-styled clinical header displaying verified ABHA badge (`91-8472-1092-4821` • `arun.patel@abdm`), age, gender, blood group, emergency contact details, and active encounter pill.
+    - Critical alerts strip with drug allergies banner (e.g. `Penicillin V - Severe Anaphylaxis`) and encounter chief complaint.
+    - Expandable longitudinal summary card displaying active SNOMED-CT / ICD-10 conditions, recent LOINC vitals telemetry, and ABDM CareContext status.
+  - **Clinical Quick-Action Rail (`frontend/src/components/clinical/ClinicalQuickActionRail.tsx`):**
+    - Quick navigation tabs: Consultation Queue (`queue`), SOAP Notes (`soap`), e-Prescriptions (`prescriptions`), Diagnostic Orders (`diagnostics`), Problem List (`problems`), Vitals Telemetry (`vitals`).
+    - Dedicated "Launch Teleconsult Video" trigger button for active teleconsultation visits.
+  - **EMR Cockpit Integration (`frontend/src/app/doctor/page.tsx`):**
+    - Streamlined doctor page (445 insertions, 1042 deletions), replacing monolithic inline duplicate forms with modular reactive bindings to `SoapNoteEditor`, `PrescriptionAuthoringPad`, `DiagnosticOrderTracker`, and `TelemedicineReadinessModal`.
+  - **Backend Pagination Standardization & Automated Tests (`backend/app/api/v1/endpoints/appointments.py`, `backend/tests/test_doctor_queue.py`):**
+    - Aligned `list_user_appointments` with standard `PaginatedResponse[PaginationMeta]`.
+    - Automated test suite validating status filtering, lifecycle transitions (`confirmed` -> `in_progress` -> `completed`), and patient RBAC isolation.
+- **Verification:**
+  - Backend Automated Test Suite: **3/3 tests passing in `tests/test_doctor_queue.py` (100% green)**; full suite: **245 / 245 passed** (0 failures).
+  - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **11/11 static pages generated with 0 errors** (`npm run build`, `/doctor`: 4.27 kB).
+  - **Tag Discipline Honored:** Strictly zero release tags created today (Milestone release tag `v0.2.0` reserved for Day 40 Month 2 close).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
