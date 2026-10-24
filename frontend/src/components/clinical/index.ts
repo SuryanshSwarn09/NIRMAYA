@@ -7,3 +7,5 @@ export { PrescriptionAuthoringPad } from "./PrescriptionAuthoringPad";
 export { CDSAlertBanner } from "./CDSAlertBanner";
 export { PharmacyDispenseModal } from "./PharmacyDispenseModal";
 export { ClinicianConsultationQueue, type QueueAppointment } from "./ClinicianConsultationQueue";
+export { PatientDemographicBanner, type PatientDemographics } from "./PatientDemographicBanner";
+export { ClinicalQuickActionRail, type ClinicalTabType } from "./ClinicalQuickActionRail";
