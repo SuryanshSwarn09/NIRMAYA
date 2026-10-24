@@ -58,6 +58,7 @@
     * [Day 32: Interactive Digital ABHA ID Card Generator & QR Verification](journey/month-2/day-32.md)
     * [Day 33: Problem List & Active Conditions UI](journey/month-2/day-33.md)
     * [Day 34: Vitals Telemetry & Observational Charts](journey/month-2/day-34.md)
+    * [Day 35: E2E Patient Portal Verification & Week 7 Close](journey/month-2/day-35.md)
   * [Week 8: Doctor EMR Workspace, SOAP UX & Release v0.2.0](journey/month-2/week-8.md)
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
   * [Week 9: ABDM Milestone 1 - ABHA Creation & Verification](journey/month-3/week-9.md)
@@ -82,6 +83,7 @@
 * [Month 1 Comprehensive Retrospective & Foundation Report](journey/month-1/month-1-retrospective.md)
 * [Week 5 Retrospective & Clinical Architecture Review](journey/month-2/week-5-review.md)
 * [Week 6 Retrospective & Pharmacy Architecture Review](journey/month-2/week-6-review.md)
+* [Week 7 Retrospective & Patient Vault Architecture](journey/month-2/week-7-review.md)
 
 ## Fundamental FAQ
 * [Finalized System Architecture & Ecosystem Specification](faq/finalized-system-architecture.md)

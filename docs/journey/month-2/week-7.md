@@ -12,7 +12,7 @@
 | **Day 32** | ABHA ID Card Generator & QR | Digital ABHA Card canvas, QR code payload renderer, SVG export | **Completed** |
 | **Day 33** | Problem List & Active Conditions UI | Patient-facing problem list, SNOMED CT condition badges, clinical cards | **Completed** |
 | **Day 34** | Vitals Telemetry & Observational Charts | Recharts vital sign tracking (Blood Pressure, SpO2, Heart Rate, BMI) | **Completed** |
-| **Day 35** | E2E Patient Portal Verification | Playwright integration tests, responsive verification, and sprint review | Planned |
+| **Day 35** | E2E Patient Portal Verification | Playwright integration tests, responsive verification, and sprint review | **Completed** |
 
 ---
 
