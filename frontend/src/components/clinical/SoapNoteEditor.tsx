@@ -368,6 +368,18 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
     ],
   };
 
+  const [fhirTab, setFhirTab] = useState<"narrative" | "json">("narrative");
+
+  const downloadFhirJson = () => {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fhirComposition, null, 2));
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `FHIR-Composition-${patientId}-${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
   return (
     <div className="space-y-4">
       {/* Action Header Card */}
@@ -403,7 +415,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
             className="flex items-center gap-1.5 border-[#e5e7eb] hover:bg-[#f9fafb] text-[#111111] font-medium"
           >
             <Code className="h-3.5 w-3.5 text-[#6b7280]" />
-            FHIR R4 JSON
+            FHIR R4 Composition
           </Button>
 
           {!isSigned && !isReadOnly && (
@@ -546,6 +558,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                 CC
               </span>
               <span>Chief Complaint Narrative (LOINC 10154-3)</span>
+              {isSigned && <Lock className="h-3 w-3 text-[#10b981]" />}
             </label>
             <Badge variant="neutral" size="sm" className="text-[10px]">
               Encounter Trigger
@@ -558,7 +571,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
             value={chiefComplaint}
             onChange={(e) => setChiefComplaint(e.target.value)}
             placeholder="e.g. Occasional morning cephalalgia and borderline elevated home BP log..."
-            className="w-full text-xs px-3 py-2.5 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f9fafb] text-[#111111] font-medium"
+            className="w-full text-xs px-3 py-2.5 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] disabled:bg-[#f9fafb] disabled:text-[#6b7280] text-[#111111] font-medium"
           />
 
           {!isSigned && !isReadOnly && (
@@ -592,6 +605,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                   S
                 </span>
                 <span>Subjective History & Narrative (LOINC 61150-9)</span>
+                {isSigned && <Lock className="h-3 w-3 text-[#10b981]" />}
               </label>
               <span className="text-[11px] text-[#6b7280]">
                 Patient-reported symptoms, HPI & ROS
@@ -603,7 +617,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
               value={subjective}
               onChange={(e) => setSubjective(e.target.value)}
               placeholder="Record patient-reported history of present illness, symptom duration, aggravating/alleviating factors..."
-              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] text-[#111111]"
+              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] disabled:text-[#6b7280] text-[#111111]"
             />
           </Card>
         )}
@@ -617,6 +631,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                   O
                 </span>
                 <span>Objective Examination & Physical Findings (LOINC 61149-1)</span>
+                {isSigned && <Lock className="h-3 w-3 text-[#10b981]" />}
               </label>
               <span className="text-[11px] text-[#6b7280]">
                 Telemetry vitals & physical examination
@@ -628,7 +643,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
               value={objective}
               onChange={(e) => setObjective(e.target.value)}
               placeholder="Record measured blood pressure, heart rate, SpO2, BMI, cardiac auscultation, respiratory exams..."
-              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] text-[#111111]"
+              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] disabled:text-[#6b7280] text-[#111111]"
             />
           </Card>
         )}
@@ -642,6 +657,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                   A
                 </span>
                 <span>Assessment & Differential Diagnoses (LOINC 51848-0)</span>
+                {isSigned && <Lock className="h-3 w-3 text-[#10b981]" />}
               </label>
               <span className="text-[11px] text-[#6b7280]">
                 Clinical synthesis & ICD-10 codings
@@ -691,7 +707,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
               value={assessment}
               onChange={(e) => setAssessment(e.target.value)}
               placeholder="Clinical synthesis, active problem evaluations, differential diagnoses with ICD-10/SNOMED..."
-              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] text-[#111111]"
+              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] disabled:text-[#6b7280] text-[#111111]"
             />
           </Card>
         )}
@@ -705,6 +721,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                   P
                 </span>
                 <span>Plan of Care & Requisitions (LOINC 18776-5)</span>
+                {isSigned && <Lock className="h-3 w-3 text-[#10b981]" />}
               </label>
               <span className="text-[11px] text-[#6b7280]">
                 Therapeutics, lab orders & follow-up
@@ -716,7 +733,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
               value={plan}
               onChange={(e) => setPlan(e.target.value)}
               placeholder="Formulate management plan: prescription orders, diagnostic lab requisitions, lifestyle advice..."
-              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] text-[#111111]"
+              className="w-full text-xs p-3 border border-[#e5e7eb] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#111111] leading-relaxed disabled:bg-[#f9fafb] disabled:text-[#6b7280] text-[#111111]"
             />
           </Card>
         )}
@@ -736,7 +753,7 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
                     HL7 FHIR Release 4 • Composition Resource
                   </h3>
                   <p className="text-xs text-[#6b7280]">
-                    LOINC 11506-3 Narrative Progress Note Structure
+                    LOINC 11506-3 Progress Note Architecture
                   </p>
                 </div>
               </div>
@@ -749,24 +766,90 @@ export const SoapNoteEditor: React.FC<SoapNoteEditorProps> = ({
               </button>
             </div>
 
-            <pre className="p-4 bg-[#101010] text-[#a1a1aa] rounded-xl text-xs font-mono overflow-x-auto max-h-[380px] leading-relaxed">
-              {JSON.stringify(fhirComposition, null, 2)}
-            </pre>
+            {/* Sub-Tabs: Narrative View vs Raw JSON */}
+            <div className="flex items-center gap-2 border-b border-[#e5e7eb] pb-2 text-xs">
+              <button
+                type="button"
+                onClick={() => setFhirTab("narrative")}
+                className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
+                  fhirTab === "narrative"
+                    ? "bg-[#111111] text-white"
+                    : "text-[#6b7280] hover:text-[#111111] hover:bg-[#f3f4f6]"
+                }`}
+              >
+                Structured Clinical Narrative
+              </button>
+              <button
+                type="button"
+                onClick={() => setFhirTab("json")}
+                className={`px-3 py-1.5 rounded-lg font-medium transition-colors ${
+                  fhirTab === "json"
+                    ? "bg-[#111111] text-white"
+                    : "text-[#6b7280] hover:text-[#111111] hover:bg-[#f3f4f6]"
+                }`}
+              >
+                Raw FHIR R4 JSON Payload
+              </button>
+            </div>
+
+            {fhirTab === "narrative" ? (
+              <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1 text-xs">
+                <div className="p-3 bg-[#f8f9fa] rounded-xl border border-[#e5e7eb] space-y-1">
+                  <div className="font-semibold text-[#111111] flex items-center justify-between">
+                    <span>Document: {title}</span>
+                    <Badge variant={isSigned ? "emerald" : "warning"} size="sm">
+                      {isSigned ? "final" : "preliminary"}
+                    </Badge>
+                  </div>
+                  <div className="text-[11px] text-[#6b7280]">
+                    Subject: {patientName} • Author: {doctorName} • Date: {new Date(signedAt || Date.now()).toLocaleDateString("en-IN")}
+                  </div>
+                </div>
+
+                {fhirComposition.section.map((sec) => (
+                  <div key={sec.title} className="p-3 rounded-xl border border-[#e5e7eb] space-y-1">
+                    <div className="flex items-center justify-between text-[#111111] font-semibold">
+                      <span>{sec.title}</span>
+                      <span className="font-mono text-[10px] text-[#2563eb] bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                        {sec.code.coding[0].system.replace("http://", "")} #{sec.code.coding[0].code}
+                      </span>
+                    </div>
+                    <p className="text-[#374151] whitespace-pre-line leading-relaxed text-[11px]">
+                      {sec.text.div.replace(/<\/?div>/g, "")}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <pre className="p-4 bg-[#101010] text-[#a1a1aa] rounded-xl text-xs font-mono overflow-x-auto max-h-[380px] leading-relaxed">
+                {JSON.stringify(fhirComposition, null, 2)}
+              </pre>
+            )}
 
             <div className="flex items-center justify-between pt-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  navigator.clipboard.writeText(JSON.stringify(fhirComposition, null, 2));
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}
-                className="flex items-center gap-1.5 border-[#e5e7eb] text-[#111111]"
-              >
-                {copied ? <Check className="h-3.5 w-3.5 text-[#10b981]" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? "Copied" : "Copy FHIR JSON"}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(JSON.stringify(fhirComposition, null, 2));
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="flex items-center gap-1.5 border-[#e5e7eb] text-[#111111]"
+                >
+                  {copied ? <Check className="h-3.5 w-3.5 text-[#10b981]" /> : <Copy className="h-3.5 w-3.5" />}
+                  {copied ? "Copied" : "Copy FHIR JSON"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={downloadFhirJson}
+                  className="flex items-center gap-1.5 border-[#e5e7eb] text-[#111111]"
+                >
+                  Download JSON
+                </Button>
+              </div>
               <Button
                 size="sm"
                 onClick={() => setIsViewingFhir(false)}
