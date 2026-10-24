@@ -6,6 +6,6 @@ export { MedicationCatalogBrowser } from "./MedicationCatalogBrowser";
 export { PrescriptionAuthoringPad } from "./PrescriptionAuthoringPad";
 export { CDSAlertBanner } from "./CDSAlertBanner";
 export { PharmacyDispenseModal } from "./PharmacyDispenseModal";
-export { ClinicianConsultationQueue, type QueueAppointment } from "./ClinicianConsultationQueue";
+export { ClinicianConsultationQueue, type QueueAppointment, INITIAL_MOCK_QUEUE } from "./ClinicianConsultationQueue";
 export { PatientDemographicBanner, type PatientDemographics } from "./PatientDemographicBanner";
 export { ClinicalQuickActionRail, type ClinicalTabType } from "./ClinicalQuickActionRail";
