@@ -592,3 +592,87 @@ async def test_observation_rbac_security(obs_test_env):
     # 4. Unauthenticated request -> Unauthorized (401)
     unauth = await client.get(f"/api/v1/patients/{pat1_id}/observations")
     assert unauth.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_multimetric_telemetry_recording_and_fhir_serialization(obs_test_env):
+    """Verify recording of SpO2, BMI, and Temperature observations with FHIR R4 validation."""
+    client, session_factory = obs_test_env
+    async with session_factory() as session:
+        actors = await seed_clinical_actors(session)
+
+    pat_id = actors["patient1"].id
+    doc_header = auth_header_for(actors["user_doc"])
+
+    # 1. SpO2 observation (2708-6)
+    spo2_resp = await client.post(
+        f"/api/v1/patients/{pat_id}/observations",
+        json={
+            "category": "vital-signs",
+            "code_value": "2708-6",
+            "code_display": "Oxygen saturation in Arterial blood",
+            "value_quantity": 98.0,
+            "value_unit": "%",
+            "value_code": "%",
+            "interpretation": "normal",
+        },
+        headers=doc_header,
+    )
+    assert spo2_resp.status_code == 201
+    spo2_id = spo2_resp.json()["data"]["id"]
+
+    fhir_spo2 = await client.get(f"/api/v1/observations/{spo2_id}/fhir", headers=doc_header)
+    assert fhir_spo2.status_code == 200
+    spo2_json = fhir_spo2.json()
+    assert spo2_json["resourceType"] == "Observation"
+    assert spo2_json["code"]["coding"][0]["code"] == "2708-6"
+    assert spo2_json["valueQuantity"]["value"] == 98.0
+    assert spo2_json["valueQuantity"]["unit"] == "%"
+
+    # 2. Body Mass Index observation (39156-5)
+    bmi_resp = await client.post(
+        f"/api/v1/patients/{pat_id}/observations",
+        json={
+            "category": "vital-signs",
+            "code_value": "39156-5",
+            "code_display": "Body mass index (BMI)",
+            "value_quantity": 24.2,
+            "value_unit": "kg/m2",
+            "value_code": "kg/m2",
+            "interpretation": "normal",
+        },
+        headers=doc_header,
+    )
+    assert bmi_resp.status_code == 201
+    bmi_id = bmi_resp.json()["data"]["id"]
+
+    fhir_bmi = await client.get(f"/api/v1/observations/{bmi_id}/fhir", headers=doc_header)
+    assert fhir_bmi.status_code == 200
+    bmi_json = fhir_bmi.json()
+    assert bmi_json["resourceType"] == "Observation"
+    assert bmi_json["code"]["coding"][0]["code"] == "39156-5"
+    assert bmi_json["valueQuantity"]["value"] == 24.2
+
+    # 3. Body Temperature observation (8310-5)
+    temp_resp = await client.post(
+        f"/api/v1/patients/{pat_id}/observations",
+        json={
+            "category": "vital-signs",
+            "code_value": "8310-5",
+            "code_display": "Body temperature",
+            "value_quantity": 98.6,
+            "value_unit": "[degF]",
+            "value_code": "[degF]",
+            "interpretation": "normal",
+        },
+        headers=doc_header,
+    )
+    assert temp_resp.status_code == 201
+    temp_id = temp_resp.json()["data"]["id"]
+
+    fhir_temp = await client.get(f"/api/v1/observations/{temp_id}/fhir", headers=doc_header)
+    assert fhir_temp.status_code == 200
+    temp_json = fhir_temp.json()
+    assert temp_json["resourceType"] == "Observation"
+    assert temp_json["code"]["coding"][0]["code"] == "8310-5"
+    assert temp_json["valueQuantity"]["value"] == 98.6
