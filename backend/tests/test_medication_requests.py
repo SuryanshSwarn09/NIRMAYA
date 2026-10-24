@@ -530,3 +530,91 @@ async def test_export_prescription_fhir_r4(rx_test_env) -> None:
     assert fhir_data["medicationReference"]["reference"] == f"Medication/{actors['medication'].id}"
     assert fhir_data["meta"]["profile"] == ["https://nrces.in/ndhm/fhir/r4/StructureDefinition/Prescription"]
     assert fhir_data["dosageInstruction"][0]["text"] == "Take 1 tablet orally once daily at bedtime"
+
+
+@pytest.mark.asyncio
+async def test_prescription_with_refills_and_generic_substitution(rx_test_env) -> None:
+    """Verify authoring prescription with refills, PRN condition, and substitution permission."""
+    client, session_factory = rx_test_env
+    actors = await seed_rx_actors(session_factory)
+
+    create_res = await client.post(
+        f"/api/v1/patients/{actors['patient_profile'].id}/prescriptions",
+        headers=auth_header_for(actors["doctor_user"]),
+        json={
+            "medication_id": actors["medication"].id,
+            "dosage_text": "Take 1 tablet orally as needed for severe tension headache",
+            "dose_quantity": 20.0,
+            "dose_unit": "mg",
+            "route": "oral",
+            "as_needed": True,
+            "as_needed_reason": "For acute tension headache",
+            "dispense_quantity": 30.0,
+            "dispense_unit": "tablets",
+            "number_of_repeats_allowed": 3,
+            "allow_generic_substitution": True,
+            "reason_code": "G44.209",
+        },
+    )
+
+    assert create_res.status_code == 201
+    data = create_res.json()["data"]
+    assert data["as_needed"] is True
+    assert data["as_needed_reason"] == "For acute tension headache"
+    assert data["number_of_repeats_allowed"] == 3
+    assert data["allow_generic_substitution"] is True
+
+    # Validate FHIR export represents substitution and repeats
+    rx_id = data["id"]
+    fhir_res = await client.get(
+        f"/api/v1/prescriptions/{rx_id}/fhir",
+        headers=auth_header_for(actors["patient_user"]),
+    )
+    assert fhir_res.status_code == 200
+    fhir_data = fhir_res.json()
+    assert fhir_data["dispenseRequest"]["numberOfRepeatsAllowed"] == 3
+    assert fhir_data["substitution"]["allowedBoolean"] is True
+
+
+@pytest.mark.asyncio
+async def test_sign_prescription_idempotency_and_hash_stability(rx_test_env) -> None:
+    """Verify that repeatedly signing an already signed prescription is idempotent and maintains SHA-256 digest stability."""
+    client, session_factory = rx_test_env
+    actors = await seed_rx_actors(session_factory)
+
+    # 1. Draft prescription
+    create_res = await client.post(
+        f"/api/v1/patients/{actors['patient_profile'].id}/prescriptions",
+        headers=auth_header_for(actors["doctor_user"]),
+        json={
+            "medication_id": actors["medication"].id,
+            "dosage_text": "Take 1 tablet daily with food",
+            "dose_quantity": 20.0,
+            "dose_unit": "mg",
+        },
+    )
+    rx_id = create_res.json()["data"]["id"]
+
+    # 2. First sign operation
+    sign_res_1 = await client.post(
+        f"/api/v1/prescriptions/{rx_id}/sign",
+        headers=auth_header_for(actors["doctor_user"]),
+        json={"signature_notes": "Initial clinician authorization"},
+    )
+    assert sign_res_1.status_code == 200
+    data_1 = sign_res_1.json()["data"]
+    assert data_1["is_signed"] is True
+    hash_1 = data_1["signature_hash"]
+    assert len(hash_1) == 64  # SHA-256 64-char hex string
+
+    # 3. Second sign operation (idempotency check)
+    sign_res_2 = await client.post(
+        f"/api/v1/prescriptions/{rx_id}/sign",
+        headers=auth_header_for(actors["doctor_user"]),
+        json={"signature_notes": "Attempting secondary sign"},
+    )
+    assert sign_res_2.status_code == 200
+    data_2 = sign_res_2.json()["data"]
+    assert data_2["is_signed"] is True
+    assert data_2["signature_hash"] == hash_1  # Hash remains invariant and stable
+
