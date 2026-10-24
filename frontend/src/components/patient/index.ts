@@ -14,3 +14,4 @@ export * from "./PatientProblemsTab";
 export * from "./BloodPressureChart";
 export * from "./VitalsMetricChart";
 export * from "./PatientVitalsTelemetry";
+export * from "./TelemedicineReadinessModal";
