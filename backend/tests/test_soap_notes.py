@@ -526,3 +526,95 @@ async def test_delete_draft_vs_signed_soap_note(soap_test_env):
     check_signed = await client.get(f"/api/v1/soap-notes/{signed_id}", headers=auth_header_for(u_doc))
     assert check_signed.status_code == 200
     assert check_signed.json()["data"]["status"] == "entered-in-error"
+
+
+@pytest.mark.asyncio
+async def test_soap_note_templates_and_icd10_linkages(soap_test_env):
+    """SOAP note preserves ICD-10 diagnostic linkages and clinical template sections."""
+    client, session_factory = soap_test_env
+    async with session_factory() as session:
+        _, pat1, _, _, u_doc, _, appt = await seed_soap_actors(session)
+
+    payload = {
+        "encounter_id": appt.id,
+        "note_type": "soap",
+        "title": "Hypertension & Metabolic Follow-up",
+        "chief_complaint": "Occasional morning cephalalgia and borderline elevated home BP log",
+        "subjective": "39-year-old male presenting for quarterly cardiovascular review. Reports high work stress.",
+        "objective": "BP 138/88 mmHg, HR 78 bpm, SpO2 98%, BMI 27.2 kg/m².",
+        "assessment": "1. Essential hypertension (ICD-10 I10), stage 1.\n2. Overweight (BMI 27.2).",
+        "plan": "1. DASH diet with reduced sodium.\n2. 30 min daily brisk walking.\n3. Lipid panel.",
+        "primary_diagnosis_code": "I10",
+        "primary_diagnosis_display": "Essential (primary) hypertension",
+        "follow_up_instructions": "Review home BP log in 2 weeks via tele-consultation.",
+    }
+
+    create_res = await client.post(
+        f"/api/v1/patients/{pat1.id}/soap-notes",
+        json=payload,
+        headers=auth_header_for(u_doc),
+    )
+    assert create_res.status_code == 201
+    created_data = create_res.json()["data"]
+    assert created_data["primary_diagnosis_code"] == "I10"
+    assert created_data["primary_diagnosis_display"] == "Essential (primary) hypertension"
+    assert created_data["follow_up_instructions"] == payload["follow_up_instructions"]
+
+    # Verify retrieval
+    note_id = created_data["id"]
+    get_res = await client.get(f"/api/v1/soap-notes/{note_id}", headers=auth_header_for(u_doc))
+    assert get_res.status_code == 200
+    retrieved = get_res.json()["data"]
+    assert retrieved["primary_diagnosis_code"] == "I10"
+    assert retrieved["primary_diagnosis_display"] == "Essential (primary) hypertension"
+    assert "DASH diet" in retrieved["plan"]
+
+
+@pytest.mark.asyncio
+async def test_patient_cannot_sign_or_tamper_soap_note(soap_test_env):
+    """Patients cannot electronically sign clinical notes; double-signing is rejected."""
+    client, session_factory = soap_test_env
+    async with session_factory() as session:
+        u_pat1, pat1, _, _, u_doc, _, appt = await seed_soap_actors(session)
+
+    # 1. Doctor creates note
+    create_res = await client.post(
+        f"/api/v1/patients/{pat1.id}/soap-notes",
+        json={
+            "encounter_id": appt.id,
+            "chief_complaint": "Palpitations review",
+            "subjective": "Fluttering sensation",
+            "objective": "HR 84 bpm",
+            "assessment": "Benign ectopic beats",
+            "plan": "Limit caffeine",
+        },
+        headers=auth_header_for(u_doc),
+    )
+    note_id = create_res.json()["data"]["id"]
+
+    # 2. Patient attempts to sign -> 403 Forbidden
+    patient_sign_res = await client.post(
+        f"/api/v1/soap-notes/{note_id}/sign",
+        json={"comments": "Patient attempt to sign"},
+        headers=auth_header_for(u_pat1),
+    )
+    assert patient_sign_res.status_code == 403
+
+    # 3. Doctor signs -> 200 OK
+    doc_sign_res = await client.post(
+        f"/api/v1/soap-notes/{note_id}/sign",
+        json={"comments": "Attested by Dr. Ananya Sharma"},
+        headers=auth_header_for(u_doc),
+    )
+    assert doc_sign_res.status_code == 200
+    signed_data = doc_sign_res.json()["data"]
+    assert signed_data["is_signed"] is True
+    assert signed_data["status"] == "final"
+
+    # 4. Doctor attempts to sign again -> 400 Bad Request
+    doc_resign_res = await client.post(
+        f"/api/v1/soap-notes/{note_id}/sign",
+        headers=auth_header_for(u_doc),
+    )
+    assert doc_resign_res.status_code == 400
+    assert "already finalized and signed" in doc_resign_res.text.lower()
