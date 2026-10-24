@@ -142,6 +142,111 @@ export const FORMULARY_PRESETS = [
     expected_days: 30,
     indication: "J45.909 - Unspecified Asthma",
   },
+  {
+    id: "med-amlodipine-5",
+    name: "Amlodipine 5mg Oral Tablet",
+    generic_name: "Amlodipine Besylate",
+    brand_name: "Norvasc / Stamlo",
+    rxnorm_code: "197361",
+    atc_code: "C08CA01",
+    form: "tablet",
+    route: "oral" as AdministrationRoute,
+    strength: "5 mg",
+    dosage_text: "Take 1 tablet orally once daily in the morning for 30 days",
+    dose_quantity: 5,
+    dose_unit: "mg",
+    frequency: 1,
+    period: 1,
+    period_unit: "d",
+    dispense_quantity: 30,
+    dispense_unit: "tablets",
+    expected_days: 30,
+    indication: "I10 - Essential Hypertension",
+  },
+  {
+    id: "med-paracetamol-650",
+    name: "Paracetamol 650mg Oral Tablet",
+    generic_name: "Acetaminophen / Paracetamol",
+    brand_name: "Dolo-650 / Calpol",
+    rxnorm_code: "209459",
+    atc_code: "N02BE01",
+    form: "tablet",
+    route: "oral" as AdministrationRoute,
+    strength: "650 mg",
+    dosage_text: "Take 1 tablet orally every 8 hours as needed for fever or pain (max 3g daily)",
+    dose_quantity: 650,
+    dose_unit: "mg",
+    frequency: 3,
+    period: 1,
+    period_unit: "d",
+    dispense_quantity: 15,
+    dispense_unit: "tablets",
+    expected_days: 5,
+    indication: "R50.9 - Fever, unspecified / Acute Pain",
+  },
+  {
+    id: "med-azithromycin-500",
+    name: "Azithromycin 500mg Oral Tablet",
+    generic_name: "Azithromycin Dihydrate",
+    brand_name: "Zithromax / Azithral",
+    rxnorm_code: "248656",
+    atc_code: "J01FA10",
+    form: "tablet",
+    route: "oral" as AdministrationRoute,
+    strength: "500 mg",
+    dosage_text: "Take 1 tablet orally once daily 1 hour before or 2 hours after food for 3 days",
+    dose_quantity: 500,
+    dose_unit: "mg",
+    frequency: 1,
+    period: 1,
+    period_unit: "d",
+    dispense_quantity: 3,
+    dispense_unit: "tablets",
+    expected_days: 3,
+    indication: "J20.9 - Acute Bronchitis / RTI",
+  },
+  {
+    id: "med-telmisartan-40",
+    name: "Telmisartan 40mg Oral Tablet",
+    generic_name: "Telmisartan",
+    brand_name: "Micardis / Telma",
+    rxnorm_code: "259255",
+    atc_code: "C09CA07",
+    form: "tablet",
+    route: "oral" as AdministrationRoute,
+    strength: "40 mg",
+    dosage_text: "Take 1 tablet orally once daily in the morning for 30 days",
+    dose_quantity: 40,
+    dose_unit: "mg",
+    frequency: 1,
+    period: 1,
+    period_unit: "d",
+    dispense_quantity: 30,
+    dispense_unit: "tablets",
+    expected_days: 30,
+    indication: "I10 - Essential Hypertension",
+  },
+  {
+    id: "med-levothyroxine-50",
+    name: "Levothyroxine Sodium 50mcg Oral Tablet",
+    generic_name: "Levothyroxine Sodium",
+    brand_name: "Thyronorm / Synthroid",
+    rxnorm_code: "966224",
+    atc_code: "H03AA01",
+    form: "tablet",
+    route: "oral" as AdministrationRoute,
+    strength: "50 mcg",
+    dosage_text: "Take 1 tablet orally once daily early morning on an empty stomach with water 30 min before food",
+    dose_quantity: 50,
+    dose_unit: "mcg",
+    frequency: 1,
+    period: 1,
+    period_unit: "d",
+    dispense_quantity: 90,
+    dispense_unit: "tablets",
+    expected_days: 90,
+    indication: "E03.9 - Hypothyroidism, unspecified",
+  },
 ];
 
 // Common dosage presets keyed by generic name prefix
@@ -154,6 +259,8 @@ export const DOSAGE_PRESETS_BY_DRUG: Record<string, number[]> = {
   "Amlodipine": [2.5, 5, 10],
   "Paracetamol": [325, 500, 650],
   "Azithromycin": [250, 500],
+  "Telmisartan": [20, 40, 80],
+  "Levothyroxine": [25, 50, 75, 100, 125],
 };
 
 export const MEAL_TIMINGS = [
@@ -197,6 +304,8 @@ export function PrescriptionAuthoringPad({
   const [selectedDrug, setSelectedDrug] = useState(FORMULARY_PRESETS[0]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [catalogResults, setCatalogResults] = useState<Medication[]>([]);
+  const [isSearchingCatalog, setIsSearchingCatalog] = useState(false);
 
   // Dosage instruction form state
   const [dosageText, setDosageText] = useState(FORMULARY_PRESETS[0].dosage_text);
@@ -259,6 +368,66 @@ export function PrescriptionAuthoringPad({
     setIndication(preset.indication);
     setIsDropdownOpen(false);
   };
+
+  // Convert and select backend catalog medication
+  const handleSelectCatalogMedication = (med: Medication) => {
+    const strengthNum = parseFloat(med.strength) || 10;
+    const strengthUnit = med.strength.replace(/[0-9.]/g, "").trim() || "mg";
+    const mapped = {
+      id: med.id,
+      name: med.name,
+      generic_name: med.generic_name,
+      brand_name: med.brand_name || med.name,
+      rxnorm_code: med.rxnorm_code,
+      atc_code: med.atc_code || "A",
+      form: med.form,
+      route: med.route as AdministrationRoute,
+      strength: med.strength,
+      dosage_text: `Take ${strengthNum} ${strengthUnit} (${med.generic_name}) ${med.route} once daily for 30 days`,
+      dose_quantity: strengthNum,
+      dose_unit: strengthUnit,
+      frequency: 1,
+      period: 1,
+      period_unit: "d",
+      dispense_quantity: 30,
+      dispense_unit: med.form === "tablet" ? "tablets" : med.form === "capsule" ? "capsules" : "units",
+      expected_days: 30,
+      indication: "General clinical management",
+    };
+    handleSelectPreset(mapped);
+  };
+
+  // Debounced live formulary catalog search from backend
+  useEffect(() => {
+    if (!searchQuery || searchQuery.trim().length < 2) {
+      setCatalogResults([]);
+      return;
+    }
+
+    let active = true;
+    const searchCatalog = async () => {
+      setIsSearchingCatalog(true);
+      try {
+        const res = await apiClient.listMedications({
+          q: searchQuery.trim(),
+          limit: 8,
+        });
+        if (active && res && res.items) {
+          setCatalogResults(res.items);
+        }
+      } catch {
+        if (active) setCatalogResults([]);
+      } finally {
+        if (active) setIsSearchingCatalog(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchCatalog, 250);
+    return () => {
+      active = false;
+      clearTimeout(debounceTimer);
+    };
+  }, [searchQuery]);
 
   // Live dosage instruction summary string
   const autoGeneratedSig = useMemo(() => {
@@ -674,7 +843,7 @@ export function PrescriptionAuthoringPad({
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-[#e5e7eb] rounded-xl shadow-xl max-h-64 overflow-y-auto p-2 space-y-1 animate-fadeIn">
+                <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-white border border-[#e5e7eb] rounded-xl shadow-xl max-h-72 overflow-y-auto p-2 space-y-1 animate-fadeIn">
                   <div className="relative mb-2">
                     <Search className="h-3.5 w-3.5 absolute left-2.5 top-2.5 text-[#6b7280]" />
                     <input
@@ -682,34 +851,86 @@ export function PrescriptionAuthoringPad({
                       placeholder="Search trade, generic name, or RxCUI..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-[#e5e7eb] focus:outline-none focus:border-[#111111]"
+                      className="w-full pl-8 pr-8 py-1.5 text-xs rounded-lg border border-[#e5e7eb] focus:outline-none focus:border-[#111111]"
                     />
+                    {isSearchingCatalog && (
+                      <RefreshCw className="h-3 w-3 absolute right-2.5 top-2.5 text-[#6b7280] animate-spin" />
+                    )}
                   </div>
-                  {filteredPresets.map((preset) => (
-                    <button
-                      key={preset.id}
-                      type="button"
-                      onClick={() => handleSelectPreset(preset)}
-                      className={`w-full text-left p-2.5 rounded-lg text-xs flex items-center justify-between transition-colors ${
-                        selectedDrug.id === preset.id
-                          ? "bg-[#f8f9fa] font-bold text-[#111111] border border-[#e5e7eb]"
-                          : "hover:bg-[#f8f9fa] text-[#4b5563]"
-                      }`}
-                    >
-                      <div>
-                        <div className="font-semibold text-[#111111]">{preset.name}</div>
-                        <div className="text-[11px] text-[#6b7280]">{preset.generic_name} • {preset.strength}</div>
+
+                  {/* Backend Catalog Search Results */}
+                  {catalogResults.length > 0 && (
+                    <div className="space-y-1 mb-2">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-[#059669] px-2 py-0.5 bg-[#ecfdf5] rounded border border-[#a7f3d0]">
+                        ABDM / Hospital Formulary Catalog ({catalogResults.length})
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-mono text-[10px] bg-[#e5e7eb] px-1.5 py-0.5 rounded text-[#111111]">
-                          ATC: {preset.atc_code}
-                        </span>
-                        <span className="font-mono text-[10px] bg-[#dbeafe] text-[#1e40af] px-1.5 py-0.5 rounded">
-                          RxCUI: {preset.rxnorm_code}
-                        </span>
-                      </div>
-                    </button>
-                  ))}
+                      {catalogResults.map((med) => (
+                        <button
+                          key={med.id}
+                          type="button"
+                          onClick={() => handleSelectCatalogMedication(med)}
+                          className={`w-full text-left p-2.5 rounded-lg text-xs flex items-center justify-between transition-colors ${
+                            selectedDrug.id === med.id
+                              ? "bg-[#ecfdf5] font-bold text-[#065f46] border border-[#a7f3d0]"
+                              : "hover:bg-[#f8f9fa] text-[#4b5563]"
+                          }`}
+                        >
+                          <div>
+                            <div className="font-semibold text-[#111111]">{med.name}</div>
+                            <div className="text-[11px] text-[#6b7280]">
+                              {med.generic_name} • {med.strength} • <span className="capitalize">{med.form}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="font-mono text-[10px] bg-[#e5e7eb] px-1.5 py-0.5 rounded text-[#111111]">
+                              ATC: {med.atc_code}
+                            </span>
+                            <span className="font-mono text-[10px] bg-[#dbeafe] text-[#1e40af] px-1.5 py-0.5 rounded">
+                              RxCUI: {med.rxnorm_code}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Built-in Presets */}
+                  <div className="space-y-1">
+                    <div className="text-[10px] uppercase font-bold tracking-wider text-[#6b7280] px-2 py-0.5 bg-[#f9fafb] rounded border border-[#e5e7eb]">
+                      Rapid Presets ({filteredPresets.length})
+                    </div>
+                    {filteredPresets.map((preset) => (
+                      <button
+                        key={preset.id}
+                        type="button"
+                        onClick={() => handleSelectPreset(preset)}
+                        className={`w-full text-left p-2.5 rounded-lg text-xs flex items-center justify-between transition-colors ${
+                          selectedDrug.id === preset.id
+                            ? "bg-[#f8f9fa] font-bold text-[#111111] border border-[#e5e7eb]"
+                            : "hover:bg-[#f8f9fa] text-[#4b5563]"
+                        }`}
+                      >
+                        <div>
+                          <div className="font-semibold text-[#111111]">{preset.name}</div>
+                          <div className="text-[11px] text-[#6b7280]">{preset.generic_name} • {preset.strength}</div>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <span className="font-mono text-[10px] bg-[#e5e7eb] px-1.5 py-0.5 rounded text-[#111111]">
+                            ATC: {preset.atc_code}
+                          </span>
+                          <span className="font-mono text-[10px] bg-[#dbeafe] text-[#1e40af] px-1.5 py-0.5 rounded">
+                            RxCUI: {preset.rxnorm_code}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {filteredPresets.length === 0 && catalogResults.length === 0 && (
+                    <div className="py-4 text-center text-xs text-[#6b7280]">
+                      No medications matching query in formulary or presets.
+                    </div>
+                  )}
                 </div>
               )}
             </div>

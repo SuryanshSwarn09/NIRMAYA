@@ -201,6 +201,7 @@ export default function DoctorEMRPage() {
   const [isTelemedicineModalOpen, setIsTelemedicineModalOpen] = useState(false);
   const [signedNotes, setSignedNotes] = useState<Record<string, SoapNote>>({});
   const [noteAttestationSuccess, setNoteAttestationSuccess] = useState<string | null>(null);
+  const [prescriptionSuccess, setPrescriptionSuccess] = useState<string | null>(null);
 
   // Active patient profile derived from selected appointment or selected name
   const activePatient: PatientDemographics = 
@@ -306,8 +307,8 @@ export default function DoctorEMRPage() {
               </div>
               <button
                 type="button"
-                onClick={() => setActiveTab("medications")}
-                className="underline font-semibold hover:text-emerald-950 flex items-center gap-1"
+                onClick={() => setActiveTab("prescriptions")}
+                className="underline font-semibold hover:text-emerald-950 flex items-center gap-1 cursor-pointer"
               >
                 <span>Proceed to e-Prescriptions</span>
                 <ArrowRight className="h-3 w-3" />
@@ -359,12 +360,38 @@ export default function DoctorEMRPage() {
           <MedicationCatalogBrowser />
         </div>
       ) : activeTab === "prescriptions" ? (
-        <div className="animate-fade-in max-w-5xl mx-auto">
+        <div className="animate-fade-in max-w-5xl mx-auto space-y-4">
+          {prescriptionSuccess && (
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800 flex items-center justify-between animate-in fade-in shadow-xs">
+              <div className="flex items-center gap-2 font-medium">
+                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                <span>{prescriptionSuccess}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab("diagnostics")}
+                className="underline font-semibold hover:text-emerald-950 flex items-center gap-1 cursor-pointer shrink-0"
+              >
+                <span>Order Lab Panels</span>
+                <ArrowRight className="h-3 w-3" />
+              </button>
+            </div>
+          )}
           <PrescriptionAuthoringPad
+            key={activePatient.id}
             patientId={activePatient.id}
             patientName={activePatient.name}
             doctorId={doctorId}
             doctorName={doctorName}
+            doctorSpecialty="Consultant Physician / Cardiology"
+            doctorRegNumber="MCI-2015-84920"
+            encounterId={selectedAppointment?.id}
+            onPrescriptionSigned={() => {
+              setPrescriptionSuccess(
+                `Prescription successfully signed and sealed with SHA-256 for ${activePatient.name}. Transmitted to patient vault.`
+              );
+              setTimeout(() => setPrescriptionSuccess(null), 6000);
+            }}
           />
         </div>
       ) : (
