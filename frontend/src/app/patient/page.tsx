@@ -14,7 +14,8 @@ import {
   AbhaQrVerificationModal,
   PatientProblemsTab,
   PatientTabId,
-  VitalMetricType
+  VitalMetricType,
+  TelemedicineReadinessModal
 } from "@/components/patient";
 import { 
   ClinicalSlotPicker, 
@@ -76,6 +77,11 @@ export default function PatientVaultPage() {
   // ABHA ID Card & QR Verification States (Day 32)
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
+  
+  // Telemedicine Pre-Consultation WebRTC Readiness Modal (Day 35)
+  const [isTelemedicineModalOpen, setIsTelemedicineModalOpen] = useState(false);
+  const [activeConsultationAppt, setActiveConsultationAppt] = useState<Appointment | null>(null);
+  
   const [abhaCardData, setAbhaCardData] = useState<{
     abhaId: string;
     abhaAddress: string;
@@ -923,6 +929,10 @@ export default function PatientVaultPage() {
           onSelectTab={setActiveTab}
           onOpenLogVitals={() => setIsLogVitalsOpen(true)}
           onViewFhirPrescription={(rx) => handleViewFhirRx(rx.id)}
+          onStartTelemedicine={(appt) => {
+            setActiveConsultationAppt(appt);
+            setIsTelemedicineModalOpen(true);
+          }}
         />
       )}
 
@@ -1088,6 +1098,30 @@ export default function PatientVaultPage() {
         defaultQrPayload={abhaCardData.qrPayload}
         patientName={abhaCardData.patientName}
         abhaId={abhaCardData.abhaId}
+      />
+
+      {/* Telemedicine WebRTC Device & Bandwidth Readiness Modal (Day 35) */}
+      <TelemedicineReadinessModal
+        isOpen={isTelemedicineModalOpen}
+        onClose={() => setIsTelemedicineModalOpen(false)}
+        doctorName={activeConsultationAppt?.doctor_name || "Dr. Ananya Sharma"}
+        doctorSpecialty={activeConsultationAppt?.doctor_specialty || "Chief Cardiologist, AIIMS"}
+        appointmentTime={
+          activeConsultationAppt
+            ? new Date(activeConsultationAppt.scheduled_start).toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })
+            : "Today, In 15 minutes"
+        }
+        roomToken={`nirmaya-webrtc-${activeConsultationAppt?.id || "consult-8472"}`}
+        onJoinRoom={() => {
+          alert(`Connecting to peer WebRTC session with ${activeConsultationAppt?.doctor_name || "Dr. Ananya Sharma"}...`);
+          setIsTelemedicineModalOpen(false);
+        }}
       />
 
     </div>

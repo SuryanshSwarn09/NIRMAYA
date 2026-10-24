@@ -19,7 +19,8 @@ import {
   ArrowRight,
   ShieldCheck,
   CheckCircle2,
-  Stethoscope
+  Stethoscope,
+  Video
 } from "lucide-react";
 import { Appointment, MedicationRequest } from "@/lib/api";
 import { DigitalAbhaCard } from "./DigitalAbhaCard";
@@ -47,6 +48,7 @@ export interface PatientOverviewTabProps {
   onSelectTab: (tab: "overview" | "prescriptions" | "problems" | "records" | "book") => void;
   onOpenLogVitals: () => void;
   onViewFhirPrescription?: (rx: MedicationRequest) => void;
+  onStartTelemedicine?: (appt: Appointment) => void;
 }
 
 export function PatientOverviewTab({
@@ -72,6 +74,7 @@ export function PatientOverviewTab({
   onSelectTab,
   onOpenLogVitals,
   onViewFhirPrescription,
+  onStartTelemedicine,
 }: PatientOverviewTabProps) {
   // Most recent 2 prescriptions
   const recentPrescriptions = prescriptions.slice(0, 2);
@@ -226,14 +229,26 @@ export function PatientOverviewTab({
                     <span className="font-mono text-[11px] text-[#059669] font-bold">
                       {careContext}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => alert(`Exporting signed FHIR Bundle for ${careContext}...`)}
-                      className="text-[11px] font-semibold text-[#111111] hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <Download className="h-3 w-3" />
-                      FHIR R4 Encounter
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {onStartTelemedicine && (
+                        <button
+                          type="button"
+                          onClick={() => onStartTelemedicine(appt)}
+                          className="text-[11px] font-semibold text-[#2563eb] hover:bg-[#dbeafe] transition-colors flex items-center gap-1 cursor-pointer bg-[#eff6ff] px-2 py-1 rounded-[6px] border border-[#bfdbfe]"
+                        >
+                          <Video className="h-3 w-3" />
+                          Join Video Consult
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => alert(`Exporting signed FHIR Bundle for ${careContext}...`)}
+                        className="text-[11px] font-semibold text-[#111111] hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <Download className="h-3 w-3" />
+                        FHIR R4
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
