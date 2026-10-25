@@ -68,6 +68,7 @@
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
   * [Week 9: ABDM Milestone 1 - ABHA Creation & Verification](journey/month-3/week-9.md)
     * [Day 41: ABDM Gateway Session Auth & RSA Crypto](journey/month-3/day-41.md)
+    * [Day 42: DigiLocker OAuth 2.0 & e-Aadhaar Verification](journey/month-3/day-42.md)
   * [Week 10: ABDM Milestone 2 - HIP Discovery & Care Contexts](journey/month-3/week-10.md)
   * [Week 11: ABDM Milestone 3 - Consent Manager & HIE-CM Gateway](journey/month-3/week-11.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)

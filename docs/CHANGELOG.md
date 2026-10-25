@@ -1162,6 +1162,32 @@
   - ABDM Gateway Auth Test Suite: **5/5 tests passing in `tests/test_abdm_gateway_auth.py` (100% green in 0.79s)**.
   - Full Backend Regression Test Suite: **261/261 tests passing across all 21 test modules (100% green in 73.81s)**.
   - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
+#### Day 42 (Tue) - Milestone 09-02: DigiLocker OAuth 2.0 & e-Aadhaar Verification Service
+- **Focus:** DigiLocker OAuth 2.0 PKCE Engine (`backend/app/services/digilocker.py`), RFC 7636 S256 Code Challenge Generation, DigiLocker Authorization URL Builder, Bearer Token Exchange (`/public/oauth2/1/token`), UIDAI-signed e-Aadhaar XML Parser (`<Poi>`, `<Poa>`, `<Pht>`, `<Signature>`), Masked Aadhaar (`XXXX-XXXX-4821`) Regulatory Compliance, FastAPI Endpoints (`/api/v1/auth/digilocker/authorize-url`, `/verify`, `/sync-patient/{patient_id}`), Cal.com-Styled `DigiLockerAuthCard.tsx` in Patient Vault Overview Dashboard, and Automated Test Suite (`backend/tests/test_digilocker_auth.py`).
+- **Executed Micro-Commits:**
+  1. `feat(digilocker): implement pkce oauth2 authorization and eaadhaar xml parser`
+  2. `feat(patient): add digilocker eaadhaar verification card to patient vault dashboard`
+  3. `test(digilocker): author automated test suite for pkce url verification and patient sync`
+  4. `docs(journey): record Day 42 milestone log, update summary, and changelog`
+- **Key Deliverables:**
+  - **RFC 7636 PKCE Engine & Authorization Flow (`backend/app/services/digilocker.py`):**
+    - Cryptographically secure 64-byte `code_verifier` and S256 `code_challenge` computation.
+    - Government of India DigiLocker authorization URL synthesis with PKCE parameters, CSRF state, and scopes (`read profile eaadhaar`).
+    - Robust token exchange and sandbox simulation mode returning deterministic test credentials.
+  - **UIDAI e-Aadhaar XML Parser & Cryptographic Validator:**
+    - Structured extraction of certified legal full name, gender mapping, date of birth, photo avatar, and residential address claims.
+    - Aadhaar Act (2016) compliance: guarantees zero raw 12-digit Aadhaar storage (masked format only).
+    - UIDAI X.509 digital signature verification.
+  - **DigiLocker REST API Endpoints (`backend/app/api/v1/endpoints/digilocker.py`):**
+    - `GET /api/v1/auth/digilocker/authorize-url`: Generates PKCE URL and state.
+    - `POST /api/v1/auth/digilocker/verify`: Validates callback code and extracts verified claims.
+    - `POST /api/v1/auth/digilocker/sync-patient/{patient_id}`: Synchronizes verified e-Aadhaar claims to `PatientProfile`.
+  - **Cal.com Verification Card (`frontend/src/components/patient/DigiLockerAuthCard.tsx`):**
+    - Geometric card rendered in Patient Vault dashboard displaying verified demographic claims, masked Aadhaar badge, UIDAI signature validity chip, and one-click re-verification.
+- **Verification:**
+  - DigiLocker Auth Test Suite: **9/9 tests passing in `tests/test_digilocker_auth.py` (100% green in 0.86s)**.
+  - Full Backend Regression Test Suite: **270/270 tests passing across all 22 test modules (100% green in 66.74s)**.
+  - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
   - **Anti-Vibe-Coding:** Zero purple gradients, zero emoji icons, zero em dashes.
 
