@@ -64,6 +64,7 @@
     * [Day 37: Structured SOAP Note Authoring Pad](journey/month-2/day-37.md)
     * [Day 38: Integrated Prescription Authoring & Search](journey/month-2/day-38.md)
     * [Day 39: Lab Order Requisition & PACS Viewer](journey/month-2/day-39.md)
+    * [Day 40: Full Month 2 Audit & Milestone Release v0.2.0](journey/month-2/day-40.md)
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
   * [Week 9: ABDM Milestone 1 - ABHA Creation & Verification](journey/month-3/week-9.md)
   * [Week 10: ABDM Milestone 2 - HIP Discovery & Care Contexts](journey/month-3/week-10.md)
@@ -88,6 +89,8 @@
 * [Week 5 Retrospective & Clinical Architecture Review](journey/month-2/week-5-review.md)
 * [Week 6 Retrospective & Pharmacy Architecture Review](journey/month-2/week-6-review.md)
 * [Week 7 Retrospective & Patient Vault Architecture](journey/month-2/week-7-review.md)
+* [Week 8 Retrospective & Clinician EMR Workspace](journey/month-2/week-8-review.md)
+* [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
 ## Fundamental FAQ
 * [Finalized System Architecture & Ecosystem Specification](faq/finalized-system-architecture.md)
