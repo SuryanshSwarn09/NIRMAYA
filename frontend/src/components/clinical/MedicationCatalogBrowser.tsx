@@ -631,18 +631,18 @@ export function MedicationCatalogBrowser({
 
             {/* Middle row: Coding Chips */}
             <div className="flex flex-wrap items-center gap-1.5 my-3">
-              <span className="bg-[#f0fdf4] text-[#166534] border border-[#bbf7d0] text-[10px] font-mono font-medium px-2 py-0.5 rounded-full">
+              <span className="bg-[#f0fdf4] text-[#166534] border border-[#bbf7d0] text-[10px] font-mono font-medium px-2 py-0.5 rounded-[6px]">
                 RxCUI: {med.rxnorm_code}
               </span>
               {med.atc_code && (
-                <span className="bg-[#eff6ff] text-[#1e40af] border border-[#bfdbfe] text-[10px] font-mono font-medium px-2 py-0.5 rounded-full">
+                <span className="bg-[#eff6ff] text-[#1e40af] border border-[#bfdbfe] text-[10px] font-mono font-medium px-2 py-0.5 rounded-[6px]">
                   ATC: {med.atc_code}
                 </span>
               )}
-              <span className="bg-[#f4f4f5] text-[#52525b] text-[10px] font-medium px-2 py-0.5 rounded-full capitalize">
+              <span className="bg-[#f4f4f5] text-[#52525b] text-[10px] font-medium px-2 py-0.5 rounded-[6px] capitalize">
                 {med.form} · {med.route}
               </span>
-              <span className="bg-[#fafafa] text-[#71717a] border border-[#e4e4e7] text-[10px] font-medium px-2 py-0.5 rounded-full">
+              <span className="bg-[#fafafa] text-[#71717a] border border-[#e4e4e7] text-[10px] font-medium px-2 py-0.5 rounded-[6px]">
                 Strength: {med.strength}
               </span>
             </div>
