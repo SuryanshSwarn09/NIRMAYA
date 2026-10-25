@@ -15,3 +15,4 @@ export * from "./BloodPressureChart";
 export * from "./VitalsMetricChart";
 export * from "./PatientVitalsTelemetry";
 export * from "./TelemedicineReadinessModal";
+export * from "./DigiLockerAuthCard";

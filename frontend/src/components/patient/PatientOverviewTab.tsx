@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import { Appointment, MedicationRequest } from "@/lib/api";
 import { DigitalAbhaCard } from "./DigitalAbhaCard";
+import { DigiLockerAuthCard } from "./DigiLockerAuthCard";
 import { useAccessibility } from "@/context/AccessibilityContext";
 
 export interface PatientOverviewTabProps {
@@ -130,6 +131,9 @@ export function PatientOverviewTab({
           onOpenExport={onOpenExport}
           onOpenVerify={onOpenVerify}
         />
+
+        {/* DigiLocker e-Aadhaar Verification Card */}
+        <DigiLockerAuthCard isVerified={true} />
 
         {/* Active Consent Delegation Panel */}
         <Card variant="mockup" className="space-y-4">
