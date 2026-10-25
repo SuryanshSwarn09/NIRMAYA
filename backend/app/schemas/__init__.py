@@ -125,6 +125,16 @@ from app.schemas.medication_dispense import (
     MedicationDispenseResponse,
     MedicationDispenseFilter,
 )
+from app.schemas.abdm import (
+    GatewaySessionRequest,
+    GatewaySessionResponse,
+    GatewayErrorDetail,
+    GatewayErrorResponse,
+    GatewayHeaderSchema,
+    GatewayStatusResponse,
+    ABDMEncryptionPayload,
+    ABDMEncryptedResponse,
+)
 
 __all__ = [
     "APIResponse",
@@ -132,6 +142,14 @@ __all__ = [
     "ErrorResponse",
     "PaginationMeta",
     "PaginatedResponse",
+    "GatewaySessionRequest",
+    "GatewaySessionResponse",
+    "GatewayErrorDetail",
+    "GatewayErrorResponse",
+    "GatewayHeaderSchema",
+    "GatewayStatusResponse",
+    "ABDMEncryptionPayload",
+    "ABDMEncryptedResponse",
     "StandardsCompliance",
     "DatabaseHealth",
     "SystemHealthResponse",

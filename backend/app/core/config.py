@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     PROJECT_FULL_NAME: str = (
         "Networked Interoperable Records Medical Assets & Your Archives"
     )
-    VERSION: str = "0.1.0"
+    VERSION: str = "0.2.0"
     API_V1_STR: str = "/api/v1"
 
     # Environment & Debugging
@@ -69,6 +69,34 @@ class Settings(BaseSettings):
     # Healthcare Interoperability Flags
     FHIR_VERSION: str = "R4"
     ABDM_SANDBOX_ENABLED: bool = True
+    ABDM_GATEWAY_URL: str = Field(
+        default="https://dev.abdm.gov.in/gateway",
+        description="National Health Authority ABDM Gateway base URL",
+    )
+    ABDM_CLIENT_ID: str = Field(
+        default="SBX_001234",
+        description="ABDM Sandbox registered Client ID",
+    )
+    ABDM_CLIENT_SECRET: str = Field(
+        default="sbx-client-secret-placeholder-key-2026",
+        description="ABDM Sandbox Client Secret",
+    )
+    ABDM_CM_ID: str = Field(
+        default="sbx",
+        description="ABDM Consent Manager Identifier (e.g. sbx)",
+    )
+    ABDM_REQUEST_TIMEOUT_SECONDS: float = Field(
+        default=15.0,
+        description="Timeout for ABDM Gateway HTTP calls in seconds",
+    )
+    ABDM_ENCRYPTION_PUBLIC_KEY: str = Field(
+        default="",
+        description="Optional PEM-encoded RSA public key for demographic encryption",
+    )
+    ABDM_ENCRYPTION_PRIVATE_KEY: str = Field(
+        default="",
+        description="Optional PEM-encoded RSA private key for decryption",
+    )
 
     # Rate Limiting & Abuse Defense
     RATE_LIMIT_ENABLED: bool = True
