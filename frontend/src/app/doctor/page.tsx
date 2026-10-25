@@ -366,6 +366,7 @@ export default function DoctorEMRPage() {
       ) : activeTab === "diagnostics" ? (
         <div className="animate-fade-in max-w-5xl mx-auto">
           <DiagnosticOrderTracker
+            key={activePatient.id}
             patientId={activePatient.id}
             patientName={activePatient.name}
             doctorId={doctorId}

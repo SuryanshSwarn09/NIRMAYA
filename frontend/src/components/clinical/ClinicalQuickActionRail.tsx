@@ -64,8 +64,9 @@ export function ClinicalQuickActionRail({
     },
     {
       id: "diagnostics",
-      label: "Lab Orders",
+      label: "Diagnostics & PACS",
       icon: <FlaskConical className="h-4 w-4" />,
+      badge: "PACS",
       shortcut: "4",
     },
     {
