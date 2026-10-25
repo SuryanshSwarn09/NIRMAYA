@@ -1188,6 +1188,31 @@
   - DigiLocker Auth Test Suite: **9/9 tests passing in `tests/test_digilocker_auth.py` (100% green in 0.86s)**.
   - Full Backend Regression Test Suite: **270/270 tests passing across all 22 test modules (100% green in 66.74s)**.
   - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
+#### Day 43 (Wed) - Milestone 09-03: Direct Aadhaar Demographic OTP Verification & Unified Profile Sync
+- **Focus:** UIDAI Verhoeff Checksum Algorithm (`backend/app/services/aadhaar_otp.py`), Ephemeral Transaction Session Manager (`AadhaarSessionManager`), On-The-Fly RSA-OAEP SHA-256 Demographic Encryption (`ABDMRSAEncryptionManager`), Rate-Limited 3-Attempt Maximum Protection, ABDM M1 Endpoints (`/api/v1/abdm/m1/aadhaar/generate-otp`, `/verify-otp`, `/sync-patient/{patient_id}`), Cal.com-Styled `AadhaarOtpVerificationModal.tsx` in Patient Vault Overview Dashboard, and Automated Test Suite (`backend/tests/test_aadhaar_otp_auth.py`).
+- **Executed Micro-Commits:**
+  1. `feat(abdm): implement direct aadhaar otp engine and verhoeff checksum validator`
+  2. `feat(patient): add calcom aadhaar otp verification modal to patient vault`
+  3. `test(abdm): author automated test suite for aadhaar otp session auth and ekyc sync`
+  4. `docs(journey): record Day 43 milestone log, update summary, and changelog`
+- **Key Deliverables:**
+  - **Verhoeff Checksum Engine (`backend/app/services/aadhaar_otp.py`):**
+    - Mathematical implementation of the dihedral group $D_5$ Verhoeff algorithm.
+    - Client- and server-side validation ensuring instant detection of single-digit entry errors and adjacent transposition errors.
+  - **Ephemeral Transaction Session Manager (`AadhaarSessionManager`):**
+    - Tracks active transactions with secure `txnId`, 600-second TTL, and masked phone destination notice (`XXXX-XXX-482`).
+    - Brute-force protection: strict 3-attempt limit per session before permanent revocation.
+    - Aadhaar Act (2016) compliance: encrypts raw 12-digit Aadhaar via RSA-2048 OAEP SHA-256 before gateway dispatch; zero plaintext Aadhaar storage.
+  - **ABDM M1 REST Endpoints (`backend/app/api/v1/endpoints/abdm_m1.py`):**
+    - `POST /api/v1/abdm/m1/aadhaar/generate-otp`: Validates 12-digit Aadhaar, encrypts payload, generates transaction session, dispatches 6-digit OTP.
+    - `POST /api/v1/abdm/m1/aadhaar/verify-otp`: Validates 6-digit OTP against active transaction, extracts verified UIDAI e-KYC demographics.
+    - `POST /api/v1/abdm/m1/aadhaar/sync-patient/{patient_id}`: Atomically synchronizes verified demographic claims into `PatientProfile`.
+  - **Cal.com Verification Modal (`frontend/src/components/patient/AadhaarOtpVerificationModal.tsx`):**
+    - Geometric two-step modal with live Verhoeff formatting, 6-digit OTP input with attempt counter, 60s cooldown resend timer, and instant e-KYC confirmation.
+- **Verification:**
+  - Aadhaar OTP Auth Test Suite: **7/7 tests passing in `tests/test_aadhaar_otp_auth.py` (100% green in 1.22s)**.
+  - Full Backend Regression Test Suite: **277/277 tests passing across all 23 test modules (100% green in 55.36s)**.
+  - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
   - **Anti-Vibe-Coding:** Zero purple gradients, zero emoji icons, zero em dashes.
 
