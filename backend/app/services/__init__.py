@@ -186,4 +186,21 @@ __all__ = [
     "get_dispense_by_id",
     "list_dispensations",
     "update_dispense",
+    # DigiLocker service
+    "generate_pkce_pair",
+    "generate_authorization_url",
+    "exchange_code_for_token",
+    "fetch_eaadhaar_xml",
+    "parse_eaadhaar_xml",
+    "verify_digilocker_callback",
+    "sync_patient_profile",
 ]
+from app.services.digilocker import (
+    generate_pkce_pair,
+    generate_authorization_url,
+    exchange_code_for_token,
+    fetch_eaadhaar_xml,
+    parse_eaadhaar_xml,
+    verify_digilocker_callback,
+    sync_patient_profile,
+)

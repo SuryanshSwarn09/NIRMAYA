@@ -135,6 +135,15 @@ from app.schemas.abdm import (
     ABDMEncryptionPayload,
     ABDMEncryptedResponse,
 )
+from app.schemas.digilocker import (
+    DigiLockerAuthorizeUrlResponse,
+    DigiLockerCallbackRequest,
+    DigiLockerTokenResponse,
+    EAadhaarAddress,
+    EAadhaarDemographics,
+    DigiLockerVerificationResult,
+    DigiLockerSyncPatientResponse,
+)
 
 __all__ = [
     "APIResponse",
@@ -150,6 +159,13 @@ __all__ = [
     "GatewayStatusResponse",
     "ABDMEncryptionPayload",
     "ABDMEncryptedResponse",
+    "DigiLockerAuthorizeUrlResponse",
+    "DigiLockerCallbackRequest",
+    "DigiLockerTokenResponse",
+    "EAadhaarAddress",
+    "EAadhaarDemographics",
+    "DigiLockerVerificationResult",
+    "DigiLockerSyncPatientResponse",
     "StandardsCompliance",
     "DatabaseHealth",
     "SystemHealthResponse",

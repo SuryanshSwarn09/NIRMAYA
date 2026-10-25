@@ -98,6 +98,40 @@ class Settings(BaseSettings):
         description="Optional PEM-encoded RSA private key for decryption",
     )
 
+    # DigiLocker OAuth 2.0 & e-Aadhaar Integration
+    DIGILOCKER_CLIENT_ID: str = Field(
+        default="NIRMAYA_DL_001",
+        description="DigiLocker Registered Client ID",
+    )
+    DIGILOCKER_CLIENT_SECRET: str = Field(
+        default="dl-secret-placeholder-key-2026",
+        description="DigiLocker Client Secret Key",
+    )
+    DIGILOCKER_REDIRECT_URI: str = Field(
+        default="http://localhost:3000/patient?digilocker=callback",
+        description="DigiLocker OAuth2 redirect URI",
+    )
+    DIGILOCKER_AUTH_URL: str = Field(
+        default="https://api.digitallocker.gov.in/public/oauth2/1/authorize",
+        description="DigiLocker OAuth2 authorization endpoint",
+    )
+    DIGILOCKER_TOKEN_URL: str = Field(
+        default="https://api.digitallocker.gov.in/public/oauth2/1/token",
+        description="DigiLocker OAuth2 token endpoint",
+    )
+    DIGILOCKER_USER_URL: str = Field(
+        default="https://api.digitallocker.gov.in/public/oauth2/1/user",
+        description="DigiLocker user profile endpoint",
+    )
+    DIGILOCKER_EAADHAAR_URL: str = Field(
+        default="https://api.digitallocker.gov.in/public/oauth2/1/xml/eaadhaar",
+        description="DigiLocker e-Aadhaar XML retrieval endpoint",
+    )
+    DIGILOCKER_SIMULATION_MODE: bool = Field(
+        default=True,
+        description="Whether to use simulated DigiLocker sandbox fixtures for offline testing",
+    )
+
     # Rate Limiting & Abuse Defense
     RATE_LIMIT_ENABLED: bool = True
     RATE_LIMIT_AUTH_PER_MINUTE: int = 15
