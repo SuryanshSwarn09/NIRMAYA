@@ -548,3 +548,122 @@ async def test_patient_cross_tenant_access_isolation(diagnostic_test_env):
         headers=auth_header_for(actors["user_pat2"]),
     )
     assert res.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_imaging_requisition_service_request(diagnostic_test_env):
+    """Clinician requisitions a diagnostic imaging study (Chest X-Ray, LOINC 24648-8) with urgent priority."""
+    client, session_factory = diagnostic_test_env
+    async with session_factory() as session:
+        actors = await seed_diagnostic_actors(session)
+
+    payload = {
+        "category": "diagnostic_imaging",
+        "code_value": "24648-8",
+        "code_display": "Chest X-Ray 2 Views PA and Lateral (CR)",
+        "priority": "urgent",
+        "reason_code": "R06.02",
+        "reason_description": "Shortness of breath on exertion; exclude cardiomegaly or pleural effusion",
+        "notes": "Direct digital capture with WADO-RS PACS linkage",
+    }
+
+    res = await client.post(
+        f"/api/v1/patients/{actors['patient1'].id}/diagnostic-orders",
+        json=payload,
+        headers=auth_header_for(actors["user_doc"]),
+    )
+    assert res.status_code == 201
+    data = res.json()["data"]
+    order_id = data["id"]
+    assert data["category"] == "diagnostic_imaging"
+    assert data["code_value"] == "24648-8"
+    assert data["priority"] == "urgent"
+    assert data["status"] == "active"
+
+    # Export FHIR ServiceRequest
+    res_fhir = await client.get(
+        f"/api/v1/diagnostic-orders/{order_id}/fhir",
+        headers=auth_header_for(actors["user_doc"]),
+    )
+    assert res_fhir.status_code == 200
+    fhir_sr = res_fhir.json()["data"]
+    assert fhir_sr["resourceType"] == "ServiceRequest"
+    assert fhir_sr["priority"] == "urgent"
+    assert fhir_sr["code"]["coding"][0]["code"] == "24648-8"
+
+
+@pytest.mark.asyncio
+async def test_imaging_report_dicom_metadata_persistence(diagnostic_test_env):
+    """Diagnostic imaging report persists DICOM Study/Series UIDs and windowing presets in report_data."""
+    client, session_factory = diagnostic_test_env
+    async with session_factory() as session:
+        actors = await seed_diagnostic_actors(session)
+
+    dicom_metadata = {
+        "study_instance_uid": "1.2.840.113619.2.55.3.604681313.731.1698219001",
+        "series_instance_uid": "1.2.840.113619.2.55.3.604681313.731.1698219001.1",
+        "modality": "CR",
+        "accession_number": "ACC-2026-XRAY-4491",
+        "view_window_presets": ["default", "lung", "bone", "soft-tissue", "inverted"],
+        "cardiothoracic_ratio": 0.44,
+    }
+
+    payload = {
+        "category": "RAD",
+        "code_value": "24648-8",
+        "code_display": "Chest X-Ray 2 Views (PA and Lateral)",
+        "conclusion": "Normal posteroanterior chest radiograph. CTR 0.44. Clear lung fields without infiltrates.",
+        "is_abnormal": False,
+        "performer_name": "NIRMAYA Apex Imaging Center, Bengaluru",
+        "report_data": dicom_metadata,
+    }
+
+    res = await client.post(
+        f"/api/v1/patients/{actors['patient1'].id}/diagnostic-reports",
+        json=payload,
+        headers=auth_header_for(actors["user_lab"]),
+    )
+    assert res.status_code == 201
+    report_id = res.json()["data"]["id"]
+
+    # Retrieve report and verify DICOM metadata is preserved intact
+    res_get = await client.get(
+        f"/api/v1/diagnostic-reports/{report_id}",
+        headers=auth_header_for(actors["user_doc"]),
+    )
+    assert res_get.status_code == 200
+    report_data = res_get.json()["data"]
+    assert report_data["category"] == "RAD"
+    assert report_data["report_data"]["study_instance_uid"] == "1.2.840.113619.2.55.3.604681313.731.1698219001"
+    assert report_data["report_data"]["modality"] == "CR"
+    assert "lung" in report_data["report_data"]["view_window_presets"]
+
+
+@pytest.mark.asyncio
+async def test_stat_priority_and_fasting_requirement_handling(diagnostic_test_env):
+    """Requisitioning STAT emergency priority and validating fasting requirements."""
+    client, session_factory = diagnostic_test_env
+    async with session_factory() as session:
+        actors = await seed_diagnostic_actors(session)
+
+    payload = {
+        "category": "laboratory",
+        "code_value": "24331-1",
+        "code_display": "Lipid panel with direct LDL",
+        "priority": "stat",
+        "specimen_type": "serum",
+        "reason_code": "I10",
+        "reason_description": "Urgent pre-operative lipid risk assessment",
+        "notes": "12-hour fasting verified by nursing staff",
+    }
+
+    res = await client.post(
+        f"/api/v1/patients/{actors['patient1'].id}/diagnostic-orders",
+        json=payload,
+        headers=auth_header_for(actors["user_doc"]),
+    )
+    assert res.status_code == 201
+    data = res.json()["data"]
+    assert data["priority"] == "stat"
+    assert data["specimen_type"] == "serum"
+    assert data["status"] == "active"
