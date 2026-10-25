@@ -31,3 +31,4 @@ export {
   type WindowPreset,
   SAMPLE_STUDIES 
 } from "./PacsViewerModal";
+export { AbdmGatewayStatusCard, type AbdmGatewayStatus } from "./AbdmGatewayStatusCard";

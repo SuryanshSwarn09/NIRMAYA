@@ -37,7 +37,8 @@ import {
   PatientDemographics,
   ClinicalQuickActionRail,
   ClinicalTabType,
-  INITIAL_MOCK_QUEUE
+  INITIAL_MOCK_QUEUE,
+  AbdmGatewayStatusCard
 } from "@/components/clinical";
 import { TelemedicineReadinessModal } from "@/components/patient";
 import { SoapNote } from "@/lib/api";
@@ -476,7 +477,9 @@ export default function DoctorEMRPage() {
 
           {/* Right Column (7 Cols): Active Encounter Cockpit & Quick Documentation Actions */}
           <div className="lg:col-span-7 space-y-5">
-            
+            {/* ABDM National Gateway Interoperability Status */}
+            <AbdmGatewayStatusCard />
+
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">
               <div className="flex items-start justify-between pb-3 border-b border-[#E5E7EB] gap-3">
