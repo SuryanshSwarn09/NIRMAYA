@@ -3,6 +3,7 @@
 from unittest.mock import patch
 import pytest
 from httpx import AsyncClient
+from app.core.config import settings
 
 
 @pytest.mark.asyncio
@@ -12,7 +13,7 @@ async def test_root_endpoint(client: AsyncClient):
     assert response.status_code == 200
     data = response.json()
     assert "NIRMAYA" in data["message"]
-    assert data["version"] == "0.1.0"
+    assert data["version"] == settings.VERSION
     assert "HL7 FHIR R4" in data["standards"]
 
 
