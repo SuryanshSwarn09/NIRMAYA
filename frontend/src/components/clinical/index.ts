@@ -23,3 +23,11 @@ export { PharmacyDispenseModal } from "./PharmacyDispenseModal";
 export { ClinicianConsultationQueue, type QueueAppointment, INITIAL_MOCK_QUEUE } from "./ClinicianConsultationQueue";
 export { PatientDemographicBanner, type PatientDemographics } from "./PatientDemographicBanner";
 export { ClinicalQuickActionRail, type ClinicalTabType } from "./ClinicalQuickActionRail";
+export { 
+  PacsViewerModal, 
+  type DicomStudy, 
+  type DicomSeries, 
+  type DicomSlice, 
+  type WindowPreset,
+  SAMPLE_STUDIES 
+} from "./PacsViewerModal";
