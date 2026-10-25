@@ -1134,4 +1134,37 @@
   - **Milestone Tag Created:** Annotated git tag `v0.2.0` published.
 
 ---
+
+## Month 3: ABDM Milestones & Health Information Exchange
+
+### Week 9: ABDM Milestone 1 - ABHA Registration, Identity & HPR
+
+#### Day 41 (Mon) - Milestone 09-01: ABDM Gateway Session Client & RSA Public Key Manager
+- **Focus:** ABDM Gateway HTTP Client (`backend/app/abdm/client.py`), Session Token Exchange (`/v0.5/sessions`), Preemptive Token Caching & Auto-Renewal, Standard ABDM Request Headers (`Authorization`, `X-CM-ID`, `REQUEST-ID`, `TIMESTAMP`), RSA-2048 OAEP SHA-256 Demographic Cryptographic Manager (`backend/app/abdm/security/rsa.py`), ABDM REST Endpoints (`/api/v1/abdm/status`, `/sessions/refresh`, `/crypto/public-key`, `/crypto/encrypt-demographics`, `/crypto/decrypt-demographics`), Cal.com-Styled Gateway Status Card (`AbdmGatewayStatusCard.tsx`) integrated into Doctor EMR Cockpit, and Comprehensive Automated Test Suite (`backend/tests/test_abdm_gateway_auth.py`).
+- **Executed Micro-Commits:**
+  1. `feat(abdm): implement abdm gateway session client and rsa demographic cryptographic manager`
+  2. `feat(clinical): integrate abdm national gateway status card into doctor emr workspace`
+  3. `test(abdm): add unit and integration test suite for gateway session auth and rsa encryption`
+  4. `docs(journey): record Day 41 milestone log, update summary, and changelog`
+- **Key Deliverables:**
+  - **ABDM Gateway HTTP Client (`backend/app/abdm/client.py`):**
+    - Secure client credentials exchange with central NHA Gateway (`dev.abdm.gov.in/gateway`).
+    - Token lifecycle management with 60-second safety refresh buffer and sandbox simulation fallback.
+    - Standardized correlation header injection for distributed tracing across ABDM nodes.
+  - **RSA-2048 Demographic Cryptographic Manager (`backend/app/abdm/security/rsa.py`):**
+    - Cryptographic engine adhering to NHA specifications: RSA-2048, OAEP padding, SHA-256 digest, and MGF1(SHA-256).
+    - Public key PEM export, SHA-256 SubjectPublicKeyInfo fingerprinting, and demographic encryption/decryption.
+  - **ABDM REST Endpoints (`backend/app/api/v1/endpoints/abdm.py`):**
+    - Connectivity health inspection (`GET /status`), manual token refresh (`POST /sessions/refresh`), and cryptographic operations (`/crypto/encrypt-demographics`, `/crypto/decrypt-demographics`).
+  - **Cal.com Gateway Status Component (`frontend/src/components/clinical/AbdmGatewayStatusCard.tsx`):**
+    - High-polish geometric card rendered in Doctor EMR displaying live gateway state, token TTL, CM ID (`sbx`), and RSA key readiness.
+- **Verification:**
+  - ABDM Gateway Auth Test Suite: **5/5 tests passing in `tests/test_abdm_gateway_auth.py` (100% green in 0.79s)**.
+  - Full Backend Regression Test Suite: **261/261 tests passing across all 21 test modules (100% green in 73.81s)**.
+  - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+  - **Anti-Vibe-Coding:** Zero purple gradients, zero emoji icons, zero em dashes.
+
+---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
