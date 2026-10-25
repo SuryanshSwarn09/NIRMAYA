@@ -63,6 +63,7 @@
     * [Day 36: Clinician Queue & Consultation Workspace](journey/month-2/day-36.md)
     * [Day 37: Structured SOAP Note Authoring Pad](journey/month-2/day-37.md)
     * [Day 38: Integrated Prescription Authoring & Search](journey/month-2/day-38.md)
+    * [Day 39: Lab Order Requisition & PACS Viewer](journey/month-2/day-39.md)
 * [Month 3: ABDM Milestones & Health Information Exchange](journey/month-3/overview.md)
   * [Week 9: ABDM Milestone 1 - ABHA Creation & Verification](journey/month-3/week-9.md)
   * [Week 10: ABDM Milestone 2 - HIP Discovery & Care Contexts](journey/month-3/week-10.md)

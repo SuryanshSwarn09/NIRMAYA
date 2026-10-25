@@ -1077,6 +1077,39 @@
   - Next.js 15 Production Build: **11/11 static pages generated with 0 errors** (`npm run build`, `/doctor`: 4.69 kB).
   - **Tag Discipline Honored:** Strictly zero release tags created today. Milestone release tag `v0.2.0` remains reserved for Day 40 Month 2 close.
 
+#### Day 39 (Thu) - Milestone 08-04: Lab Order Requisition & PACS Viewer
+- **Focus:** Cal.com-Styled Diagnostic Order Requisition Pad (`DiagnosticOrderTracker.tsx`), Comprehensive LOINC Catalog Expansion (Pathology Panels & Diagnostic Imaging Modalities), Interactive Clinical PACS / DICOM Medical Imaging Viewer Modal (`PacsViewerModal.tsx`: Chest X-Ray 2-Views, 12-Lead ECG strip, Axial Head CT scan, Echocardiogram), Radiologist Windowing Presets (Native, Lung, Bone, Soft Tissue, Inverted Monochromatic), Pan & Zoom Controls, Digital Caliper Measurement Engine, DICOM 3.0 Header Tags Inspector Drawer (Study/Series UIDs, WADO-RS endpoint references, JSON export), Doctor EMR Workspace Integration (`frontend/src/app/doctor/page.tsx`), and Automated Backend Diagnostic Test Suite (`backend/tests/test_diagnostics.py`).
+- **Executed Micro-Commits (Strict 7-Commit Schedule):**
+  1. `5df934d: feat(clinical): implement PACS / DICOM medical imaging viewer modal`
+  2. `4c760a2: feat(clinical): expand LOINC test catalog and imaging orders in DiagnosticOrderTracker`
+  3. `faeafd0: refactor(clinical): apply Cal.com geometric design tokens to diagnostic components`
+  4. `1a20b58: feat(doctor): integrate lab requisition and PACS imaging viewer into Doctor EMR`
+  5. `7200c6c: test(backend): add test suite for imaging requisitions, DICOM metadata, and FHIR export`
+  6. `docs(journey): record Day 39 milestone log and update Week 8 roadmap`
+  7. `chore(sync): verify production build, full test suite pass, and clean repo state`
+- **Key Deliverables:**
+  - **PACS / DICOM Medical Imaging Viewer Modal (`frontend/src/components/clinical/PacsViewerModal.tsx`):**
+    - High-fidelity medical imaging inspection studio supporting CR/DX (Chest X-Ray 2-Views, LOINC 24648-8), ECG (12-Lead Diagnostic Rhythm Strip, LOINC 11524-6), CT (Head & Brain Axial non-contrast series, LOINC 36642-7), and US (Echocardiogram 2D Doppler, LOINC 77484-4).
+    - Windowing presets: Native, Lung Window, Bone Window, Soft Tissue, and Monochromatic Inversion.
+    - Zoom (+25% / -25%), step rotation (90°), and interactive digital measurement caliper with calibrated millimeter approximation.
+    - DICOM 3.0 header inspection drawer with tag references, WADO-RS endpoint schema, and client-side JSON download.
+    - Integrated radiologist clinical findings drawer with impression narrative and attestation seal.
+  - **Diagnostic Order Tracker & LOINC Selector (`frontend/src/components/clinical/DiagnosticOrderTracker.tsx`):**
+    - Expanded LOINC catalog with fast presets across biochemistry, hematology, and diagnostic imaging.
+    - Specimen handling, 12-hour fasting requirement flag, and priority tier selection (routine, urgent, STAT).
+    - "Launch PACS Viewer" action buttons on completed imaging reports.
+  - **Doctor EMR Workspace Integration (`frontend/src/app/doctor/page.tsx`):**
+    - Quick-Action Rail updated with "Diagnostics & PACS" action and "PACS" badge.
+    - Active patient profile synchronization (`key={activePatient.id}`).
+  - **Backend Test Suite Expansion (`backend/tests/test_diagnostics.py`):**
+    - Added 3 new tests (12/12 passed) validating urgent imaging requisitions, DICOM metadata persistence in `report_data`, STAT priority handling, and FHIR R4 `ServiceRequest` serialization.
+- **Verification:**
+  - Backend Automated Test Suite: **12/12 tests passing in `tests/test_diagnostics.py` (100% green)**.
+  - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors**.
+  - **Anti-Vibe-Coding:** Zero purple gradients, zero emoji icons, zero em dashes.
+  - **Tag Discipline Honored:** Strictly zero release tags created today. Milestone release tag `v0.2.0` remains reserved for Day 40 Month 2 close.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
