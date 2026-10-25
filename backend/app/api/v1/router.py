@@ -15,6 +15,7 @@ from app.api.v1.endpoints import (
     soap_notes,
     abdm,
     digilocker,
+    abdm_m1,
 )
 
 api_router = APIRouter()
@@ -22,6 +23,7 @@ api_router.include_router(health.router, prefix="", tags=["Health & Telemetry"])
 api_router.include_router(meta.router, prefix="", tags=["Interoperability & Metadata"])
 api_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 api_router.include_router(digilocker.router, prefix="", tags=["DigiLocker Identity & e-Aadhaar"])
+api_router.include_router(abdm_m1.router, prefix="", tags=["ABDM M1 - Aadhaar Demographic OTP Verification"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
 api_router.include_router(patients.router, prefix="/patients", tags=["Patient Vault"])
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])

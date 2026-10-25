@@ -194,6 +194,13 @@ __all__ = [
     "parse_eaadhaar_xml",
     "verify_digilocker_callback",
     "sync_patient_profile",
+    # Aadhaar OTP service
+    "validate_verhoeff",
+    "generate_verhoeff",
+    "aadhaar_session_manager",
+    "generate_aadhaar_otp",
+    "verify_aadhaar_otp",
+    "sync_unified_patient_profile",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -203,4 +210,12 @@ from app.services.digilocker import (
     parse_eaadhaar_xml,
     verify_digilocker_callback,
     sync_patient_profile,
+)
+from app.services.aadhaar_otp import (
+    validate_verhoeff,
+    generate_verhoeff,
+    aadhaar_session_manager,
+    generate_aadhaar_otp,
+    verify_aadhaar_otp,
+    sync_unified_patient_profile,
 )

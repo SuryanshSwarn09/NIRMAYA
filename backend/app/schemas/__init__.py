@@ -144,6 +144,15 @@ from app.schemas.digilocker import (
     DigiLockerVerificationResult,
     DigiLockerSyncPatientResponse,
 )
+from app.schemas.abdm_m1 import (
+    AadhaarAddress,
+    AadhaarDemographicData,
+    AadhaarOtpGenerateRequest,
+    AadhaarOtpGenerateResponse,
+    AadhaarOtpVerifyRequest,
+    AadhaarOtpVerifyResponse,
+    UnifiedIdentitySyncResponse,
+)
 
 __all__ = [
     "APIResponse",
@@ -166,6 +175,13 @@ __all__ = [
     "EAadhaarDemographics",
     "DigiLockerVerificationResult",
     "DigiLockerSyncPatientResponse",
+    "AadhaarAddress",
+    "AadhaarDemographicData",
+    "AadhaarOtpGenerateRequest",
+    "AadhaarOtpGenerateResponse",
+    "AadhaarOtpVerifyRequest",
+    "AadhaarOtpVerifyResponse",
+    "UnifiedIdentitySyncResponse",
     "StandardsCompliance",
     "DatabaseHealth",
     "SystemHealthResponse",
