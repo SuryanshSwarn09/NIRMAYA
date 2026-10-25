@@ -10,8 +10,10 @@ import {
   FileText,
   Building,
   Check,
+  Smartphone,
 } from "lucide-react";
 import { Badge, Button } from "@/components/ui";
+import { AadhaarOtpVerificationModal, AadhaarDemographics } from "./AadhaarOtpVerificationModal";
 
 export interface DigiLockerDemographics {
   name: string;
@@ -56,6 +58,25 @@ export function DigiLockerAuthCard({
         : null)
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isAadhaarModalOpen, setIsAadhaarModalOpen] = useState<boolean>(false);
+
+  const handleAadhaarOtpSuccess = (demo: AadhaarDemographics) => {
+    const formatted: DigiLockerDemographics = {
+      name: demo.name,
+      gender: demo.gender,
+      date_of_birth: demo.date_of_birth,
+      masked_aadhaar: demo.masked_aadhaar,
+      formatted_address: demo.formatted_address,
+      pincode: demo.pincode,
+      state: demo.state,
+      signature_valid: true,
+    };
+    setDemographics(formatted);
+    setVerified(true);
+    if (onVerificationComplete) {
+      onVerificationComplete(formatted);
+    }
+  };
 
   const handleDigiLockerConnect = async () => {
     setLoading(true);
@@ -236,28 +257,49 @@ export function DigiLockerAuthCard({
             <span>UIDAI X.509 digitally signed demographic proof</span>
           </div>
 
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={handleDigiLockerConnect}
-            disabled={loading}
-            className="w-full rounded-[8px] bg-[#111827] hover:bg-[#1f2937] text-white text-xs font-semibold h-9 flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-colors"
-          >
-            {loading ? (
-              <>
-                <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                Connecting to DigiLocker...
-              </>
-            ) : (
-              <>
-                <ExternalLink className="h-3.5 w-3.5" />
-                Verify with DigiLocker
-              </>
-            )}
-          </Button>
+          <div className="space-y-2 pt-1">
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={handleDigiLockerConnect}
+              disabled={loading}
+              className="w-full rounded-[8px] bg-[#111827] hover:bg-[#1f2937] text-white text-xs font-semibold h-9 flex items-center justify-center gap-2 cursor-pointer shadow-sm transition-colors"
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                  Connecting to DigiLocker...
+                </>
+              ) : (
+                <>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Verify with DigiLocker
+                </>
+              )}
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAadhaarModalOpen(true)}
+              className="w-full rounded-[8px] border-[#e5e7eb] hover:bg-[#f8f9fa] text-[#111827] text-xs font-semibold h-9 flex items-center justify-center gap-2 cursor-pointer transition-colors"
+            >
+              <Smartphone className="h-3.5 w-3.5 text-[#059669]" />
+              Verify via Direct Aadhaar OTP
+            </Button>
+          </div>
         </div>
       )}
+
+      {/* Direct Aadhaar Demographic OTP Verification Modal */}
+      <AadhaarOtpVerificationModal
+        isOpen={isAadhaarModalOpen}
+        onClose={() => setIsAadhaarModalOpen(false)}
+        patientId={patientId}
+        onVerified={handleAadhaarOtpSuccess}
+      />
     </div>
   );
 }
