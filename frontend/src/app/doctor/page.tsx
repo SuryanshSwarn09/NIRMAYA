@@ -38,7 +38,8 @@ import {
   ClinicalQuickActionRail,
   ClinicalTabType,
   INITIAL_MOCK_QUEUE,
-  AbdmGatewayStatusCard
+  AbdmGatewayStatusCard,
+  HprOnboardingCard
 } from "@/components/clinical";
 import { TelemedicineReadinessModal } from "@/components/patient";
 import { SoapNote } from "@/lib/api";
@@ -473,6 +474,13 @@ export default function DoctorEMRPage() {
                 </button>
               </div>
             </Card>
+
+            {/* Healthcare Professional Registry (HPR) Onboarding & Verification (Day 44) */}
+            <HprOnboardingCard
+              doctorId={doctorId}
+              doctorName={user?.fullName || "Dr. Ananya Sharma"}
+              initialHprId={user?.hprId || "ananya.sharma@hpr.abdm"}
+            />
           </div>
 
           {/* Right Column (7 Cols): Active Encounter Cockpit & Quick Documentation Actions */}

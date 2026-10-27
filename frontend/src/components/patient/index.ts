@@ -17,3 +17,4 @@ export * from "./PatientVitalsTelemetry";
 export * from "./TelemedicineReadinessModal";
 export * from "./DigiLockerAuthCard";
 export * from "./AadhaarOtpVerificationModal";
+export * from "./AbhaCreationModal";

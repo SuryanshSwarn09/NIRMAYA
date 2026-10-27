@@ -45,6 +45,7 @@ export interface PatientOverviewTabProps {
   qrPayload?: string;
   onOpenExport?: () => void;
   onOpenVerify?: () => void;
+  onOpenCreateAbha?: () => void;
   consentActive: boolean;
   onToggleConsent: (active: boolean) => void;
   scheduledAppointments: Appointment[];
@@ -71,6 +72,7 @@ export function PatientOverviewTab({
   qrPayload,
   onOpenExport,
   onOpenVerify,
+  onOpenCreateAbha,
   consentActive,
   onToggleConsent,
   scheduledAppointments,
@@ -130,6 +132,7 @@ export function PatientOverviewTab({
           qrPayload={qrPayload}
           onOpenExport={onOpenExport}
           onOpenVerify={onOpenVerify}
+          onOpenCreateAbha={onOpenCreateAbha}
         />
 
         {/* DigiLocker e-Aadhaar Verification Card */}

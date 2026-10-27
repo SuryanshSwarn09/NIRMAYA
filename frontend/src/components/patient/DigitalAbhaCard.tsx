@@ -35,6 +35,7 @@ export interface DigitalAbhaCardProps {
   qrPayload?: string;
   onOpenExport?: () => void;
   onOpenVerify?: () => void;
+  onOpenCreateAbha?: () => void;
   className?: string;
 }
 
@@ -53,6 +54,7 @@ export function DigitalAbhaCard({
   qrPayload,
   onOpenExport,
   onOpenVerify,
+  onOpenCreateAbha,
   className = "",
 }: DigitalAbhaCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -391,6 +393,19 @@ export function DigitalAbhaCard({
           <RotateCcw className="h-3.5 w-3.5 text-[#6b7280]" />
           <span>{isFlipped ? "Show Front Face" : "Flip to Back Face"}</span>
         </Button>
+
+        {onOpenCreateAbha && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onOpenCreateAbha}
+            className="text-xs font-medium flex items-center gap-1.5"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-[#059669]" />
+            <span>Issue / Link ABHA</span>
+          </Button>
+        )}
 
         {onOpenExport && (
           <Button

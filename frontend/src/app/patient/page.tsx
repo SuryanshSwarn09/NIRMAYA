@@ -15,7 +15,8 @@ import {
   PatientProblemsTab,
   PatientTabId,
   VitalMetricType,
-  TelemedicineReadinessModal
+  TelemedicineReadinessModal,
+  AbhaCreationModal
 } from "@/components/patient";
 import { 
   ClinicalSlotPicker, 
@@ -74,9 +75,10 @@ export default function PatientVaultPage() {
   const [activeTab, setActiveTab] = useState<PatientTabId>("overview");
   const [consentActive, setConsentActive] = useState(true);
 
-  // ABHA ID Card & QR Verification States (Day 32)
+  // ABHA ID Card & QR Verification States (Day 32, Day 44)
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
+  const [isAbhaCreationModalOpen, setIsAbhaCreationModalOpen] = useState(false);
   
   // Telemedicine Pre-Consultation WebRTC Readiness Modal (Day 35)
   const [isTelemedicineModalOpen, setIsTelemedicineModalOpen] = useState(false);
@@ -921,6 +923,7 @@ export default function PatientVaultPage() {
           qrPayload={abhaCardData.qrPayload}
           onOpenExport={() => setIsExportModalOpen(true)}
           onOpenVerify={() => setIsVerifyModalOpen(true)}
+          onOpenCreateAbha={() => setIsAbhaCreationModalOpen(true)}
           consentActive={consentActive}
           onToggleConsent={setConsentActive}
           scheduledAppointments={scheduledAppointments}
@@ -1098,6 +1101,23 @@ export default function PatientVaultPage() {
         defaultQrPayload={abhaCardData.qrPayload}
         patientName={abhaCardData.patientName}
         abhaId={abhaCardData.abhaId}
+      />
+
+      {/* ABDM 14-Digit ABHA Generation & @abdm PHR Address Reservation Modal (Day 44) */}
+      <AbhaCreationModal
+        isOpen={isAbhaCreationModalOpen}
+        onClose={() => setIsAbhaCreationModalOpen(false)}
+        defaultPatientName={abhaCardData.patientName}
+        defaultGender={abhaCardData.gender}
+        defaultDob={abhaCardData.dob}
+        defaultMobile={abhaCardData.mobile}
+        onSuccess={(cred) => {
+          setAbhaCardData((prev) => ({
+            ...prev,
+            abhaId: cred.abhaNumber,
+            abhaAddress: cred.phrAddress,
+          }));
+        }}
       />
 
       {/* Telemedicine WebRTC Device & Bandwidth Readiness Modal (Day 35) */}
