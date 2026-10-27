@@ -71,6 +71,7 @@
     * [Day 42: DigiLocker OAuth 2.0 & e-Aadhaar Verification](journey/month-3/day-42.md)
     * [Day 43: Direct Aadhaar OTP & Unified Profile Sync](journey/month-3/day-43.md)
     * [Day 44: 14-Digit ABHA Generation, @abdm PHR Handle & HPR Onboarding](journey/month-3/day-44.md)
+    * [Day 45: ABDM Milestone 1 Comprehensive Audit & Multi-Auth Verification](journey/month-3/day-45.md)
   * [Week 10: ABDM Milestone 2 - HIP Discovery & Care Contexts](journey/month-3/week-10.md)
   * [Week 11: ABDM Milestone 3 - Consent Manager & HIE-CM Gateway](journey/month-3/week-11.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)
@@ -94,6 +95,7 @@
 * [Week 6 Retrospective & Pharmacy Architecture Review](journey/month-2/week-6-review.md)
 * [Week 7 Retrospective & Patient Vault Architecture](journey/month-2/week-7-review.md)
 * [Week 8 Retrospective & Clinician EMR Workspace](journey/month-2/week-8-review.md)
+* [Week 9 Retrospective & ABDM Milestone 1 Architecture](journey/month-3/week-9-review.md)
 * [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
 ## Fundamental FAQ
