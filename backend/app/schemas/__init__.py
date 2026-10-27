@@ -153,6 +153,15 @@ from app.schemas.abdm_m1 import (
     AadhaarOtpVerifyResponse,
     UnifiedIdentitySyncResponse,
 )
+from app.schemas.abdm_m1_issuance import (
+    AbhaNumberCreateRequest,
+    AbhaNumberCreateResponse,
+    PhrAvailabilityResponse,
+    PhrLinkRequest,
+    PhrLinkResponse,
+    HprOnboardRequest,
+    HprOnboardResponse,
+)
 
 __all__ = [
     "APIResponse",
@@ -182,6 +191,13 @@ __all__ = [
     "AadhaarOtpVerifyRequest",
     "AadhaarOtpVerifyResponse",
     "UnifiedIdentitySyncResponse",
+    "AbhaNumberCreateRequest",
+    "AbhaNumberCreateResponse",
+    "PhrAvailabilityResponse",
+    "PhrLinkRequest",
+    "PhrLinkResponse",
+    "HprOnboardRequest",
+    "HprOnboardResponse",
     "StandardsCompliance",
     "DatabaseHealth",
     "SystemHealthResponse",

@@ -201,6 +201,11 @@ __all__ = [
     "generate_aadhaar_otp",
     "verify_aadhaar_otp",
     "sync_unified_patient_profile",
+    # ABHA Issuance & HPR service
+    "generate_14_digit_abha",
+    "check_phr_availability",
+    "link_phr_address",
+    "onboard_doctor_hpr",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -218,4 +223,10 @@ from app.services.aadhaar_otp import (
     generate_aadhaar_otp,
     verify_aadhaar_otp,
     sync_unified_patient_profile,
+)
+from app.services.abdm_issuance import (
+    generate_14_digit_abha,
+    check_phr_availability,
+    link_phr_address,
+    onboard_doctor_hpr,
 )
