@@ -1216,6 +1216,41 @@
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
   - **Anti-Vibe-Coding:** Zero purple gradients, zero emoji icons, zero em dashes.
 
+#### Day 44 (Thu) - Milestone 09-04: 14-Digit ABHA Generation, @abdm PHR Handle Reservation & HPR Doctor Onboarding
+- **Focus:** 14-Digit ABHA Generation with Verhoeff Checksum (`backend/app/services/abdm_issuance.py`), Universal @abdm PHR Address Reservation Engine with Collision Alternative Generation, Healthcare Professional Registry (HPR) Practitioner Council Onboarding, REST Endpoints (`/api/v1/abdm/m1/abha/create`, `/phr/check-availability`, `/phr/link`, `/hpr/onboard`), Cal.com-Styled `AbhaCreationModal.tsx` in Patient Vault, `HprOnboardingCard.tsx` in Doctor EMR Cockpit, and Automated Test Suite (`backend/tests/test_abdm_m1_abha_hpr.py`).
+- **Executed Micro-Commits:**
+  1. `feat(abdm): implement 14-digit abha issuance and phr handle reservation service`
+  2. `feat(patient): add abha creation modal and doctor hpr onboarding card`
+  3. `test(abdm): author automated test suite for abha issuance phr linking and hpr`
+  4. `docs(journey): record Day 44 milestone log, update summary, and changelog`
+- **Key Deliverables:**
+  - **14-Digit ABHA Generation Service (`backend/app/services/abdm_issuance.py`):**
+    - Generates ABDM M1 compliant 14-digit ABHA numbers beginning with India prefix `91-`.
+    - Computes mathematical Verhoeff check-digit on the 14th digit over the preceding 13 digits (`91` + 11 random digits).
+    - Formats into 4 distinct groups (`91-XXXX-XXXX-XXXX`).
+  - **@abdm PHR Address Reservation Engine:**
+    - Validates handle format against regex `^[a-z0-9._]{3,32}$` with mandatory `@abdm` suffix.
+    - Real-time availability endpoint filtering reserved keywords (`admin`, `root`, `nha`, `abdm`, `gov`, `support`, etc.) and collision detection.
+    - Automated generator proposing 3 collision-free alternative suggestions.
+    - Persistent linkage binding the 14-digit ABHA Number to the reserved `@abdm` PHR handle.
+  - **Healthcare Professional Registry (HPR) Onboarding:**
+    - Onboards doctor state medical council credentials (DMC, MMC, KMC, etc.) to an official `@hpr.abdm` identifier.
+    - Synchronizes HPR credentials directly into `DoctorProfile.hpr_id`.
+  - **ABDM M1 REST Endpoints (`backend/app/api/v1/endpoints/abdm_issuance.py`):**
+    - `POST /api/v1/abdm/m1/abha/create`: Mints new 14-digit ABHA number with Verhoeff verification.
+    - `GET /api/v1/abdm/m1/phr/check-availability`: Real-time handle availability evaluation with suggestions.
+    - `POST /api/v1/abdm/m1/phr/link`: Atomically links verified ABHA number to desired `@abdm` PHR address.
+    - `POST /api/v1/abdm/m1/hpr/onboard`: Registers doctor council credentials to official `@hpr.abdm` handle.
+  - **Cal.com Geometric Frontend Components:**
+    - `AbhaCreationModal.tsx`: 3-step modal (14-digit generation, debounced PHR handle reservation, and credential confirmation) with `#ffffff` canvas, hairline border (`#e5e7eb`), and `rounded-[8px]` controls.
+    - `HprOnboardingCard.tsx`: Doctor EMR Cockpit card displaying active HPR verification status and state council onboarding workflow.
+- **Verification:**
+  - ABHA Issuance & HPR Test Suite: **5/5 tests passing in `tests/test_abdm_m1_abha_hpr.py` (100% green in 1.48s)**.
+  - Full Backend Regression Test Suite: **282/282 tests passing across all 24 test modules (100% green in 62.84s)**.
+  - TypeScript Type Check: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+  - **Anti-Vibe-Coding:** Zero purple gradients, zero emoji icons, zero em dashes.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
