@@ -18,3 +18,4 @@ export * from "./TelemedicineReadinessModal";
 export * from "./DigiLockerAuthCard";
 export * from "./AadhaarOtpVerificationModal";
 export * from "./AbhaCreationModal";
+export * from "./PatientPasswordlessAuthCard";
