@@ -167,6 +167,18 @@ from app.schemas.patient_auth import (
     PatientMobileFallbackLoginRequest,
     PatientUnifiedAuthResponse,
 )
+from app.schemas.abdm_m2_bridge import (
+    GatewayAuthInitRequest,
+    GatewayAuthInitQuery,
+    GatewayAuthInitRequester,
+    GatewayAuthOnInitCallback,
+    GatewayAuthOnInitAuth,
+    GatewayAuthOnInitMeta,
+    GatewayRespRef,
+    WebhookEventItem,
+    HipBridgeStatusResponse,
+    TestPingResponse,
+)
 
 __all__ = [
     "APIResponse",
@@ -291,6 +303,16 @@ __all__ = [
     "PatientUnifiedAuthRequest",
     "PatientMobileFallbackLoginRequest",
     "PatientUnifiedAuthResponse",
+    "GatewayAuthInitRequest",
+    "GatewayAuthInitQuery",
+    "GatewayAuthInitRequester",
+    "GatewayAuthOnInitCallback",
+    "GatewayAuthOnInitAuth",
+    "GatewayAuthOnInitMeta",
+    "GatewayRespRef",
+    "WebhookEventItem",
+    "HipBridgeStatusResponse",
+    "TestPingResponse",
 ]
 
 

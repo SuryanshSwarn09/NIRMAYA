@@ -82,6 +82,23 @@ class ConflictException(AppException):
         )
 
 
+class ValidationException(AppException):
+    """Raised when an operation, header, or payload fails validation checks."""
+
+    def __init__(
+        self,
+        message: str = "Validation failed for provided request",
+        error_code: str = "VALIDATION_ERROR",
+        details: Optional[List[ErrorDetail]] = None,
+    ):
+        super().__init__(
+            message=message,
+            error_code=error_code,
+            status_code=status.HTTP_400_BAD_REQUEST,
+            details=details,
+        )
+
+
 def register_exception_handlers(app):
 
     """Register uniform error handlers formatting failures into standard ErrorResponse JSON."""

@@ -209,6 +209,13 @@ __all__ = [
     # Unified Patient Auth service
     "authenticate_or_register_patient",
     "authenticate_mobile_fallback",
+    # ABDM M2 HIP Bridge service
+    "validate_gateway_headers",
+    "dispatch_async_on_init_callback",
+    "get_bridge_status",
+    "get_recent_webhook_events",
+    "simulate_gateway_test_ping",
+    "webhook_audit_store",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -236,4 +243,12 @@ from app.services.abdm_issuance import (
 from app.services.patient_auth import (
     authenticate_or_register_patient,
     authenticate_mobile_fallback,
+)
+from app.services.abdm_hip_bridge import (
+    validate_gateway_headers,
+    dispatch_async_on_init_callback,
+    get_bridge_status,
+    get_recent_webhook_events,
+    simulate_gateway_test_ping,
+    webhook_audit_store,
 )
