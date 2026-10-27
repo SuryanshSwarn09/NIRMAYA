@@ -1279,6 +1279,36 @@
   - **Official Alpha Milestone Release Tag:**
     - Tagged `v0.3.0-alpha.w9` on `main` branch with strict single author provenance (`Suryansh Swarn <suryanshswarn@gmail.com>`).
 
+### Week 10: ABDM Milestone 2 - HIP Discovery & Care Contexts
+
+#### Day 46 (Mon) - Milestone 10-01: Unified DigiLocker & Aadhaar OTP Passwordless Patient Gateway
+- **Focus:** Build unified passwordless patient authentication and one-tap registration gateway powered by DigiLocker OAuth 2.0 PKCE and Direct Aadhaar Demographic OTP, incorporating auto-ABHA minting, mobile fallback, and 30-day session longevity.
+- **Executed Micro-Commits:**
+  1. `feat(auth): implement unified passwordless patient auth service and api endpoints`
+  2. `feat(frontend): create PatientPasswordlessAuthCard and redesign role login gateway`
+  3. `test(auth): author automated test suite for patient unified passwordless authentication`
+  4. `docs(journey): record Day 46 milestone log, update summary, and changelog`
+- **Key Deliverables:**
+  - **Unified Backend Authentication Architecture:**
+    - Schemas: `PatientUnifiedAuthRequest`, `PatientMobileFallbackLoginRequest`, `PatientUnifiedAuthResponse` (`backend/app/schemas/patient_auth.py`).
+    - Service Layer: `authenticate_or_register_patient` & `authenticate_mobile_fallback` (`backend/app/services/patient_auth.py`).
+    - Dedicated REST Endpoints:
+      - `POST /api/v1/auth/patient/login-or-register`: Idempotently resolves existing patients or auto-registers new users via verified DigiLocker e-Aadhaar or direct Aadhaar OTP claims.
+      - `POST /api/v1/auth/patient/mobile-fallback-login`: Active mobile number fallback for patients whose current SIM differs from their older Aadhaar-registered SIM card.
+  - **Three Core Product Innovations Delivered:**
+    - *Suggestion 1 (Mismatched SIM Fallback):* Dual-channel identity fallback allowing citizens with disconnected Aadhaar SIMs to authenticate via active mobile OTP and ABHA handle.
+    - *Suggestion 2 (Session Longevity):* Configurable 30-day extended JWT session tokens (`remember_me: true`, 2,592,000s) eliminating daily OTP friction on personal devices.
+    - *Suggestion 3 (Auto-ABHA Minting on First Login):* New patients have their accounts created, verified demographics synced, official 14-digit ABHA Numbers (`91-XXXX-XXXX-XXXX`) minted with Verhoeff verification, and `@abdm` handles reserved automatically in a single atomic transaction.
+  - **Cal.com Geometric Frontend Components:**
+    - `PatientPasswordlessAuthCard.tsx`: Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), and `rounded-[8px]` containers featuring 1-click DigiLocker, Aadhaar OTP with 60s cooldown, active mobile fallback, and 30-day session toggle.
+    - Redesigned `/login` and `/register`: Clean role switcher gateway (`Patient`, `Doctor`, `Lab / Staff`) with zero password requirements for citizens.
+- **Verification:**
+  - Dedicated Test Suite: **5/5 tests passing in `tests/test_patient_unified_auth.py` (100% green in 1.93s)**.
+  - Full Backend Regression Pass: **294/294 tests passing across all 26 test modules (100% green in 77.42s)**.
+  - TypeScript Static Typecheck: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+  - **Anti-Vibe-Coding:** Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), geometric radii (`rounded-[8px]`), dark `#111827` action buttons, zero purple gradients, zero emojis, zero em dashes.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
