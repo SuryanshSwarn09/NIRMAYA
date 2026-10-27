@@ -39,7 +39,8 @@ import {
   ClinicalTabType,
   INITIAL_MOCK_QUEUE,
   AbdmGatewayStatusCard,
-  HprOnboardingCard
+  HprOnboardingCard,
+  HipBridgeConsoleCard
 } from "@/components/clinical";
 import { TelemedicineReadinessModal } from "@/components/patient";
 import { SoapNote } from "@/lib/api";
@@ -487,6 +488,9 @@ export default function DoctorEMRPage() {
           <div className="lg:col-span-7 space-y-5">
             {/* ABDM National Gateway Interoperability Status */}
             <AbdmGatewayStatusCard />
+
+            {/* ABDM Milestone 2 HIP Bridge Service & Inbound Webhook Telemetry */}
+            <HipBridgeConsoleCard />
 
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">

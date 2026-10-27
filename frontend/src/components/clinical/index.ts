@@ -33,3 +33,4 @@ export {
 } from "./PacsViewerModal";
 export { AbdmGatewayStatusCard, type AbdmGatewayStatus } from "./AbdmGatewayStatusCard";
 export { HprOnboardingCard, type HprOnboardingCardProps } from "./HprOnboardingCard";
+export { HipBridgeConsoleCard, type HipBridgeStatus, type WebhookEventItem, type TestPingResult } from "./HipBridgeConsoleCard";
