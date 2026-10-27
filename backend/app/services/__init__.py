@@ -206,6 +206,9 @@ __all__ = [
     "check_phr_availability",
     "link_phr_address",
     "onboard_doctor_hpr",
+    # Unified Patient Auth service
+    "authenticate_or_register_patient",
+    "authenticate_mobile_fallback",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -229,4 +232,8 @@ from app.services.abdm_issuance import (
     check_phr_availability,
     link_phr_address,
     onboard_doctor_hpr,
+)
+from app.services.patient_auth import (
+    authenticate_or_register_patient,
+    authenticate_mobile_fallback,
 )

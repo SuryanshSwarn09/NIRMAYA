@@ -17,12 +17,14 @@ from app.api.v1.endpoints import (
     digilocker,
     abdm_m1,
     abdm_issuance,
+    patient_auth,
 )
 
 api_router = APIRouter()
 api_router.include_router(health.router, prefix="", tags=["Health & Telemetry"])
 api_router.include_router(meta.router, prefix="", tags=["Interoperability & Metadata"])
 api_router.include_router(auth.router, prefix="/auth", tags=["Authentication"])
+api_router.include_router(patient_auth.router, prefix="", tags=["Passwordless Patient Authentication"])
 api_router.include_router(digilocker.router, prefix="", tags=["DigiLocker Identity & e-Aadhaar"])
 api_router.include_router(abdm_m1.router, prefix="", tags=["ABDM M1 - Aadhaar Demographic OTP Verification"])
 api_router.include_router(abdm_issuance.router, prefix="", tags=["ABDM M1 - ABHA Issuance & HPR Onboarding"])

@@ -162,6 +162,11 @@ from app.schemas.abdm_m1_issuance import (
     HprOnboardRequest,
     HprOnboardResponse,
 )
+from app.schemas.patient_auth import (
+    PatientUnifiedAuthRequest,
+    PatientMobileFallbackLoginRequest,
+    PatientUnifiedAuthResponse,
+)
 
 __all__ = [
     "APIResponse",
@@ -283,6 +288,9 @@ __all__ = [
     "MedicationDispenseUpdate",
     "MedicationDispenseResponse",
     "MedicationDispenseFilter",
+    "PatientUnifiedAuthRequest",
+    "PatientMobileFallbackLoginRequest",
+    "PatientUnifiedAuthResponse",
 ]
 
 
