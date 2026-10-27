@@ -1309,6 +1309,36 @@
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
   - **Anti-Vibe-Coding:** Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), geometric radii (`rounded-[8px]`), dark `#111827` action buttons, zero purple gradients, zero emojis, zero em dashes.
 
+#### Day 47 (Tue) - Milestone 10-02: HIP Bridge Service & Webhook Ingest
+- **Focus:** Build ABDM Milestone 2 (M2) Health Information Provider (HIP) Bridge Service, enabling incoming Gateway webhook ingest (`POST /v0.5/users/auth/init`), timestamp drift replay defense, synchronous HTTP 202 Accepted handling, asynchronous background callback dispatch (`POST /v0.5/users/auth/on-init`), live telemetry audit logging, and Cal.com console component.
+- **Executed Micro-Commits:**
+  1. `feat(abdm): implement hip bridge service and asynchronous callback router`
+  2. `feat(frontend): create HipBridgeConsoleCard and mount in doctor emr cockpit`
+  3. `test(abdm): author automated test suite for hip bridge webhook ingest and replay defense`
+  4. `docs(journey): record Day 47 milestone log, update summary, and changelog`
+- **Key Deliverables:**
+  - **HIP Bridge Architecture & Security Ingest:**
+    - Schemas: `GatewayAuthInitRequest`, `GatewayAuthOnInitCallback`, `WebhookEventItem`, `HipBridgeStatusResponse`, `TestPingResponse` (`backend/app/schemas/abdm_m2_bridge.py`).
+    - Service Layer: `validate_gateway_headers`, `dispatch_async_on_init_callback`, `webhook_audit_store`, `get_bridge_status`, `simulate_gateway_test_ping` (`backend/app/services/abdm_hip_bridge.py`).
+    - Dedicated REST Endpoints:
+      - `POST /v0.5/users/auth/init`: Standard ABDM Gateway root route synchronously returning HTTP 202 Accepted with non-blocking background callback scheduling.
+      - `POST /api/v1/abdm/m2/bridge/users/auth/init`: Internal mirror route.
+      - `GET /api/v1/abdm/m2/bridge/status`: HIP node health, registration credentials (`IN0410000123`), and active listeners.
+      - `GET /api/v1/abdm/m2/bridge/events`: Recent webhook ingest event log with processing latencies.
+      - `POST /api/v1/abdm/m2/bridge/test-ping`: 1-click end-to-end webhook test simulator.
+  - **Replay Protection & Correlation Preservation:**
+    - Replay Defense: Validates `TIMESTAMP` header drift against server UTC with strict $\pm 300$ seconds (5 minutes) threshold, rejecting stale or future replays with HTTP 400.
+    - UUID Header Validation: Validates `REQUEST-ID` header as a compliant UUID.
+    - Asynchronous Correlation: Preserves correlation contract where outgoing callback `resp.requestId` matches incoming Gateway `requestId`.
+  - **Cal.com Geometric Frontend Component:**
+    - `HipBridgeConsoleCard.tsx`: Real-time HIP node status, live webhook audit table with latency metrics, and interactive 1-click Gateway test ping button. Mounted in Doctor EMR Cockpit (`/doctor`).
+- **Verification:**
+  - Dedicated Test Suite: **8/8 tests passing in `tests/test_abdm_m2_hip_bridge.py` (100% green in 9.98s)**.
+  - Full Backend Regression Pass: **302/302 tests passing across all 27 test modules (100% green in 108.40s)**.
+  - TypeScript Static Typecheck: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+  - **Anti-Vibe-Coding:** Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), geometric radii (`rounded-[8px]`), dark `#111827` action buttons, zero purple gradients, zero emojis, zero em dashes.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 

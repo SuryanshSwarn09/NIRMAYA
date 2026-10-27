@@ -74,6 +74,7 @@
     * [Day 45: ABDM Milestone 1 Comprehensive Audit & Multi-Auth Verification](journey/month-3/day-45.md)
   * [Week 10: ABDM Milestone 2 - HIP Discovery & Care Contexts](journey/month-3/week-10.md)
     * [Day 46: Unified DigiLocker & Aadhaar OTP Passwordless Patient Gateway](journey/month-3/day-46.md)
+    * [Day 47: HIP Bridge Service & Webhook Ingest](journey/month-3/day-47.md)
   * [Week 11: ABDM Milestone 3 - Consent Manager & HIE-CM Gateway](journey/month-3/week-11.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
