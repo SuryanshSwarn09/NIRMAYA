@@ -269,3 +269,223 @@ class PatientDiscoverySimulateResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
+# ----------------------------------------------------------------------------
+# Care Context Linkage Protocol Schemas (ABDM M2 /v0.5/links/link/*)
+# ----------------------------------------------------------------------------
+
+
+class GatewayCareContextRef(BaseModel):
+    """Reference to single care context in linking request."""
+
+    referenceNumber: str = Field(description="Care context reference (e.g. OPD-ENC-102938)")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkPatient(BaseModel):
+    """Patient and requested care contexts inside /v0.5/links/link/init."""
+
+    id: str = Field(description="Patient ABHA Address (e.g. arun.patel@abdm)")
+    referenceNumber: Optional[str] = Field(
+        default=None,
+        description="Patient internal reference / MRN at HIP",
+    )
+    careContexts: List[GatewayCareContextRef] = Field(
+        default_factory=list,
+        description="List of care contexts citizen selected to link",
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkInitRequest(BaseModel):
+    """Payload received from ABDM Gateway on POST /v0.5/links/link/init."""
+
+    requestId: str = Field(description="Unique UUID identifying this link init request")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="ISO 8601 UTC timestamp of dispatch",
+    )
+    transactionId: str = Field(description="Correlation transaction UUID across link lifecycle")
+    patient: GatewayLinkPatient = Field(description="Patient identifier and care contexts to link")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkMeta(BaseModel):
+    """Communication metadata for link OTP verification."""
+
+    communicationMedium: str = Field(default="MOBILE", description="MOBILE | EMAIL")
+    communicationHint: str = Field(description="Masked contact target (e.g. +91 ******3210)")
+    communicationExpiry: datetime = Field(description="UTC expiration time of the OTP challenge")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkOnInitLink(BaseModel):
+    """Link reference block in /v0.5/links/link/on-init callback."""
+
+    referenceNumber: str = Field(description="HIP linking reference number (e.g. LINK-REF-A1B2C3D4)")
+    authenticationType: str = Field(default="DIRECT", description="DIRECT | MEDIATED")
+    meta: GatewayLinkMeta = Field(description="Contact hint and expiry details")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkOnInitCallback(BaseModel):
+    """Payload dispatched asynchronously by HIP to ABDM Gateway /v0.5/links/link/on-init."""
+
+    requestId: str = Field(description="Unique UUID identifying this callback")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="ISO 8601 UTC timestamp of dispatch",
+    )
+    transactionId: str = Field(description="Correlation transaction UUID")
+    link: Optional[GatewayLinkOnInitLink] = Field(
+        default=None,
+        description="Link reference and auth metadata if challenge generated",
+    )
+    error: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Error details if patient or care contexts not found",
+    )
+    resp: GatewayRespRef = Field(description="Correlation reference pointing to incoming requestId")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkConfirmConfirmation(BaseModel):
+    """Citizen OTP confirmation block in /v0.5/links/link/confirm."""
+
+    linkRefNumber: str = Field(description="HIP link reference number returned in on-init")
+    token: str = Field(description="6-digit OTP code entered by patient")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkConfirmRequest(BaseModel):
+    """Payload received from ABDM Gateway on POST /v0.5/links/link/confirm."""
+
+    requestId: str = Field(description="Unique UUID identifying this link confirm request")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="ISO 8601 UTC timestamp of dispatch",
+    )
+    confirmation: GatewayLinkConfirmConfirmation = Field(description="OTP token and link reference")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkOnConfirmPatient(BaseModel):
+    """Confirmed linked patient and care contexts."""
+
+    referenceNumber: str = Field(description="Patient internal ID or MRN")
+    display: str = Field(description="Patient legal full name")
+    careContexts: List[CareContextRepresentation] = Field(
+        default_factory=list,
+        description="Confirmed linked care contexts with full descriptions",
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayLinkOnConfirmCallback(BaseModel):
+    """Payload dispatched asynchronously by HIP to ABDM Gateway /v0.5/links/link/on-confirm."""
+
+    requestId: str = Field(description="Unique UUID identifying this callback")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="ISO 8601 UTC timestamp of dispatch",
+    )
+    patient: Optional[GatewayLinkOnConfirmPatient] = Field(
+        default=None,
+        description="Confirmed linked patient representation",
+    )
+    error: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Error details if OTP invalid, expired, or max attempts exceeded",
+    )
+    resp: GatewayRespRef = Field(description="Correlation reference pointing to incoming requestId")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class LinkInitSimulateRequest(BaseModel):
+    """Simulation request to initiate care context linking."""
+
+    patient_identifier: str = Field(
+        description="Patient ABHA Address, 14-digit ABHA Number, or PatientProfile ID",
+    )
+    care_context_references: Optional[List[str]] = Field(
+        default=None,
+        description="Optional subset of care context reference numbers to link (defaults to all)",
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class LinkInitSimulateResponse(BaseModel):
+    """Simulation outcome report for link initiation."""
+
+    success: bool = Field(description="Whether linking challenge was successfully initiated")
+    link_ref_number: str = Field(description="HIP linking reference number")
+    transaction_id: str = Field(description="Correlation transaction ID")
+    communication_hint: str = Field(description="Masked phone destination")
+    otp_sandbox_hint: Optional[str] = Field(
+        default=None,
+        description="Sandbox plain OTP for immediate manual or automated verification",
+    )
+    care_contexts_count: int = Field(description="Number of care contexts queued for linking")
+    callback_payload: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Full generated ABDM /v0.5/links/link/on-init payload",
+    )
+    error_message: Optional[str] = Field(default=None, description="Error reason if failed")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class LinkConfirmSimulateRequest(BaseModel):
+    """Simulation request to confirm care context linking via OTP."""
+
+    link_ref_number: str = Field(description="HIP linking reference number")
+    otp_token: str = Field(description="6-digit OTP code")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class LinkConfirmSimulateResponse(BaseModel):
+    """Simulation outcome report for link confirmation."""
+
+    success: bool = Field(description="Whether OTP was valid and link was confirmed")
+    linked: bool = Field(description="Whether care contexts are now linked")
+    patient_name: Optional[str] = Field(default=None, description="Patient full name")
+    linked_care_contexts: List[CareContextRepresentation] = Field(
+        default_factory=list,
+        description="List of successfully linked care contexts",
+    )
+    callback_payload: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Full generated ABDM /v0.5/links/link/on-confirm payload",
+    )
+    error_message: Optional[str] = Field(default=None, description="Error reason if failed")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class LinkSessionRepresentation(BaseModel):
+    """Representation of an active or completed linking session."""
+
+    link_ref_number: str = Field(description="HIP link reference number")
+    transaction_id: str = Field(description="Transaction UUID")
+    patient_id: str = Field(description="Patient ABHA Address or identifier")
+    patient_name: Optional[str] = Field(default=None, description="Patient full name")
+    status: str = Field(description="PENDING | CONFIRMED | EXPIRED | FAILED")
+    care_contexts_count: int = Field(description="Count of care contexts")
+    created_at: datetime = Field(description="Session creation time")
+    expires_at: datetime = Field(description="Session expiration time")
+    attempts_remaining: int = Field(description="OTP attempts left")
+
+    model_config = ConfigDict(from_attributes=True)
+

@@ -9,6 +9,7 @@ Provides sliding-window token-bucket rate limiting across:
 import time
 import math
 import asyncio
+import threading
 from typing import Dict, Tuple, Optional
 from datetime import datetime, timezone
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -26,7 +27,7 @@ class TokenBucket:
         self.refill_rate = refill_rate_per_sec
         self.tokens = float(capacity)
         self.last_updated = time.time()
-        self._lock = asyncio.Lock()
+        self._lock = threading.Lock()
 
     async def consume(self, amount: float = 1.0) -> Tuple[bool, int, int]:
         """Attempt to consume tokens.
@@ -34,7 +35,7 @@ class TokenBucket:
         Returns:
             Tuple of (is_allowed, remaining_tokens, retry_after_seconds)
         """
-        async with self._lock:
+        with self._lock:
             now = time.time()
             elapsed = now - self.last_updated
             self.last_updated = now
@@ -69,11 +70,12 @@ class RateLimiter:
 
     def __init__(self):
         self._buckets: Dict[str, TokenBucket] = {}
-        self._lock = asyncio.Lock()
+        self._lock = threading.Lock()
 
     def clear(self) -> None:
         """Clear all active rate limit buckets (useful for test resets)."""
-        self._buckets.clear()
+        with self._lock:
+            self._buckets.clear()
 
     def _resolve_bucket_params(self, path: str) -> Tuple[str, int]:
         """Determine rate limit tier based on request path.
@@ -128,7 +130,7 @@ class RateLimiter:
 
         refill_rate = limit / 60.0
 
-        async with self._lock:
+        with self._lock:
             if bucket_key not in self._buckets:
                 self._buckets[bucket_key] = TokenBucket(
                     capacity=limit,

@@ -14,8 +14,15 @@ from app.schemas.common import APIResponse
 from app.schemas.abdm_m2_bridge import (
     GatewayAuthInitRequest,
     GatewayAuthOnInitCallback,
+    GatewayLinkConfirmRequest,
+    GatewayLinkInitRequest,
     GatewayPatientDiscoveryRequest,
     HipBridgeStatusResponse,
+    LinkConfirmSimulateRequest,
+    LinkConfirmSimulateResponse,
+    LinkInitSimulateRequest,
+    LinkInitSimulateResponse,
+    LinkSessionRepresentation,
     PatientDiscoverySimulateRequest,
     PatientDiscoverySimulateResponse,
     TestPingResponse,
@@ -32,6 +39,13 @@ from app.services.abdm_hip_bridge import (
 from app.services.abdm_discovery import (
     process_and_dispatch_discovery,
     simulate_patient_discovery,
+)
+from app.services.abdm_linkage import (
+    link_session_manager,
+    process_and_dispatch_link_confirm,
+    process_and_dispatch_link_init,
+    simulate_care_context_link_confirm,
+    simulate_care_context_link_init,
 )
 
 logger = logging.getLogger("nirmaya.api.abdm_m2_bridge")
@@ -219,5 +233,194 @@ async def simulate_discovery(
             f"Patient discovery completed: matched={sim_result.matched} "
             f"({sim_result.confidence_score * 100:.1f}% confidence)"
         ),
+    )
+
+
+# ----------------------------------------------------------------------------
+# ABDM M2 Care Context Linkage Endpoints (/v0.5/links/link/*)
+# ----------------------------------------------------------------------------
+
+
+@router.post(
+    "/links/link/init",
+    status_code=status.HTTP_202_ACCEPTED,
+    summary="Inbound ABDM Gateway Webhook: Initiate Care Context Link Challenge",
+    description=(
+        "Synchronous HTTP 202 Accepted ingest point for ABDM Gateway /v0.5/links/link/init. "
+        "Enforces replay defense (300s timestamp drift), creates a 10-minute OTP challenge, "
+        "and schedules asynchronous callback to /v0.5/links/link/on-init."
+    ),
+)
+async def inbound_gateway_link_init(
+    payload: GatewayLinkInitRequest,
+    background_tasks: BackgroundTasks,
+    request_id: Optional[str] = Header(None, alias="REQUEST-ID"),
+    timestamp: Optional[str] = Header(None, alias="TIMESTAMP"),
+    x_cm_id: Optional[str] = Header("sbx", alias="X-CM-ID"),
+) -> Response:
+    start_time = time.perf_counter()
+
+    req_id_val = request_id or payload.requestId
+    ts_val = timestamp or (payload.timestamp.isoformat() if payload.timestamp else None)
+
+    # 1. Validate headers with replay defense
+    valid_req_id, parsed_ts = validate_gateway_headers(
+        request_id_header=req_id_val,
+        timestamp_header=ts_val,
+        x_cm_id_header=x_cm_id,
+    )
+
+    # 2. Record initial ingest event in audit store
+    event = WebhookEventItem(
+        id=str(uuid.uuid4()),
+        request_id=valid_req_id,
+        event_type="links/link/init",
+        status="ACCEPTED",
+        latency_ms=0.0,
+        received_at=datetime.now(timezone.utc),
+        details={
+            "cm_id": x_cm_id,
+            "patient_id": payload.patient.id,
+            "transaction_id": payload.transactionId,
+            "care_contexts_count": len(payload.patient.careContexts),
+        },
+    )
+    webhook_audit_store.add_event(event)
+
+    # 3. Schedule asynchronous background linking & callback dispatch
+    background_tasks.add_task(
+        process_and_dispatch_link_init,
+        incoming_request=payload,
+        start_time=start_time,
+    )
+
+    # 4. Synchronously acknowledge under 200ms
+    return Response(status_code=status.HTTP_202_ACCEPTED)
+
+
+@router.post(
+    "/links/link/confirm",
+    status_code=status.HTTP_202_ACCEPTED,
+    summary="Inbound ABDM Gateway Webhook: Confirm Care Context Link OTP",
+    description=(
+        "Synchronous HTTP 202 Accepted ingest point for ABDM Gateway /v0.5/links/link/confirm. "
+        "Enforces replay defense (300s timestamp drift), verifies patient OTP token, "
+        "and schedules asynchronous callback to /v0.5/links/link/on-confirm."
+    ),
+)
+async def inbound_gateway_link_confirm(
+    payload: GatewayLinkConfirmRequest,
+    background_tasks: BackgroundTasks,
+    request_id: Optional[str] = Header(None, alias="REQUEST-ID"),
+    timestamp: Optional[str] = Header(None, alias="TIMESTAMP"),
+    x_cm_id: Optional[str] = Header("sbx", alias="X-CM-ID"),
+) -> Response:
+    start_time = time.perf_counter()
+
+    req_id_val = request_id or payload.requestId
+    ts_val = timestamp or (payload.timestamp.isoformat() if payload.timestamp else None)
+
+    # 1. Validate headers with replay defense
+    valid_req_id, parsed_ts = validate_gateway_headers(
+        request_id_header=req_id_val,
+        timestamp_header=ts_val,
+        x_cm_id_header=x_cm_id,
+    )
+
+    # 2. Record initial ingest event in audit store
+    event = WebhookEventItem(
+        id=str(uuid.uuid4()),
+        request_id=valid_req_id,
+        event_type="links/link/confirm",
+        status="ACCEPTED",
+        latency_ms=0.0,
+        received_at=datetime.now(timezone.utc),
+        details={
+            "cm_id": x_cm_id,
+            "link_ref_number": payload.confirmation.linkRefNumber,
+        },
+    )
+    webhook_audit_store.add_event(event)
+
+    # 3. Schedule asynchronous background OTP confirmation & callback dispatch
+    background_tasks.add_task(
+        process_and_dispatch_link_confirm,
+        incoming_request=payload,
+        start_time=start_time,
+    )
+
+    # 4. Synchronously acknowledge under 200ms
+    return Response(status_code=status.HTTP_202_ACCEPTED)
+
+
+@router.post(
+    "/link/init/simulate",
+    response_model=APIResponse[LinkInitSimulateResponse],
+    summary="Simulate Inbound ABDM Care Context Link Initiation",
+)
+async def simulate_link_init_endpoint(
+    sim_req: LinkInitSimulateRequest,
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse[LinkInitSimulateResponse]:
+    """Simulate care context linking challenge and OTP generation from clinical cockpit."""
+    sim_result = await simulate_care_context_link_init(session=db, sim_req=sim_req)
+    return APIResponse(
+        success=sim_result.success,
+        data=sim_result,
+        message=(
+            f"Care context link initiation completed: success={sim_result.success} "
+            f"(Link Ref: {sim_result.link_ref_number or 'N/A'})"
+        ),
+    )
+
+
+@router.post(
+    "/link/confirm/simulate",
+    response_model=APIResponse[LinkConfirmSimulateResponse],
+    summary="Simulate Inbound ABDM Care Context Link OTP Confirmation",
+)
+async def simulate_link_confirm_endpoint(
+    sim_req: LinkConfirmSimulateRequest,
+) -> APIResponse[LinkConfirmSimulateResponse]:
+    """Simulate citizen OTP verification to link care contexts."""
+    sim_result = await simulate_care_context_link_confirm(sim_req=sim_req)
+    return APIResponse(
+        success=sim_result.success,
+        data=sim_result,
+        message=(
+            f"Care context link confirmation completed: linked={sim_result.linked} "
+            f"({len(sim_result.linked_care_contexts)} care contexts linked)"
+        ),
+    )
+
+
+@router.get(
+    "/link/sessions",
+    response_model=APIResponse[List[LinkSessionRepresentation]],
+    summary="List Active and Recent ABDM Link Sessions",
+)
+async def list_link_sessions_endpoint(
+    limit: int = 50,
+) -> APIResponse[List[LinkSessionRepresentation]]:
+    """List recent link challenge sessions with OTP state and remaining attempts."""
+    sessions = link_session_manager.list_sessions(limit=limit)
+    data = [
+        LinkSessionRepresentation(
+            link_ref_number=s.link_ref_number,
+            transaction_id=s.transaction_id,
+            patient_id=s.patient_id,
+            patient_name=s.patient_name,
+            status=s.status,
+            care_contexts_count=len(s.care_contexts),
+            created_at=s.created_at,
+            expires_at=s.expires_at,
+            attempts_remaining=s.attempts_left,
+        )
+        for s in sessions
+    ]
+    return APIResponse(
+        success=True,
+        data=data,
+        message=f"Retrieved {len(data)} link sessions",
     )
 
