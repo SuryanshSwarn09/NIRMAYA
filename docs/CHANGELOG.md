@@ -1366,6 +1366,37 @@
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
   - **Anti-Vibe-Coding:** Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), geometric radii (`rounded-[8px]`), dark `#111827` action buttons, zero purple gradients, zero emojis, zero em dashes.
 
+#### Day 49 (Thu) - Milestone 10-04: ABDM M2 Care Context Linkage & OTP Verification
+- **Focus:** Implement ABDM Milestone 2 (M2) Care Context Linkage and OTP Verification Protocol for NIRMAYA HIP nodes, featuring multi-step asynchronous gateway webhook orchestration (`POST /v0.5/links/link/init` and `confirm`), stateful session management with 10-minute TTL and 3-attempt defense (`AbdmLinkSessionManager`), privacy-preserving mobile masking (`+91 ******XXXX`), asynchronous gateway callback dispatchers (`POST /v0.5/links/link/on-init` and `on-confirm`), rate limiter concurrency hardening, Cal.com 3-step modal wizard, and operator simulation endpoints.
+- **Executed Micro-Commits:**
+  1. `feat(abdm): implement m2 care context linkage service and otp session manager`
+  2. `feat(frontend): create CareContextLinkageModal and integrate in hip bridge card`
+  3. `test(abdm): author automated test suite for care context linkage and otp confirmation`
+  4. `docs(journey): record Day 49 milestone log, update summary, and changelog`
+- **Key Deliverables:**
+  - **Care Context Linkage & OTP Session Engine (`backend/app/services/abdm_linkage.py`):**
+    - Stateful session manager (`AbdmLinkSessionManager`): Manages cryptographically secure link reference tokens with 600s (10-minute) TTL, max 3 attempts counter, and atomic state transitions (`PENDING` -> `CONFIRMED` / `EXPIRED` / `FAILED`).
+    - Phone number masking utility: Masks registered mobile numbers following ABDM privacy guidelines (`+91 9876543210` -> `+91 ******3210`).
+    - Link Initiation: Resolves candidate care contexts from patient vault, generates 6-digit OTP challenge, records session metadata, and queues SMS/direct challenge.
+    - Link Confirmation: Validates submitted OTP, decrements attempt counter on mismatch, transitions session to `CONFIRMED`, and locks against further tampering.
+    - Asynchronous Callbacks: Dispatches `POST /v0.5/links/link/on-init` and `POST /v0.5/links/link/on-confirm` with correlated request identifiers (`resp.requestId = req.requestId`).
+  - **Pydantic Schemas & Inbound Webhook Endpoints (`backend/app/schemas/abdm_m2_bridge.py`, `backend/app/api/v1/endpoints/abdm_m2_bridge.py`):**
+    - `POST /v0.5/links/link/init`: Standard ABDM Gateway webhook returning synchronous HTTP 202 Accepted and triggering background evaluation.
+    - `POST /v0.5/links/link/confirm`: Standard ABDM Gateway webhook returning synchronous HTTP 202 Accepted and verifying OTP.
+    - `POST /api/v1/abdm/m2/bridge/link/init/simulate`: Operator endpoint simulating link challenge initiation.
+    - `POST /api/v1/abdm/m2/bridge/link/confirm/simulate`: Operator endpoint simulating OTP verification and record linkage.
+    - `GET /api/v1/abdm/m2/bridge/link/sessions`: Telemetry endpoint querying active and historical link sessions.
+  - **Rate Limiting Concurrency Hardening (`backend/app/core/rate_limit.py`):**
+    - Replaced import-time `asyncio.Lock()` in `TokenBucket` and `RateLimiter` with `threading.Lock()` to eliminate cross-event-loop deadlocks during asynchronous test execution.
+  - **Cal.com Geometric Frontend Component:**
+    - `CareContextLinkageModal.tsx`: Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), geometric radii (`rounded-[8px]`), dark `#111827` action buttons. Features a 3-step wizard (Patient Discovery & Care Context selection, 6-digit OTP verification with countdown timer and attempt indicator, and confirmation summary with raw ABDM JSON inspection). Integrated directly into `HipBridgeConsoleCard.tsx`.
+- **Verification:**
+  - Dedicated Test Suite: **10/10 tests passing in `tests/test_abdm_m2_linkage.py` (100% green in 0.41s)**.
+  - Combined M2 Test Suite: **28/28 tests passing across all ABDM M2 modules (100% green in 4.90s)**.
+  - TypeScript Static Typecheck: **0 errors** (`npx tsc --noEmit`).
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+  - **Anti-Vibe-Coding:** Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), geometric radii (`rounded-[8px]`), dark `#111827` action buttons, zero purple gradients, zero emojis, zero em dashes.
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
