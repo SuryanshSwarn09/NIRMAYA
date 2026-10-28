@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Server, Activity, ShieldCheck, RefreshCw, Zap, ArrowUpRight, CheckCircle2, Clock, Search } from "lucide-react";
+import { Server, Activity, ShieldCheck, RefreshCw, Zap, ArrowUpRight, CheckCircle2, Clock, Search, Link2 } from "lucide-react";
 import { PatientDiscoverySimulatorModal } from "./PatientDiscoverySimulatorModal";
+import { CareContextLinkageModal } from "./CareContextLinkageModal";
 
 export interface WebhookEventItem {
   id: string;
@@ -61,6 +62,10 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
       "/api/v1/abdm/m2/bridge/users/auth/init",
       "/v0.5/care-contexts/discover",
       "/api/v1/abdm/m2/bridge/care-contexts/discover",
+      "/v0.5/links/link/init",
+      "/v0.5/links/link/on-init",
+      "/v0.5/links/link/confirm",
+      "/v0.5/links/link/on-confirm",
     ],
     total_events_processed: 12,
     last_heartbeat_at: new Date().toISOString(),
@@ -71,6 +76,7 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
   const [pingLoading, setPingLoading] = useState(false);
   const [lastPingResult, setLastPingResult] = useState<TestPingResult | null>(null);
   const [isDiscoveryModalOpen, setIsDiscoveryModalOpen] = useState(false);
+  const [isLinkageModalOpen, setIsLinkageModalOpen] = useState(false);
 
   const fetchBridgeData = async () => {
     try {
@@ -177,6 +183,13 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
           >
             <Search className="w-3.5 h-3.5 text-[#4b5563]" />
             Simulate Discovery
+          </button>
+          <button
+            onClick={() => setIsLinkageModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#374151] bg-[#ffffff] border border-[#e5e7eb] rounded-[8px] hover:bg-[#f9fafb] transition-colors"
+          >
+            <Link2 className="w-3.5 h-3.5 text-[#4b5563]" />
+            Link Care Contexts
           </button>
           <button
             onClick={handleTestPing}
@@ -330,6 +343,11 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
       <PatientDiscoverySimulatorModal
         isOpen={isDiscoveryModalOpen}
         onClose={() => setIsDiscoveryModalOpen(false)}
+      />
+
+      <CareContextLinkageModal
+        isOpen={isLinkageModalOpen}
+        onClose={() => setIsLinkageModalOpen(false)}
       />
     </div>
   );
