@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Server, Activity, ShieldCheck, RefreshCw, Zap, ArrowUpRight, CheckCircle2, Clock } from "lucide-react";
+import { Server, Activity, ShieldCheck, RefreshCw, Zap, ArrowUpRight, CheckCircle2, Clock, Search } from "lucide-react";
+import { PatientDiscoverySimulatorModal } from "./PatientDiscoverySimulatorModal";
 
 export interface WebhookEventItem {
   id: string;
@@ -58,6 +59,8 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
       "/v0.5/users/auth/init",
       "/v0.5/users/auth/on-init",
       "/api/v1/abdm/m2/bridge/users/auth/init",
+      "/v0.5/care-contexts/discover",
+      "/api/v1/abdm/m2/bridge/care-contexts/discover",
     ],
     total_events_processed: 12,
     last_heartbeat_at: new Date().toISOString(),
@@ -67,6 +70,7 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
   const [loading, setLoading] = useState(false);
   const [pingLoading, setPingLoading] = useState(false);
   const [lastPingResult, setLastPingResult] = useState<TestPingResult | null>(null);
+  const [isDiscoveryModalOpen, setIsDiscoveryModalOpen] = useState(false);
 
   const fetchBridgeData = async () => {
     try {
@@ -166,6 +170,13 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-[#111827]" : ""}`} />
             Refresh
+          </button>
+          <button
+            onClick={() => setIsDiscoveryModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[#374151] bg-[#ffffff] border border-[#e5e7eb] rounded-[8px] hover:bg-[#f9fafb] transition-colors"
+          >
+            <Search className="w-3.5 h-3.5 text-[#4b5563]" />
+            Simulate Discovery
           </button>
           <button
             onClick={handleTestPing}
@@ -315,6 +326,11 @@ export function HipBridgeConsoleCard({ className = "" }: HipBridgeConsoleCardPro
           </div>
         )}
       </div>
+
+      <PatientDiscoverySimulatorModal
+        isOpen={isDiscoveryModalOpen}
+        onClose={() => setIsDiscoveryModalOpen(false)}
+      />
     </div>
   );
 }

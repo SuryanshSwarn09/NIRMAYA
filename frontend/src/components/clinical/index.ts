@@ -34,3 +34,4 @@ export {
 export { AbdmGatewayStatusCard, type AbdmGatewayStatus } from "./AbdmGatewayStatusCard";
 export { HprOnboardingCard, type HprOnboardingCardProps } from "./HprOnboardingCard";
 export { HipBridgeConsoleCard, type HipBridgeStatus, type WebhookEventItem, type TestPingResult } from "./HipBridgeConsoleCard";
+export { PatientDiscoverySimulatorModal, type SimulationResult, type MatchScoreBreakdown, type CareContextItem } from "./PatientDiscoverySimulatorModal";
