@@ -178,6 +178,15 @@ from app.schemas.abdm_m2_bridge import (
     WebhookEventItem,
     HipBridgeStatusResponse,
     TestPingResponse,
+    PatientIdentifier,
+    PatientDiscoveryQuery,
+    GatewayPatientDiscoveryRequest,
+    CareContextRepresentation,
+    DiscoveredPatientRepresentation,
+    GatewayPatientOnDiscoverCallback,
+    DemographicMatchBreakdown,
+    PatientDiscoverySimulateRequest,
+    PatientDiscoverySimulateResponse,
 )
 
 __all__ = [
@@ -313,6 +322,15 @@ __all__ = [
     "WebhookEventItem",
     "HipBridgeStatusResponse",
     "TestPingResponse",
+    "PatientIdentifier",
+    "PatientDiscoveryQuery",
+    "GatewayPatientDiscoveryRequest",
+    "CareContextRepresentation",
+    "DiscoveredPatientRepresentation",
+    "GatewayPatientOnDiscoverCallback",
+    "DemographicMatchBreakdown",
+    "PatientDiscoverySimulateRequest",
+    "PatientDiscoverySimulateResponse",
 ]
 
 

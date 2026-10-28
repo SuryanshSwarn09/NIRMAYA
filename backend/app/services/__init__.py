@@ -216,6 +216,15 @@ __all__ = [
     "get_recent_webhook_events",
     "simulate_gateway_test_ping",
     "webhook_audit_store",
+    # ABDM M2 Discovery service
+    "calculate_name_similarity",
+    "calculate_yob_similarity",
+    "calculate_gender_similarity",
+    "evaluate_candidate_match",
+    "resolve_patient_care_contexts",
+    "discover_patient",
+    "simulate_patient_discovery",
+    "dispatch_async_on_discover_callback",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -252,3 +261,14 @@ from app.services.abdm_hip_bridge import (
     simulate_gateway_test_ping,
     webhook_audit_store,
 )
+from app.services.abdm_discovery import (
+    calculate_name_similarity,
+    calculate_yob_similarity,
+    calculate_gender_similarity,
+    evaluate_candidate_match,
+    resolve_patient_care_contexts,
+    discover_patient,
+    simulate_patient_discovery,
+    dispatch_async_on_discover_callback,
+)
+

@@ -69,9 +69,16 @@ class WebhookAuditStore:
     def get_events(self, limit: int = 50) -> List[WebhookEventItem]:
         return list(self._events)[:limit]
 
+    def get_event_by_request_id(self, request_id: str) -> Optional[WebhookEventItem]:
+        for ev in self._events:
+            if ev.request_id == request_id:
+                return ev
+        return None
+
     @property
     def total_count(self) -> int:
         return self._total_count
+
 
 
 # Global singleton audit store
@@ -225,7 +232,10 @@ def get_bridge_status() -> HipBridgeStatusResponse:
         active_listeners=[
             "/v0.5/users/auth/init",
             "/v0.5/users/auth/on-init",
+            "/v0.5/care-contexts/discover",
+            "/v0.5/care-contexts/on-discover",
             "/api/v1/abdm/m2/bridge/users/auth/init",
+            "/api/v1/abdm/m2/bridge/care-contexts/discover",
         ],
         total_events_processed=webhook_audit_store.total_count,
         last_heartbeat_at=datetime.now(timezone.utc),

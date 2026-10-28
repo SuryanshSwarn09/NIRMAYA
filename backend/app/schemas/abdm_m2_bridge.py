@@ -124,3 +124,148 @@ class TestPingResponse(BaseModel):
     callback_payload: Optional[Dict[str, Any]] = Field(default=None, description="Dispatched callback body")
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# ----------------------------------------------------------------------------
+# Patient Discovery Protocol Schemas (ABDM M2 /v0.5/care-contexts/discover)
+# ----------------------------------------------------------------------------
+
+
+class PatientIdentifier(BaseModel):
+    """Verified or unverified patient identifier in ABDM discovery query."""
+
+    type: str = Field(description="Identifier type (e.g. MOBILE, NDHM_HEALTH_NUMBER, MR, HEALTH_ID)")
+    value: str = Field(description="Identifier value (e.g. +919876543210, 91-1029-3847-5610)")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PatientDiscoveryQuery(BaseModel):
+    """Query attributes provided by ABDM Gateway in patient discovery."""
+
+    id: str = Field(description="ABHA Address of patient (e.g. arun.patel@abdm)")
+    name: Optional[str] = Field(default=None, description="Patient full name")
+    gender: Optional[str] = Field(default=None, description="Gender code (M, F, O)")
+    yearOfBirth: Optional[int] = Field(default=None, description="Patient birth year (e.g. 1985)")
+    dateOfBirth: Optional[str] = Field(default=None, description="Patient ISO birth date (e.g. 1985-04-12)")
+    verifiedIdentifiers: List[PatientIdentifier] = Field(
+        default_factory=list,
+        description="List of verified identifiers (e.g. MOBILE, NDHM_HEALTH_NUMBER)",
+    )
+    unverifiedIdentifiers: List[PatientIdentifier] = Field(
+        default_factory=list,
+        description="List of unverified demographic identifiers",
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayPatientDiscoveryRequest(BaseModel):
+    """Payload received from ABDM Gateway on POST /v0.5/care-contexts/discover."""
+
+    requestId: str = Field(description="Unique UUID identifying this discovery request")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="ISO 8601 UTC timestamp of dispatch",
+    )
+    hipId: str = Field(default="IN0410000123", description="HIP Facility ID queried")
+    patient: PatientDiscoveryQuery = Field(description="Patient demographic & identifier criteria")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CareContextRepresentation(BaseModel):
+    """Single care context episode linked to patient at this HIP."""
+
+    referenceNumber: str = Field(description="Unique reference number at HIP (e.g. OPD-ENC-001)")
+    display: str = Field(description="Human readable care context label (e.g. Cardiology Consultation)")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class DiscoveredPatientRepresentation(BaseModel):
+    """Matched patient representation returned in ABDM discovery callback."""
+
+    referenceNumber: str = Field(description="Patient ID / MRN at this HIP (e.g. pat-arun-patel-01)")
+    display: str = Field(description="Patient display name")
+    careContexts: List[CareContextRepresentation] = Field(
+        default_factory=list,
+        description="Discovered active care context episodes",
+    )
+    matchedBy: List[str] = Field(
+        default_factory=list,
+        description="Identifiers that produced the match (e.g. NDHM_HEALTH_NUMBER, MOBILE, NAME)",
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class GatewayPatientOnDiscoverCallback(BaseModel):
+    """Outbound callback payload dispatched by HIP to ABDM Gateway /v0.5/care-contexts/on-discover."""
+
+    requestId: str = Field(description="Unique UUID identifying this callback dispatch")
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="ISO 8601 UTC timestamp of dispatch",
+    )
+    transactionId: str = Field(description="Unique discovery transaction ID")
+    patient: Optional[DiscoveredPatientRepresentation] = Field(
+        default=None,
+        description="Discovered patient and care contexts, or null if no match found",
+    )
+    error: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Error details if patient not found or match is ambiguous",
+    )
+    resp: GatewayRespRef = Field(description="Correlation reference pointing to incoming requestId")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class DemographicMatchBreakdown(BaseModel):
+    """Detailed score telemetry from fuzzy demographic matcher."""
+
+    name_score: float = Field(description="Name similarity score (0.0 to 1.0)")
+    yob_score: float = Field(description="Year of birth matching score (0.0 to 1.0)")
+    gender_score: float = Field(description="Gender matching score (0.0 to 1.0)")
+    composite_score: float = Field(description="Weighted overall confidence score (0.0 to 1.0)")
+    matched_by: List[str] = Field(description="List of matched attribute keys")
+    match_status: str = Field(description="CONFIRMED | AMBIGUOUS | NO_MATCH")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PatientDiscoverySimulateRequest(BaseModel):
+    """Request payload for simulating patient discovery from the clinical console."""
+
+    abha_address: Optional[str] = Field(default=None, description="Optional ABHA address (e.g. arun.patel@abdm)")
+    abha_number: Optional[str] = Field(default=None, description="Optional 14-digit ABHA number")
+    full_name: Optional[str] = Field(default=None, description="Full or partial/fuzzy patient name")
+    gender: Optional[str] = Field(default=None, description="M, F, O, MALE, FEMALE, OTHER")
+    year_of_birth: Optional[int] = Field(default=None, description="Birth year (e.g. 1985)")
+    mobile: Optional[str] = Field(default=None, description="10-digit mobile or international format")
+    match_threshold: float = Field(default=0.75, ge=0.5, le=1.0, description="Minimum confidence threshold")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PatientDiscoverySimulateResponse(BaseModel):
+    """Outcome report from patient discovery simulation."""
+
+    matched: bool = Field(description="Whether a unique high-confidence patient was discovered")
+    confidence_score: float = Field(description="Final match confidence (0.0 to 1.0)")
+    breakdown: DemographicMatchBreakdown = Field(description="Demographic score breakdown")
+    patient_id: Optional[str] = Field(default=None, description="Matched PatientProfile ID")
+    patient_name: Optional[str] = Field(default=None, description="Matched patient full name")
+    abha_address: Optional[str] = Field(default=None, description="Patient ABHA Address")
+    care_contexts: List[CareContextRepresentation] = Field(
+        default_factory=list,
+        description="Discovered clinical care contexts",
+    )
+    callback_payload: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Full ABDM /v0.5/care-contexts/on-discover payload generated",
+    )
+
+    model_config = ConfigDict(from_attributes=True)
+
