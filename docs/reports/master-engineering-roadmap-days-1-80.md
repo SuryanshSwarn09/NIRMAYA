@@ -212,9 +212,9 @@ gantt
 - **Day 50:** ABDM Milestone 2 Integration Audit & Review; E2E verification test suite (`test_week_10_e2e_verification.py` - 6 scenarios); live audit endpoint (`GET /api/v1/abdm/m2/bridge/audit`); Cal.com audit drawer in `HipBridgeConsoleCard.tsx`; release tagging `v0.3.0-alpha.w10`.
 
 ### Week 11: ABDM Milestone 3 - Consent Management & Encrypted Data Flow (Days 51–55)
-*Status:* **In Progress (Day 51 Completed)**
+*Status:* **In Progress (Day 52 Completed)**
 - **Day 51 (Milestone 11-01) [COMPLETED]:** Consent Notification & Artefact Ingest (`POST /v0.5/consents/hip/notify`); cryptographic Electronic Consent Artefact (ECA) signature verifier; thread-safe Consent Registry (`ConsentRegistryStore`); fine-grained record authorization engine; async acknowledgement (`POST /v0.5/consents/hip/on-notify`).
-- **Day 52 (Milestone 11-02):** Diffie-Hellman Key Exchange Service; ECDH Curve25519 (X25519) key pair generation; HKDF-SHA256 shared secret derivation compliant with NHA specifications.
+- **Day 52 (Milestone 11-02) [COMPLETED]:** Diffie-Hellman Key Exchange Service; ephemeral ECDH Curve25519 (X25519) key pair generation; CSPRNG 32-byte nonces; Dual-Nonce XOR entropy extraction (20-byte Salt + 12-byte IV); HKDF-SHA256 256-bit symmetric encryption key derivation compliant with NHA Fidelius specifications; thread-safe `CryptoSessionStore`; Gateway inbound listener (`POST /v0.5/health-information/hip/request`).
 - **Day 53 (Milestone 11-03):** Encrypted Health Data Transfer Pipeline; FHIR Document Bundle serialization; AES-256-GCM symmetric encryption with 128-bit authentication tag; data push to HIU bridge (`/v0.5/health-information/transfer`).
 - **Day 54 (Milestone 11-04):** Health Information User (HIU) Data Consumer Engine; encrypted data reception webhook (`/v0.5/health-information/hip/request`); FHIR bundle decryption and clinical record parser.
 - **Day 55 (Milestone 11-05):** ABDM Milestone 3 Integration Audit; full-loop consent request -> approval -> encrypted transfer -> HIU rendering test suite; release tagging `v0.3.0-alpha.w11`.

@@ -1460,7 +1460,43 @@
   - Full Cumulative Backend Test Suite: **337/337 tests passing (100% green in 82.23s)**.
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
 
+#### Day 52 (Tue) - Milestone 11-02: Diffie-Hellman Key Exchange Service (ECDH Curve25519 & HKDF-SHA256)
+- **Focus:** ABDM Milestone 3 cryptographic key exchange, NHA Fidelius specifications, ephemeral ECDH Curve25519 (X25519) keypair generation, 32-byte CSPRNG nonces, Dual-Nonce XOR entropy extraction (20-byte Salt for HKDF, 12-byte IV for AES-256-GCM), Diffie-Hellman scalar multiplication for shared secret agreement, RFC 5869 HKDF-SHA256 256-bit symmetric encryption key derivation, thread-safe `CryptoSessionStore`, inbound Gateway data request listener (`POST /v0.5/health-information/hip/request`), and async acknowledgement callback (`POST /v0.5/health-information/hip/on-request`).
+- **Executed Micro-Commits:**
+  1. `feat(abdm): define nha v0.5 and fidelius cryptographic schemas for key material and health info request`
+  2. `feat(abdm): implement ecdh curve25519 key exchange, nonce xor, and hkdf-sha256 derivation service`
+  3. `feat(abdm): implement m3 health info request gateway listener and cryptographic endpoints`
+  4. `test(abdm): author unit and integration test suite for ecdh key exchange and gateway request`
+  5. `docs(journey): record day 52 milestone log, update week 11 schedule, and changelog`
+- **Key Deliverables:**
+  - **NHA v0.5 Cryptographic Schemas (`backend/app/schemas/abdm_m3_crypto.py`):**
+    - `KeyUserInfo`: Base64-encoded Curve25519 public key and 32-byte CSPRNG nonce.
+    - `KeyMaterial`: Cryptographic parameters (`cryptoAlg: "ECDH"`, `curve: "Curve25519"`).
+    - `HIRequestPayload`: Inbound health information request carrying `transactionId`, `consentId`, requested `dateRange`, `dataPushUrl`, and HIU key material.
+    - `HIOnRequestCallback`: Asynchronous callback acknowledging receipt (`POST /v0.5/health-information/hip/on-request`).
+    - `CryptoSessionDetail`: Active session record containing transaction ID, consent ID, keys, salt, IV, and derived symmetric encryption key.
+  - **Cryptographic Core Service (`backend/app/services/abdm_crypto.py`):**
+    - Ephemeral Curve25519 Key Generation: Fresh X25519 keypairs per session with raw 32-byte Base64 serialization and multi-format parsing (Raw, DER, PEM).
+    - 32-Byte CSPRNG Nonces: Generated using `secrets.token_bytes(32)`.
+    - Dual-Nonce XOR Derivation (Fidelius): Computes $\text{Nonce}_{\text{local}} \oplus \text{Nonce}_{\text{peer}}$ into 20-byte Salt (HKDF) and 12-byte IV (AES-GCM).
+    - ECDH Shared Secret: Scalar multiplication $\text{ECDH}(\text{Priv}_{\text{local}}, \text{Pub}_{\text{peer}})$.
+    - HKDF-SHA256 Derivation: RFC 5869 deterministic 32-byte symmetric AES-GCM encryption key derivation.
+    - `CryptoSessionStore`: Thread-safe in-memory cache indexing active sessions by `transactionId` and `consentId` with 1-hour TTL expiration.
+    - Asynchronous Callback Dispatcher (`dispatch_hi_on_request`): Formulates and dispatches `/v0.5/health-information/hip/on-request` with audit logging in `WebhookAuditStore`.
+  - **API Router & Endpoints (`backend/app/api/v1/endpoints/abdm_m3_crypto.py`):**
+    - `POST /v0.5/health-information/hip/request`: Synchronous HTTP 202 Accepted Gateway webhook listener. Verifies consent in `ConsentRegistryStore`, derives symmetric encryption key, caches session, and schedules async `/on-request` callback.
+    - `POST /v0.5/health-information/hip/on-request`: Gateway acknowledgement callback receiver.
+    - `POST /api/v1/abdm/m3/crypto/keys/generate`: Local developer endpoint to generate Curve25519 keypairs and nonces.
+    - `POST /api/v1/abdm/m3/crypto/exchange`: Direct cryptographic handshake computation verifying shared secret and derived keys.
+    - `GET /api/v1/abdm/m3/crypto/sessions`: List active cryptographic sessions.
+    - `GET /api/v1/abdm/m3/crypto/sessions/{transaction_id}`: Fetch session details by transaction ID.
+- **Verification:**
+  - Dedicated Test Suite: **11/11 tests passing in `tests/test_abdm_m3_crypto.py` (100% green in 0.66s)**.
+  - Full Cumulative Backend Test Suite: **348/348 tests passing (100% green in 68.67s)**.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
