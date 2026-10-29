@@ -239,12 +239,12 @@ gantt
 - **Day 64:** Zero-Knowledge Break-The-Glass (BTG) Emergency Health Profile Vault schemas, Argon2id key derivation, and audited emergency override API for ICU/ER clinicians.
 - **Day 65:** Cryptographic audit trail (SHA-256 hash-chaining) and automated SMS alert dispatch to patient emergency contacts upon BTG access.
 
-### Week 14: Security Hardening, Zero-Trust Architecture & ASVS Compliance (Days 66–70)
+### Week 14: Security Hardening, Indian LGD Administrative Hierarchy & Zero-Trust (Days 66–70)
 - **Day 66:** Static application security testing (SAST) and automated vulnerability scanning with Bandit and Safety.
 - **Day 67:** OWASP Application Security Verification Standard (ASVS) Level 2 compliance audit; automated SQL injection and XSS fuzzing.
-- **Day 68:** Distributed token-bucket rate limiter backed by Redis protecting all public APIs, authentication gateways, and ABDM callback routes.
-- **Day 69:** Enterprise secret management, environment variable vaulting, and automated RSA/ECDH key rotation protocols.
-- **Day 70:** Simulated penetration testing and security sign-off across all API surfaces and web client routes.
+- **Day 68:** Indian Local Government Directory (LGD) 6-Tier Administrative Hierarchy schema (`administrative_units`, `administrative_officers`); PostgreSQL `ltree` extension migration and sub-2ms territorial GIST indexing.
+- **Day 69:** Chain-of-Command Administrative Provisioning Service (National SuperAdmin -> State -> Division -> District -> Block) with official `@gov.in` email and Aadhaar OTP MFA; Scoped Territorial RBAC.
+- **Day 70:** District & State Command Center endpoints (outbreak heatmaps, ICU bed occupancy, doctor roster); automated test suite `test_administrative_hierarchy.py` and security sign-off.
 
 ### Week 15: Dual-Mode Edge Appliance, Docker Containerization & Cloud CI/CD (Days 71–75)
 - **Day 71:** Multi-stage minimal Alpine Dockerfile builds for FastAPI backend with non-root security context.
@@ -278,6 +278,7 @@ During active implementation, several critical architectural enhancements and sc
 | **Phone Privacy Masking** | Week 10 (Day 49) | Automatically masks patient phone numbers (`+91 ******XXXX`) during care context discovery and linkage flows in compliance with NHA data privacy guidelines. |
 | **Automated M2 Audit Report Engine** | Week 10 (Day 50) | Built a live diagnostic engine (`GET /api/v1/abdm/m2/bridge/audit`) computing real-time discovery accuracy, callback latency, and linkage security scores. |
 | **Federated Database, Edge Network & Solo Doctor PWA** | Week 11 (Day 51) | Formulated 3-tier multi-tenancy spectrum: On-premise Edge Node for hospitals + Turnkey Docker Appliance for clinics + Local-First Encrypted SQLite PWA with Append-Only Event Log sync for solo doctors without servers. Integrated 2-tier data storage (95% on-demand pull + 5% Zero-Knowledge Break-The-Glass Emergency Vault) and Dual-Registration ABDM Bridge ensuring 100% DPDP Act compliance with instant 2-minute onboarding. |
+| **6-Tier Indian LGD Administrative Governance Hierarchy** | Week 11 (Day 51) | Designed sovereign Indian administrative chain of command (Sub-District -> District CMO -> Division -> State Secretary -> National SuperAdmin) utilizing PostgreSQL `ltree` indexing with official Ministry LGD codes, Chain-of-Command delegation with Aadhaar MFA, and Dual-Plane privacy air-gapping administrative oversight from private clinical records. |
 
 ---
 

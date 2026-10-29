@@ -13,6 +13,7 @@
 * [HL7 FHIR Release 4 Mappings](standards/fhir-r4.md)
 * [Ayushman Bharat Digital Mission (ABDM) & ABHA](standards/abdm-abha.md)
 * [Federated Database Systems & Edge-Node Interoperability](standards/federated-database-edge-architecture.md)
+* [India 6-Tier Administrative Hierarchy & LGD Governance](standards/indian-administrative-hierarchy.md)
 
 ## Engineering Journey (80-Day Roadmap)
 * [Development Methodology & Pacing](journey/overview.md)
