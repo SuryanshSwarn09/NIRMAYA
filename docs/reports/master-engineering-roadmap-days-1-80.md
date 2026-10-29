@@ -1,3 +1,4 @@
+
 # NIRMAYA: Master Engineering Roadmap & Technical Blueprint (Days 1–80)
 ## Complete End-to-End System Architecture, Implemented Foundations & Future Specifications
 
@@ -249,7 +250,7 @@ gantt
 - **Day 71:** Multi-stage minimal Alpine Dockerfile builds for FastAPI backend with non-root security context.
 - **Day 72:** Next.js 15 standalone output optimization; minimal Docker containerization with production asset caching.
 - **Day 73:** Production Docker Compose orchestration topology: FastAPI, Next.js, PostgreSQL 16, Redis 7, and Caddy reverse proxy with automated Let's Encrypt TLS 1.3.
-- **Day 74:** Dual-Mode Edge Node Appliance packaging (`docker-compose.edge.yml`): Standalone Local PostgreSQL, Offline Clinical Engine, and ABDM mTLS Sync Agent for new clinics.
+- **Day 74:** Dual-Mode Edge Node Appliance packaging (`docker-compose.edge.yml`) and Local-First Encrypted SQLite PWA client sync engine (Append-Only Clinical Event Log) for solo practitioners without servers.
 - **Day 75:** PostgreSQL Foreign Data Wrapper (`postgres_fdw`) & legacy database read-only adapter enabling hospitals with existing HIS (MySQL/Oracle) to federate records into NIRMAYA.
 
 ### Week 16: Academic Project Monograph & Master Production Release (Days 76–80)
@@ -276,7 +277,7 @@ During active implementation, several critical architectural enhancements and sc
 | **Ambiguity Protection Filter (ABDM Error 1441)** | Week 10 (Day 48) | Added strict safety guardrail: if patient discovery finds $\ge 2$ patients with close fuzzy match scores, system rejects matching to prevent leaking clinical records to the wrong patient. |
 | **Phone Privacy Masking** | Week 10 (Day 49) | Automatically masks patient phone numbers (`+91 ******XXXX`) during care context discovery and linkage flows in compliance with NHA data privacy guidelines. |
 | **Automated M2 Audit Report Engine** | Week 10 (Day 50) | Built a live diagnostic engine (`GET /api/v1/abdm/m2/bridge/audit`) computing real-time discovery accuracy, callback latency, and linkage security scores. |
-| **Federated Database & Dual-Mode Edge Network** | Week 11 (Day 51) | Formulated 2-tier federation topology: 95% clinical data zero-replication on-demand pull via ABDM FHIR streams + 5% opt-in Zero-Knowledge Break-The-Glass (BTG) Emergency Vault. Packaged Dual-Mode Edge Appliance (Standalone Docker stack for new clinics + PostgreSQL FDW adapters for legacy hospital databases) ensuring 100% DPDP Act 2023 compliance without exposing raw database ports. |
+| **Federated Database, Edge Network & Solo Doctor PWA** | Week 11 (Day 51) | Formulated 3-tier multi-tenancy spectrum: On-premise Edge Node for hospitals + Turnkey Docker Appliance for clinics + Local-First Encrypted SQLite PWA with Append-Only Event Log sync for solo doctors without servers. Integrated 2-tier data storage (95% on-demand pull + 5% Zero-Knowledge Break-The-Glass Emergency Vault) and Dual-Registration ABDM Bridge ensuring 100% DPDP Act compliance with instant 2-minute onboarding. |
 
 ---
 
