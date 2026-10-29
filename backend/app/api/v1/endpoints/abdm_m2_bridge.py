@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.schemas.common import APIResponse
 from app.schemas.abdm_m2_bridge import (
+    AbdmM2AuditReport,
     GatewayAuthInitRequest,
     GatewayAuthOnInitCallback,
     GatewayLinkConfirmRequest,
@@ -30,6 +31,7 @@ from app.schemas.abdm_m2_bridge import (
 )
 from app.services.abdm_hip_bridge import (
     dispatch_async_on_init_callback,
+    generate_m2_audit_report,
     get_bridge_status,
     get_recent_webhook_events,
     simulate_gateway_test_ping,
@@ -423,4 +425,20 @@ async def list_link_sessions_endpoint(
         data=data,
         message=f"Retrieved {len(data)} link sessions",
     )
+
+
+@router.get(
+    "/audit",
+    response_model=APIResponse[AbdmM2AuditReport],
+    summary="Get ABDM Milestone 2 Integration & Interoperability Audit Report",
+)
+async def get_m2_audit_endpoint() -> APIResponse[AbdmM2AuditReport]:
+    """Compile and return comprehensive ABDM Milestone 2 integration audit metrics."""
+    audit_report = generate_m2_audit_report()
+    return APIResponse(
+        success=True,
+        data=audit_report,
+        message="ABDM Milestone 2 integration audit metrics compiled successfully",
+    )
+
 

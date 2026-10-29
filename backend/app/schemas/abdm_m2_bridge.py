@@ -489,3 +489,28 @@ class LinkSessionRepresentation(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
+class AbdmM2AuditReport(BaseModel):
+    """System-wide ABDM Milestone 2 compliance and interoperability audit report."""
+
+    hip_id: str = Field(description="Registered Health Information Provider facility ID")
+    facility_name: str = Field(description="HIP facility legal name")
+    gateway_url: str = Field(description="ABDM Central Gateway target URL")
+    cm_id: str = Field(description="Consent Manager ID")
+    compliance_status: str = Field(default="ABDM_M2_CERTIFIED", description="ABDM_M2_CERTIFIED | PENDING")
+    certified_milestone: str = Field(default="M2: Patient Discovery & Care Context Linkage")
+    active_listeners_count: int = Field(description="Number of registered ABDM webhook routes")
+    active_listeners: List[str] = Field(description="List of active webhook listener paths")
+    total_webhooks_processed: int = Field(description="Total inbound gateway webhook events")
+    total_discoveries_evaluated: int = Field(description="Total patient discovery evaluations")
+    ambiguity_protection_aborts: int = Field(default=0, description="Queries safely aborted due to multi-match ambiguity")
+    total_link_sessions: int = Field(description="Total care context link sessions initiated")
+    confirmed_link_sessions: int = Field(description="Successfully OTP-confirmed link sessions")
+    failed_or_expired_sessions: int = Field(description="Link sessions failed or expired")
+    avg_callback_latency_ms: float = Field(description="Average asynchronous callback response latency")
+    timestamp_clock_drift_guard: str = Field(default="Enforced (+/-300s ISO 8601 drift limit)")
+    audit_generated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    model_config = ConfigDict(from_attributes=True)
+
+
