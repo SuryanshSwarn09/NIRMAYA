@@ -271,4 +271,19 @@ from app.services.abdm_discovery import (
     simulate_patient_discovery,
     dispatch_async_on_discover_callback,
 )
+from app.services.abdm_consent import (
+    ConsentRegistryStore,
+    consent_registry_store,
+    verify_consent_signature,
+    dispatch_consent_on_notify,
+    process_and_dispatch_consent_notification,
+    simulate_consent_notification,
+)
+from app.services.abdm_crypto import (
+    AbdmCryptoService,
+    CryptoSessionStore,
+    crypto_session_store,
+    dispatch_hi_on_request,
+)
+
 
