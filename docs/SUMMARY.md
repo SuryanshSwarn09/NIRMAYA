@@ -109,6 +109,7 @@
 * [Medical Practitioner Credentialing & Verification](faq/medical-practitioner-verification.md)
 
 ## Reports & Case Studies
+* [Master Engineering Roadmap & Technical Blueprint (Days 1–80)](reports/master-engineering-roadmap-days-1-80.md)
 * [Interim Project Report (Month 1 Review)](reports/interim-project-report-month-1.md)
 * [Engineering Case Study: Vercel Monorepo Deployment Failures](reports/case-study-vercel-deployment-failure.md)
 * [Comprehensive Changelog](CHANGELOG.md)
