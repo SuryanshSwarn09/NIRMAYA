@@ -19,6 +19,7 @@ from app.api.v1.endpoints import (
     abdm_issuance,
     patient_auth,
     abdm_m2_bridge,
+    abdm_m3_consent,
 )
 
 api_router = APIRouter()
@@ -30,6 +31,7 @@ api_router.include_router(digilocker.router, prefix="", tags=["DigiLocker Identi
 api_router.include_router(abdm_m1.router, prefix="", tags=["ABDM M1 - Aadhaar Demographic OTP Verification"])
 api_router.include_router(abdm_issuance.router, prefix="", tags=["ABDM M1 - ABHA Issuance & HPR Onboarding"])
 api_router.include_router(abdm_m2_bridge.router, prefix="/abdm/m2/bridge", tags=["ABDM M2 - HIP Bridge & Webhooks"])
+api_router.include_router(abdm_m3_consent.router, prefix="/abdm/m3/consent", tags=["ABDM M3 - Consent Management"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
 api_router.include_router(patients.router, prefix="/patients", tags=["Patient Vault"])
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])

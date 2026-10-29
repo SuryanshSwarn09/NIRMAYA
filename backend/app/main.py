@@ -66,8 +66,9 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # 6. Include ABDM Gateway /v0.5 Webhook Root Route
-from app.api.v1.endpoints import abdm_m2_bridge
+from app.api.v1.endpoints import abdm_m2_bridge, abdm_m3_consent
 app.include_router(abdm_m2_bridge.router, prefix="/v0.5", tags=["ABDM Gateway Webhooks (/v0.5)"])
+app.include_router(abdm_m3_consent.router, prefix="/v0.5", tags=["ABDM Gateway Webhooks (/v0.5)"])
 
 
 @app.get("/", tags=["Root"])
