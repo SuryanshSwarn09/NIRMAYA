@@ -5,8 +5,8 @@
 **Candidate & Project Lead:** Suryansh Swarn (`suryanshswarn@gmail.com`)  
 **Repository:** `https://github.com/SuryanshSwarn09/NIRMAYA`  
 **Pacing:** 4 Months / 16 Weeks / 80 Development Days  
-**Current Status:** Day 50 Completed (Release `v0.3.0-alpha.w10` / ABDM Milestone 2 Certified)  
-**Next Horizon:** Day 51 (Month 3, Week 11 / ABDM Milestone 3: Consent Notification & Artefact Ingest)  
+**Current Status:** Day 51 Completed (Release `v0.3.0-alpha.w11` / ABDM Milestone 3 Ingress Active)  
+**Next Horizon:** Day 52 (Month 3, Week 11 / Diffie-Hellman Key Exchange Service - ECDH Curve25519)  
 **Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3)  
 
 ---
@@ -281,10 +281,11 @@ During active implementation, several critical architectural enhancements and sc
 
 ## 8. Codebase Health, Verification Suite & Current Status
 
-As of **Day 50 (Week 10 Close)**:
-- **Backend Test Suite:** **318 / 318 tests passing (100% green in 9.22s)**
-- **ABDM Specific Suites:** 34 tests passing across discovery, linkage, and bridge verification
+As of **Day 51 (Week 11 Milestone 11-01)**:
+- **Backend Test Suite:** **337 / 337 tests passing (100% green in 82.23s)**
+- **ABDM Specific Suites:** 43 tests passing across M1, M2, and M3 consent modules
 - **Frontend Typecheck & Build:** Clean compilation with 0 TypeScript errors and 13/13 static routes rendered
-- **Active Release Tag:** **`v0.3.0-alpha.w10`**
+- **Active Release Tag:** **`v0.3.0-alpha.w11`**
 - **Git Repository Branch:** `main` (synchronized with `origin/main`)
-- **Next Operational Milestone:** **Day 51 (Milestone 11-01: ABDM Milestone 3 Consent Notification & Artefact Ingest)**
+- **Next Operational Milestone:** **Day 52 (Milestone 11-02: Diffie-Hellman Key Exchange Service - ECDH Curve25519)**
+

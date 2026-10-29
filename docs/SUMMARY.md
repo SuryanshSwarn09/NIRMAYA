@@ -79,6 +79,7 @@
     * [Day 49: ABDM M2 Care Context Linkage & OTP Verification](journey/month-3/day-49.md)
     * [Day 50: ABDM Milestone 2 Integration Audit & Review](journey/month-3/day-50.md)
   * [Week 11: ABDM Milestone 3 - Consent Manager & HIE-CM Gateway](journey/month-3/week-11.md)
+    * [Day 51: ABDM M3 Consent Notification & Artefact Ingest](journey/month-3/day-51.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
   * [Week 13: WebSockets & Distributed Audit Logging](journey/month-4/week-13.md)

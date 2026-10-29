@@ -8,7 +8,7 @@
 
 | Day | Focus Area | Planned Deliverables | Status |
 |---|---|---|---|
-| **Day 51** | Consent Notification & Artefact Ingest | Consent webhook handler (`/v0.5/consents/hip/notify`), signature verifier | Planned |
+| **Day 51** | Consent Notification & Artefact Ingest | Consent webhook handler (`/v0.5/consents/hip/notify`), signature verifier | Completed |
 | **Day 52** | Diffie-Hellman Key Exchange Service | ECDH Curve25519 key pair generator, shared secret derivation engine | Planned |
 | **Day 53** | AES-GCM Encrypted FHIR Bundle Stream | AES-256-GCM encryption pipeline for clinical bundles, transfer payload | Planned |
 | **Day 54** | HIU Data Ingestion & Decryption | HIU request engine (`/v0.5/health-information/hip/request`), bundle parser | Planned |

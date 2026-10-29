@@ -1425,6 +1425,41 @@
   - **Anti-Vibe-Coding:** Pure `#ffffff` canvas, hairline borders (`#e5e7eb`), geometric radii (`rounded-[8px]`), dark `#111827` action buttons, zero purple gradients, zero emojis, zero em dashes.
   - **Milestone Release Tag:** `v0.3.0-alpha.w10`.
 
+### Week 11: ABDM Milestone 3 - Consent Manager & HIE-CM Gateway
+
+#### Day 51 (Mon) - Milestone 11-01: ABDM Milestone 3 Consent Notification & Artefact Ingest
+- **Focus:** ABDM Milestone 3 ingress boundary, NHA v0.5 electronic consent schemas, webhook listener (`POST /v0.5/consents/hip/notify`), Gateway signature verification, Consent Registry persistence, and async acknowledgement callback (`POST /v0.5/consents/hip/on-notify`).
+- **Executed Micro-Commits:**
+  1. `feat(abdm): define nha v0.5 pydantic schemas for consent notification and artefact`
+  2. `feat(abdm): implement consent ingestion signature verification and registry service`
+  3. `feat(abdm): implement m3 consent webhook listener and query api endpoints`
+  4. `test(abdm): author unit and integration test suite for abdm m3 consent lifecycle`
+  5. `docs(journey): record day 51 milestone log, update week 11 schedule, and changelog`
+- **Key Deliverables:**
+  - **NHA v0.5 Electronic Consent Schemas (`backend/app/schemas/abdm_m3_consent.py`):**
+    - `ConsentPatient`: Patient ABHA address (`<username>@abdm`).
+    - `ConsentPurpose`: Standard clinical access purpose codes (`CAREMGT`, `PUBHLTH`, `DSRCH`, `PATRQT`, `BTG`).
+    - `ConsentPermission`: Access modes (`VIEW`, `STORE`, `STREAM`), clinical date window (`dateRange`), expiration timestamp (`dataEraseAt`), and frequency limits.
+    - `ConsentCareContextReference`: Mapping patient reference and specific `careContextReference` IDs.
+    - `ConsentArtefact`: Full electronic consent contract structure with digital `signature` attribute (JWS / SHA256withRSA).
+    - `GatewayConsentOnNotifyCallback`: Standardized asynchronous acknowledgement response for `POST /v0.5/consents/hip/on-notify`.
+  - **Consent Ingestion & Registry Service (`backend/app/services/abdm_consent.py`):**
+    - Gateway Replay Protection: Standard $\pm 300\text{s}$ timestamp drift defense.
+    - Signature Verification: Verifies Consent Manager digital signature over canonical consent payload.
+    - Thread-safe `ConsentRegistryStore`: In-memory and cache store for active and historical consents with indexing by `consent_id` and `patient_id`.
+    - Fine-Grained Health Record Authorization Engine (`validate_record_authorization`): Sub-millisecond validation of incoming health data requests against active consent status, expiration date, authorized `hiTypes` (`OPConsultation`, `DiagnosticReport`, `Prescription`), authorized care contexts, and clinical record timestamps.
+    - Asynchronous Callback Dispatcher (`dispatch_consent_on_notify`): Formulates and dispatches `POST /v0.5/consents/hip/on-notify`.
+  - **API Router & Endpoints (`backend/app/api/v1/endpoints/abdm_m3_consent.py`):**
+    - `POST /v0.5/consents/hip/notify`: Synchronous HTTP 202 Accepted Gateway webhook listener.
+    - `GET /api/v1/abdm/m3/consent/consents/{consent_id}`: Query internal stored consent details and permissions.
+    - `GET /api/v1/abdm/m3/consent/consents/patient/{patient_id}`: List all consents registered for a patient.
+    - `POST /api/v1/abdm/m3/consent/consents/simulate`: Interactive developer testing endpoint generating synthetic consent notifications.
+    - `POST /api/v1/abdm/m3/consent/consents/{consent_id}/revoke`: Manual simulation endpoint to test revocation propagation.
+- **Verification:**
+  - Dedicated Test Suite: **9/9 tests passing in `tests/test_abdm_m3_consent.py` (100% green in 1.10s)**.
+  - Full Cumulative Backend Test Suite: **337/337 tests passing (100% green in 82.23s)**.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
