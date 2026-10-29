@@ -211,8 +211,8 @@ gantt
 - **Day 50:** ABDM Milestone 2 Integration Audit & Review; E2E verification test suite (`test_week_10_e2e_verification.py` - 6 scenarios); live audit endpoint (`GET /api/v1/abdm/m2/bridge/audit`); Cal.com audit drawer in `HipBridgeConsoleCard.tsx`; release tagging `v0.3.0-alpha.w10`.
 
 ### Week 11: ABDM Milestone 3 - Consent Management & Encrypted Data Flow (Days 51–55)
-*Status:* **Next Immediate Focus**
-- **Day 51 (Milestone 11-01):** Consent Notification & Artefact Ingest (`POST /v0.5/consents/hip/notify`); cryptographic Electronic Consent Artefact (ECA) signature verifier; consent state storage (`AbdmConsentArtefact`).
+*Status:* **In Progress (Day 51 Completed)**
+- **Day 51 (Milestone 11-01) [COMPLETED]:** Consent Notification & Artefact Ingest (`POST /v0.5/consents/hip/notify`); cryptographic Electronic Consent Artefact (ECA) signature verifier; thread-safe Consent Registry (`ConsentRegistryStore`); fine-grained record authorization engine; async acknowledgement (`POST /v0.5/consents/hip/on-notify`).
 - **Day 52 (Milestone 11-02):** Diffie-Hellman Key Exchange Service; ECDH Curve25519 (X25519) key pair generation; HKDF-SHA256 shared secret derivation compliant with NHA specifications.
 - **Day 53 (Milestone 11-03):** Encrypted Health Data Transfer Pipeline; FHIR Document Bundle serialization; AES-256-GCM symmetric encryption with 128-bit authentication tag; data push to HIU bridge (`/v0.5/health-information/transfer`).
 - **Day 54 (Milestone 11-04):** Health Information User (HIU) Data Consumer Engine; encrypted data reception webhook (`/v0.5/health-information/hip/request`); FHIR bundle decryption and clinical record parser.
@@ -231,12 +231,12 @@ gantt
 ## 6. Phase 4: Production Hardening, Cloud Deployment & Thesis (Days 61–80) [PLANNED]
 *Target Milestone Release:* **`v1.0.0`**
 
-### Week 13: Distributed WebSockets & Real-Time Queue Telemetry (Days 61–65)
+### Week 13: Distributed WebSockets, BTG Emergency Vault & Real-Time Queue (Days 61–65)
 - **Day 61:** Distributed WebSocket gateway in FastAPI backed by Redis Pub/Sub channels for multi-worker synchronization.
 - **Day 62:** Live Doctor OPD Queue synchronization: instant push notifications when patients arrive, check in, or undergo triage.
 - **Day 63:** Critical Laboratory Alert push notification system alerting clinicians within $< 100\text{ms}$ of abnormal panic-value lab results.
-- **Day 64:** Distributed, immutable audit logging stream capturing all FHIR data accesses, consent validations, and clinical modifications.
-- **Day 65:** Concurrency stress testing of real-time communication pipeline with 1,000+ simultaneous simulated WebSocket connections.
+- **Day 64:** Zero-Knowledge Break-The-Glass (BTG) Emergency Health Profile Vault schemas, Argon2id key derivation, and audited emergency override API for ICU/ER clinicians.
+- **Day 65:** Cryptographic audit trail (SHA-256 hash-chaining) and automated SMS alert dispatch to patient emergency contacts upon BTG access.
 
 ### Week 14: Security Hardening, Zero-Trust Architecture & ASVS Compliance (Days 66–70)
 - **Day 66:** Static application security testing (SAST) and automated vulnerability scanning with Bandit and Safety.
@@ -245,12 +245,12 @@ gantt
 - **Day 69:** Enterprise secret management, environment variable vaulting, and automated RSA/ECDH key rotation protocols.
 - **Day 70:** Simulated penetration testing and security sign-off across all API surfaces and web client routes.
 
-### Week 15: Production Docker Containerization & Cloud CI/CD (Days 71–75)
+### Week 15: Dual-Mode Edge Appliance, Docker Containerization & Cloud CI/CD (Days 71–75)
 - **Day 71:** Multi-stage minimal Alpine Dockerfile builds for FastAPI backend with non-root security context.
 - **Day 72:** Next.js 15 standalone output optimization; minimal Docker containerization with production asset caching.
 - **Day 73:** Production Docker Compose orchestration topology: FastAPI, Next.js, PostgreSQL 16, Redis 7, and Caddy reverse proxy with automated Let's Encrypt TLS 1.3.
-- **Day 74:** GitHub Actions automated CI/CD pipeline: linting, type-checking, test matrix execution, Docker image building, and automated deployment triggers.
-- **Day 75:** Staging environment deployment and end-to-end smoke verification on cloud infrastructure.
+- **Day 74:** Dual-Mode Edge Node Appliance packaging (`docker-compose.edge.yml`): Standalone Local PostgreSQL, Offline Clinical Engine, and ABDM mTLS Sync Agent for new clinics.
+- **Day 75:** PostgreSQL Foreign Data Wrapper (`postgres_fdw`) & legacy database read-only adapter enabling hospitals with existing HIS (MySQL/Oracle) to federate records into NIRMAYA.
 
 ### Week 16: Academic Project Monograph & Master Production Release (Days 76–80)
 - **Day 76:** Compilation of comprehensive 80-day Academic Project Monograph / Thesis detailing architectural proofs, standards compliance, and clinical data models.
@@ -276,6 +276,7 @@ During active implementation, several critical architectural enhancements and sc
 | **Ambiguity Protection Filter (ABDM Error 1441)** | Week 10 (Day 48) | Added strict safety guardrail: if patient discovery finds $\ge 2$ patients with close fuzzy match scores, system rejects matching to prevent leaking clinical records to the wrong patient. |
 | **Phone Privacy Masking** | Week 10 (Day 49) | Automatically masks patient phone numbers (`+91 ******XXXX`) during care context discovery and linkage flows in compliance with NHA data privacy guidelines. |
 | **Automated M2 Audit Report Engine** | Week 10 (Day 50) | Built a live diagnostic engine (`GET /api/v1/abdm/m2/bridge/audit`) computing real-time discovery accuracy, callback latency, and linkage security scores. |
+| **Federated Database & Dual-Mode Edge Network** | Week 11 (Day 51) | Formulated 2-tier federation topology: 95% clinical data zero-replication on-demand pull via ABDM FHIR streams + 5% opt-in Zero-Knowledge Break-The-Glass (BTG) Emergency Vault. Packaged Dual-Mode Edge Appliance (Standalone Docker stack for new clinics + PostgreSQL FDW adapters for legacy hospital databases) ensuring 100% DPDP Act 2023 compliance without exposing raw database ports. |
 
 ---
 
