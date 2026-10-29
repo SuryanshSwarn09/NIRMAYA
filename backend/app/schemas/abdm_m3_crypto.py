@@ -186,3 +186,4 @@ class CryptoSessionDetail(BaseModel):
     expiresAt: datetime = Field(description="UTC timestamp when session expires")
 
     model_config = ConfigDict(from_attributes=True)
+

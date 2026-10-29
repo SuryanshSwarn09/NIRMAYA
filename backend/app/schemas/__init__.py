@@ -363,6 +363,20 @@ __all__ = [
     "KeyExchangeComputeRequest",
     "KeyExchangeComputeResponse",
     "CryptoSessionDetail",
+    "EncryptedDataEntry",
+    "DataTransferPushPayload",
+    "DataTransferPushResponse",
+    "TransferNotifier",
+    "TransferStatusResponse",
+    "TransferStatusNotification",
+    "TransferNotificationDetail",
+    "DataTransferNotificationPayload",
+    "DirectEncryptRequest",
+    "DirectEncryptResponse",
+    "DirectDecryptRequest",
+    "DirectDecryptResponse",
+    "TransferTriggerRequest",
+    "TransferAuditRecord",
 ]
 
 from app.schemas.abdm_m3_consent import (
@@ -401,6 +415,23 @@ from app.schemas.abdm_m3_crypto import (
     KeyExchangeComputeResponse,
     CryptoSessionDetail,
 )
+from app.schemas.abdm_m3_transfer import (
+    EncryptedDataEntry,
+    DataTransferPushPayload,
+    DataTransferPushResponse,
+    TransferNotifier,
+    TransferStatusResponse,
+    TransferStatusNotification,
+    TransferNotificationDetail,
+    DataTransferNotificationPayload,
+    DirectEncryptRequest,
+    DirectEncryptResponse,
+    DirectDecryptRequest,
+    DirectDecryptResponse,
+    TransferTriggerRequest,
+    TransferAuditRecord,
+)
+
 
 
 
