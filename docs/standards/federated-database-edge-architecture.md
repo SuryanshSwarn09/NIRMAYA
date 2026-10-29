@@ -253,19 +253,123 @@ sequenceDiagram
 
 ---
 
-## 8. Record of Design Decisions (`/grill-me` Comprehensive Archive)
+## 8. Record of Design Decisions (`/grill-me` Comprehensive Questionnaire Archive)
 
-All foundational architectural decisions resolved across the `/grill-me` design interview sessions:
+During the architectural evaluation process, a series of 8 rigorous design decision branches were interviewed, analyzed, and resolved. Below is the complete record of every question asked, options considered, technical explanations provided, and final architectural choices:
 
-| Decision Area | Design Question | Selected Architecture | Key Architectural Rationale |
-| :--- | :--- | :--- | :--- |
-| **Federation Layer** | Which architectural layer of federation should NIRMAYA adopt? | **Hybrid: API-Level FHIR Federation + Edge-Node Hospital Vaults** | Combines 100% hospital data sovereignty (DPDP Act compliance) with national ABDM M3 consent interoperability; completely avoids the security risks of opening raw database ports across the WAN. |
-| **Data Storage Topology** | How should records be synchronized between hospital nodes and cloud? | **Hybrid: Zero-Replication On-Demand Pull + Opt-In Zero-Knowledge Emergency Backup** | 95% of clinical charts stay strictly on-premise; 5% life-critical data (allergies, blood group) is backed up as zero-knowledge ciphertext to save lives in emergency trauma. |
-| **Edge Node Packaging** | How should hospital edge nodes be deployed and integrated? | **Dual-Mode Edge Appliance (Standalone Stack + Legacy FDW Adapter)** | Standalone clinics get a turnkey Docker EMR; large tertiary hospitals can integrate their existing Oracle/MySQL databases non-invasively via read-only foreign data adapters. |
-| **Emergency Cryptography** | How should emergency decryption keys be managed? | **ABDM "Break-the-Glass" (BTG) + Patient Master Key** | Balances patient privacy with clinical urgency. Verified doctors can override in ICU emergencies with mandatory HPR logging and instant SMS alerts to next-of-kin. |
-| **Solo Doctor Hosting** | How should NIRMAYA serve solo doctors without a server or database? | **Hybrid: Encrypted Local SQLite (PWA) + Managed Cloud Tenant (PostgreSQL RLS)** | Eliminates 100% of IT friction for solo doctors (works offline on laptop with 0ms latency), while NIRMAYA Cloud acts as their 24/7 ABDM Gateway Bridge. |
-| **Data Synchronization** | How should local doctor devices sync with NIRMAYA Cloud? | **Append-Only Clinical Event Log** | Medical records are additive; event-sourcing eliminates sync conflicts entirely, operates reliably over intermittent clinic Wi-Fi, and provides a tamper-evident audit log. |
-| **National ABDM Registration** | How should solo doctors connect to the national gateway? | **Dual-Registration ABDM Bridge Model** | Solo doctors get instant 2-minute onboarding under NIRMAYA's master bridge; accredited clinics can bind their official Government HFR ID anytime. |
+```
+                                  GRILL-ME DECISION TREE
+                                            │
+           ┌────────────────────────────────┴────────────────────────────────┐
+           ▼                                                                 ▼
+[Part I: Federation Topology]                                     [Part II: The Solo Doctor Problem]
+ ├── Q1: Architectural Layer ──► Hybrid (API + Edge)               ├── Q6: Solo Doctor Hosting ──► Hybrid (SQLite + Cloud)
+ ├── Q2: Storage Model       ──► Hybrid (95% Pull + 5% ZK Vault)   ├── Q7: Sync Mechanism     ──► Append-Only Event Log
+ ├── Q3: Edge Packaging      ──► Dual-Mode Appliance (Docker+FDW)  └── Q8: ABDM Registration  ──► Dual-Registration (Instant + HFR)
+ ├── Q4: Key Management      ──► ABDM Break-The-Glass (BTG)
+ └── Q5: Phasing & Roadmap   ──► Natural Roadmap Alignment
+```
+
+---
+
+### **Question 1: Architectural Layer of Federation**
+* **The Question:** *Which specific architectural layer of federation are you considering for NIRMAYA?*
+* **Options Considered:**
+  1. *(Recommended)* API-Level Health Information Federation (ABDM/FHIR standard where autonomous hospital nodes query each other over secure, consent-bound FHIR APIs rather than linking raw databases).
+  2. Database-Level Storage Federation (PostgreSQL Foreign Data Wrappers or Citus directly linking disparate hospital databases).
+  3. Distributed Analytics / Query Federation (Trino or DuckDB executing read-only queries across distributed hospital databases).
+  4. Edge-Node Hospital Vaults (Lightweight on-premise Docker instances for each clinic/hospital federating through a central cloud orchestrator).
+* **User Decision:** **Hybrid of Option 1 and Option 4**
+* **Technical Rationale:** Combining API-Level FHIR Federation (Option 1) with Edge-Node Hospital Vaults (Option 4) provides local clinical autonomy and sub-millisecond response times at hospitals while completely eliminating the security risks of exposing raw database ports (5432/3306) across the public internet.
+
+---
+
+### **Question 2: Clinical Record Storage & Synchronization Model**
+* **The Question:** *How should patient clinical records be stored and synchronized between the local hospital edge nodes and the central network?*
+* **Options Considered:**
+  1. *(Recommended)* Zero-Replication On-Demand Pull: Clinical data stays 100% on the local hospital node; central cloud only indexes ABHA care contexts.
+  2. Asynchronous Zero-Knowledge Cloud Shadow: Edge nodes process data locally, but replicate client-encrypted (zero-knowledge) clinical blobs to central cloud for emergency offline availability.
+  3. Centralized Hybrid Analytics Replica: Edge nodes handle clinical operations locally, while streaming de-identified FHIR records to a central read-replica for population health analytics and research.
+  4. *(Hybrid)* On-demand pull by default, with an opt-in zero-knowledge emergency backup for critical records (allergies, blood group, chronic conditions).
+* **Technical Explanation Provided:**
+  - *Option 1 (The National ABDM Model):* Zero liability for the central cloud (0 bytes of health records stored); 100% DPDP Act compliance. However, if a hospital suffers an internet outage, external emergency rooms cannot pull records.
+  - *Option 2 (The Encrypted Vault Model):* High 24/7 availability even if a clinic is offline, but requires complex key management.
+  - *Option 3 (The Population Health Model):* Unlocks AI research and disease surveillance, but requires rigorous de-identification pipelines.
+* **User Decision:** **Hybrid of Option 1 and Option 2**
+* **Technical Rationale:** 95% of clinical records (full encounters, SOAP notes, lab panels) remain 100% on-premise at hospital edge nodes and are pulled on-demand via consent-bound FHIR streams. The remaining 5% of life-saving data (blood group, high-risk allergies, chronic conditions) is backed up as client-encrypted zero-knowledge ciphertext to save lives in unconscious emergency trauma.
+
+---
+
+### **Question 3: Hospital Edge Node Packaging & Deployment**
+* **The Question:** *How should hospital/clinic edge nodes be packaged and integrated with local hospital databases?*
+* **Options Considered:**
+  1. *(Recommended)* Dual-Mode Edge Appliance: Standalone Docker Compose stack (Local DB + EMR API + Bridge Connector) for new clinics, while supporting external database connectors for hospitals with existing systems.
+  2. Standalone All-in-One Docker Node: NIRMAYA is the primary on-premise EMR for the clinic; includes local PostgreSQL, doctor workstation, and outbound sync bridge.
+  3. Lightweight Gateway Sidecar: The hospital keeps its own proprietary HIS/EMR, and NIRMAYA runs only as a headless background bridge reading records via database views or HL7 feeds.
+* **User Decision:** **Option 1: Dual-Mode Edge Appliance**
+* **Technical Rationale:** Enables rapid, turnkey adoption for greenfield clinics (standalone stack) while allowing large tertiary hospitals with existing Oracle/MySQL/SQL Server systems to participate non-invasively via read-only foreign data adapters.
+
+---
+
+### **Question 4: Emergency Cryptographic Key Management & Access Control**
+* **The Question:** *For the Zero-Knowledge Emergency Backup (allergies, blood group, chronic conditions), how should emergency authorization and decryption keys be managed?*
+* **Options Considered:**
+  1. *(Recommended)* ABDM "Break-the-Glass" (BTG) + Patient Master Key: AES-256-GCM encryption with dual authorization — routine access requires patient PIN/consent; verified ICU/ER doctors can trigger audited ABDM Break-The-Glass access with instant SMS alerts to emergency contacts.
+  2. Strict Patient-Only Zero-Knowledge: Only the patient holds the decryption key; zero access is possible if the patient is unconscious without their phone/PIN.
+  3. Emergency Contact Escrow: An encrypted recovery key shard is shared with the patient's designated emergency contact (next of kin) to authorize access during trauma.
+* **User Decision:** **Option 1: ABDM Break-the-Glass (BTG) + Patient Master Key**
+* **Technical Rationale:** In emergency trauma situations where a patient is unconscious, strict patient-only encryption would result in avoidable fatalities. Official ABDM BTG protocol allows verified clinicians with Healthcare Professional Registry (HPR) credentials to execute an audited emergency override with immediate out-of-band SMS alerts to next-of-kin.
+
+---
+
+### **Question 5: Master Roadmap Scheduling & Phasing**
+* **The Question:** *When would you like to schedule the implementation of this Federated Architecture within the 80-day master roadmap?*
+* **Options Considered:**
+  1. *(Recommended)* Natural Roadmap Alignment: Complete Week 11 ABDM M3 core (Days 52-55 ECDH key exchange & encrypted FHIR streaming), then implement the BTG Emergency Vault in Week 13 and package the Dual-Mode Edge Node Docker Appliance in Week 15.
+  2. Accelerated Early Delivery: Introduce the Zero-Knowledge BTG Emergency Vault schemas and endpoints immediately into Week 11 alongside Days 52-54.
+* **User Decision:** **Option 1: Natural Roadmap Alignment**
+* **Technical Rationale:** Maintains engineering focus on completing the ABDM Milestone 3 cryptographic core (Diffie-Hellman key exchange and AES-GCM FHIR pipelines) during Week 11, scheduling the BTG Emergency Vault in Week 13 and containerized Edge Node packaging in Week 15.
+
+---
+
+### **Question 6: Solving the "No-Database" Solo Doctor Dilemma**
+* **The Question:** *How should NIRMAYA host and isolate clinical records for solo doctors and small clinics who do not have their own database or server?*
+* **Options Considered:**
+  1. *(Recommended)* Managed Cloud Workspace with Row-Level Security (RLS): Solo doctors need zero IT infrastructure; they simply log into NIRMAYA via web browser. Their records live in NIRMAYA Cloud with strict multi-tenant database isolation (`tenant_id` + RLS), and NIRMAYA acts as their ABDM Bridge HIP.
+  2. Schema-per-Clinic Cloud Isolation: Each doctor/clinic gets their own isolated PostgreSQL schema (`clinic_xyz.*`) on NIRMAYA Cloud with dedicated encryption keys.
+  3. Local-First Desktop App (Encrypted SQLite): Doctors install a lightweight desktop/PWA app on their clinic laptop that runs an encrypted local SQLite database, requiring zero cloud servers or Docker knowledge.
+* **User Decision:** **Hybrid of Option 3 and Option 1 (Local-First Desktop App + Managed Cloud Tenant)**
+* **Technical Rationale:** Combines an embedded encrypted SQLite database on the doctor's device (guaranteeing 100% offline functionality with 0ms latency during clinic power/broadband cuts) with a background-synced managed tenant in NIRMAYA Cloud (which acts as their 24/7 national ABDM bridge when the doctor's laptop is closed at night).
+
+---
+
+### **Question 7: Local-to-Cloud Data Synchronization Mechanism**
+* **The Question:** *How should clinical records synchronize between the doctor's local SQLite and the NIRMAYA Cloud database?*
+* **Options Considered:**
+  1. *(Recommended)* Append-Only Clinical Event Log: Every SOAP note, vitals entry, and prescription is treated as an immutable signed event with a UUID. When online, events replicate to the cloud; conflicts are eliminated because medical history is naturally additive.
+  2. Bi-Directional State Sync with Last-Write-Wins: Standard record-level sync with `updated_at` timestamps; newer edits on the doctor's device overwrite cloud records upon reconnection.
+  3. Encounter-Boundary Sync: Data is held purely locally during an active patient visit and only commits/pushes to the cloud when the doctor explicitly clicks "Sign & Finalize Consultation".
+* **Technical Explanation Provided:**
+  - *Option 1 (The Medical Ledger):* Medical records are legally and ethically immutable. Changes are recorded as new events (amendments/corrections). Zero risk of sync conflicts, perfect medico-legal audit trail, and fully resilient over intermittent clinic Wi-Fi.
+  - *Option 2 (Last-Write-Wins):* Extremely dangerous in healthcare; a receptionist updating a phone number could overwrite a doctor's offline allergy note.
+  - *Option 3 (Encounter Boundaries):* Clean atomic commits, but risks losing unfinalized consultation drafts if a laptop fails.
+* **User Decision:** **Option 1: Append-Only Clinical Event Log**
+* **Technical Rationale:** Mathematical conflict elimination, bulletproof medico-legal audit defense, and seamless resumption over intermittent rural broadband connections.
+
+---
+
+### **Question 8: ABDM Gateway Identity & Bridge Representation for Solo Doctors**
+* **The Question:** *How should solo doctors and small clinics be identified and registered with the national ABDM Gateway?*
+* **Options Considered:**
+  1. *(Recommended)* Dual-Registration Model: Solo doctors get instant onboarding under NIRMAYA's aggregated HIP Bridge; established clinics can bind their official Government Health Facility Registry (HFR) ID anytime, with NIRMAYA Cloud proxying all 24/7 webhooks.
+  2. NIRMAYA Unified Umbrella HIP: All solo doctors operate under NIRMAYA's single national HIP ID (`IN0410000123`), with clinic names identified as sub-departments in Care Context references.
+  3. Dedicated HFR Gateway Proxy: Every clinic must register their own HFR facility ID with NHA; NIRMAYA Cloud purely acts as the technical reverse-proxy and consent gateway.
+* **Technical Explanation Provided:**
+  - *Option 1 (Amazon/Shopify Model):* Instant 2-minute setup for solo doctors with zero government red tape on Day 1, while allowing established clinics to link their official government facility license anytime.
+  - *Option 2 (Uber Franchise Model):* Instant onboarding, but clinics never get their own distinct government registry badge.
+  - *Option 3 (Commercial Banking License Model):* High friction; forces busy doctors to wait weeks for government approvals before writing their first prescription.
+* **User Decision:** **Option 1: Dual-Registration Model**
+* **Technical Rationale:** Removes 100% of onboarding friction for individual doctors, while offering enterprise accreditation for licensed multi-doctor clinics.
 
 ---
 
