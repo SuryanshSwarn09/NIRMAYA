@@ -77,6 +77,7 @@
     * [Day 47: HIP Bridge Service & Webhook Ingest](journey/month-3/day-47.md)
     * [Day 48: ABDM M2 Patient Discovery & Fuzzy Demographic Matcher](journey/month-3/day-48.md)
     * [Day 49: ABDM M2 Care Context Linkage & OTP Verification](journey/month-3/day-49.md)
+    * [Day 50: ABDM Milestone 2 Integration Audit & Review](journey/month-3/day-50.md)
   * [Week 11: ABDM Milestone 3 - Consent Manager & HIE-CM Gateway](journey/month-3/week-11.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
@@ -100,6 +101,7 @@
 * [Week 7 Retrospective & Patient Vault Architecture](journey/month-2/week-7-review.md)
 * [Week 8 Retrospective & Clinician EMR Workspace](journey/month-2/week-8-review.md)
 * [Week 9 Retrospective & ABDM Milestone 1 Architecture](journey/month-3/week-9-review.md)
+* [Week 10 Retrospective & ABDM Milestone 2 Architecture](journey/month-3/week-10-review.md)
 * [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
 ## Fundamental FAQ
