@@ -36,6 +36,8 @@ from app.services.abdm_transfer import (
     dispatch_transfer_push,
     transfer_audit_store,
 )
+from app.services.abdm_hiu import AbdmHIUService, hiu_request_store
+
 
 logger = logging.getLogger("nirmaya.abdm.m3_transfer_api")
 
@@ -73,6 +75,24 @@ async def gateway_inbound_health_information_transfer(
         timestamp=datetime.now(timezone.utc),
     )
     transfer_audit_store.add_record(audit_rec)
+
+    # If an active HIU session exists, decrypt and ingest the longitudinal records
+    hiu_session = hiu_request_store.get_session(str(payload.transactionId))
+    if hiu_session:
+        success, error_msg, bundles = AbdmHIUService.process_inbound_transfer(payload)
+        if success:
+            return {
+                "status": "RECEIVED",
+                "transactionId": str(payload.transactionId),
+                "entriesReceived": len(payload.entries),
+                "bundlesImported": len(bundles),
+                "pageNumber": payload.pageNumber,
+                "pageCount": payload.pageCount,
+                "message": f"Successfully ingested and decrypted {len(bundles)} clinical bundles into patient vault",
+            }
+        else:
+            logger.warning(f"[gateway_inbound_health_information_transfer] Decryption note: {error_msg}")
+
 
     return {
         "status": "RECEIVED",
@@ -200,3 +220,4 @@ async def direct_decrypt_utility(
 async def get_transfer_history() -> List[TransferAuditRecord]:
     """Retrieves circular audit records of recent data transfers."""
     return transfer_audit_store.get_records()
+
