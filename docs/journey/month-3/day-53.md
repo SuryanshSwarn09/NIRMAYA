@@ -85,3 +85,4 @@ sequenceDiagram
 - **Backend Test Suite:** **357 / 357 tests passed** (100% green in 96.15s).
 - **Crypto & Transfer Joint Suite:** **20 / 20 tests passed in 2.96s**.
 - **Frontend Production Build:** Next.js 15.5.25 generated 13/13 static routes with **0 errors**.
+

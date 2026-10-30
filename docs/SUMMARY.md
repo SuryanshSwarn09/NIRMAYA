@@ -84,6 +84,7 @@
     * [Day 51: ABDM M3 Consent Notification & Artefact Ingest](journey/month-3/day-51.md)
     * [Day 52: Diffie-Hellman Key Exchange & HKDF-SHA256 Derivation](journey/month-3/day-52.md)
     * [Day 53: Encrypted Health Data Transfer Pipeline & AES-256-GCM](journey/month-3/day-53.md)
+    * [Day 54: HIU Data Consumer Engine, FHIR Bundle Decryption & Ingestion](journey/month-3/day-54.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
   * [Week 13: WebSockets & Distributed Audit Logging](journey/month-4/week-13.md)

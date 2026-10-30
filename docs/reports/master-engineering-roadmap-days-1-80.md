@@ -212,11 +212,11 @@ gantt
 - **Day 50:** ABDM Milestone 2 Integration Audit & Review; E2E verification test suite (`test_week_10_e2e_verification.py` - 6 scenarios); live audit endpoint (`GET /api/v1/abdm/m2/bridge/audit`); Cal.com audit drawer in `HipBridgeConsoleCard.tsx`; release tagging `v0.3.0-alpha.w10`.
 
 ### Week 11: ABDM Milestone 3 - Consent Management & Encrypted Data Flow (Days 51–55)
-*Status:* **In Progress (Day 53 Completed)**
+*Status:* **In Progress (Day 54 Completed)**
 - **Day 51 (Milestone 11-01) [COMPLETED]:** Consent Notification & Artefact Ingest (`POST /v0.5/consents/hip/notify`); cryptographic Electronic Consent Artefact (ECA) signature verifier; thread-safe Consent Registry (`ConsentRegistryStore`); fine-grained record authorization engine; async acknowledgement (`POST /v0.5/consents/hip/on-notify`).
 - **Day 52 (Milestone 11-02) [COMPLETED]:** Diffie-Hellman Key Exchange Service; ephemeral ECDH Curve25519 (X25519) key pair generation; CSPRNG 32-byte nonces; Dual-Nonce XOR entropy extraction (20-byte Salt + 12-byte IV); HKDF-SHA256 256-bit symmetric encryption key derivation compliant with NHA Fidelius specifications; thread-safe `CryptoSessionStore`; Gateway inbound listener (`POST /v0.5/health-information/hip/request`).
 - **Day 53 (Milestone 11-03) [COMPLETED]:** Encrypted Health Data Transfer Pipeline; FHIR R4 Document Bundle packaging per care context; AES-256-GCM authenticated symmetric encryption with 128-bit authentication tag; SHA-256 tamper-evident checksums; data push to HIU bridge (`POST {dataPushUrl}` / `/v0.5/health-information/transfer`); Gateway status notification (`POST /v0.5/health-information/notify`).
-- **Day 54 (Milestone 11-04):** Health Information User (HIU) Data Consumer Engine; encrypted data reception webhook (`/v0.5/health-information/hip/request`); FHIR bundle decryption and clinical record parser.
+- **Day 54 (Milestone 11-04) [COMPLETED]:** Health Information User (HIU) Data Consumer Engine; outbound data request initiation (`POST /api/v1/abdm/m3/hiu/request`); ephemeral Curve25519 keypair and nonce generation; `HIURequestStore`; Nonce XOR + ECDH + HKDF-SHA256 key agreement on inbound transfer; AES-256-GCM authenticated decryption with tag verification; SHA-256 checksum validation; clinical FHIR R4 Document Bundle parser; longitudinal patient record vault (`HIURecordStore`).
 - **Day 55 (Milestone 11-05):** ABDM Milestone 3 Integration Audit; full-loop consent request -> approval -> encrypted transfer -> HIU rendering test suite; release tagging `v0.3.0-alpha.w11`.
 
 ### Week 12: FHIR R4 Certification, Sandbox Validation & M3 Sign-Off (Days 56–60)
