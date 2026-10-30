@@ -85,6 +85,7 @@
     * [Day 52: Diffie-Hellman Key Exchange & HKDF-SHA256 Derivation](journey/month-3/day-52.md)
     * [Day 53: Encrypted Health Data Transfer Pipeline & AES-256-GCM](journey/month-3/day-53.md)
     * [Day 54: HIU Data Consumer Engine, FHIR Bundle Decryption & Ingestion](journey/month-3/day-54.md)
+    * [Day 55: ABDM Milestone 3 Integration Audit & Week 11 Release](journey/month-3/day-55.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
   * [Week 13: WebSockets & Distributed Audit Logging](journey/month-4/week-13.md)
@@ -108,6 +109,7 @@
 * [Week 8 Retrospective & Clinician EMR Workspace](journey/month-2/week-8-review.md)
 * [Week 9 Retrospective & ABDM Milestone 1 Architecture](journey/month-3/week-9-review.md)
 * [Week 10 Retrospective & ABDM Milestone 2 Architecture](journey/month-3/week-10-review.md)
+* [Week 11 Retrospective & ABDM Milestone 3 Audit](journey/month-3/week-11-review.md)
 * [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
 ## Fundamental FAQ
