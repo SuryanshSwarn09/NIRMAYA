@@ -229,6 +229,9 @@ __all__ = [
     "FHIRR4BundleValidatorService",
     "fhir_bundle_validator",
     "NRCES_PROFILES",
+    # Medical Ontology Validator service
+    "MedicalOntologyValidatorService",
+    "medical_ontology_validator",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -311,6 +314,10 @@ from app.services.fhir_validator import (
     FHIRR4BundleValidatorService,
     fhir_bundle_validator,
     NRCES_PROFILES,
+)
+from app.services.terminology_validator import (
+    MedicalOntologyValidatorService,
+    medical_ontology_validator,
 )
 
 
