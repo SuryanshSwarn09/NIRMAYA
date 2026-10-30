@@ -390,6 +390,13 @@ __all__ = [
     "TransferAuditMetrics",
     "HIUConsumerAuditMetrics",
     "AbdmM3AuditReport",
+    "ValidationIssueSeverity",
+    "ValidationIssue",
+    "BundleProfileType",
+    "BundleValidationRequest",
+    "BundleValidationResponse",
+    "ProfileMetadata",
+    "ProfilesCatalogResponse",
 ]
 
 from app.schemas.abdm_m3_consent import (
@@ -460,6 +467,15 @@ from app.schemas.abdm_m3_audit import (
     TransferAuditMetrics,
     HIUConsumerAuditMetrics,
     AbdmM3AuditReport,
+)
+from app.schemas.fhir_validator import (
+    ValidationIssueSeverity,
+    ValidationIssue,
+    BundleProfileType,
+    BundleValidationRequest,
+    BundleValidationResponse,
+    ProfileMetadata,
+    ProfilesCatalogResponse,
 )
 
 
