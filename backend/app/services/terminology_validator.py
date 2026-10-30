@@ -421,7 +421,7 @@ class MedicalOntologyValidatorService:
                     )
                     continue
 
-                # 2. Substring match
+                # 2. Substring match (search_term in display)
                 if search_term in display_lower:
                     ratio = len(search_term) / len(display_lower)
                     conf = round(0.75 + (0.20 * ratio), 2)
@@ -437,6 +437,47 @@ class MedicalOntologyValidatorService:
                             ),
                         )
                     )
+                    continue
+
+                # 2b. Inverse substring match (standard display contained in query, e.g. 'fever' in 'suspected typhoid fever')
+                if display_lower in search_term:
+                    ratio = len(display_lower) / len(search_term)
+                    conf = round(0.70 + (0.25 * ratio), 2)
+                    candidates.append(
+                        (
+                            conf,
+                            ConceptSuggestion(
+                                system=sys_uri,
+                                code=code,
+                                display=meta["display"],
+                                category=category,
+                                confidence=conf,
+                            ),
+                        )
+                    )
+                    continue
+
+                # 2c. Token-level keyword overlap
+                tokens = [w for w in search_term.split() if len(w) > 2]
+                token_matched = False
+                for tok in tokens:
+                    if tok in display_lower:
+                        conf = 0.65
+                        candidates.append(
+                            (
+                                conf,
+                                ConceptSuggestion(
+                                    system=sys_uri,
+                                    code=code,
+                                    display=meta["display"],
+                                    category=category,
+                                    confidence=conf,
+                                ),
+                            )
+                        )
+                        token_matched = True
+                        break
+                if token_matched:
                     continue
 
                 # 3. Fuzzy sequence matcher
