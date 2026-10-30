@@ -25,6 +25,7 @@ from app.api.v1.endpoints import (
     abdm_m3_hiu,
     abdm_m3_audit,
     abdm_certification,
+    abdm_security_audit,
     fhir_validator,
     terminology_validator,
 )
@@ -44,6 +45,7 @@ api_router.include_router(abdm_m3_transfer.router, prefix="/abdm/m3/transfer", t
 api_router.include_router(abdm_m3_hiu.router, prefix="/abdm/m3/hiu", tags=["ABDM M3 - HIU Data Consumer & Decryption"])
 api_router.include_router(abdm_m3_audit.router, prefix="/abdm/m3/audit", tags=["ABDM M3 - Integration Audit & Compliance"])
 api_router.include_router(abdm_certification.router, prefix="/abdm/certification", tags=["ABDM Sandbox E2E Certification & Regression"])
+api_router.include_router(abdm_security_audit.router, prefix="/abdm/security", tags=["ABDM Security Penetration & Consent Hardening"])
 api_router.include_router(fhir_validator.router, prefix="/fhir", tags=["FHIR R4 Bundle Validation & NRCES Profiles"])
 api_router.include_router(terminology_validator.router, prefix="/fhir/ontology", tags=["FHIR R4 Medical Ontology & Terminology Binding"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
