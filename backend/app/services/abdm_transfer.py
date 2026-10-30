@@ -295,6 +295,7 @@ class AbdmTransferService:
                 f"Consent artefact '{session.consentId}' not found in registry"
             )
         if consent.status != "GRANTED":
+            crypto_session_store.delete_session(transaction_id)
             raise ValidationException(
                 f"Consent artefact '{session.consentId}' is in status '{consent.status}', not GRANTED"
             )
@@ -373,7 +374,7 @@ class AbdmTransferService:
         if consent.status != "GRANTED":
             crypto_session_store.delete_session(transaction_id)
             raise ValidationException(
-                f"Consent artefact '{session.consentId}' is in status '{consent.status}'. Mid-flight transfer aborted."
+                f"Consent artefact '{session.consentId}' is in status '{consent.status}', not GRANTED"
             )
 
         now = datetime.now(timezone.utc)

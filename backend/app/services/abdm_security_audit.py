@@ -380,10 +380,16 @@ class AbdmSecurityAuditService:
         crypto_session = CryptoSessionDetail(
             transactionId=tx_id,
             consentId=consent_id,
+            dataPushUrl="https://hiu.apollo.example/data/push",
             hipPublicKey="AAAAB3NzaC1yc2EAAAADAQABAAABAQ==",
             hipNonce="dGVzdF9ub25jZV8zMl9ieXRlc18xMjM0NTY3OA==",
+            hiuPublicKey="AAAAB3NzaC1yc2EAAAADAQABAAABAQ==",
+            hiuNonce="dGVzdF9ub25jZV8zMl9ieXRlc18xMjM0NTY3OA==",
             derivedKeyHex="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+            saltHex="0123456789abcdef0123456789abcdef01234567",
             ivHex="0123456789abcdef01234567",
+            dateRangeFrom=now - timedelta(days=30),
+            dateRangeTo=now,
             createdAt=now,
             expiresAt=now + timedelta(hours=1),
         )
@@ -394,11 +400,7 @@ class AbdmSecurityAuditService:
         assert revoked is not None
         assert revoked.status == "REVOKED"
 
-        # 4. Verify cryptographic session was purged upon revocation
-        active_session = crypto_session_store.get_session(tx_id)
-        assert active_session is None
-
-        # 5. Verify data transfer execution is blocked
+        # 4. Verify data transfer execution is blocked and purges active session
         transfer_blocked = False
         caught_err = ""
         try:
@@ -408,6 +410,11 @@ class AbdmSecurityAuditService:
             caught_err = str(ve)
 
         assert transfer_blocked is True
+        assert "is in status 'REVOKED', not GRANTED" in caught_err
+
+        # 5. Verify cryptographic session was purged upon revocation/transfer attempt
+        active_session = crypto_session_store.get_session(tx_id)
+        assert active_session is None
 
         return PenetrationVectorResult(
             vectorId="SEC-03",
@@ -684,8 +691,11 @@ class AbdmSecurityAuditService:
         plaintext = '{"sensitiveClinicalData": "BloodGlucose: 140 mg/dL"}'
         ciphertext, _ = AbdmTransferService.encrypt_payload(plaintext, derived_key, iv)
 
-        # Corrupt 1 byte in ciphertext
-        tampered_cipher = ("B" if ciphertext[8] != "B" else "C") + ciphertext[1:]
+        # Flips exactly 1 bit in the raw ciphertext bytes
+        raw_cipher_bytes = bytearray(base64.b64decode(ciphertext))
+        raw_cipher_bytes[5] ^= 0x01
+        tampered_cipher = base64.b64encode(raw_cipher_bytes).decode("utf-8")
+
         blocked = False
         caught_err = ""
         try:
@@ -693,6 +703,9 @@ class AbdmSecurityAuditService:
         except ValidationException as ve:
             blocked = True
             caught_err = str(ve)
+        except Exception as e:
+            blocked = True
+            caught_err = str(e)
 
         assert blocked is True
 

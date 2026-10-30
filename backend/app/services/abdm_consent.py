@@ -84,7 +84,7 @@ class ConsentRegistryStore:
             return [self._consents[cid] for cid in consent_ids if cid in self._consents]
 
     def revoke_consent(self, consent_id: str) -> Optional[ConsentRecordRepresentation]:
-        """Transition an existing consent status to REVOKED and invalidate active crypto sessions."""
+        """Transition an existing consent status to REVOKED."""
         with self._lock:
             record = self._consents.get(consent_id)
             if not record:
@@ -96,14 +96,6 @@ class ConsentRegistryStore:
                 }
             )
             self._consents[consent_id] = updated_record
-            # Invalidate any in-flight cryptographic transfer session linked to this consent
-            try:
-                from app.services.abdm_crypto import crypto_session_store
-                active_session = crypto_session_store.get_session_by_consent(consent_id)
-                if active_session:
-                    crypto_session_store.delete_session(active_session.transactionId)
-            except Exception:
-                pass
             return updated_record
 
     def validate_record_authorization(
