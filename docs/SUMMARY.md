@@ -88,6 +88,7 @@
     * [Day 55: ABDM Milestone 3 Integration Audit & Week 11 Release](journey/month-3/day-55.md)
   * [Week 12: FHIR R4 Bundle Validator, M3 Audit & Release v0.3.0](journey/month-3/week-12.md)
     * [Day 56: FHIR R4 Document Bundle JSON Schema Validator & NRCES Profiles](journey/month-3/day-56.md)
+    * [Day 57: Medical Ontology Binding Audit & Terminology Validator Engine](journey/month-3/day-57.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
   * [Week 13: WebSockets & Distributed Audit Logging](journey/month-4/week-13.md)
   * [Week 14: Security Hardening & Penetration Testing](journey/month-4/week-14.md)
