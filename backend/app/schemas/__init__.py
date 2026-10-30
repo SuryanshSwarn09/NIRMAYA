@@ -408,6 +408,14 @@ __all__ = [
     "ConceptSuggestionResponse",
     "TerminologySystemInfo",
     "TerminologySystemsResponse",
+    "SandboxMilestoneType",
+    "CertificationVectorStatus",
+    "CertificationVectorResult",
+    "MilestoneSummary",
+    "SandboxCertificationReport",
+    "RunCertificationRequest",
+    "VectorCatalogItem",
+    "VectorCatalogResponse",
 ]
 
 from app.schemas.abdm_m3_consent import (
@@ -500,6 +508,16 @@ from app.schemas.terminology_validator import (
     ConceptSuggestionResponse,
     TerminologySystemInfo,
     TerminologySystemsResponse,
+)
+from app.schemas.abdm_certification import (
+    SandboxMilestoneType,
+    CertificationVectorStatus,
+    CertificationVectorResult,
+    MilestoneSummary,
+    SandboxCertificationReport,
+    RunCertificationRequest,
+    VectorCatalogItem,
+    VectorCatalogResponse,
 )
 
 
