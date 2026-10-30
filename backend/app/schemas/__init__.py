@@ -385,6 +385,11 @@ __all__ = [
     "ParsedObservation",
     "DecryptedClinicalBundle",
     "HIUPatientRecordsResponse",
+    "ConsentAuditMetrics",
+    "CryptoAuditMetrics",
+    "TransferAuditMetrics",
+    "HIUConsumerAuditMetrics",
+    "AbdmM3AuditReport",
 ]
 
 from app.schemas.abdm_m3_consent import (
@@ -448,6 +453,13 @@ from app.schemas.abdm_m3_hiu import (
     ParsedObservation,
     DecryptedClinicalBundle,
     HIUPatientRecordsResponse,
+)
+from app.schemas.abdm_m3_audit import (
+    ConsentAuditMetrics,
+    CryptoAuditMetrics,
+    TransferAuditMetrics,
+    HIUConsumerAuditMetrics,
+    AbdmM3AuditReport,
 )
 
 
