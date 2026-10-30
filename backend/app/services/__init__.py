@@ -225,6 +225,10 @@ __all__ = [
     "discover_patient",
     "simulate_patient_discovery",
     "dispatch_async_on_discover_callback",
+    # FHIR R4 Bundle Validator service
+    "FHIRR4BundleValidatorService",
+    "fhir_bundle_validator",
+    "NRCES_PROFILES",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -302,6 +306,11 @@ from app.services.abdm_hiu import (
 from app.services.abdm_m3_audit import (
     generate_m3_audit_report,
     ACTIVE_M3_WEBHOOK_LISTENERS,
+)
+from app.services.fhir_validator import (
+    FHIRR4BundleValidatorService,
+    fhir_bundle_validator,
+    NRCES_PROFILES,
 )
 
 
