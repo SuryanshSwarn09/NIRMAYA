@@ -279,6 +279,70 @@ class AbdmTransferService:
         return json.dumps(fhir_bundle, indent=2)
 
     @classmethod
+    def build_transfer_push_payload(
+        cls,
+        transaction_id: str,
+    ) -> DataTransferPushPayload:
+        """Builds and returns the DataTransferPushPayload for an active transaction without dispatching."""
+        session = crypto_session_store.get_session(transaction_id)
+        if not session:
+            raise ValidationException(
+                f"Active cryptographic session '{transaction_id}' not found or has expired"
+            )
+        consent = consent_registry_store.get_consent(session.consentId)
+        if not consent:
+            raise ValidationException(
+                f"Consent artefact '{session.consentId}' not found in registry"
+            )
+        if consent.status != "GRANTED":
+            raise ValidationException(
+                f"Consent artefact '{session.consentId}' is in status '{consent.status}', not GRANTED"
+            )
+        derived_key = bytes.fromhex(session.derivedKeyHex)
+        iv = bytes.fromhex(session.ivHex)
+        care_contexts = consent.care_contexts
+        care_context_refs = (
+            [ctx.careContextReference for ctx in care_contexts]
+            if care_contexts
+            else ["ENC-GLOBAL-001"]
+        )
+        hi_type = consent.hi_types[0] if consent.hi_types else "OPConsultation"
+        entries: List[EncryptedDataEntry] = []
+        for cc_ref in care_context_refs:
+            fhir_json = cls.generate_clinical_bundle_json(
+                care_context_ref=cc_ref,
+                hi_type=hi_type,
+                patient_id=consent.patient_id,
+            )
+            b64_cipher, checksum = cls.encrypt_payload(
+                plaintext=fhir_json,
+                derived_key=derived_key,
+                iv=iv,
+            )
+            entries.append(
+                EncryptedDataEntry(
+                    content=b64_cipher,
+                    media="application/fhir+json",
+                    checksum=checksum,
+                    careContextReference=cc_ref,
+                )
+            )
+        return DataTransferPushPayload(
+            pageNumber=1,
+            pageCount=1,
+            transactionId=uuid.UUID(transaction_id),
+            entries=entries,
+            keyMaterial=KeyMaterial(
+                cryptoAlg="ECDH",
+                curve="Curve25519",
+                userInfo=KeyUserInfo(
+                    publicKey=session.hipPublicKey,
+                    nonce=session.hipNonce,
+                ),
+            ),
+        )
+
+    @classmethod
     def execute_data_transfer(
         cls,
         transaction_id: str,

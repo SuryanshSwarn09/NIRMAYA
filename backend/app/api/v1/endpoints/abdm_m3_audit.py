@@ -36,3 +36,4 @@ async def get_audit_report() -> AbdmM3AuditReport:
     """Returns live ABDM Milestone 3 compliance audit report."""
     logger.info("[get_audit_report] Generating ABDM M3 compliance audit report")
     return generate_m3_audit_report()
+
