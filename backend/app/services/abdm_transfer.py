@@ -366,12 +366,24 @@ class AbdmTransferService:
         # 2. Fetch consent artefact
         consent = consent_registry_store.get_consent(session.consentId)
         if not consent:
+            crypto_session_store.delete_session(transaction_id)
             raise ValidationException(
                 f"Consent artefact '{session.consentId}' not found in registry"
             )
         if consent.status != "GRANTED":
+            crypto_session_store.delete_session(transaction_id)
             raise ValidationException(
-                f"Consent artefact '{session.consentId}' is in status '{consent.status}', not GRANTED"
+                f"Consent artefact '{session.consentId}' is in status '{consent.status}'. Mid-flight transfer aborted."
+            )
+
+        now = datetime.now(timezone.utc)
+        if now > consent.data_erase_at:
+            consent_registry_store.save_consent(
+                consent.model_copy(update={"status": "EXPIRED", "updated_at": now})
+            )
+            crypto_session_store.delete_session(transaction_id)
+            raise ValidationException(
+                f"Consent artefact '{session.consentId}' validity has expired (dataEraseAt passed). Transfer aborted."
             )
 
         derived_key = bytes.fromhex(session.derivedKeyHex)

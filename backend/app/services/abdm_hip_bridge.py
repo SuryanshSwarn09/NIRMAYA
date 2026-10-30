@@ -86,10 +86,46 @@ class WebhookAuditStore:
 webhook_audit_store = WebhookAuditStore(maxlen=50)
 
 
+class RequestIdReplayCache:
+    """Thread-safe cache of recent Gateway request IDs to prevent replay attacks."""
+
+    def __init__(self, maxlen: int = 1000) -> None:
+        self._lock = threading.RLock()
+        self._seen_ids: Dict[str, datetime] = {}
+        self._maxlen = maxlen
+
+    def check_and_add(self, request_id: str, timestamp: datetime) -> bool:
+        """Returns True if request_id is new, False if already seen (replay detected)."""
+        with self._lock:
+            now = datetime.now(timezone.utc)
+            cutoff = now - timedelta(seconds=MAX_TIMESTAMP_DRIFT_SECONDS * 2)
+            expired = [k for k, ts in self._seen_ids.items() if ts < cutoff]
+            for k in expired:
+                del self._seen_ids[k]
+
+            if request_id in self._seen_ids:
+                return False
+
+            if len(self._seen_ids) >= self._maxlen:
+                oldest_k = next(iter(self._seen_ids))
+                del self._seen_ids[oldest_k]
+
+            self._seen_ids[request_id] = timestamp
+            return True
+
+    def clear(self) -> None:
+        with self._lock:
+            self._seen_ids.clear()
+
+
+request_id_replay_cache = RequestIdReplayCache()
+
+
 def validate_gateway_headers(
     request_id_header: Optional[str],
     timestamp_header: Optional[str],
     x_cm_id_header: Optional[str] = None,
+    check_duplicate: bool = True,
 ) -> Tuple[str, datetime]:
     """Validate inbound ABDM Gateway headers for replay defense and standard compliance.
 
@@ -97,12 +133,13 @@ def validate_gateway_headers(
         request_id_header: Mandatory REQUEST-ID UUID header
         timestamp_header: Mandatory TIMESTAMP ISO 8601 string
         x_cm_id_header: Optional X-CM-ID Consent Manager ID
+        check_duplicate: Whether to check and record against RequestIdReplayCache
 
     Returns:
         Tuple of (validated_request_id_str, parsed_utc_timestamp)
 
     Raises:
-        ValidationException: If headers are missing, malformed, or timestamp has drifted >300s.
+        ValidationException: If headers are missing, malformed, timestamp has drifted >300s, or duplicate request ID.
     """
     if not request_id_header:
         raise ValidationException("Missing mandatory 'REQUEST-ID' header")
@@ -135,6 +172,13 @@ def validate_gateway_headers(
         raise ValidationException(
             f"ABDM Gateway timestamp drift ({drift_seconds:.1f}s) exceeds {MAX_TIMESTAMP_DRIFT_SECONDS:.0f}s threshold. Replay rejected."
         )
+
+    # Enforce Replay Protection: Duplicate Request-ID Cache
+    if check_duplicate:
+        if not request_id_replay_cache.check_and_add(valid_request_id, parsed_dt):
+            raise ValidationException(
+                f"ABDM Gateway replay attack detected: Request ID '{valid_request_id}' has already been processed."
+            )
 
     return valid_request_id, parsed_dt
 
