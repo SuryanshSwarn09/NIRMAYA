@@ -10,6 +10,7 @@ import logging
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query, status
 
+from app.core.exceptions import EntityNotFoundException
 from app.schemas.fhir_validator import (
     BundleProfileType,
     BundleValidationRequest,
@@ -81,8 +82,5 @@ def get_profile_detail(profile_id: str) -> ProfileMetadata:
     """Returns specification details for a single NRCES profile by identifier."""
     profile = NRCES_PROFILES.get(profile_id)
     if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Profile '{profile_id}' not found. Supported profiles: {list(NRCES_PROFILES.keys())}",
-        )
+        raise EntityNotFoundException("NRCES Profile", profile_id)
     return profile
