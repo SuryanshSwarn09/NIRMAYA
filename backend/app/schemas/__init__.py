@@ -397,6 +397,17 @@ __all__ = [
     "BundleValidationResponse",
     "ProfileMetadata",
     "ProfilesCatalogResponse",
+    "ConceptBindingStatus",
+    "ConceptSuggestion",
+    "ConceptAuditItem",
+    "OntologyAuditReport",
+    "BundleOntologyAuditRequest",
+    "ConceptLookupRequest",
+    "ConceptLookupResponse",
+    "ConceptSuggestionRequest",
+    "ConceptSuggestionResponse",
+    "TerminologySystemInfo",
+    "TerminologySystemsResponse",
 ]
 
 from app.schemas.abdm_m3_consent import (
@@ -476,6 +487,19 @@ from app.schemas.fhir_validator import (
     BundleValidationResponse,
     ProfileMetadata,
     ProfilesCatalogResponse,
+)
+from app.schemas.terminology_validator import (
+    ConceptBindingStatus,
+    ConceptSuggestion,
+    ConceptAuditItem,
+    OntologyAuditReport,
+    BundleOntologyAuditRequest,
+    ConceptLookupRequest,
+    ConceptLookupResponse,
+    ConceptSuggestionRequest,
+    ConceptSuggestionResponse,
+    TerminologySystemInfo,
+    TerminologySystemsResponse,
 )
 
 
