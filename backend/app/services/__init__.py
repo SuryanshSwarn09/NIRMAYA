@@ -232,6 +232,10 @@ __all__ = [
     # Medical Ontology Validator service
     "MedicalOntologyValidatorService",
     "medical_ontology_validator",
+    # ABDM Sandbox Certification service
+    "AbdmSandboxCertificationService",
+    "abdm_sandbox_certifier",
+    "OFFICIAL_VECTOR_CATALOG",
 ]
 from app.services.digilocker import (
     generate_pkce_pair,
@@ -318,6 +322,11 @@ from app.services.fhir_validator import (
 from app.services.terminology_validator import (
     MedicalOntologyValidatorService,
     medical_ontology_validator,
+)
+from app.services.abdm_certification import (
+    AbdmSandboxCertificationService,
+    abdm_sandbox_certifier,
+    OFFICIAL_VECTOR_CATALOG,
 )
 
 
