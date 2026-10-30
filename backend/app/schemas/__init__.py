@@ -377,6 +377,14 @@ __all__ = [
     "DirectDecryptResponse",
     "TransferTriggerRequest",
     "TransferAuditRecord",
+    "HIUDataRequestInitiate",
+    "HIURequestSession",
+    "ParsedEncounter",
+    "ParsedDiagnosticReport",
+    "ParsedPrescription",
+    "ParsedObservation",
+    "DecryptedClinicalBundle",
+    "HIUPatientRecordsResponse",
 ]
 
 from app.schemas.abdm_m3_consent import (
@@ -431,6 +439,17 @@ from app.schemas.abdm_m3_transfer import (
     TransferTriggerRequest,
     TransferAuditRecord,
 )
+from app.schemas.abdm_m3_hiu import (
+    HIUDataRequestInitiate,
+    HIURequestSession,
+    ParsedEncounter,
+    ParsedDiagnosticReport,
+    ParsedPrescription,
+    ParsedObservation,
+    DecryptedClinicalBundle,
+    HIUPatientRecordsResponse,
+)
+
 
 
 
