@@ -1662,8 +1662,39 @@
   - Full Cumulative Backend Test Suite: **416/416 tests passing (100% green in 90.95s)** across all 22 test suites.
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
 
+#### Day 58 (Wed) - Milestone 12-03: ABDM Official Sandbox E2E Certification & Regression Test Harness
+- **Focus:** Automated certification harness executing official National Health Authority (NHA) ABDM Gateway v0.5 test vectors across Milestone 1 (ABHA issuance, Aadhaar OTP, PHR reservation, HPR onboarding), Milestone 2 (discovery, fuzzy matching, ambiguity protection Error 1441, care context linkage), and Milestone 3 (consent ingestion, Curve25519 ECDH key agreement, AES-256-GCM encrypted transfer, HIU decryption, tamper defense), SHA-256 sealed digital certificate proof, and REST API endpoints (`POST /api/v1/abdm/certification/run`, `GET /api/v1/abdm/certification/report`, `GET /api/v1/abdm/certification/vectors`).
+- **Executed Micro-Commits:**
+  1. `6f255e2: feat(certification): define abdm sandbox test vectors and certification report pydantic schemas`
+  2. `20dcabd: feat(certification): implement official abdm sandbox e2e certification test harness service`
+  3. `400125e: feat(certification): implement abdm sandbox certification rest api endpoints`
+  4. `197769b: test(certification): author comprehensive abdm sandbox certification test suite`
+  5. `docs(journey): record day 58 milestone log and update week 12 roadmap`
+- **Key Deliverables:**
+  - **Pydantic Validation Schemas (`backend/app/schemas/abdm_certification.py`):**
+    - `VectorCatalogItem`: Official NHA vector catalog representation with specification references.
+    - `CertificationVectorResult`: Execution result with status (`PASSED`, `FAILED`), duration, request/response payload summaries, and assertion counts.
+    - `MilestoneSummary`: Milestone-level breakdown and pass-rate aggregation.
+    - `SandboxCertificationReport`: Official certification report with environment metadata, overall pass rate, and cryptographic SHA-256 certificate proof.
+  - **Harness Service (`backend/app/services/abdm_certification.py`):**
+    - Automated execution of all 15 official NHA ABDM Gateway v0.5 test vectors across M1, M2, and M3.
+    - Dynamic selective milestone execution (M1, M2, M3, or full suite).
+    - Simulated network latency injection for realistic testing.
+    - Cryptographic certificate sealing with SHA-256 hex digest.
+  - **REST APIs (`backend/app/api/v1/endpoints/abdm_certification.py`):**
+    - `POST /api/v1/abdm/certification/run`: Run certification test vectors and generate report.
+    - `GET /api/v1/abdm/certification/report`: Retrieve latest cached certification report.
+    - `GET /api/v1/abdm/certification/vectors`: Retrieve official test vector catalog.
+  - **Dedicated Test Suite (`backend/tests/test_abdm_sandbox_certification.py`):**
+    - 10 unit and integration tests covering all 15 vectors, selective runs, caching, and REST endpoints.
+- **Verification:**
+  - Dedicated Certification Suite: **10/10 tests passing in `tests/test_abdm_sandbox_certification.py` (100% green in 1.32s)**.
+  - Full Cumulative Backend Test Suite: **426/426 tests passing (100% green in 77.62s)** across all 23 test suites.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
+
 
 
 
