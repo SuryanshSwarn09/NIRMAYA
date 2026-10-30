@@ -70,9 +70,16 @@ class CryptoSessionStore:
         self._lock = threading.RLock()
         self._sessions_by_tx: Dict[str, CryptoSessionDetail] = {}
         self._sessions_by_consent: Dict[str, str] = {}  # consent_id -> tx_id
+        self._total_key_agreements: int = 0
+
+    @property
+    def total_key_agreements(self) -> int:
+        with self._lock:
+            return self._total_key_agreements
 
     def store_session(self, session: CryptoSessionDetail) -> None:
         with self._lock:
+            self._total_key_agreements += 1
             self._sessions_by_tx[session.transactionId] = session
             self._sessions_by_consent[session.consentId] = session.transactionId
             logger.info(
@@ -121,6 +128,7 @@ class CryptoSessionStore:
         with self._lock:
             self._sessions_by_tx.clear()
             self._sessions_by_consent.clear()
+            self._total_key_agreements = 0
 
 
 crypto_session_store = CryptoSessionStore()

@@ -53,9 +53,16 @@ class HIURequestStore:
         self._lock = threading.RLock()
         self._sessions: Dict[str, HIURequestSession] = {}  # tx_id -> session
         self._consent_index: Dict[str, str] = {}  # consent_id -> tx_id
+        self._total_requests: int = 0
+
+    @property
+    def total_requests(self) -> int:
+        with self._lock:
+            return self._total_requests
 
     def store_session(self, session: HIURequestSession) -> None:
         with self._lock:
+            self._total_requests += 1
             self._sessions[session.transactionId] = session
             self._consent_index[session.consentId] = session.transactionId
             logger.info(
@@ -113,6 +120,7 @@ class HIURequestStore:
         with self._lock:
             self._sessions.clear()
             self._consent_index.clear()
+            self._total_requests = 0
 
 
 class HIURecordStore:
@@ -122,6 +130,16 @@ class HIURecordStore:
         self._lock = threading.RLock()
         self._patient_bundles: Dict[str, List[DecryptedClinicalBundle]] = {}  # patient_id -> bundles
         self._tx_bundles: Dict[str, List[DecryptedClinicalBundle]] = {}  # tx_id -> bundles
+        self._tamper_rejections: int = 0
+
+    def record_tamper_rejection(self) -> None:
+        with self._lock:
+            self._tamper_rejections += 1
+
+    @property
+    def tamper_rejections(self) -> int:
+        with self._lock:
+            return self._tamper_rejections
 
     def save_records(
         self,
@@ -148,10 +166,18 @@ class HIURecordStore:
         with self._lock:
             return list(self._tx_bundles.get(transaction_id, []))
 
+    def get_all_bundles(self) -> List[DecryptedClinicalBundle]:
+        with self._lock:
+            all_bundles: List[DecryptedClinicalBundle] = []
+            for b_list in self._tx_bundles.values():
+                all_bundles.extend(b_list)
+            return all_bundles
+
     def clear(self) -> None:
         with self._lock:
             self._patient_bundles.clear()
             self._tx_bundles.clear()
+            self._tamper_rejections = 0
 
 
 # Global singletons
@@ -285,6 +311,7 @@ class AbdmHIUService:
                     iv=iv,
                 )
             except ValidationException as ve:
+                hiu_record_store.record_tamper_rejection()
                 msg = f"Entry {idx} decryption failed: {ve.message}"
                 logger.error(f"[process_inbound_transfer] {msg}")
                 return False, msg, []
@@ -292,6 +319,7 @@ class AbdmHIUService:
             # Check SHA-256 checksum integrity
             computed_checksum = hashlib.sha256(plaintext_json.encode("utf-8")).hexdigest()
             if computed_checksum.lower() != entry.checksum.lower():
+                hiu_record_store.record_tamper_rejection()
                 msg = (
                     f"Entry {idx} checksum mismatch! Computed: {computed_checksum}, "
                     f"Expected: {entry.checksum}. Payload altered in transit."

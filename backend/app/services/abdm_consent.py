@@ -152,6 +152,11 @@ class ConsentRegistryStore:
 
             return True, "Authorized"
 
+    def get_all_consents(self) -> List[ConsentRecordRepresentation]:
+        """Fetch all stored consent records."""
+        with self._lock:
+            return list(self._consents.values())
+
     def clear(self) -> None:
         """Reset store (primarily for unit tests)."""
         with self._lock:
