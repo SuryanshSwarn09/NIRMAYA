@@ -434,3 +434,4 @@ async def test_api_encrypt_decrypt_and_push_endpoints():
         assert hist_resp.status_code == 200
         records = hist_resp.json()
         assert len(records) >= 1
+
