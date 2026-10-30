@@ -23,6 +23,7 @@ from app.api.v1.endpoints import (
     abdm_m3_crypto,
     abdm_m3_transfer,
     abdm_m3_hiu,
+    abdm_m3_audit,
 )
 
 api_router = APIRouter()
@@ -38,6 +39,7 @@ api_router.include_router(abdm_m3_consent.router, prefix="/abdm/m3/consent", tag
 api_router.include_router(abdm_m3_crypto.router, prefix="/abdm/m3/crypto", tags=["ABDM M3 - Key Exchange & Cryptography"])
 api_router.include_router(abdm_m3_transfer.router, prefix="/abdm/m3/transfer", tags=["ABDM M3 - Data Transfer & Encryption"])
 api_router.include_router(abdm_m3_hiu.router, prefix="/abdm/m3/hiu", tags=["ABDM M3 - HIU Data Consumer & Decryption"])
+api_router.include_router(abdm_m3_audit.router, prefix="/abdm/m3/audit", tags=["ABDM M3 - Integration Audit & Compliance"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
 api_router.include_router(patients.router, prefix="/patients", tags=["Patient Vault"])
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])
