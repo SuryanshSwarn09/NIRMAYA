@@ -38,6 +38,7 @@ from app.models.enums import (
     GovtDesignationEnum,
 )
 from app.models.administrative_hierarchy import AdministrativeUnit, AdministrativeOfficer, LTreePath
+from app.models.delegation import AdministrativeDelegation, DelegationAuditLedger
 from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.lab import DiagnosticLabFacility
 from app.models.medication import Medication
@@ -95,6 +96,8 @@ __all__ = [
     "MedicationDispenseStatus",
     "AdministrativeUnit",
     "AdministrativeOfficer",
+    "AdministrativeDelegation",
+    "DelegationAuditLedger",
     "AdminLevelEnum",
     "GovtDesignationEnum",
     "LTreePath",
