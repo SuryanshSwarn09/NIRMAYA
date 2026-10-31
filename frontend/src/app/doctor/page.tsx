@@ -47,7 +47,8 @@ import {
   ClinicalAlertToastSystem,
   BreakTheGlassModal,
   AuditLedgerVerificationCard,
-  SecurityScanReportCard
+  SecurityScanReportCard,
+  AsvsComplianceShieldCard
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -549,6 +550,9 @@ export default function DoctorEMRPage() {
 
             {/* Static Security (SAST) Scanner & Connection Pool Telemetry */}
             <SecurityScanReportCard />
+
+            {/* OWASP ASVS Level 2 Verification & DoS Rate-Limiting Shield */}
+            <AsvsComplianceShieldCard />
 
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">

@@ -51,5 +51,12 @@ export {
   type DatabasePoolMetricsItem,
   type SecurityReportState,
 } from "./SecurityScanReportCard";
+export {
+  AsvsComplianceShieldCard,
+  type ASVSItem,
+  type FuzzingResult,
+  type IPJailItem,
+} from "./AsvsComplianceShieldCard";
+
 
 
