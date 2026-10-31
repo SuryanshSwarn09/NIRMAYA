@@ -270,3 +270,183 @@ class DockerImageManifest(BaseModel):
         "/app/docker-entrypoint.sh",
         description="Container initialization command",
     )
+
+
+class FrontendExecutionMode(str, Enum):
+    """Next.js frontend runtime execution environment classification."""
+
+    CONTAINERIZED = "containerized"
+    STANDALONE_HOST = "standalone_host"
+    DEVELOPMENT = "development"
+    TEST_RUNNER = "test_runner"
+
+
+class FrontendContainerStatus(BaseModel):
+    """Telemetry report describing the running Next.js frontend container or host process."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    execution_mode: FrontendExecutionMode = Field(
+        ...,
+        description="Frontend runtime containerization classification",
+    )
+    is_container: bool = Field(
+        ...,
+        description="Whether frontend is executing inside an OCI container cgroup",
+    )
+    is_standalone: bool = Field(
+        True,
+        description="Whether Next.js output standalone traced server is active",
+    )
+    node_version: str = Field(
+        ...,
+        description="Node.js engine version (e.g. 'v20.18.0')",
+    )
+    process_uid: int = Field(
+        ...,
+        description="Host or container process User ID (must be non-zero in production)",
+    )
+    process_gid: int = Field(
+        ...,
+        description="Process Group ID",
+    )
+    is_non_root: bool = Field(
+        ...,
+        description="True if running under an unprivileged user (UID != 0, e.g. UID 1001 nextjs)",
+    )
+    memory_rss_mb: float = Field(
+        ...,
+        description="Resident Set Size memory allocation in megabytes",
+    )
+    memory_heap_total_mb: float = Field(
+        ...,
+        description="V8 total heap allocation in megabytes",
+    )
+    memory_heap_used_mb: float = Field(
+        ...,
+        description="V8 used heap in megabytes",
+    )
+    uptime_seconds: float = Field(
+        ...,
+        description="Seconds elapsed since Next.js server startup",
+    )
+    static_cache_enabled: bool = Field(
+        True,
+        description="Whether immutable static caching headers are active for /_next/static",
+    )
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        description="Timestamp of telemetry evaluation",
+    )
+
+
+class FrontendDockerManifest(BaseModel):
+    """OCI container image specification for Next.js 15 standalone frontend image."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    image_name: str = Field(
+        "nirmaya-frontend",
+        description="Repository name for frontend container image",
+    )
+    tag: str = Field(
+        "v0.4.0",
+        description="Target image version tag",
+    )
+    base_image: str = Field(
+        "node:20-alpine",
+        description="Base Alpine Node.js distribution",
+    )
+    architectures: List[str] = Field(
+        default_factory=lambda: ["linux/amd64", "linux/arm64"],
+        description="Supported OCI CPU architectures",
+    )
+    stages: List[DockerStageManifest] = Field(
+        default_factory=list,
+        description="Multi-stage build steps (deps, builder, runner)",
+    )
+    target_image_size_mb: float = Field(
+        145.0,
+        description="Target production compressed image size footprint in megabytes (< 150MB)",
+    )
+    non_root_uid: int = Field(
+        1001,
+        description="Configured unprivileged system user ID (UID 1001 nextjs)",
+    )
+    non_root_gid: int = Field(
+        1001,
+        description="Configured unprivileged system group ID (GID 1001 nodejs)",
+    )
+    non_root_user: str = Field(
+        "nextjs",
+        description="Configured unprivileged system username",
+    )
+    non_root_group: str = Field(
+        "nodejs",
+        description="Configured unprivileged system group name",
+    )
+    healthcheck_endpoint: str = Field(
+        "/api/health",
+        description="Target URL path probed by Docker daemon or load balancer",
+    )
+    healthcheck_interval_seconds: int = Field(
+        30,
+        description="Frequency of healthcheck probe in seconds",
+    )
+    exposed_ports: List[int] = Field(
+        default_factory=lambda: [3000],
+        description="TCP ports exposed by frontend container",
+    )
+    output_mode: str = Field(
+        "standalone",
+        description="Next.js output compilation mode",
+    )
+    cache_control_static: str = Field(
+        "public, max-age=31536000, immutable",
+        description="Cache-Control header applied to static assets",
+    )
+    entrypoint_command: str = Field(
+        "node server.js",
+        description="Next.js standalone production server execution command",
+    )
+
+
+class FrontendSecurityAudit(BaseModel):
+    """CIS Docker benchmark evaluation for Next.js frontend container."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    compliance_level: SecurityComplianceLevel = Field(
+        ...,
+        description="Overall CIS security context evaluation level",
+    )
+    is_root: bool = Field(
+        ...,
+        description="Flag indicating if frontend process is executing as root (UID 0)",
+    )
+    uid_assigned: int = Field(
+        ...,
+        description="Assigned process User ID",
+    )
+    user_name: str = Field(
+        ...,
+        description="Configured OS username (e.g. 'nextjs')",
+    )
+    node_env: str = Field(
+        "production",
+        description="Configured NODE_ENV environment variable",
+    )
+    read_only_rootfs: bool = Field(
+        False,
+        description="Whether root filesystem is mounted read-only",
+    )
+    security_findings: List[str] = Field(
+        default_factory=list,
+        description="List of detected security findings or compliance advisories",
+    )
+    cis_benchmark_score_pct: float = Field(
+        ...,
+        ge=0.0,
+        le=100.0,
+        description="CIS benchmark security compliance score percentage",
+    )

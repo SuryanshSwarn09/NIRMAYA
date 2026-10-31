@@ -566,6 +566,10 @@ from app.schemas.container_runtime import (
     EnvironmentConformanceReport,
     DockerStageManifest,
     DockerImageManifest,
+    FrontendExecutionMode,
+    FrontendContainerStatus,
+    FrontendDockerManifest,
+    FrontendSecurityAudit,
 )
 
 
