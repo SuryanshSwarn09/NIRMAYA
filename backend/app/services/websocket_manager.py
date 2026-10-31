@@ -91,7 +91,7 @@ class InMemoryPubSubAdapter(BasePubSubAdapter):
         all_callbacks = callbacks + global_cbs
         for cb in all_callbacks:
             try:
-                asyncio.create_task(cb(channel, message))
+                await cb(channel, message)
             except Exception as e:
                 logger.error(f"[WebSocketBus] Error dispatching in-memory message on channel '{channel}': {e}")
 
