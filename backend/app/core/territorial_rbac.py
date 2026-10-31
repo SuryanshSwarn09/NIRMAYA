@@ -4,7 +4,7 @@ Enforces sovereign administrative boundary isolation for clinical records, patie
 emergency overrides, and public health telemetry across India's 6-tier LGD hierarchy.
 """
 
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 from fastapi import Depends, Header, HTTPException, Query, status
 
 from app.schemas.delegation import TerritorialScopeValidationRequest
@@ -54,11 +54,23 @@ class TerritorialSecurityScope:
             None,
             description="Target territorial jurisdiction path",
         ),
+        target_path: Optional[str] = Query(
+            None,
+            description="Target resource path",
+        ),
     ) -> str:
         """Validate territorial authority, raising HTTP 403 on lateral or upward boundary violations."""
+        def _clean_str(val: Any) -> Optional[str]:
+            return val.strip() if isinstance(val, str) and val.strip() else None
+
         # Fallback to national root if not explicitly scoped (e.g. public health portal read)
-        officer_path = x_officer_jurisdiction or "india"
-        req_target = jurisdiction_path or path or "india"
+        officer_path = _clean_str(x_officer_jurisdiction) or "india"
+        req_target = (
+            _clean_str(target_path)
+            or _clean_str(jurisdiction_path)
+            or _clean_str(path)
+            or "india"
+        )
 
         validation = delegation_service.validate_territorial_scope(
             TerritorialScopeValidationRequest(

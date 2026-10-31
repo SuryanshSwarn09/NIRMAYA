@@ -2083,32 +2083,44 @@
   - **Dedicated Test Suite (`backend/tests/test_delegation_and_trbac.py`):**
     - 14 comprehensive unit, integration, and security tests verifying downward authority enforcement, upward/lateral delegation rejection, `@gov.in` validation, Aadhaar Verhoeff checksums, revocation lifecycle, sub-2ms TRBAC evaluation, REST API endpoints, and SQLAlchemy model persistence.
 - **Verification:**
-  - Dedicated Delegation & TRBAC Suite: **14/14 tests passing in `tests/test_delegation_and_trbac.py` (100% green in 0.79s)**.
+  - Dedicated Delegation & TRBAC Suite: **14/14 tests passing in `tests/test_delegation_and_trbac.py` (100% green in 1.74s)**.
   - Full Cumulative Backend Test Suite: **543/543 tests passing (100% green in 98.48s)** across all 33 test suites.
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
+#### Day 70 (Fri) - Milestone 14-05: District & State Public Health Command Center, Territorial Disease Outbreak Heatmap, ICU Bed Telemetry & Week 14 Review
+- **Focus:** District & State Public Health Command Center, Recursive Subtree Telemetry Aggregation across Sovereign LGD Hierarchy, Integrated Disease Surveillance Programme (IDSP) Outbreak Tracking, Critical Care ICU Bed & Mechanical Ventilator Census with Automated Admission Diversion Alerts (> 85%), Clinical Specialist Workforce Duty Rostering, Public Health Emergency Directive Dispatch Lifecycle, Sub-2ms Scoped Territorial RBAC (TRBAC) Fastpath (< 0.01ms), Cal.com Design System `TerritorialCommandCenterCard.tsx` UI Component, Dedicated Test Suite (`tests/test_public_health_command_center.py`), and Comprehensive Week 14 Retrospective & Security Governance Review.
+- **Executed Micro-Commits (Strict 7-Commit Pacing):**
+  1. `c75367b: feat(schemas): define public health command center, disease outbreak surveillance, and icu telemetry schemas`
+  2. `2fcfdb0: feat(models): implement territorial outbreak and facility resource telemetry relational models`
+  3. `df9ae13: feat(services): implement public health command center aggregation and disease surveillance engine`
+  4. `fd9c018: feat(security): bind scoped trbac security to command center telemetry endpoints`
+  5. `1de8b0a: feat(api): expose district and state public health command center rest endpoints`
+  6. `ce47fa3: feat(frontend): implement TerritorialCommandCenterCard with calcom design tokens`
+  7. `31d5c31: test(admin): author public health command center test suite, publish week-14 review, and update documentation`
 - **Key Deliverables:**
-  - **LGD Administrative Hierarchy Schemas (`backend/app/schemas/administrative_hierarchy.py`):**
-    - Modeled `AdminLevelEnum` (`country`, `state`, `division`, `district`, `sub_district`) and `GovtDesignationEnum` (`national_director`, `state_secretary`, `divisional_commissioner`, `district_magistrate`, `chief_medical_officer`, `block_medical_officer`).
-    - Defined `AdministrativeUnitBase`, `AdministrativeUnitCreate`, `AdministrativeUnitUpdate`, `AdministrativeUnitResponse`, `AdministrativeOfficerCreate`, `AdministrativeOfficerResponse`, `TerritorialTreeNode`, and `TerritorialSummaryMetrics`.
-  - **PostgreSQL `ltree` Relational Models (`backend/app/models/administrative_hierarchy.py`):**
-    - Custom `LTreePath` SQLAlchemy TypeDecorator translating to native `ltree` on PostgreSQL and `String(255)` on SQLite.
-    - Relational entities `AdministrativeUnit` and `AdministrativeOfficer` with foreign keys, index decorators, and parent-child traversal.
-  - **Alembic Database Migration (`backend/alembic/versions/2026_11_01_0011_lgd_administrative_hierarchy_ltree.py`):**
-    - Enabled PostgreSQL `ltree` extension; created `administrative_units` and `administrative_officers` tables with GiST indexing.
-  - **Administrative Hierarchy Service & National LGD Seeder (`backend/app/services/administrative_hierarchy_service.py`):**
-    - Pre-seeded National root (`india`), 36 sovereign States and Union Territories, sample Divisions, Districts (Pune, Satara, Mumbai, New Delhi, Bengaluru Urban, Paschim Bardhaman), and Talukas (Haveli, Durgapur).
-    - Sub-2ms ancestor resolution (`find_ancestors`) and descendant subtree search (`find_descendants`).
-    - Enforced scoped territorial RBAC authority validation (`verify_jurisdiction_access`).
-  - **Administrative Hierarchy REST API (`backend/app/api/v1/endpoints/administrative_hierarchy.py`):**
-    - Mounted under `/api/v1/admin/hierarchy`: summary metrics, unit listing with level filters, sub-2ms fast search, tree drilldowns, ancestor/descendant lookups, territorial verification, and officer appointment roster.
-  - **Cal.com Design System Frontend Dashboard (`frontend/src/components/clinical/AdministrativeHierarchyViewerCard.tsx`):**
-    - Built interactive territorial tree explorer, fast search bench with LGD code lookup, and appointed officers roster.
+  - **Public Health Command Center Schemas (`backend/app/schemas/command_center.py`):**
+    - Defined `DiseaseCategoryEnum`, `OutbreakSeverityEnum` (`NORMAL`, `WATCH`, `ALERT`, `OUTBREAK`), and `DirectiveCategoryEnum`.
+    - Modeled `CommandCenterOverviewResponse`, `DiseaseClusterReport`, `FacilityResourceTelemetry`, `WorkforceDutyRoster`, and `PublicHealthDirectiveCreate` / `PublicHealthDirectiveResponse`.
+  - **SQLAlchemy Relational Models (`backend/app/models/command_center.py`):**
+    - Implemented `DiseaseOutbreakRecord`, `FacilityResourceTelemetryModel`, and `PublicHealthDirectiveModel` with cross-dialect `LTreePath`, foreign key relations, and compound indexes.
+  - **Public Health Command Center Engine (`backend/app/services/command_center_service.py`):**
+    - Recursive subtree aggregation across sovereign LGD hierarchy (`path <@ jurisdiction_path`).
+    - IDSP outbreak cluster tracking with 7-day growth trajectory % and effective reproduction rate $R_t$.
+    - Critical care ICU bed and oxygen telemetry with automated emergency diversion triggers (> 85% occupancy).
+    - Clinical specialist duty roster telemetry and emergency directive dispatch lifecycle.
+  - **Scoped Territorial RBAC Security Enforcement (`backend/app/core/territorial_rbac.py`):**
+    - Bound `verify_command_center_access` and `require_territory("jurisdiction_path")` dependency interceptor to command center endpoints, evaluating boundary containment in < 0.01ms.
+  - **Command Center REST API (`backend/app/api/v1/endpoints/command_center.py`):**
+    - Mounted under `/api/v1/admin/command-center`: overview rollups, filtered outbreak clusters, ICU bed census, workforce roster, directive issuance, and directive query endpoints.
+  - **Cal.com Design System Frontend Dashboard (`frontend/src/components/clinical/TerritorialCommandCenterCard.tsx`):**
+    - Built KPI header (Active Cases, Critical Outbreaks, ICU Occupancy %, Ventilators, Active Doctors), Territorial Jurisdiction Filter with quick-select buttons, Disease Surveillance Outbreak Heatmap, Hospital Critical Care ICU Census, Clinical Workforce Roster, and Emergency Directive Dispatch Modal.
     - Mounted in `/doctor` clinical portal with clean Next.js 15 compilation.
-  - **Dedicated Test Suite (`backend/tests/test_administrative_hierarchy.py`):**
-    - 11 comprehensive unit and integration tests verifying seeder initialization, sub-2ms performance, fast search, jurisdictional access control, tree construction, REST endpoints, and SQLAlchemy model persistence.
+  - **Dedicated Test Suite (`backend/tests/test_public_health_command_center.py`):**
+    - 13 comprehensive unit, integration, and security tests verifying overview rollups, sub-2ms query SLA, outbreak growth trajectory, ICU bed diversion triggers, clinical workforce rosters, directive dispatch, scoped TRBAC boundary enforcement, REST endpoints, and SQLAlchemy model persistence.
 - **Verification:**
-  - Dedicated Hierarchy Suite: **11/11 tests passing in `tests/test_administrative_hierarchy.py` (100% green in 1.03s)**.
-  - Full Cumulative Backend Test Suite: **531/531 tests passing (100% green in 85.56s)** across all 32 test suites.
+  - Dedicated Command Center Suite: **13/13 tests passing in `tests/test_public_health_command_center.py` (100% green in 1.26s)**.
+  - Dedicated Delegation & TRBAC Suite: **14/14 tests passing in `tests/test_delegation_and_trbac.py` (100% green in 1.74s)**.
+  - Full Cumulative Backend Test Suite: **556/556 tests passing (100% green in 92.69s)** across all 34 test suites.
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
 
 ---

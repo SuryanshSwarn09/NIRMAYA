@@ -104,6 +104,7 @@
     * [Day 67: OWASP ASVS Level 2 Verification & DoS Rate-Limiting Shield](journey/month-4/day-67.md)
     * [Day 68: Indian LGD 6-Tier Administrative Hierarchy & LTree Indexing](journey/month-4/day-68.md)
     * [Day 69: Chain-of-Command Administrative Provisioning & Scoped TRBAC](journey/month-4/day-69.md)
+    * [Day 70: District & State Public Health Command Center](journey/month-4/day-70.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
 
@@ -126,6 +127,7 @@
 * [Week 11 Retrospective & ABDM Milestone 3 Audit](journey/month-3/week-11-review.md)
 * [Week 12 Retrospective & Interoperability Gateway Audit](journey/month-3/week-12-review.md)
 * [Week 13 Retrospective & Real-Time Infrastructure Audit](journey/month-4/week-13-review.md)
+* [Week 14 Retrospective & Security Governance Review](journey/month-4/week-14-review.md)
 * [Month 3 Comprehensive Retrospective & Interoperability Gateway](journey/month-3/month-3-retrospective.md)
 * [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
