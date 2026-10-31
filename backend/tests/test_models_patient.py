@@ -2,6 +2,7 @@
 
 from datetime import date
 import pytest
+import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -11,7 +12,7 @@ from app.models.patient import PatientProfile
 from app.models.user import User
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def async_db():
     """Provide an isolated in-memory SQLite async database engine and sessionmaker."""
     engine = create_async_engine("sqlite+aiosqlite:///:memory:", echo=False)

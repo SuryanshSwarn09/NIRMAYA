@@ -40,7 +40,7 @@ def test_migration_revision_head(alembic_config) -> None:
     heads = script.get_heads()
 
     assert len(heads) == 1
-    assert heads[0] == "0010_medication_dispense_schema"
+    assert heads[0] == "0011_lgd_administrative_hierarchy_ltree"
 
 
 def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
@@ -70,6 +70,8 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "medication",
         "medication_request",
         "medication_dispense",
+        "administrative_units",
+        "administrative_officers",
         "alembic_version",
     }
     assert expected_tables.issubset(table_names), f"Missing tables: {expected_tables - table_names}"
@@ -238,6 +240,32 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "was_substituted",
     }.issubset(disp_cols)
 
+    # Verify key columns on 'administrative_units'
+    unit_cols = {col["name"] for col in inspector.get_columns("administrative_units")}
+    assert {
+        "id",
+        "name",
+        "unit_level",
+        "lgd_code",
+        "path",
+        "parent_id",
+        "pincode_prefixes",
+        "is_active",
+    }.issubset(unit_cols)
+
+    # Verify key columns on 'administrative_officers'
+    officer_cols = {col["name"] for col in inspector.get_columns("administrative_officers")}
+    assert {
+        "id",
+        "user_id",
+        "designation",
+        "administrative_unit_id",
+        "jurisdiction_path",
+        "gov_email",
+        "aadhaar_verified",
+        "is_active",
+    }.issubset(officer_cols)
+
     engine.dispose()
 
     # 3. Run downgrade to base
@@ -264,6 +292,8 @@ def test_migration_upgrade_and_downgrade_lifecycle(alembic_config) -> None:
         "medication",
         "medication_request",
         "medication_dispense",
+        "administrative_units",
+        "administrative_officers",
     }
     assert not core_tables.intersection(remaining_tables), f"Tables not dropped: {core_tables.intersection(remaining_tables)}"
 

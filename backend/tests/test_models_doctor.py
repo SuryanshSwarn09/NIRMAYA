@@ -1,6 +1,7 @@
 """Unit tests for DoctorProfile SQLAlchemy 2.0 relational entity and ABDM HPR integration."""
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
@@ -10,7 +11,7 @@ from app.models.enums import MedicalSpecialty, UserRole
 from app.models.user import User
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def async_db():
     """Provide an isolated in-memory SQLite async database engine and sessionmaker."""
     engine = create_async_engine("sqlite+aiosqlite:///:memory:", echo=False)

@@ -109,7 +109,7 @@ class AdministrativeOfficer(Base, UUIDPrimaryKeyMixin):
 
     user_id: Mapped[str] = mapped_column(
         String(36),
-        ForeignKey("users.id", ondelete="CASCADE"),
+        ForeignKey("user.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )

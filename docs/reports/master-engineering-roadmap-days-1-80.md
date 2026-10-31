@@ -6,8 +6,8 @@
 **Candidate & Project Lead:** Suryansh Swarn (`suryanshswarn@gmail.com`)  
 **Repository:** `https://github.com/SuryanshSwarn09/NIRMAYA`  
 **Pacing:** 4.75 Months / 19 Weeks / 95 Development Days  
-**Current Status:** Day 67 Completed (Week 14 Active / Phase 4 Active / Release `v0.3.0` Baseline / 518 Tests Passing)  
-**Next Horizon:** Day 68 (Month 4, Week 14 / Indian Local Government Directory (LGD) 6-Tier Administrative Hierarchy Schema & PostgreSQL ltree Migration)  
+**Current Status:** Day 68 Completed (Week 14 Active / Phase 4 Active / Release `v0.3.0` Baseline / 531 Tests Passing)  
+**Next Horizon:** Day 69 (Month 4, Week 14 / Chain-of-Command Administrative Provisioning Service, Official @gov.in Aadhaar MFA & Scoped Territorial RBAC)  
 **Extended Horizon:** Phase 5 (Weeks 17–18, Days 81–90 / Family Health Proxy, Child-ABHA & National Public Digital Infrastructure)  
 **Capstone Publication Horizon:** Phase 6 (Week 19, Days 91–95 / IEEE Research Paper Manuscript & Empirical Comparative Benchmarking)  
 **Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3) & DPDP Act 2023  
@@ -251,7 +251,7 @@ gantt
 ### Week 14: Security Hardening, Indian LGD Administrative Hierarchy & Zero-Trust (Days 66–70)
 - **Day 66 (Milestone 14-01) [COMPLETED]:** Static Application Security Testing (SAST), Automated Vulnerability Scanning & PostgreSQL Connection Optimization: Python AST security analyzer for weak crypto, SQLi, and hardcoded secrets; CVE dependency vulnerability catalog; multi-tenant RLS context injection (`app.current_tenant`); live engine connection pool telemetry (`get_pool_metrics`); Cal.com `SecurityScanReportCard` dashboard with interactive AST tester; 505/505 passing tests.
 - **Day 67 (Milestone 14-02) [COMPLETED]:** OWASP Application Security Verification Standard (ASVS) Level 2 Compliance Audit, Automated SQLi/XSS Defensive Fuzzing & Distributed Rate Limiter: 100.0% compliance across 18 Level 2 controls (CERTIFIED status); 17-vector adversarial attack fuzzing bench with 100.0% defense efficacy; distributed token-bucket rate limiter with automated IP Jail penalty box; Cal.com `AsvsComplianceShieldCard` frontend dashboard; 518/518 passing tests.
-- **Day 68:** Indian Local Government Directory (LGD) 6-Tier Administrative Hierarchy schema (`administrative_units`, `administrative_officers`); PostgreSQL `ltree` extension migration and sub-2ms territorial GIST indexing.
+- **Day 68 (Milestone 14-03) [COMPLETED]:** Indian Local Government Directory (LGD) 6-Tier Administrative Hierarchy schema (`administrative_units`, `administrative_officers`); PostgreSQL `ltree` extension migration with GiST indexing; sovereign LGD reference seeder with 36 States/UTs; sub-2ms ancestor and descendant queries; Cal.com `AdministrativeHierarchyViewerCard` frontend dashboard; 531/531 passing tests.
 - **Day 69:** Chain-of-Command Administrative Provisioning Service (National SuperAdmin -> State -> Division -> District -> Block) with official `@gov.in` email and Aadhaar OTP MFA; Scoped Territorial RBAC.
 - **Day 70:** District & State Command Center endpoints (outbreak heatmaps, ICU bed occupancy, doctor roster); automated test suite `test_administrative_hierarchy.py` and security sign-off.
 
@@ -399,5 +399,5 @@ As of **Day 67 (Phase 4 Active / Week 14 Active / ASVS Level 2 & DoS Shield Acti
 - **Frontend Typecheck & Build:** Clean compilation with 0 TypeScript errors and 13/13 static routes rendered cleanly in Next.js 15.5.25
 - **Active Release Tag:** **`v0.3.0`** (Milestone `v0.4.0` in progress)
 - **Git Repository Branch:** `main` (synchronized with `origin/main`)
-- **Next Operational Milestone:** **Day 68 (Milestone 14-03: Indian Local Government Directory (LGD) 6-Tier Administrative Hierarchy Schema, PostgreSQL ltree Migration & Sub-2ms Territorial Indexing)**
+- **Next Operational Milestone:** **Day 69 (Milestone 14-04: Chain-of-Command Administrative Provisioning Service, Official @gov.in Aadhaar MFA & Scoped Territorial RBAC)**
 

@@ -1,6 +1,7 @@
 """Unit tests for asynchronous database seeder service and fixture verification."""
 
 import pytest
+import pytest_asyncio
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from app.db.base import Base
@@ -11,7 +12,7 @@ from app.models.patient import PatientProfile
 from app.models.user import User
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def async_db():
     """Provide an isolated in-memory SQLite database sessionmaker for seeder tests."""
     engine = create_async_engine("sqlite+aiosqlite:///:memory:", echo=False)

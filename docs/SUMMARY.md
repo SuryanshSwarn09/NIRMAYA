@@ -102,6 +102,7 @@
   * [Week 14: Security Hardening & Zero-Trust Governance](journey/month-4/week-14.md)
     * [Day 66: Static Application Security Testing (SAST) & DB Pool Optimization](journey/month-4/day-66.md)
     * [Day 67: OWASP ASVS Level 2 Verification & DoS Rate-Limiting Shield](journey/month-4/day-67.md)
+    * [Day 68: Indian LGD 6-Tier Administrative Hierarchy & LTree Indexing](journey/month-4/day-68.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
 

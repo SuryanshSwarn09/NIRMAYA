@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta, timezone
 import uuid
 import pytest
+import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 
 from app.main import app
@@ -14,7 +15,7 @@ from app.services.abdm_hip_bridge import (
 from app.schemas.abdm_m2_bridge import GatewayAuthInitQuery
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def async_client():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
