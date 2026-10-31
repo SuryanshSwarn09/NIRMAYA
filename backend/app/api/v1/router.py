@@ -34,6 +34,7 @@ from app.api.v1.endpoints import (
     emergency_vault,
     audit_ledger,
     security_scan,
+    asvs_audit,
 )
 
 api_router = APIRouter()
@@ -60,6 +61,7 @@ api_router.include_router(clinical_alerts.router, prefix="/alerts", tags=["Clini
 api_router.include_router(emergency_vault.router, prefix="/emergency/btg", tags=["Break-The-Glass Emergency Access"])
 api_router.include_router(audit_ledger.router, prefix="/audit/ledger", tags=["Audit Ledger & Emergency Dispatch"])
 api_router.include_router(security_scan.router, prefix="/security", tags=["Security & Vulnerability Auditing"])
+api_router.include_router(asvs_audit.router, prefix="/security", tags=["OWASP ASVS & DoS Shield"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
 api_router.include_router(patients.router, prefix="/patients", tags=["Patient Vault"])
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])
