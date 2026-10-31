@@ -1784,6 +1784,43 @@
   - Full Cumulative Backend Test Suite: **448/448 tests passing (100% green in 70.27s)** across all 25 test suites.
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
 
+#### Day 62 (Tue) - Milestone 13-02: Live Clinician Consultation Queue Synchronization
+- **Focus:** Real-Time Outpatient Department (OPD) Consultation Queue Management, Intake Check-In & Daily Sequential Token Minting, Clinical Triage Urgency Classifications (`EMERGENT`, `URGENT`, `STANDARD`, `NON_URGENT`), Clinician Patient Calling Protocol to Specific Consultation Rooms (`queue.called`), Consultation Lifecycle Transitions (`IN_CONSULTATION`, `COMPLETED`, `ABSENT`), Automated WebSocket Event Dissemination (`facility:{id}:queue` and `doctor:{id}:workspace`), Custom React Hook (`useOpdQueueWebSocket`), Live Connectivity Indicator Telemetry on Clinician Dashboard, and Comprehensive E2E Verification.
+- **Executed Micro-Commits (Strict 7-Commit Pacing):**
+  1. `606738f: feat(schemas): define opd queue models, triage levels, and transition payloads`
+  2. `c7e3f11: feat(services): implement real-time opd queue service with automated websocket event broadcast`
+  3. `46a2ff6: feat(api): implement opd queue rest api endpoints and router`
+  4. `cfabb6d: feat(api): mount opd queue router in v1 router`
+  5. `c73e2e1: feat(frontend): implement useOpdQueueWebSocket hook and live consultation queue integration`
+  6. `0d09e49: test(queue): author comprehensive opd queue sync and websocket broadcast test suite`
+  7. `docs(journey): record day 62 milestone log, update week 13 schedule, summary, changelog, and roadmap`
+- **Key Deliverables:**
+  - **OPD Queue Schemas (`backend/app/schemas/opd_queue.py`):**
+    - `QueueStatus`: Lifecycle enum (`WAITING`, `CALLED`, `IN_CONSULTATION`, `COMPLETED`, `ABSENT`, `CANCELLED`).
+    - `OPDQueueEntry`: Detailed queue record capturing token, demographics, ABHA, doctor, triage, room, and timestamps.
+    - `QueueCheckInRequest`, `QueueTriageUpdateRequest`, `QueueCallPatientRequest`, `QueueStatusUpdateRequest`, `OPDQueueResponse`, and `QueueStatsResponse`.
+  - **Queue Service Engine (`backend/app/services/opd_queue.py`):**
+    - Thread-safe `OpdQueueService` managing daily facility queues with sequential token generation and wait time estimation.
+    - Automated event dispatching triggering `ws_manager.broadcast_event` emitting `queue.update` and `queue.called`.
+    - Operational throughput statistics computation (`get_queue_stats`).
+  - **Queue REST APIs (`backend/app/api/v1/endpoints/opd_queue.py`):**
+    - `POST /api/v1/queue/check-in`: Patient check-in and token issuance.
+    - `GET /api/v1/queue/facility/{facility_id}`: Filterable active queue listing.
+    - `GET /api/v1/queue/entry/{queue_id}`: Single entry detail fetch.
+    - `PUT /api/v1/queue/{queue_id}/triage`: Nursing triage priority update.
+    - `POST /api/v1/queue/{queue_id}/call`: Clinician patient summon into room.
+    - `PUT /api/v1/queue/{queue_id}/status`: Consultation status progression.
+    - `GET /api/v1/queue/facility/{facility_id}/stats`: Live facility throughput metrics.
+  - **Frontend WebSocket Hook & Live Telemetry:**
+    - Authored custom React hook `useOpdQueueWebSocket.ts` with exponential backoff reconnects and 25s heartbeat keep-alives.
+    - Connected live event listener and `Live Queue Sync (WebSocket Connected)` indicator badge in `ClinicianConsultationQueue.tsx`.
+  - **Dedicated Test Suite (`backend/tests/test_opd_queue_sync.py`):**
+    - 10 unit and integration tests covering check-in, triage updates, patient calling, lifecycle transitions, 404 errors, and live WebSocket broadcast receipt.
+- **Verification:**
+  - Dedicated Queue Suite: **10/10 tests passing in `tests/test_opd_queue_sync.py` (100% green in 2.25s)**.
+  - Full Cumulative Backend Test Suite: **458/458 tests passing (100% green in 72.17s)** across all 26 test suites.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
