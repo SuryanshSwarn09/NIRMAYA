@@ -1,14 +1,15 @@
 
-# NIRMAYA: Master Engineering Roadmap & Technical Blueprint (Days 1–80)
-## Complete End-to-End System Architecture, Implemented Foundations & Future Specifications
+# NIRMAYA: Master Engineering Roadmap & Technical Blueprint (Days 1–90)
+## Complete End-to-End System Architecture, Implemented Foundations & Extended Phase 5 Specifications
 
 **Academic Target:** Final Year Major Project in Health Informatics & Computer Systems Engineering  
 **Candidate & Project Lead:** Suryansh Swarn (`suryanshswarn@gmail.com`)  
 **Repository:** `https://github.com/SuryanshSwarn09/NIRMAYA`  
-**Pacing:** 4 Months / 16 Weeks / 80 Development Days  
+**Pacing:** 4.5 Months / 18 Weeks / 90 Development Days  
 **Current Status:** Day 67 Completed (Week 14 Active / Phase 4 Active / Release `v0.3.0` Baseline / 518 Tests Passing)  
 **Next Horizon:** Day 68 (Month 4, Week 14 / Indian Local Government Directory (LGD) 6-Tier Administrative Hierarchy Schema & PostgreSQL ltree Migration)  
-**Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3)  
+**Extended Horizon:** Phase 5 (Weeks 17–18, Days 81–90 / Family Health Proxy, Child-ABHA & National Public Digital Infrastructure)  
+**Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3) & DPDP Act 2023  
 
 ---
 
@@ -16,24 +17,25 @@
 
 **NIRMAYA** (*Networked Interoperable Records Medical Assets & Your Archives*) is an enterprise-grade digital health interoperability network, longitudinal patient health vault, and modern Electronic Medical Records (EMR) platform engineered to resolve the fragmentation of India's healthcare data ecosystem. Rather than isolating clinical encounters in proprietary database schemas or unstructured paper documents, NIRMAYA structures encounters, demographic profiles, prescriptions, vitals telemetry, and diagnostic observations around international healthcare protocols (**HL7 FHIR Release 4**) and integrates directly into the national health backbone (**Ayushman Bharat Digital Mission - ABDM**).
 
-This document serves as the authoritative, end-to-end Master Engineering Roadmap for the entire 80-day development journey. It details:
+This document serves as the authoritative, end-to-end Master Engineering Roadmap for the entire 90-day development journey. It details:
 1. The **foundational motive and multi-tier architectural topology** powering NIRMAYA across Patients, Clinicians, Diagnostic Facilities, Pharmacies, and ABDM Network Nodes.
-2. The **complete day-by-day engineering progression from Day 1 to Day 80**, delineating verified implementations (Days 1–60) from planned upcoming milestones (Days 61–80).
-3. The **chronological record of architectural pivots, strategic scope expansions, and critical enhancements** introduced during development (including the Cal.com design system migration, Vercel monorepo fixes, Drug-Drug Interaction Clinical Decision Support, the Day 46 DigiLocker/Aadhaar 1-day extension, and ABDM Ambiguity Protection filters).
-4. The **system health metrics, testing benchmarks (481/481 green tests), and certification status** under NHA ABDM Gateway v0.5 standards.
+2. The **complete day-by-day engineering progression from Day 1 to Day 90**, delineating verified implementations (Days 1–67) from active hardening milestones (Days 68–80) and the extended Phase 5 public infrastructure and family proxy access sprint (Days 81–90).
+3. The **chronological record of architectural pivots, strategic scope expansions, and critical enhancements** introduced during development (including the Cal.com design system migration, Vercel monorepo fixes, Drug-Drug Interaction Clinical Decision Support, the Day 46 DigiLocker/Aadhaar 1-day extension, ABDM Ambiguity Protection filters, pre-implemented A11y text sizing and high contrast foundations, and Phase 5 CoWIN/DigiLocker UI redesign).
+4. The **system health metrics, testing benchmarks (518/518 green tests), and certification status** under NHA ABDM Gateway v0.5 standards and OWASP ASVS Level 2.
 
 ---
 
 ## Table of Contents
 
 1. [Foundational System Motive & Architecture Topology](#1-foundational-system-motive--architecture-topology)
-2. [Master 80-Day Engineering Lifecycle Overview](#2-master-80-day-engineering-lifecycle-overview)
+2. [Master 90-Day Engineering Lifecycle Overview](#2-master-90-day-engineering-lifecycle-overview)
 3. [Phase 1: Foundation, Schemas, Supabase Auth & Scheduling (Days 1–20) [COMPLETED]](#3-phase-1-foundation-schemas-supabase-auth--scheduling-days-120-completed)
 4. [Phase 2: Clinical EMR, Observational Telemetry & CIS (Days 21–40) [COMPLETED]](#4-phase-2-clinical-emr-observational-telemetry--cis-days-2140-completed)
 5. [Phase 3: ABDM Federation & Interoperability Gateway (Days 41–60) [COMPLETED]](#5-phase-3-abdm-federation--interoperability-gateway-days-4160-completed)
 6. [Phase 4: Production Hardening, Cloud Deployment & Thesis (Days 61–80) [ACTIVE]](#6-phase-4-production-hardening-cloud-deployment--thesis-days-6180-active)
-7. [Chronology of Architectural Pivots & Strategic Scope Additions](#7-chronology-of-architectural-pivots--strategic-scope-additions)
-8. [Codebase Health, Verification Suite & Current Status](#8-codebase-health-verification-suite--current-status)
+7. [Phase 5: Extended Enterprise, Family Health Proxy & National Public Digital Infrastructure (Days 81–90) [PLANNED]](#7-phase-5-extended-enterprise-family-health-proxy--national-public-digital-infrastructure-days-8190-planned)
+8. [Chronology of Architectural Pivots & Strategic Scope Additions](#8-chronology-of-architectural-pivots--strategic-scope-additions)
+9. [Codebase Health, Verification Suite & Current Status](#9-codebase-health-verification-suite--current-status)
 
 ---
 
@@ -95,11 +97,11 @@ flowchart TB
 
 ---
 
-## 2. Master 80-Day Engineering Lifecycle Overview
+## 2. Master 90-Day Engineering Lifecycle Overview
 
 ```mermaid
 gantt
-    title NIRMAYA 80-Day Engineering Pacing
+    title NIRMAYA 90-Day Engineering Pacing
     dateFormat  X
     axisFormat Day %d
     section Month 1: Foundation (v0.1.0)
@@ -116,12 +118,15 @@ gantt
     Week 9: ABDM M1 (ABHA & HPR)           :done, w9, 41, 45
     Week 10: ABDM M2 (Discovery & Linking) :done, w10, 46, 50
     Week 11: ABDM M3 (Consent & Data Flow) :done, w11, 51, 55
-    Week 12: FHIR R4 Certification & Audit :active, w12, 56, 60
+    Week 12: FHIR R4 Certification & Audit :done, w12, 56, 60
     section Month 4: Production & Monograph (v1.0.0)
-    Week 13: Distributed WebSockets       :w13, 61, 65
-    Week 14: Security Hardening & Zero-Trust:w14, 66, 70
+    Week 13: Distributed WebSockets       :done, w13, 61, 65
+    Week 14: Security Hardening & Zero-Trust:active, w14, 66, 70
     Week 15: Docker Compose & Cloud CI/CD  :w15, 71, 75
     Week 16: Academic Thesis & Release v1  :w16, 76, 80
+    section Month 5: Extended DPI & Proxy (v1.1.0)
+    Week 17: Family Proxy & Child-ABHA     :w17, 81, 85
+    Week 18: Gateway, CoWIN UI & A11y      :w18, 86, 90
 ```
 
 ---
@@ -262,7 +267,61 @@ gantt
 
 ---
 
-## 7. Chronology of Architectural Pivots & Strategic Scope Additions
+## 7. Phase 5: Extended Enterprise, Family Health Proxy & National Public Digital Infrastructure (Days 81–90) [PLANNED]
+*Target Milestone Release:* **`v1.1.0`**
+
+Following Phase 4 cloud deployment and production hardening, Phase 5 scales NIRMAYA into an inclusive, sovereign National Public Digital Infrastructure (DPI) compliant with the Digital Personal Data Protection (DPDP) Act 2023 (Section 9: Processing of personal data of children and persons with disabilities) and tailored for real-world Indian demographic accessibility:
+
+### Week 17: Dependent & Family Health Proxy Access, Child-ABHA & Pediatric/Geriatric Management (Days 81–85)
+*Target Milestone Release:* **`v1.1.0-alpha.w17`**
+- **Day 81 (Milestone 17-01):** Dependent & Family Proxy Schema, Zero-Contamination Architecture & Relationship Authority Validation:
+  - Database schema models: `PatientProxyRelationship`, `ProxyAuditLog`, and `RelationshipVerificationArtefact`.
+  - Zero Record Contamination: Minor children and elderly dependents possess distinct `PatientProfile` records linked via HL7 FHIR `RelatedPerson` and ABDM proxy metadata; clinical observations, allergies, and prescriptions are never mixed into parent vaults.
+  - Relationship verification authority: Guardian Aadhaar e-KYC, DigiLocker verified birth certificates, or self-attested low-tier access.
+- **Day 82 (Milestone 17-02):** Child-ABHA Minting Pipeline, Parent/Guardian Aadhaar e-KYC Verification & Verhoeff Validation:
+  - Direct Child-ABHA issuance API (`POST /api/v1/abdm/m1/child-abha/mint`) linked to authenticated guardian Aadhaar token.
+  - Mathematical 14-digit ABHA minting with Verhoeff $D_5$ check digit and guardian cryptographic co-signature.
+  - Automatic relationship association and linked profile generation.
+- **Day 83 (Milestone 17-03):** Dual-Authorization ABDM Consent Delegation & Granular Revocation Engine:
+  - Time-bound, category-specific proxy consent delegation (OPD visits, prescriptions, diagnostics).
+  - Strict DPDP Act Section 9 compliance: Prohibition of behavioral tracking or targeted marketing for minors.
+  - Automatic Age-of-Majority State Machine: Automatic revocation of parental proxy control upon the dependent attaining 18 years of age, converting the profile into a sovereign adult account.
+- **Day 84 (Milestone 17-04):** Pediatric Growth Curves (WHO / IAP z-score percentiles) & Geriatric Multimorbidity Vault:
+  - WHO and Indian Academy of Pediatrics (IAP) height/weight/head circumference z-score percentile calculators.
+  - Immunization schedule tracker (Universal Immunization Programme - UIP) with automated vaccine due-date calculation.
+  - Geriatric multimorbidity Polypharmacy safety alerts and caregiver assistance permissions.
+- **Day 85 (Milestone 17-05):** Cal.com Family Health Vault Switcher & Week 17 Integration Audit:
+  - Frontend `FamilyAccountSwitcherModal.tsx` adhering to Cal.com monochrome design tokens.
+  - Visual patient switcher pill in portal header showing active profile avatar, ABHA handle, and relationship badge (`Son (Minor)`, `Mother (Senior)`).
+  - End-to-end integration test suite `test_family_proxy_access.py` and milestone release tagging `v1.1.0-alpha.w17`.
+
+### Week 18: Universal National Health Gateway, CoWIN/DigiLocker 3-Tile Citizen Portal, Express Doctor OPD & DPI Accessibility Suite (Days 86–90)
+*Target Milestone Release:* **`v1.1.0`**
+- **Day 86 (Milestone 18-01):** Universal High-Density National Health Gateway & Multi-Channel Authentication:
+  - Unified multi-modal citizen gateway (`/login`): 1-click Aadhaar OTP, DigiLocker e-KYC, ABHA Mobile Login, and Offline Emergency Mode.
+  - High-volume rate-limiting shield (50,000 requests/sec capacity) and automated distributed session management.
+- **Day 87 (Milestone 18-02):** Strict CoWIN/DigiLocker 3-Tile Citizen Portal (`/patient`):
+  - Elimination of clinical information overload and dense scatter charts in favor of a universal 3-Tile citizen layout:
+    - **Tile 1: My Health ID (ABHA Card)** - 14-digit ABHA display, `@abdm` handle, and full-screen QR scan modal for instant hospital OPD counter check-in.
+    - **Tile 2: Active Medicines (Daily Schedule)** - Plain language medicine schedule with morning, afternoon, and night badges, dosage counts, and refill timers.
+    - **Tile 3: Doctor Visits & Reports (Health Vault)** - Chronological list of consultations and diagnostic tests with 1-click signed PDF download.
+- **Day 88 (Milestone 18-03):** Express 45-Second Doctor Consultation Mode:
+  - Dual-mode clinician workspace: One-click toggle between "Comprehensive Specialist EMR" and "Express 45-Second OPD".
+  - High-throughput government OPD optimization: Instant patient queue call-in, prominent red allergy banner, 1-click common diagnosis templates, rapid prescription autocomplete, and 1-click cryptographic signing.
+- **Day 89 (Milestone 18-04):** Indian DPI Accessibility Suite, Bilingual Hindi/English Switcher & Visual Control Strip:
+  - Full expansion of pre-implemented `AccessibilityContext.tsx` and `AccessibilityBar.tsx`:
+    - Pre-implemented foundations: Font scaling (`normal`, `large`, `xl`), high-contrast mode toggle, screen-reader skip links, and medical jargon simplifier are already functioning in `AccessibilityContext.tsx`, `AccessibilityBar.tsx`, and `globals.css`.
+    - Dynamic bilingual localization (Hindi `अ` / English `A`) across all citizen portal tiles, forms, and emergency banners.
+    - Indian National Health Portal design standard: High-contrast Indian Tricolor header bar and official typography.
+    - High-visibility accessibility presets: Large font scaling (112.5% and 125%), high-contrast yellow-on-black mode, and screen-reader skip links.
+- **Day 90 (Milestone 18-05):** Master Production Certification, 90-Day Engineering Monograph & Release `v1.1.0`:
+  - Full regression test execution across all 18 weeks of development.
+  - Verification of HL7 FHIR R4, ABDM Gateway v0.5 M1/M2/M3, OWASP ASVS Level 2, and DPDP Act 2023 compliance.
+  - Publication of finalized 90-Day Engineering Monograph and Master Production Release `v1.1.0`.
+
+---
+
+## 8. Chronology of Architectural Pivots & Strategic Scope Additions
 
 During active implementation, several critical architectural enhancements and scope expansions were introduced to ensure clinical safety, regulatory compliance, and bulletproof user experience:
 
@@ -272,6 +331,7 @@ During active implementation, several critical architectural enhancements and sc
 | **Vercel Monorepo Build Isolation** | Week 2 | Solved Next.js 15 / Turborepo parent path build failure on Vercel by isolating package configurations and establishing standalone export structures. |
 | **ACID Slot Locking with Redis Hold** | Week 4 | Implemented row-level locking (`SELECT FOR UPDATE`) on Doctor Slots combined with 10-minute temporary Redis key reservations to prevent concurrent double-booking. |
 | **Drug-Drug Interaction (DDI) Rule Engine** | Week 6 | Added Clinical Decision Support (CDS) cross-checking RxNorm and WHO-ATC codes to warn prescribers of fatal contraindications before committing prescriptions. |
+| **Pre-Implemented Accessible Text Sizing & High Contrast** | Week 7 | Built foundational accessibility framework in `frontend/src/context/AccessibilityContext.tsx`, `AccessibilityBar.tsx`, and `globals.css` with client-side text scaling (`A / A+ / A++`), high contrast mode, screen-reader skip links, and medical jargon helpers, ready to be expanded in Phase 5 Day 89. |
 | **Verhoeff Check Digit & RSA Encryption** | Week 9 | Implemented dihedral group $D_5$ Verhoeff algorithm for Aadhaar validation and RSA-2048 OAEP encryption with SHA-256 for secure demographic payload transit. |
 | **Unified Passwordless Gateway (Day 46 Extension)** | Week 10 (Day 46) | **Added 1 extra strategic day** to build a unified passwordless patient gateway supporting DigiLocker and Aadhaar OTP with 30-day extended JWT sessions, auto-ABHA minting, and mismatched SIM fallbacks. |
 | **Ambiguity Protection Filter (ABDM Error 1441)** | Week 10 (Day 48) | Added strict safety guardrail: if patient discovery finds $\ge 2$ patients with close fuzzy match scores, system rejects matching to prevent leaking clinical records to the wrong patient. |
@@ -279,10 +339,12 @@ During active implementation, several critical architectural enhancements and sc
 | **Automated M2 Audit Report Engine** | Week 10 (Day 50) | Built a live diagnostic engine (`GET /api/v1/abdm/m2/bridge/audit`) computing real-time discovery accuracy, callback latency, and linkage security scores. |
 | **Federated Database, Edge Network & Solo Doctor PWA** | Week 11 (Day 51) | Formulated 3-tier multi-tenancy spectrum: On-premise Edge Node for hospitals + Turnkey Docker Appliance for clinics + Local-First Encrypted SQLite PWA with Append-Only Event Log sync for solo doctors without servers. Integrated 2-tier data storage (95% on-demand pull + 5% Zero-Knowledge Break-The-Glass Emergency Vault) and Dual-Registration ABDM Bridge ensuring 100% DPDP Act compliance with instant 2-minute onboarding. |
 | **6-Tier Indian LGD Administrative Governance Hierarchy** | Week 11 (Day 51) | Designed sovereign Indian administrative chain of command (Sub-District -> District CMO -> Division -> State Secretary -> National SuperAdmin) utilizing PostgreSQL `ltree` indexing with official Ministry LGD codes, Chain-of-Command delegation with Aadhaar MFA, and Dual-Plane privacy air-gapping administrative oversight from private clinical records. |
+| **Dependent & Family Health Proxy Access (DPDP Act Sec 9)** | Phase 5 (Week 17, Days 81–85) | Extended roadmap to engineer zero-contamination proxy access for minor children and senior parents, direct Child-ABHA issuance linked to parent e-KYC, dual-authorization consent delegation, and automatic age-of-majority conversion at 18. |
+| **Universal Public Digital Infrastructure (DPI) & CoWIN/DigiLocker 3-Tile Simplification** | Phase 5 (Week 18, Days 86–90) | Redesigned citizen UI into a strict 3-tile accessible interface (Health ID, Active Medicines, Doctor Visits) inspired by CoWIN and DigiLocker to eliminate cognitive overload for all Indian citizens, paired with an Express 45-second Doctor OPD consultation mode for high-volume clinics. |
 
 ---
 
-## 8. Codebase Health, Verification Suite & Current Status
+## 9. Codebase Health, Verification Suite & Current Status
 
 As of **Day 67 (Phase 4 Active / Week 14 Active / ASVS Level 2 & DoS Shield Active)**:
 - **Backend Test Suite:** **518 / 518 tests passing (100% green in 57.42s)** across 31 test suites
