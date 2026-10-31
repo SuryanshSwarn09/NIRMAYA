@@ -2123,6 +2123,44 @@
   - Full Cumulative Backend Test Suite: **556/556 tests passing (100% green in 92.69s)** across all 34 test suites.
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
 
+### Week 15: Dual-Mode Edge Appliance, Docker Containerization & Cloud CI/CD
+
+#### Day 71 (Mon) - Milestone 15-01: Multi-Stage Minimal Alpine Dockerfile Builds for FastAPI Backend & Non-Root Security Context
+- **Focus:** Production Multi-Stage Minimal Alpine Dockerfile, CIS Docker Benchmark 4.1 Non-Root User Execution (`nirmaya:nirmaya` UID 10001), Minimal Image Footprint (< 120MB), Native OCI Health Probes (`/api/v1/health`), Container Lifecycle Entrypoint Script with Automated Alembic Migrations (`alembic upgrade head`), Context Boundary Exclusions (`.dockerignore`), Container Runtime Telemetry & Environment Conformance Service, REST API Endpoints (`/api/v1/admin/container/*`), Cal.com `ContainerRuntimeCard.tsx` Frontend Component, and Dedicated Test Suite (`tests/test_container_runtime.py`).
+- **Executed Micro-Commits (Strict 7-Commit Pacing):**
+  1. `12fb3a7: feat(schemas): define container runtime, environment conformance, and deployment manifest schemas`
+  2. `1dcb447: feat(docker): implement multi-stage production Dockerfile and entrypoint script for backend`
+  3. `8d39e4c: feat(services): implement container runtime service and environment conformance validator`
+  4. `ab61536: feat(security): enforce non-root security context and container isolation policies`
+  5. `38c614f: feat(api): expose container runtime telemetry and environment validation rest endpoints`
+  6. `beb689f: feat(frontend): implement ContainerRuntimeCard with calcom design tokens`
+  7. `PENDING: test(deploy): author container runtime test suite, publish day-71 log, and update documentation`
+- **Key Deliverables:**
+  - **Container Schemas (`backend/app/schemas/container_runtime.py`):**
+    - Modeled `ContainerExecutionMode` (`containerized`, `standalone_host`), `SecurityComplianceLevel`, `ContainerRuntimeStatus`, `ContainerSecurityAudit`, `EnvironmentVariableCheck`, `EnvironmentConformanceReport`, `DockerStageManifest`, and `DockerImageManifest`.
+  - **Multi-Stage Production Dockerfile (`backend/Dockerfile`):**
+    - 2-stage build: `builder` compiles C-extensions in `/opt/venv`; `runtime` provides a stripped, unprivileged runner with non-root UID 10001 and zero build tools.
+    - Native OCI healthcheck probing `/api/v1/health` with 30s interval, 5s timeout, and 3 retries.
+  - **Container Entrypoint Script (`backend/docker-entrypoint.sh`):**
+    - Executable POSIX shell script executing database migrations (`alembic upgrade head`) before server launch, signal forwarding, and parameterized worker concurrency.
+  - **Build Context Exclusions (`backend/.dockerignore` & `.dockerignore`):**
+    - Excluded `.venv`, `__pycache__`, `.pytest_cache`, `.git`, databases, and logs.
+  - **Container Runtime Service (`backend/app/services/container_service.py`):**
+    - Real-time cgroup memory detection, process UID/GID inspection, CIS Docker Benchmark scoring, and production environment variable conformance analysis with credential masking.
+  - **Container Security Guard (`backend/app/core/container_security.py`):**
+    - CIS Benchmark 4.1 enforcement, root-privilege detection, and container security response headers (`X-Container-Runtime`, `X-Process-UID`, `X-Security-Standard`).
+  - **Container REST API (`backend/app/api/v1/endpoints/container.py`):**
+    - Mounted under `/api/v1/admin/container`: runtime status, security audit, build manifest, and environment validation.
+  - **Cal.com Design System Frontend Dashboard (`frontend/src/components/clinical/ContainerRuntimeCard.tsx`):**
+    - Built KPI header (Execution Mode, Process UID 10001, Health Probes, Env Conformance), Multi-Stage Architecture visualizer, Environment Conformance checklist, and Dockerfile viewer.
+    - Mounted in `/doctor` clinical portal with clean Next.js 15 compilation.
+  - **Dedicated Test Suite (`backend/tests/test_container_runtime.py`):**
+    - 14 comprehensive unit, integration, and security tests verifying multi-stage Dockerfile syntax, non-root user configuration, HEALTHCHECK presence, `.dockerignore` completeness, entrypoint script execution, container service runtime status, security audits, environment conformance, REST endpoints, and security headers.
+- **Verification:**
+  - Dedicated Container Runtime Suite: **14/14 tests passing in `tests/test_container_runtime.py` (100% green in 0.72s)**.
+  - Full Cumulative Backend Test Suite: **570/570 tests passing (100% green)** across all 35 test suites.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
 ---
 *(Entries will be appended daily in sequential order across the 95-day roadmap)*
 

@@ -106,6 +106,7 @@
     * [Day 69: Chain-of-Command Administrative Provisioning & Scoped TRBAC](journey/month-4/day-69.md)
     * [Day 70: District & State Public Health Command Center](journey/month-4/day-70.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
+    * [Day 71: Multi-Stage Alpine Dockerfile & Non-Root Context](journey/month-4/day-71.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
 
 ## Audits & Retrospectives

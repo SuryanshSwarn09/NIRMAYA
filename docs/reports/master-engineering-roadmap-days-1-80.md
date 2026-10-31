@@ -7,7 +7,7 @@
 **Repository:** `https://github.com/SuryanshSwarn09/NIRMAYA`  
 **Pacing:** 4.75 Months / 19 Weeks / 95 Development Days  
 **Current Status:** Day 68 Completed (Week 14 Active / Phase 4 Active / Release `v0.3.0` Baseline / 531 Tests Passing)  
-**Next Horizon:** Day 71 (Month 4, Week 15 / Dual-Mode Edge Node Appliance, Docker Containerization & Cloud Deployment)  
+**Next Horizon:** Day 72 (Month 4, Week 15 / Next.js 15 Standalone Dockerfile & Asset Caching)  
 **Extended Horizon:** Phase 5 (Weeks 17–18, Days 81–90 / Family Health Proxy, Child-ABHA & National Public Digital Infrastructure)  
 **Capstone Publication Horizon:** Phase 6 (Week 19, Days 91–95 / IEEE Research Paper Manuscript & Empirical Comparative Benchmarking)  
 **Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3) & DPDP Act 2023  
@@ -256,7 +256,7 @@ gantt
 - **Day 70 (Milestone 14-05) [COMPLETED]:** District & State Public Health Command Center, Territorial Disease Outbreak Heatmap, Critical Care ICU Bed Telemetry & Week 14 Review: Recursive public health aggregation across sovereign LGD subtrees; IDSP outbreak cluster tracking with 7-day growth trajectory % and reproduction rate $R_t$; hospital ICU bed and oxygen census with automated admission diversion triggers (> 85%); clinical specialist duty roster telemetry; public health emergency directive dispatch; sub-2ms Scoped TRBAC boundary enforcement (< 0.01ms); Cal.com `TerritorialCommandCenterCard` dashboard; dedicated test suite `test_public_health_command_center.py`; 556/556 passing tests (100% green).
 
 ### Week 15: Dual-Mode Edge Appliance, Docker Containerization & Cloud CI/CD (Days 71–75)
-- **Day 71:** Multi-stage minimal Alpine Dockerfile builds for FastAPI backend with non-root security context.
+- **Day 71 (Milestone 15-01) [COMPLETED]:** Production Multi-Stage Minimal Alpine Dockerfile Builds for FastAPI Backend & Non-Root Security Context: 2-stage build (builder compiling wheels in /opt/venv, runtime stripped runner); CIS Docker Benchmark 4.1 non-root unprivileged execution (user nirmaya UID 10001); image footprint target < 120MB; native OCI healthcheck probing /api/v1/health; container entrypoint script with automated Alembic migrations and signal forwarding; container runtime telemetry service and environment conformance validation; Cal.com ContainerRuntimeCard dashboard; 570/570 passing tests.
 - **Day 72:** Next.js 15 standalone output optimization; minimal Docker containerization with production asset caching.
 - **Day 73:** Production Docker Compose orchestration topology: FastAPI, Next.js, PostgreSQL 16, Redis 7, and Caddy reverse proxy with automated Let's Encrypt TLS 1.3.
 - **Day 74:** Dual-Mode Edge Node Appliance packaging (`docker-compose.edge.yml`) and Local-First Encrypted SQLite PWA client sync engine (Append-Only Clinical Event Log) for solo practitioners without servers.
@@ -391,8 +391,8 @@ During active implementation, several critical architectural enhancements and sc
 
 ## 10. Codebase Health, Verification Suite & Current Status
 
-As of **Day 70 (Phase 4 Active / Week 14 Completed / Public Health Command Center Active)**:
-- **Backend Test Suite:** **556 / 556 tests passing (100% green in 92.69s)** across 34 test suites
+As of **Day 71 (Phase 4 Active / Week 15 Active / Container Runtime Telemetry Active)**:
+- **Backend Test Suite:** **570 / 570 tests passing (100% green in 90.69s)** across 35 test suites
 - **Real-Time WebSockets, Queue, BTG Vault & Audit:** 55 dedicated tests passing across JWT handshake authentication, dual-mode Pub/Sub adapter, OPD queue stream, critical lab panic thresholds, clinician acknowledgement, Argon2id KDF, AES-256-GCM AEAD vault, SHA-256 hash-chaining, Merkle verification, carrier SMS dispatch, and concurrency stress testing
 - **Security, ASVS, Fuzzing & DB Pool Suites:** 25 dedicated tests passing across AST security inspection, dependency CVSS vulnerability evaluation, tenant context RLS injection, OWASP ASVS compliance, SQLi/XSS defensive fuzzing, and DoS IP jail management
 - **Administrative Hierarchy, Delegation & Scoped TRBAC Suites:** 25 dedicated tests passing across sovereign 6-tier LGD indexing, sub-2ms tree traversal, downward authority delegation, `@gov.in` domain verification, Aadhaar Verhoeff checksums, and SHA-256 audit chaining
@@ -401,5 +401,5 @@ As of **Day 70 (Phase 4 Active / Week 14 Completed / Public Health Command Cente
 - **Frontend Typecheck & Build:** Clean compilation with 0 TypeScript errors and 13/13 static routes rendered cleanly in Next.js 15.5.25
 - **Active Release Tag:** **`v0.4.0`** (Week 14 Milestone Completed)
 - **Git Repository Branch:** `main` (synchronized with `origin/main`)
-- **Next Operational Milestone:** **Day 71 (Milestone 15-01: Multi-Stage Minimal Alpine Dockerfile Builds for FastAPI Backend)**
+- **Next Operational Milestone:** **Day 72 (Milestone 15-02: Next.js 15 Standalone Dockerfile & Asset Caching)**
 
