@@ -98,6 +98,7 @@
     * [Day 62: Live Clinician Consultation Queue Synchronization](journey/month-4/day-62.md)
     * [Day 63: Real-Time Critical Clinical Notifications & Lab Alerts](journey/month-4/day-63.md)
     * [Day 64: Zero-Knowledge Break-The-Glass Emergency Vault & Argon2id Keys](journey/month-4/day-64.md)
+    * [Day 65: Cryptographic Audit Hash-Chaining, Emergency Contact Dispatch & High-Concurrency Benchmark](journey/month-4/day-65.md)
   * [Week 14: Security Hardening & Penetration Testing](journey/month-4/week-14.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
@@ -120,6 +121,7 @@
 * [Week 10 Retrospective & ABDM Milestone 2 Architecture](journey/month-3/week-10-review.md)
 * [Week 11 Retrospective & ABDM Milestone 3 Audit](journey/month-3/week-11-review.md)
 * [Week 12 Retrospective & Interoperability Gateway Audit](journey/month-3/week-12-review.md)
+* [Week 13 Retrospective & Real-Time Infrastructure Audit](journey/month-4/week-13-review.md)
 * [Month 3 Comprehensive Retrospective & Interoperability Gateway](journey/month-3/month-3-retrospective.md)
 * [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
