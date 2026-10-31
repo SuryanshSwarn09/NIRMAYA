@@ -519,6 +519,20 @@ from app.schemas.abdm_certification import (
     VectorCatalogItem,
     VectorCatalogResponse,
 )
+from app.schemas.administrative_hierarchy import (
+    AdminLevelEnum,
+    GovtDesignationEnum,
+    AdministrativeUnitBase,
+    AdministrativeUnitCreate,
+    AdministrativeUnitUpdate,
+    AdministrativeUnitResponse,
+    AdministrativeOfficerBase,
+    AdministrativeOfficerCreate,
+    AdministrativeOfficerResponse,
+    TerritorialTreeNode,
+    TerritorialHierarchyFilter,
+    TerritorialSummaryMetrics,
+)
 
 
 
