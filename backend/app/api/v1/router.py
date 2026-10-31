@@ -30,6 +30,7 @@ from app.api.v1.endpoints import (
     terminology_validator,
     websockets,
     opd_queue,
+    clinical_alerts,
 )
 
 api_router = APIRouter()
@@ -52,6 +53,7 @@ api_router.include_router(fhir_validator.router, prefix="/fhir", tags=["FHIR R4 
 api_router.include_router(terminology_validator.router, prefix="/fhir/ontology", tags=["FHIR R4 Medical Ontology & Terminology Binding"])
 api_router.include_router(websockets.router, prefix="/websockets", tags=["WebSockets & Real-Time Event Bus"])
 api_router.include_router(opd_queue.router, prefix="/queue", tags=["OPD Consultation Queue & Live Sync"])
+api_router.include_router(clinical_alerts.router, prefix="/alerts", tags=["Clinical Alerts & Lab Panic Values"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
 api_router.include_router(patients.router, prefix="/patients", tags=["Patient Vault"])
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])
