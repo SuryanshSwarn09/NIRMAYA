@@ -22,7 +22,9 @@ import {
   ArrowRight,
   Sparkles,
   ExternalLink,
-  Bell
+  Bell,
+  ShieldAlert,
+  Unlock
 } from "lucide-react";
 import { DoctorSlotManager } from "@/components/appointments";
 import { 
@@ -42,7 +44,8 @@ import {
   AbdmGatewayStatusCard,
   HprOnboardingCard,
   HipBridgeConsoleCard,
-  ClinicalAlertToastSystem
+  ClinicalAlertToastSystem,
+  BreakTheGlassModal
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -209,6 +212,7 @@ export default function DoctorEMRPage() {
   const [noteAttestationSuccess, setNoteAttestationSuccess] = useState<string | null>(null);
   const [prescriptionSuccess, setPrescriptionSuccess] = useState<string | null>(null);
   const [isAlertsDrawerOpen, setIsAlertsDrawerOpen] = useState(false);
+  const [isBtgModalOpen, setIsBtgModalOpen] = useState(false);
 
   const {
     alerts,
@@ -344,6 +348,24 @@ export default function DoctorEMRPage() {
         onViewFullRecord={() => setActiveTab("problems")}
         onLaunchTelemedicine={isTelemed ? () => handleLaunchTelemedicine() : undefined}
       />
+
+      {/* Break-The-Glass Emergency Action Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-red-50/70 border border-red-200 px-4 py-2.5 rounded-lg text-xs">
+        <div className="flex items-center gap-2">
+          <ShieldAlert className="w-4 h-4 text-red-600 shrink-0" />
+          <span className="text-red-900 font-medium">
+            Emergency Trauma Protocol: Patient unconscious or incapacitated? Access Zero-Knowledge Emergency Vault.
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsBtgModalOpen(true)}
+          className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded text-xs transition-colors flex items-center gap-1.5 shrink-0 self-start sm:self-auto shadow-xs"
+        >
+          <Unlock className="w-3.5 h-3.5" />
+          Break-The-Glass (BTG) Override
+        </button>
+      </div>
 
       {/* 3. Clinical Quick Action Rail (Cal.com Tabs) */}
       <ClinicalQuickActionRail
@@ -760,6 +782,18 @@ export default function DoctorEMRPage() {
         onCloseDrawer={() => setIsAlertsDrawerOpen(false)}
         onAcknowledge={acknowledgeAlert}
         onDismissPanic={dismissPanicAlert}
+      />
+
+      {/* 7. Break-The-Glass (BTG) Emergency Access Modal */}
+      <BreakTheGlassModal
+        isOpen={isBtgModalOpen}
+        onClose={() => setIsBtgModalOpen(false)}
+        patientName={activePatient.name}
+        patientAbha={activePatient.abhaNumber || "91-8472-1092-4821"}
+        doctorId={doctorId}
+        doctorHpr="ananya.sharma@hpr.abdm"
+        doctorName={doctorName}
+        facilityId="fac-aiims-delhi"
       />
 
     </div>

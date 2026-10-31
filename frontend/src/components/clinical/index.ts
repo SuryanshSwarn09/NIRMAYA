@@ -37,3 +37,4 @@ export { HipBridgeConsoleCard, type HipBridgeStatus, type WebhookEventItem, type
 export { PatientDiscoverySimulatorModal, type SimulationResult, type MatchScoreBreakdown, type CareContextItem } from "./PatientDiscoverySimulatorModal";
 export { CareContextLinkageModal, type CareContextLinkageModalProps } from "./CareContextLinkageModal";
 export { ClinicalAlertToastSystem } from "./ClinicalAlertToastSystem";
+export { BreakTheGlassModal, type BreakTheGlassModalProps, type EmergencyProfile } from "./BreakTheGlassModal";

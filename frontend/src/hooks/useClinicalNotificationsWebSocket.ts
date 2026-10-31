@@ -278,3 +278,4 @@ export function useClinicalNotificationsWebSocket({
     refetchAlerts: fetchAlerts,
   };
 }
+
