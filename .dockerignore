@@ -1,0 +1,34 @@
+# Git version control
+.git/
+.gitignore
+.gitattributes
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Node / Frontend build artifacts
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Python virtual environments & bytecode
+backend/.venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Test and documentation cache
+.pytest_cache/
+.coverage
+htmlcov/
+.gemini/
+.agent/
+.agents/
+
+# Documentation source and PDFs
+docs/
+*.pdf
+*.docx

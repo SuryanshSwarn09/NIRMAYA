@@ -1,0 +1,35 @@
+# Build cache and virtual environments
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test artifacts and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Local database and secret files
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+!.env.example
+
+# IDE, editor and system artifacts
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs and scratch directories
+logs/
+*.log
+scratch/
+tmp/
