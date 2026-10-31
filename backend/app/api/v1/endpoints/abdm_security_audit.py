@@ -83,3 +83,4 @@ def get_penetration_vector_catalog() -> SecurityVectorsResponse:
         vectors=catalog,
         count=len(catalog),
     )
+

@@ -8,6 +8,7 @@ ABDM Gateway v0.5 specifications across:
 """
 
 from datetime import datetime, timezone, timedelta
+import base64
 import hashlib
 import logging
 import re
@@ -764,8 +765,10 @@ class AbdmSandboxCertificationService:
             iv=iv,
         )
 
-        # Tamper 1 character in ciphertext
-        tampered_ciphertext = ("A" if ciphertext[10] != "A" else "B") + ciphertext[1:]
+        # Flips exactly 1 bit in the raw ciphertext bytes
+        raw_cipher_bytes = bytearray(base64.b64decode(ciphertext))
+        raw_cipher_bytes[5] ^= 0x01
+        tampered_ciphertext = base64.b64encode(raw_cipher_bytes).decode("utf-8")
         tamper_caught = False
         try:
             AbdmTransferService.decrypt_payload(

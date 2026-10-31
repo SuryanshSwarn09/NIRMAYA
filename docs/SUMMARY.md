@@ -91,6 +91,7 @@
     * [Day 57: Medical Ontology Binding Audit & Terminology Validator Engine](journey/month-3/day-57.md)
     * [Day 58: ABDM Official Sandbox E2E Certification & Regression Test Harness](journey/month-3/day-58.md)
     * [Day 59: Consent Revocation, Expired Consent & Security Penetration Testing Engine](journey/month-3/day-59.md)
+    * [Day 60: Month 3 Retrospective, Documentation Finalization & Milestone Release v0.3.0](journey/month-3/day-60.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
   * [Week 13: WebSockets & Distributed Audit Logging](journey/month-4/week-13.md)
   * [Week 14: Security Hardening & Penetration Testing](journey/month-4/week-14.md)
@@ -114,6 +115,8 @@
 * [Week 9 Retrospective & ABDM Milestone 1 Architecture](journey/month-3/week-9-review.md)
 * [Week 10 Retrospective & ABDM Milestone 2 Architecture](journey/month-3/week-10-review.md)
 * [Week 11 Retrospective & ABDM Milestone 3 Audit](journey/month-3/week-11-review.md)
+* [Week 12 Retrospective & Interoperability Gateway Audit](journey/month-3/week-12-review.md)
+* [Month 3 Comprehensive Retrospective & Interoperability Gateway](journey/month-3/month-3-retrospective.md)
 * [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
 ## Fundamental FAQ

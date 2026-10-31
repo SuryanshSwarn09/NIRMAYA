@@ -145,3 +145,4 @@ class SecurityVectorsResponse(BaseModel):
     count: int = Field(description="Total registered vectors")
 
     model_config = ConfigDict(from_attributes=True)
+

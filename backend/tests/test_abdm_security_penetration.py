@@ -217,3 +217,4 @@ class TestAbdmSecurityPenetrationAPI:
         assert "SEC-03" in vec_ids
         assert "SEC-10" in vec_ids
         assert "SEC-12" in vec_ids
+
