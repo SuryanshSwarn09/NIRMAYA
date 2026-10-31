@@ -28,6 +28,7 @@ from app.api.v1.endpoints import (
     abdm_security_audit,
     fhir_validator,
     terminology_validator,
+    websockets,
 )
 
 api_router = APIRouter()
@@ -48,6 +49,7 @@ api_router.include_router(abdm_certification.router, prefix="/abdm/certification
 api_router.include_router(abdm_security_audit.router, prefix="/abdm/security", tags=["ABDM Security Penetration & Consent Hardening"])
 api_router.include_router(fhir_validator.router, prefix="/fhir", tags=["FHIR R4 Bundle Validation & NRCES Profiles"])
 api_router.include_router(terminology_validator.router, prefix="/fhir/ontology", tags=["FHIR R4 Medical Ontology & Terminology Binding"])
+api_router.include_router(websockets.router, prefix="/websockets", tags=["WebSockets & Real-Time Event Bus"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
 api_router.include_router(patients.router, prefix="/patients", tags=["Patient Vault"])
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])

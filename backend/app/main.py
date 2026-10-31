@@ -15,15 +15,18 @@ from app.core.middleware import (
 from app.core.rate_limit import RateLimitingMiddleware
 from app.core.exceptions import register_exception_handlers
 from app.api.v1.router import api_router
+from app.services.websocket_manager import ws_manager
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Manage application lifecycle events (startup initialization and shutdown cleanup)."""
-    # Startup: Record system initialization timestamp
+    # Startup: Record system initialization timestamp and start real-time message bus
     app.state.start_time = time.time()
+    await ws_manager.initialize()
     yield
-    # Shutdown: Cleanly release active connection pools and background tasks
+    # Shutdown: Cleanly release active WebSocket connections and message bus adapter
+    await ws_manager.shutdown()
 
 
 app = FastAPI(
@@ -66,11 +69,14 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 # 6. Include ABDM Gateway /v0.5 Webhook Root Route
-from app.api.v1.endpoints import abdm_m2_bridge, abdm_m3_consent, abdm_m3_crypto, abdm_m3_transfer
+from app.api.v1.endpoints import abdm_m2_bridge, abdm_m3_consent, abdm_m3_crypto, abdm_m3_transfer, websockets
 app.include_router(abdm_m2_bridge.router, prefix="/v0.5", tags=["ABDM Gateway Webhooks (/v0.5)"])
 app.include_router(abdm_m3_consent.router, prefix="/v0.5", tags=["ABDM Gateway Webhooks (/v0.5)"])
 app.include_router(abdm_m3_crypto.gateway_router, prefix="/v0.5", tags=["ABDM Gateway Webhooks (/v0.5)"])
 app.include_router(abdm_m3_transfer.gateway_router, prefix="/v0.5", tags=["ABDM Gateway Webhooks (/v0.5)"])
+
+# 7. Include WebSocket Stream Routes at /ws root
+app.include_router(websockets.router, prefix="/ws", tags=["WebSockets Stream Gateway (/ws)"])
 
 
 
