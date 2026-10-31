@@ -37,7 +37,7 @@ def is_territorial_access_allowed(officer_scope_path: str, target_resource_path:
 class TerritorialSecurityScope:
     """FastAPI dependency interceptor validating client territorial authority."""
 
-    def __init__(self, target_path_param_name: str = "path") -> None:
+    def __init__(self, target_path_param_name: str = "jurisdiction_path") -> None:
         self.target_path_param_name = target_path_param_name
 
     async def __call__(
@@ -46,16 +46,19 @@ class TerritorialSecurityScope:
             None,
             description="Assigned ltree territorial path of the inspecting officer (e.g. 'india.27.492')",
         ),
-        target_path: Optional[str] = Query(
+        path: Optional[str] = Query(
             None,
-            alias="path",
             description="Target administrative or facility path",
+        ),
+        jurisdiction_path: Optional[str] = Query(
+            None,
+            description="Target territorial jurisdiction path",
         ),
     ) -> str:
         """Validate territorial authority, raising HTTP 403 on lateral or upward boundary violations."""
         # Fallback to national root if not explicitly scoped (e.g. public health portal read)
         officer_path = x_officer_jurisdiction or "india"
-        req_target = target_path or "india"
+        req_target = jurisdiction_path or path or "india"
 
         validation = delegation_service.validate_territorial_scope(
             TerritorialScopeValidationRequest(
@@ -74,6 +77,11 @@ class TerritorialSecurityScope:
         return officer_path
 
 
-def require_territory(param_name: str = "path") -> Callable:
+def require_territory(param_name: str = "jurisdiction_path") -> Callable:
     """Factory creating route dependency enforcing territorial scope."""
     return TerritorialSecurityScope(target_path_param_name=param_name)
+
+
+def verify_command_center_access(officer_scope: str, target_jurisdiction: str) -> bool:
+    """Validate that inspecting officer's scope covers the requested command center jurisdiction."""
+    return is_territorial_access_allowed(officer_scope, target_jurisdiction)
