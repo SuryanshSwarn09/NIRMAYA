@@ -37,6 +37,7 @@ from app.api.v1.endpoints import (
     asvs_audit,
     administrative_hierarchy,
     delegation,
+    command_center,
 )
 
 api_router = APIRouter()
@@ -77,6 +78,7 @@ api_router.include_router(medication_requests.router, prefix="", tags=["Electron
 api_router.include_router(medication_dispenses.router, prefix="", tags=["Pharmacy Dispense & Fulfillment"])
 api_router.include_router(administrative_hierarchy.router, prefix="/admin", tags=["Indian LGD Administrative Governance & Hierarchy"])
 api_router.include_router(delegation.router, prefix="/admin", tags=["Administrative Chain of Command & Delegations"])
+api_router.include_router(command_center.router, prefix="/admin/command-center", tags=["Public Health Command Center & Disease Surveillance"])
 
 
 
