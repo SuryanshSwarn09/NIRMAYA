@@ -2,7 +2,7 @@
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import Field, computed_field
-from typing import List, Literal
+from typing import List, Literal, Optional
 from datetime import datetime, timezone
 
 
@@ -138,6 +138,32 @@ class Settings(BaseSettings):
     RATE_LIMIT_API_PER_MINUTE: int = 60
     RATE_LIMIT_BURST_CAPACITY: int = 20
     SECURITY_HSTS_SECONDS: int = 31536000  # 1 year
+
+    # Redis & Distributed WebSockets Configuration
+    REDIS_URL: Optional[str] = Field(
+        default="redis://localhost:6379/0",
+        description="Redis connection URL for distributed Pub/Sub broadcast bus",
+    )
+    REDIS_ENABLED: bool = Field(
+        default=False,
+        description="Whether to use real Redis server (True) or in-memory broadcast bus (False)",
+    )
+    WS_HEARTBEAT_INTERVAL_SECONDS: int = Field(
+        default=30,
+        description="Heartbeat ping interval for active WebSocket connections",
+    )
+    WS_HEARTBEAT_TIMEOUT_SECONDS: int = Field(
+        default=60,
+        description="Timeout seconds before dropping inactive WebSocket connections",
+    )
+    WS_MAX_MESSAGE_BYTES: int = Field(
+        default=65536,
+        description="Maximum message payload bytes permitted over WebSockets",
+    )
+    WS_TOKEN_PARAM: str = Field(
+        default="token",
+        description="Query parameter name containing client JWT auth token",
+    )
 
     model_config = SettingsConfigDict(
         case_sensitive=True,
