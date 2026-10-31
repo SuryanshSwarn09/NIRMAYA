@@ -2028,7 +2028,64 @@
   4. `98e08ea: feat(services): implement administrative hierarchy service and national lgd seeder`
   5. `79bc310: feat(api): expose lgd administrative units and territorial hierarchy rest endpoints`
   6. `bdc32e6: feat(frontend): implement AdministrativeHierarchyViewerCard with calcom design tokens`
-  7. `[pending]: test(admin): author comprehensive lgd administrative hierarchy test suite and update documentation`
+  7. `9faf5a0: test(admin): author comprehensive lgd administrative hierarchy test suite and update documentation`
+- **Key Deliverables:**
+  - **LGD Administrative Hierarchy Schemas (`backend/app/schemas/administrative_hierarchy.py`):**
+    - Modeled `AdminLevelEnum` (`country`, `state`, `division`, `district`, `sub_district`) and `GovtDesignationEnum` (`national_director`, `state_secretary`, `divisional_commissioner`, `district_magistrate`, `chief_medical_officer`, `block_medical_officer`).
+    - Defined `AdministrativeUnitBase`, `AdministrativeUnitCreate`, `AdministrativeUnitUpdate`, `AdministrativeUnitResponse`, `AdministrativeOfficerCreate`, `AdministrativeOfficerResponse`, `TerritorialTreeNode`, and `TerritorialSummaryMetrics`.
+  - **PostgreSQL `ltree` Relational Models (`backend/app/models/administrative_hierarchy.py`):**
+    - Custom `LTreePath` SQLAlchemy TypeDecorator translating to native `ltree` on PostgreSQL and `String(255)` on SQLite.
+    - Relational entities `AdministrativeUnit` and `AdministrativeOfficer` with foreign keys, index decorators, and parent-child traversal.
+  - **Alembic Database Migration (`backend/alembic/versions/2026_11_01_0011_lgd_administrative_hierarchy_ltree.py`):**
+    - Enabled PostgreSQL `ltree` extension; created `administrative_units` and `administrative_officers` tables with GiST indexing.
+  - **Administrative Hierarchy Service & National LGD Seeder (`backend/app/services/administrative_hierarchy_service.py`):**
+    - Pre-seeded National root (`india`), 36 sovereign States and Union Territories, sample Divisions, Districts (Pune, Satara, Mumbai, New Delhi, Bengaluru Urban, Paschim Bardhaman), and Talukas (Haveli, Durgapur).
+    - Sub-2ms ancestor resolution (`find_ancestors`) and descendant subtree search (`find_descendants`).
+    - Enforced scoped territorial RBAC authority validation (`verify_jurisdiction_access`).
+  - **Administrative Hierarchy REST API (`backend/app/api/v1/endpoints/administrative_hierarchy.py`):**
+    - Mounted under `/api/v1/admin/hierarchy`: summary metrics, unit listing with level filters, sub-2ms fast search, tree drilldowns, ancestor/descendant lookups, territorial verification, and officer appointment roster.
+  - **Cal.com Design System Frontend Dashboard (`frontend/src/components/clinical/AdministrativeHierarchyViewerCard.tsx`):**
+    - Built interactive territorial tree explorer, fast search bench with LGD code lookup, and appointed officers roster.
+    - Mounted in `/doctor` clinical portal with clean Next.js 15 compilation.
+  - **Dedicated Test Suite (`backend/tests/test_administrative_hierarchy.py`):**
+    - 11 comprehensive unit and integration tests verifying seeder initialization, sub-2ms performance, fast search, jurisdictional access control, tree construction, REST endpoints, and SQLAlchemy model persistence.
+- **Verification:**
+  - Dedicated Hierarchy Suite: **11/11 tests passing in `tests/test_administrative_hierarchy.py` (100% green in 1.03s)**.
+  - Full Cumulative Backend Test Suite: **531/531 tests passing (100% green in 85.56s)** across all 32 test suites.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
+#### Day 69 (Thu) - Milestone 14-04: Chain-of-Command Administrative Provisioning Service, Official `@gov.in` Aadhaar MFA & Scoped Territorial RBAC
+- **Focus:** Chain-of-Command Administrative Provisioning Service, Sovereign 5-Tier Downward Authority Ladder, Official `@gov.in` / `@nic.in` Email Validation, 12-Digit Aadhaar Verhoeff Checksum MFA, SHA-256 Cryptographic Audit Ledger Chaining, Sub-2ms Scoped Territorial RBAC (TRBAC) Policy Interceptor, REST API Endpoints (`/api/v1/admin/delegations/*`), Cal.com `ChainOfCommandDelegationCard.tsx` UI Component, and Comprehensive Delegation & TRBAC Test Suite (`tests/test_delegation_and_trbac.py`).
+- **Executed Micro-Commits (Strict 7-Commit Pacing):**
+  1. `0dd105a: feat(schemas): define chain of command delegation, gov identity, and scoped trbac schemas`
+  2. `fe95129: feat(models): implement administrative delegation and territorial audit relational models`
+  3. `2a38385: feat(services): implement chain-of-command delegation engine with strict hierarchy enforcement`
+  4. `5538511: feat(security): implement scoped territorial rbac policy interceptor and fastpath validator`
+  5. `7a12835: feat(api): expose administrative delegation and scoped territorial rbac rest endpoints`
+  6. `7caef11: feat(frontend): implement ChainOfCommandDelegationCard with calcom design tokens`
+  7. `d94973c: test(admin): author chain-of-command delegation and scoped trbac test suite and update documentation`
+- **Key Deliverables:**
+  - **Administrative Delegation Schemas (`backend/app/schemas/delegation.py`):**
+    - Defined `DelegationRank` enforcing downward authority inequality `NATIONAL_DIRECTOR (5) > STATE_SECRETARY (4) > DIVISIONAL_COMMISSIONER (3) > CMO (2) > BMO (1)`.
+    - Modeled `AdministrativeDelegationBase`, `AdministrativeDelegationCreate` with Pydantic `@field_validator` for `@gov.in` / `@nic.in` domains, `AdministrativeDelegationResponse`, `DelegationRevokeRequest`, `TerritorialScopeValidationRequest`, `TerritorialScopeValidationResponse`, `GovEmailValidationResult`, and `DelegationAuditRecord`.
+  - **SQLAlchemy Relational Models (`backend/app/models/delegation.py`):**
+    - Implemented `AdministrativeDelegation` and `DelegationAuditLedger` with foreign keys to `user.id` and `administrative_units.id`, compound indexes, and cross-dialect `LTreePath` persistence.
+  - **Chain-of-Command Delegation Engine (`backend/app/services/delegation_service.py`):**
+    - Enforced downward-only authority provisioning, territorial containment, `@gov.in` email verification, 12-digit Aadhaar Verhoeff checksum algorithm, and SHA-256 cryptographic audit chaining.
+    - Pre-seeded foundational Union Government to Maharashtra State Secretary delegation.
+  - **Scoped Territorial RBAC Security Interceptor (`backend/app/core/territorial_rbac.py`):**
+    - Engineered `is_territorial_access_allowed` fastpath checker (< 0.01ms evaluation) and `TerritorialSecurityScope` FastAPI dependency interceptor raising HTTP 403 on lateral or upward boundary violations.
+  - **Administrative Delegation REST API (`backend/app/api/v1/endpoints/delegation.py`):**
+    - Mounted under `/api/v1/admin/delegations`: authority provisioning, filtered listings, 5-tier sovereign hierarchy ladder, cryptographic audit ledger, email verification, delegation revocation, and sub-2ms Scoped TRBAC simulation.
+  - **Cal.com Design System Frontend Dashboard (`frontend/src/components/clinical/ChainOfCommandDelegationCard.tsx`):**
+    - Built KPI header (Active Delegations, Sovereign Tiers, Cryptographic Blocks, < 2ms SLA), Active Delegations table with revocation action, Step-Down Provisioning Console, Sovereign Authority Ladder, Scoped TRBAC Simulator, and Cryptographic Ledger Viewer.
+    - Mounted in `/doctor` clinical portal with clean Next.js 15 compilation.
+  - **Dedicated Test Suite (`backend/tests/test_delegation_and_trbac.py`):**
+    - 14 comprehensive unit, integration, and security tests verifying downward authority enforcement, upward/lateral delegation rejection, `@gov.in` validation, Aadhaar Verhoeff checksums, revocation lifecycle, sub-2ms TRBAC evaluation, REST API endpoints, and SQLAlchemy model persistence.
+- **Verification:**
+  - Dedicated Delegation & TRBAC Suite: **14/14 tests passing in `tests/test_delegation_and_trbac.py` (100% green in 0.79s)**.
+  - Full Cumulative Backend Test Suite: **543/543 tests passing (100% green in 98.48s)** across all 33 test suites.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
 - **Key Deliverables:**
   - **LGD Administrative Hierarchy Schemas (`backend/app/schemas/administrative_hierarchy.py`):**
     - Modeled `AdminLevelEnum` (`country`, `state`, `division`, `district`, `sub_district`) and `GovtDesignationEnum` (`national_director`, `state_secretary`, `divisional_commissioner`, `district_magistrate`, `chief_medical_officer`, `block_medical_officer`).

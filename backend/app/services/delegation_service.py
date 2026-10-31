@@ -182,14 +182,20 @@ class DelegationService:
 
         return AdministrativeDelegationResponse(**record)
 
-    def revoke_delegation(self, payload: DelegationRevokeRequest) -> AdministrativeDelegationResponse:
+    def revoke_delegation(
+        self, payload: DelegationRevokeRequest, delegation_id: Optional[str] = None
+    ) -> AdministrativeDelegationResponse:
         """Revoke an active delegation and record the revocation in the cryptographic audit ledger."""
-        delegation = self._delegations.get(payload.delegation_id)
+        target_id = delegation_id or payload.delegation_id
+        if not target_id:
+            raise ValueError("Delegation identifier is required for revocation.")
+
+        delegation = self._delegations.get(target_id)
         if not delegation:
-            raise ValueError(f"Delegation record '{payload.delegation_id}' not found.")
+            raise ValueError(f"Delegation record '{target_id}' not found.")
 
         if not delegation["is_active"]:
-            raise ValueError(f"Delegation '{payload.delegation_id}' is already revoked or inactive.")
+            raise ValueError(f"Delegation '{target_id}' is already revoked or inactive.")
 
         now = datetime.now(timezone.utc)
         delegation["is_active"] = False
@@ -199,14 +205,14 @@ class DelegationService:
 
         # Compute revocation block hash
         revocation_hash = hashlib.sha256(
-            f"REVOKE:{payload.delegation_id}:{payload.revoked_by_user_id}:{now.isoformat()}:{self._latest_audit_hash}".encode(
+            f"REVOKE:{target_id}:{payload.revoked_by_user_id}:{now.isoformat()}:{self._latest_audit_hash}".encode(
                 "utf-8"
             )
         ).hexdigest()
 
         audit_entry = {
             "id": str(uuid.uuid4()),
-            "delegation_id": payload.delegation_id,
+            "delegation_id": target_id,
             "action": "REVOKED",
             "actor_id": payload.revoked_by_user_id,
             "actor_designation": "ADMINISTRATIVE_AUTHORITY",
@@ -218,7 +224,7 @@ class DelegationService:
         self._audit_ledger.append(audit_entry)
         self._latest_audit_hash = revocation_hash
 
-        logger.info("Revoked authority for delegation %s (Reason: %s)", payload.delegation_id, payload.reason)
+        logger.info("Revoked authority for delegation %s (Reason: %s)", target_id, payload.reason)
         return AdministrativeDelegationResponse(**delegation)
 
     def list_delegations(
@@ -315,11 +321,10 @@ class DelegationService:
     def validate_gov_email(self, email: str) -> GovEmailValidationResult:
         """Validate if an email address belongs to authorized Indian government domains."""
         clean = email.strip().lower()
-        valid_domains = (".gov.in", ".nic.in", ".mohfw.gov.in")
-        is_valid = any(clean.endswith(d) for d in valid_domains)
-
         parts = clean.split("@")
-        domain = parts[1] if len(parts) > 1 else ""
+        domain = parts[-1] if len(parts) > 1 and parts[0] else ""
+        valid_gov_tlds = ("gov.in", "nic.in")
+        is_valid = bool(domain and any(domain == d or domain.endswith("." + d) for d in valid_gov_tlds))
 
         return GovEmailValidationResult(
             email=email,

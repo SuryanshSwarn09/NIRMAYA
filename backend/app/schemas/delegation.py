@@ -77,8 +77,11 @@ class AdministrativeDelegationCreate(AdministrativeDelegationBase):
     def validate_gov_email_domain(cls, v: str) -> str:
         """Enforce official Indian government email domain suffixes."""
         normalized = v.strip().lower()
-        valid_suffixes = (".gov.in", ".nic.in", ".mohfw.gov.in")
-        if not any(normalized.endswith(suffix) for suffix in valid_suffixes):
+        if "@" not in normalized:
+            raise ValueError(f"Email '{v}' is not an authorized Indian government domain. Must end with .gov.in or .nic.in")
+        domain = normalized.split("@")[-1]
+        valid_gov_tlds = ("gov.in", "nic.in")
+        if not any(domain == d or domain.endswith("." + d) for d in valid_gov_tlds):
             raise ValueError(
                 f"Email '{v}' is not an authorized Indian government domain. Must end with .gov.in or .nic.in"
             )
@@ -105,6 +108,7 @@ class AdministrativeDelegationResponse(AdministrativeDelegationBase):
 class DelegationRevokeRequest(BaseModel):
     """Request payload to revoke an active administrative delegation."""
 
+    delegation_id: Optional[str] = Field(None, description="UUID of delegation record (optional if provided via URL path)")
     revoked_by_user_id: str = Field(..., description="UUID of the authority initiating revocation")
     reason: str = Field(..., min_length=5, max_length=500, description="Official rationale for revocation")
 

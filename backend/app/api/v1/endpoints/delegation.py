@@ -3,6 +3,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query, status
 
+from app.schemas.administrative_hierarchy import GovtDesignationEnum
 from app.schemas.delegation import (
     AdministrativeDelegationCreate,
     AdministrativeDelegationResponse,
@@ -24,6 +25,12 @@ router = APIRouter()
     summary="Delegate administrative authority down the chain of command",
     description="Provisions official authority to a subordinate officer with Aadhaar OTP and government email verification.",
 )
+@router.post(
+    "/delegations/provision",
+    response_model=AdministrativeDelegationResponse,
+    status_code=status.HTTP_201_CREATED,
+    include_in_schema=False,
+)
 async def create_delegation(payload: AdministrativeDelegationCreate) -> AdministrativeDelegationResponse:
     """Create a new administrative chain-of-command delegation."""
     try:
@@ -33,6 +40,33 @@ async def create_delegation(payload: AdministrativeDelegationCreate) -> Administ
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(exc),
         )
+
+
+@router.get(
+    "/delegations/hierarchy-ladder",
+    summary="Get 5-tier sovereign hierarchy ladder",
+    description="Returns the sovereign chain-of-command authority tiers in descending order.",
+)
+async def get_hierarchy_ladder() -> List[dict]:
+    """Return sovereign authority tiers in descending order."""
+    return [
+        {"designation": GovtDesignationEnum.NATIONAL_DIRECTOR.name, "rank": 5, "title": "National Director", "level": "Union Government"},
+        {"designation": GovtDesignationEnum.STATE_SECRETARY.name, "rank": 4, "title": "State Health Secretary", "level": "State / UT"},
+        {"designation": GovtDesignationEnum.DIVISIONAL_COMMISSIONER.name, "rank": 3, "title": "Divisional Commissioner", "level": "Division"},
+        {"designation": GovtDesignationEnum.CHIEF_MEDICAL_OFFICER.name, "rank": 2, "title": "Chief Medical Officer", "level": "District"},
+        {"designation": GovtDesignationEnum.BLOCK_MEDICAL_OFFICER.name, "rank": 1, "title": "Block Medical Officer", "level": "Sub-District / Taluka"},
+    ]
+
+
+@router.get(
+    "/delegations/active",
+    response_model=List[AdministrativeDelegationResponse],
+    summary="List active administrative delegations",
+    include_in_schema=False,
+)
+async def list_active_delegations() -> List[AdministrativeDelegationResponse]:
+    """List active delegations."""
+    return delegation_service.list_delegations(is_active=True)
 
 
 @router.get(
@@ -63,6 +97,11 @@ async def list_delegations(
     response_model=List[DelegationAuditRecord],
     summary="Get cryptographic delegation audit ledger",
     description="Returns the chronological, immutable SHA-256 audit hash ledger of all delegation events.",
+)
+@router.get(
+    "/delegations/audit-ledger",
+    response_model=List[DelegationAuditRecord],
+    include_in_schema=False,
 )
 async def get_delegation_audit_ledger(
     limit: int = Query(50, ge=1, le=200, description="Number of recent ledger records to fetch"),
@@ -128,6 +167,11 @@ async def revoke_delegation(
     response_model=TerritorialScopeValidationResponse,
     summary="Sub-2ms Scoped TRBAC verification",
     description="Validates whether an officer's assigned jurisdiction path covers a target healthcare facility or resource path.",
+)
+@router.post(
+    "/delegations/trbac/simulate",
+    response_model=TerritorialScopeValidationResponse,
+    include_in_schema=False,
 )
 async def validate_scope(
     payload: TerritorialScopeValidationRequest,

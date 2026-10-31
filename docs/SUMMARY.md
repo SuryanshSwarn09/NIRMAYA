@@ -103,6 +103,7 @@
     * [Day 66: Static Application Security Testing (SAST) & DB Pool Optimization](journey/month-4/day-66.md)
     * [Day 67: OWASP ASVS Level 2 Verification & DoS Rate-Limiting Shield](journey/month-4/day-67.md)
     * [Day 68: Indian LGD 6-Tier Administrative Hierarchy & LTree Indexing](journey/month-4/day-68.md)
+    * [Day 69: Chain-of-Command Administrative Provisioning & Scoped TRBAC](journey/month-4/day-69.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
 

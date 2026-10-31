@@ -7,7 +7,7 @@
 **Repository:** `https://github.com/SuryanshSwarn09/NIRMAYA`  
 **Pacing:** 4.75 Months / 19 Weeks / 95 Development Days  
 **Current Status:** Day 68 Completed (Week 14 Active / Phase 4 Active / Release `v0.3.0` Baseline / 531 Tests Passing)  
-**Next Horizon:** Day 69 (Month 4, Week 14 / Chain-of-Command Administrative Provisioning Service, Official @gov.in Aadhaar MFA & Scoped Territorial RBAC)  
+**Next Horizon:** Day 70 (Month 4, Week 14 / District & State Command Center Endpoints, Heatmaps & Full Week 14 Review)  
 **Extended Horizon:** Phase 5 (Weeks 17–18, Days 81–90 / Family Health Proxy, Child-ABHA & National Public Digital Infrastructure)  
 **Capstone Publication Horizon:** Phase 6 (Week 19, Days 91–95 / IEEE Research Paper Manuscript & Empirical Comparative Benchmarking)  
 **Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3) & DPDP Act 2023  
@@ -252,7 +252,7 @@ gantt
 - **Day 66 (Milestone 14-01) [COMPLETED]:** Static Application Security Testing (SAST), Automated Vulnerability Scanning & PostgreSQL Connection Optimization: Python AST security analyzer for weak crypto, SQLi, and hardcoded secrets; CVE dependency vulnerability catalog; multi-tenant RLS context injection (`app.current_tenant`); live engine connection pool telemetry (`get_pool_metrics`); Cal.com `SecurityScanReportCard` dashboard with interactive AST tester; 505/505 passing tests.
 - **Day 67 (Milestone 14-02) [COMPLETED]:** OWASP Application Security Verification Standard (ASVS) Level 2 Compliance Audit, Automated SQLi/XSS Defensive Fuzzing & Distributed Rate Limiter: 100.0% compliance across 18 Level 2 controls (CERTIFIED status); 17-vector adversarial attack fuzzing bench with 100.0% defense efficacy; distributed token-bucket rate limiter with automated IP Jail penalty box; Cal.com `AsvsComplianceShieldCard` frontend dashboard; 518/518 passing tests.
 - **Day 68 (Milestone 14-03) [COMPLETED]:** Indian Local Government Directory (LGD) 6-Tier Administrative Hierarchy schema (`administrative_units`, `administrative_officers`); PostgreSQL `ltree` extension migration with GiST indexing; sovereign LGD reference seeder with 36 States/UTs; sub-2ms ancestor and descendant queries; Cal.com `AdministrativeHierarchyViewerCard` frontend dashboard; 531/531 passing tests.
-- **Day 69:** Chain-of-Command Administrative Provisioning Service (National SuperAdmin -> State -> Division -> District -> Block) with official `@gov.in` email and Aadhaar OTP MFA; Scoped Territorial RBAC.
+- **Day 69 (Milestone 14-04) [COMPLETED]:** Chain-of-Command Administrative Provisioning Service (National SuperAdmin -> State -> Division -> District -> Block) with official `@gov.in` / `@nic.in` email and 12-digit Aadhaar Verhoeff checksum MFA; SHA-256 cryptographic audit ledger chaining; Scoped Territorial RBAC (TRBAC) sub-2ms fastpath interceptor; Cal.com `ChainOfCommandDelegationCard` dashboard; 543/543 passing tests.
 - **Day 70:** District & State Command Center endpoints (outbreak heatmaps, ICU bed occupancy, doctor roster); automated test suite `test_administrative_hierarchy.py` and security sign-off.
 
 ### Week 15: Dual-Mode Edge Appliance, Docker Containerization & Cloud CI/CD (Days 71–75)
@@ -391,13 +391,14 @@ During active implementation, several critical architectural enhancements and sc
 
 ## 10. Codebase Health, Verification Suite & Current Status
 
-As of **Day 67 (Phase 4 Active / Week 14 Active / ASVS Level 2 & DoS Shield Active)**:
-- **Backend Test Suite:** **518 / 518 tests passing (100% green in 57.42s)** across 31 test suites
+As of **Day 69 (Phase 4 Active / Week 14 Active / Chain-of-Command & Scoped TRBAC Active)**:
+- **Backend Test Suite:** **543 / 543 tests passing (100% green in 98.48s)** across 33 test suites
 - **Real-Time WebSockets, Queue, BTG Vault & Audit:** 55 dedicated tests passing across JWT handshake authentication, dual-mode Pub/Sub adapter, OPD queue stream, critical lab panic thresholds, clinician acknowledgement, Argon2id KDF, AES-256-GCM AEAD vault, SHA-256 hash-chaining, Merkle verification, carrier SMS dispatch, and concurrency stress testing
 - **Security, ASVS, Fuzzing & DB Pool Suites:** 25 dedicated tests passing across AST security inspection, dependency CVSS vulnerability evaluation, tenant context RLS injection, OWASP ASVS compliance, SQLi/XSS defensive fuzzing, and DoS IP jail management
+- **Administrative Hierarchy, Delegation & Scoped TRBAC Suites:** 25 dedicated tests passing across sovereign 6-tier LGD indexing, sub-2ms tree traversal, downward authority delegation, `@gov.in` domain verification, Aadhaar Verhoeff checksums, and SHA-256 audit chaining
 - **ABDM & FHIR R4 Specific Suites:** 110 tests passing across M1, M2, M3, FHIR R4 Bundle Validation, Medical Ontology Binding, ABDM Sandbox Certification, and Security Penetration Testing
 - **Frontend Typecheck & Build:** Clean compilation with 0 TypeScript errors and 13/13 static routes rendered cleanly in Next.js 15.5.25
 - **Active Release Tag:** **`v0.3.0`** (Milestone `v0.4.0` in progress)
 - **Git Repository Branch:** `main` (synchronized with `origin/main`)
-- **Next Operational Milestone:** **Day 69 (Milestone 14-04: Chain-of-Command Administrative Provisioning Service, Official @gov.in Aadhaar MFA & Scoped Territorial RBAC)**
+- **Next Operational Milestone:** **Day 70 (Milestone 14-05: District & State Command Center Endpoints, Outbreak Heatmaps & Week 14 Review)**
 
