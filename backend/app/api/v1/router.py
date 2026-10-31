@@ -38,6 +38,7 @@ from app.api.v1.endpoints import (
     administrative_hierarchy,
     delegation,
     command_center,
+    container,
 )
 
 api_router = APIRouter()
@@ -79,6 +80,7 @@ api_router.include_router(medication_dispenses.router, prefix="", tags=["Pharmac
 api_router.include_router(administrative_hierarchy.router, prefix="/admin", tags=["Indian LGD Administrative Governance & Hierarchy"])
 api_router.include_router(delegation.router, prefix="/admin", tags=["Administrative Chain of Command & Delegations"])
 api_router.include_router(command_center.router, prefix="/admin/command-center", tags=["Public Health Command Center & Disease Surveillance"])
+api_router.include_router(container.router, prefix="/admin/container", tags=["Container Runtime & Environment Conformance"])
 
 
 
