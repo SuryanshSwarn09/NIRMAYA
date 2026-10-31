@@ -533,6 +533,18 @@ from app.schemas.administrative_hierarchy import (
     TerritorialHierarchyFilter,
     TerritorialSummaryMetrics,
 )
+from app.schemas.delegation import (
+    DelegationRank,
+    DelegationStatusEnum,
+    AdministrativeDelegationBase,
+    AdministrativeDelegationCreate,
+    AdministrativeDelegationResponse,
+    DelegationRevokeRequest,
+    TerritorialScopeValidationRequest,
+    TerritorialScopeValidationResponse,
+    GovEmailValidationResult,
+    DelegationAuditRecord,
+)
 
 
 
