@@ -6,8 +6,8 @@
 **Candidate & Project Lead:** Suryansh Swarn (`suryanshswarn@gmail.com`)  
 **Repository:** `https://github.com/SuryanshSwarn09/NIRMAYA`  
 **Pacing:** 4 Months / 16 Weeks / 80 Development Days  
-**Current Status:** Day 60 Completed (Phase 3 100% Complete / Release `v0.3.0` Certified / 438 Tests Passing)  
-**Next Horizon:** Day 61 (Month 4, Week 13 / Distributed WebSockets, Redis Pub/Sub & Real-Time OPD Queue)  
+**Current Status:** Day 61 Completed (Phase 4 Active / Release `v0.3.0` Baseline / 448 Tests Passing)  
+**Next Horizon:** Day 62 (Month 4, Week 13 / Live Clinician Consultation Queue Synchronization)  
 **Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3)  
 
 ---
@@ -20,7 +20,7 @@ This document serves as the authoritative, end-to-end Master Engineering Roadmap
 1. The **foundational motive and multi-tier architectural topology** powering NIRMAYA across Patients, Clinicians, Diagnostic Facilities, Pharmacies, and ABDM Network Nodes.
 2. The **complete day-by-day engineering progression from Day 1 to Day 80**, delineating verified implementations (Days 1–60) from planned upcoming milestones (Days 61–80).
 3. The **chronological record of architectural pivots, strategic scope expansions, and critical enhancements** introduced during development (including the Cal.com design system migration, Vercel monorepo fixes, Drug-Drug Interaction Clinical Decision Support, the Day 46 DigiLocker/Aadhaar 1-day extension, and ABDM Ambiguity Protection filters).
-4. The **system health metrics, testing benchmarks (438/438 green tests), and certification status** under NHA ABDM Gateway v0.5 standards.
+4. The **system health metrics, testing benchmarks (448/448 green tests), and certification status** under NHA ABDM Gateway v0.5 standards.
 
 ---
 
@@ -233,7 +233,7 @@ gantt
 *Target Milestone Release:* **`v1.0.0`**
 
 ### Week 13: Distributed WebSockets, BTG Emergency Vault & Real-Time Queue (Days 61–65)
-- **Day 61:** Distributed WebSocket gateway in FastAPI backed by Redis Pub/Sub channels for multi-worker synchronization.
+- **Day 61 (Milestone 13-01) [COMPLETED]:** Distributed WebSocket gateway in FastAPI backed by dual-mode Redis Pub/Sub channels (with in-memory fallback), Supabase JWT authentication, clinical schemas (OPD queue updates, critical alerts, slot holds), stream endpoints (`/ws/events`, `/ws/facilities/{id}/queue`, `/ws/doctors/{id}/workspace`), and REST metrics API; 448/448 passing tests.
 - **Day 62:** Live Doctor OPD Queue synchronization: instant push notifications when patients arrive, check in, or undergo triage.
 - **Day 63:** Critical Laboratory Alert push notification system alerting clinicians within $< 100\text{ms}$ of abnormal panic-value lab results.
 - **Day 64:** Zero-Knowledge Break-The-Glass (BTG) Emergency Health Profile Vault schemas, Argon2id key derivation, and audited emergency override API for ICU/ER clinicians.
@@ -284,11 +284,12 @@ During active implementation, several critical architectural enhancements and sc
 
 ## 8. Codebase Health, Verification Suite & Current Status
 
-As of **Day 60 (Phase 3 Complete / Milestone 12-05 / Release `v0.3.0`)**:
-- **Backend Test Suite:** **438 / 438 tests passing (100% green in 57.20s)** across 24 test suites
+As of **Day 61 (Phase 4 Active / Milestone 13-01 / Distributed WebSockets Active)**:
+- **Backend Test Suite:** **448 / 448 tests passing (100% green in 70.27s)** across 25 test suites
+- **Real-Time WebSockets & Distributed Bus:** 10 dedicated tests passing across JWT handshake authentication, dual-mode Pub/Sub adapter, OPD queue stream, critical lab alerts, and metrics API
 - **ABDM & FHIR R4 Specific Suites:** 110 tests passing across M1, M2, M3, FHIR R4 Bundle Validation, Medical Ontology Binding, ABDM Sandbox Certification, and Security Penetration Testing
 - **Frontend Typecheck & Build:** Clean compilation with 0 TypeScript errors and 13/13 static routes rendered cleanly in Next.js 15.5.25
-- **Official Milestone Release Tag:** **`v0.3.0`**
+- **Active Release Tag:** **`v0.3.0`** (Milestone `v0.4.0` in progress)
 - **Git Repository Branch:** `main` (synchronized with `origin/main`)
-- **Next Operational Milestone:** **Day 61 (Milestone 13-01: Distributed WebSockets & Real-Time OPD Queue Synchronization)**
+- **Next Operational Milestone:** **Day 62 (Milestone 13-02: Live Clinician Consultation Queue Synchronization)**
 

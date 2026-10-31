@@ -244,3 +244,4 @@ class AdminBroadcastRequest(BaseModel):
     payload: Dict[str, Any] = Field(description="Arbitrary event payload")
 
     model_config = ConfigDict(from_attributes=True)
+

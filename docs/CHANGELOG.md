@@ -1746,6 +1746,45 @@
   - **Milestone Tag Created:** Annotated git tag `v0.3.0` published.
 
 ---
+
+## Month 4: Production Hardening, Cloud Deployment & Academic Thesis
+
+### Week 13: Distributed WebSockets, BTG Emergency Vault & Real-Time Queue
+
+#### Day 61 (Mon) - Milestone 13-01: Distributed WebSockets & Redis Pub/Sub Architecture
+- **Focus:** Real-Time Distributed WebSocket Gateway, Redis Pub/Sub Inter-Worker Synchronization Bus, In-Memory Zero-Dependency Test Adapter, Supabase JWT Handshake Authentication & Policy Enforcements (Code 1008), Clinical Event Schemas (Live Queue Updates, Panic Lab Value Alerts, Slot Reservation Holds), Stream Routers (`/ws/events`, `/ws/facilities/{facility_id}/queue`, `/ws/doctors/{doctor_id}/workspace`), Diagnostic Telemetry & Broadcast APIs (`GET /api/v1/websockets/metrics`, `POST /api/v1/websockets/broadcast`), and Full Test Suite Execution.
+- **Executed Micro-Commits (Strict 7-Commit Pacing):**
+  1. `247c4fd: feat(config): add redis and websocket settings to core configuration`
+  2. `cec8273: feat(schemas): define websocket event types, channels, and clinical payload models`
+  3. `d8b53bf: feat(services): implement dual-mode redis pubsub adapter and distributed connection manager`
+  4. `b8db5c2: feat(api): implement authenticated websocket endpoints and diagnostic metrics router`
+  5. `00b4da2: feat(api): mount websocket router in fastapi application and v1 router`
+  6. `4c1a2ac: test(websockets): author comprehensive test suite for websocket handshake, channels, and broadcasts`
+  7. `docs(journey): record day 61 milestone log, update week 13 schedule, summary, changelog, and roadmap`
+- **Key Deliverables:**
+  - **Core Settings Extension (`backend/app/core/config.py`):**
+    - Added Redis connection URL (`REDIS_URL`), enablement flag (`REDIS_ENABLED`), heartbeat intervals (`WS_HEARTBEAT_INTERVAL_SECONDS = 30`), timeouts (60s), and max payload size (64KB).
+  - **Clinical WebSocket Schemas (`backend/app/schemas/websocket_events.py`):**
+    - `WebSocketEventType`, `TriageLevel`, `AlertSeverity`, `HoldStatus`.
+    - Canonical channel formatters (`WebSocketChannel.facility_queue`, `doctor_workspace`, `patient_vault`, `global_events`).
+    - Typed models: `QueueUpdatePayload`, `CriticalAlertPayload`, `AppointmentHoldPayload`, `SystemNotificationPayload`, `ConnectionAckPayload`, `WebSocketMetricsResponse`, `AdminBroadcastRequest`.
+  - **Dual-Mode Adapter & Connection Manager (`backend/app/services/websocket_manager.py`):**
+    - `RedisPubSubAdapter` for multi-worker production clusters and `InMemoryPubSubAdapter` for zero-dependency test/offline resilience.
+    - `ConnectionManager` handling client tracking, topic subscriptions, heartbeats, and cluster-wide broadcasts.
+  - **WebSocket Endpoints (`backend/app/api/v1/endpoints/websockets.py`):**
+    - `/ws/events`: Multi-channel clinical event stream with client-side subscription commands (`subscribe`, `unsubscribe`, `ping`).
+    - `/ws/facilities/{facility_id}/queue`: Dedicated live OPD queue stream.
+    - `/ws/doctors/{doctor_id}/workspace`: Dedicated clinician consultation stream.
+    - `GET /api/v1/websockets/metrics`: Diagnostic telemetry endpoint.
+    - `POST /api/v1/websockets/broadcast`: Administrative broadcast dispatcher.
+  - **Dedicated Test Suite (`backend/tests/test_websockets_gateway.py`):**
+    - 10 unit and integration tests asserting authentication rejection on invalid/missing JWT, handshake ack, ping/pong heartbeats, dynamic subscriptions, facility queue updates, critical lab alerts, and multi-client fanout.
+- **Verification:**
+  - Dedicated WebSocket Suite: **10/10 tests passing in `tests/test_websockets_gateway.py` (100% green in 0.61s)**.
+  - Full Cumulative Backend Test Suite: **448/448 tests passing (100% green in 70.27s)** across all 25 test suites.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
+---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 
 

@@ -94,6 +94,7 @@
     * [Day 60: Month 3 Retrospective, Documentation Finalization & Milestone Release v0.3.0](journey/month-3/day-60.md)
 * [Month 4: Production Hardening, Cloud Deployment & Academic Thesis](journey/month-4/overview.md)
   * [Week 13: WebSockets & Distributed Audit Logging](journey/month-4/week-13.md)
+    * [Day 61: Distributed WebSockets & Redis Pub/Sub Architecture](journey/month-4/day-61.md)
   * [Week 14: Security Hardening & Penetration Testing](journey/month-4/week-14.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
