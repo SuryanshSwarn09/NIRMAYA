@@ -44,4 +44,12 @@ export {
   type VerificationResult, 
   type EmergencyDispatchItem 
 } from "./AuditLedgerVerificationCard";
+export {
+  SecurityScanReportCard,
+  type SASTFindingItem,
+  type DependencyVulnerabilityItem,
+  type DatabasePoolMetricsItem,
+  type SecurityReportState,
+} from "./SecurityScanReportCard";
+
 
