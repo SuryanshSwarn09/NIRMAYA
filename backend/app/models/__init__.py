@@ -34,7 +34,10 @@ from app.models.enums import (
     SlotStatus,
     UserRole,
     VerificationStatus,
+    AdminLevelEnum,
+    GovtDesignationEnum,
 )
+from app.models.administrative_hierarchy import AdministrativeUnit, AdministrativeOfficer, LTreePath
 from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.lab import DiagnosticLabFacility
 from app.models.medication import Medication
@@ -90,5 +93,10 @@ __all__ = [
     "MedicationRequestPriority",
     "MedicationDispense",
     "MedicationDispenseStatus",
+    "AdministrativeUnit",
+    "AdministrativeOfficer",
+    "AdminLevelEnum",
+    "GovtDesignationEnum",
+    "LTreePath",
 ]
 

@@ -421,5 +421,26 @@ class MedicationDispenseStatus(str, Enum):
     UNKNOWN = "unknown"
 
 
+class AdminLevelEnum(str, Enum):
+    """6-Tier Administrative Level classification aligned with Government of India LGD."""
+
+    COUNTRY = "country"
+    STATE = "state"
+    DIVISION = "division"
+    DISTRICT = "district"
+    SUB_DISTRICT = "sub_district"
+
+
+class GovtDesignationEnum(str, Enum):
+    """Official Government of India administrative healthcare designations."""
+
+    NATIONAL_DIRECTOR = "national_director"
+    STATE_SECRETARY = "state_secretary"
+    DIVISIONAL_COMMISSIONER = "divisional_commissioner"
+    DISTRICT_MAGISTRATE = "district_magistrate"
+    CHIEF_MEDICAL_OFFICER = "chief_medical_officer"
+    BLOCK_MEDICAL_OFFICER = "block_medical_officer"
+
+
 
 
