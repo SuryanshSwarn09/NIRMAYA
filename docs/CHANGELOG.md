@@ -1941,6 +1941,43 @@
   - Full Cumulative Backend Test Suite: **493/493 tests passing (100% green in 83.09s)** across all 29 test suites.
   - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
 
+#### Day 66 (Mon) - Milestone 14-01: Static Application Security Testing (SAST), Automated Vulnerability Scanning & PostgreSQL Connection Optimization
+- **Focus:** Python Abstract Syntax Tree (AST) Security Code Inspection, Insecure Cryptography Detection (MD5/SHA1), Raw SQL Injection Prevention (f-string and modulo formatting), Dangerous System Execution Primitives (`eval`, `exec`, `subprocess.Popen` with `shell=True`, `os.system`), Insecure Deserialization (`pickle.loads`), Hardcoded Credential Flagging, Automated Dependency Vulnerability Scanner (CVSS v3.1 Advisory Database), PostgreSQL Engine Connection Pool Optimization & Telemetry (`get_pool_metrics`), Multi-Tenant Context Manager (`apply_tenant_context_to_session`, `get_tenant_db`), Security REST Endpoints (`/api/v1/security/`), Cal.com `SecurityScanReportCard.tsx` Frontend Component, and Automated Security Test Suite (`tests/test_sast_security_scanner.py`).
+- **Executed Micro-Commits (Strict 7-Commit Pacing):**
+  1. `9065d31: feat(schemas): define sast issue, dependency vulnerability, and connection pool metrics models`
+  2. `3b368f0: feat(services): implement ast-based static application security testing (sast) inspection engine`
+  3. `0e8aae4: feat(services): implement automated dependency vulnerability scanner and advisory matching engine`
+  4. `44646e7: feat(db): implement multi-tenant session context manager and connection pool telemetry`
+  5. `ddba549: feat(api): expose sast scan, dependency audit, and database pool status rest endpoints`
+  6. `ec7126d: feat(frontend): implement SecurityScanReportCard with calcom design tokens and live pool telemetry`
+  7. `[pending]: test(security): author comprehensive sast scanner test suite and update week 14 documentation`
+- **Key Deliverables:**
+  - **Security Schemas (`backend/app/schemas/security_scanner.py`):**
+    - `SecuritySeverityEnum` (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, `INFO`), `SecurityCategoryEnum` (7 distinct risk domains), `SASTFinding` (line/column precise issue tracking), `DependencyVulnerability` (CVE/CVSS metrics), `SecurityScanReport`, `TenantContextParams`, and `DatabasePoolMetrics`.
+  - **AST SAST Inspection Engine (`backend/app/services/security_scanner.py`):**
+    - `SASTASTVisitor` inspecting AST syntax nodes for weak hashes (`NIRMAYA-SEC-001`), raw SQL interpolations (`NIRMAYA-SEC-002`), hardcoded credentials (`NIRMAYA-SEC-003`), dangerous execution primitives (`NIRMAYA-SEC-004`), and insecure deserialization (`NIRMAYA-SEC-005`).
+    - `SecurityScannerService` providing snippet parsing, file scanning, and directory-wide recursive inspection.
+  - **Dependency Vulnerability Scanner (`backend/app/services/dependency_scanner.py`):**
+    - Built-in curated CVSS v3.1 advisory database across `cryptography`, `pydantic`, `aiohttp`, `urllib3`, `jinja2`, `sqlparse`, `requests`, and `rsa`.
+    - Automated parsing of `requirements.txt` and inspection of active Python environment distributions.
+  - **Multi-Tenant Context & Pool Optimization (`backend/app/db/tenant_context.py`, `session.py`):**
+    - Scoped context manager injecting PostgreSQL session variables: `app.current_tenant`, `app.current_user`, `app.jurisdiction_path`.
+    - Live pool metrics extractor (`get_pool_metrics`) collecting active checked-out connections, idle connections, overflow, and capacity utilization.
+  - **Security REST API (`backend/app/api/v1/endpoints/security_scan.py`):**
+    - `POST /api/v1/security/scan/sast`: AST static analysis endpoint.
+    - `POST /api/v1/security/scan/dependencies`: CVE dependency audit endpoint.
+    - `GET /api/v1/security/pool/status`: Live PostgreSQL pool metrics and status endpoint.
+  - **Cal.com Frontend Dashboard (`frontend/src/components/clinical/SecurityScanReportCard.tsx`):**
+    - Minimalist enterprise dashboard featuring overall status, evaluated modules, pool utilization, and multi-tenant RLS badges.
+    - Interactive Python AST security terminal allowing real-time code snippet inspection.
+    - Mounted in `/doctor` encounter workspace.
+  - **Dedicated Test Suite (`backend/tests/test_sast_security_scanner.py`):**
+    - 12 unit and integration tests verifying all SAST detection rules, dependency parsing, tenant context setting, and REST APIs.
+- **Verification:**
+  - Dedicated Security Suite: **12/12 tests passing in `tests/test_sast_security_scanner.py` (100% green in 0.93s)**.
+  - Full Cumulative Backend Test Suite: **505/505 tests passing (100% green in 138.98s)** across all 30 test suites.
+  - Next.js 15 Production Build: **13/13 static routes generated cleanly with 0 errors** (`npm run build`).
+
 ---
 *(Entries will be appended daily in sequential order across the 80-day roadmap)*
 

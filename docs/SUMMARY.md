@@ -99,7 +99,8 @@
     * [Day 63: Real-Time Critical Clinical Notifications & Lab Alerts](journey/month-4/day-63.md)
     * [Day 64: Zero-Knowledge Break-The-Glass Emergency Vault & Argon2id Keys](journey/month-4/day-64.md)
     * [Day 65: Cryptographic Audit Hash-Chaining, Emergency Contact Dispatch & High-Concurrency Benchmark](journey/month-4/day-65.md)
-  * [Week 14: Security Hardening & Penetration Testing](journey/month-4/week-14.md)
+  * [Week 14: Security Hardening & Zero-Trust Governance](journey/month-4/week-14.md)
+    * [Day 66: Static Application Security Testing (SAST) & DB Pool Optimization](journey/month-4/day-66.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
 
