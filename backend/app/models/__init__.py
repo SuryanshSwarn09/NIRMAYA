@@ -39,6 +39,11 @@ from app.models.enums import (
 )
 from app.models.administrative_hierarchy import AdministrativeUnit, AdministrativeOfficer, LTreePath
 from app.models.delegation import AdministrativeDelegation, DelegationAuditLedger
+from app.models.command_center import (
+    DiseaseOutbreakRecord,
+    FacilityResourceTelemetryModel,
+    PublicHealthDirectiveModel,
+)
 from app.models.diagnostic import DiagnosticOrder, DiagnosticReport
 from app.models.lab import DiagnosticLabFacility
 from app.models.medication import Medication
@@ -98,6 +103,9 @@ __all__ = [
     "AdministrativeOfficer",
     "AdministrativeDelegation",
     "DelegationAuditLedger",
+    "DiseaseOutbreakRecord",
+    "FacilityResourceTelemetryModel",
+    "PublicHealthDirectiveModel",
     "AdminLevelEnum",
     "GovtDesignationEnum",
     "LTreePath",
