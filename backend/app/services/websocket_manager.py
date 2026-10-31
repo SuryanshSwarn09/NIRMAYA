@@ -131,8 +131,10 @@ class RedisPubSubAdapter(BasePubSubAdapter):
                 self.redis_url,
                 encoding="utf-8",
                 decode_responses=True,
+                socket_connect_timeout=0.5,
+                socket_timeout=0.5,
             )
-            await self._redis.ping()
+            await asyncio.wait_for(self._redis.ping(), timeout=0.5)
             self._pubsub = self._redis.pubsub()
             self._connected = True
             self._reader_task = asyncio.create_task(self._reader_loop())

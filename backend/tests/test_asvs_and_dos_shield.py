@@ -15,11 +15,7 @@ from app.services.asvs_audit_service import asvs_audit_service
 from app.services.asvs_fuzzer import asvs_fuzzer_service
 from app.services.dos_shield import dos_shield_service
 
-
-@pytest.fixture
-def test_client() -> TestClient:
-    """FastAPI TestClient fixture."""
-    return TestClient(app)
+client = TestClient(app)
 
 
 @pytest.fixture(autouse=True)
@@ -192,17 +188,17 @@ def test_dos_shield_ip_jail_unban_and_clear():
     assert is_jailed_after is False
 
 
-def test_asvs_and_dos_shield_rest_api_endpoints(test_client: TestClient):
+def test_asvs_and_dos_shield_rest_api_endpoints():
     """Verify that all ASVS, fuzzing, and DoS shield REST endpoints return valid HTTP 200 responses."""
     # 1. ASVS Checklist
-    res_asvs = test_client.get("/api/v1/security/asvs/checklist")
+    res_asvs = client.get("/api/v1/security/asvs/checklist")
     assert res_asvs.status_code == 200
     asvs_data = res_asvs.json()
     assert asvs_data["status"] == "CERTIFIED"
     assert asvs_data["compliance_percentage"] == 100.0
 
     # 2. SQLi Fuzzing endpoint
-    res_sqli = test_client.post(
+    res_sqli = client.post(
         "/api/v1/security/fuzz/sqli",
         json={"input_text": "' OR '1'='1"},
     )
@@ -211,7 +207,7 @@ def test_asvs_and_dos_shield_rest_api_endpoints(test_client: TestClient):
     assert sqli_data["blocked_count"] == 1
 
     # 3. XSS Fuzzing endpoint
-    res_xss = test_client.post(
+    res_xss = client.post(
         "/api/v1/security/fuzz/xss",
         json={"input_text": "<script>alert(1)</script>"},
     )
@@ -220,20 +216,20 @@ def test_asvs_and_dos_shield_rest_api_endpoints(test_client: TestClient):
     assert xss_data["neutralized_count"] == 1
 
     # 4. Comprehensive Fuzz endpoint
-    res_all = test_client.post("/api/v1/security/fuzz/all")
+    res_all = client.post("/api/v1/security/fuzz/all")
     assert res_all.status_code == 200
     all_data = res_all.json()
     assert all_data["status"] == "SECURE"
     assert all_data["effectiveness_rate_percent"] == 100.0
 
     # 5. DoS Shield status endpoint
-    res_jail = test_client.get("/api/v1/security/shield/jail")
+    res_jail = client.get("/api/v1/security/shield/jail")
     assert res_jail.status_code == 200
     jail_data = res_jail.json()
     assert jail_data["status"] in ("PROTECTED", "UNDER_ATTACK")
 
     # 6. Clear Jails endpoint
-    res_clear = test_client.post("/api/v1/security/shield/jail/clear")
+    res_clear = client.post("/api/v1/security/shield/jail/clear")
     assert res_clear.status_code == 200
     assert res_clear.json()["success"] is True
 
