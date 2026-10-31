@@ -96,6 +96,7 @@
   * [Week 13: WebSockets & Distributed Audit Logging](journey/month-4/week-13.md)
     * [Day 61: Distributed WebSockets & Redis Pub/Sub Architecture](journey/month-4/day-61.md)
     * [Day 62: Live Clinician Consultation Queue Synchronization](journey/month-4/day-62.md)
+    * [Day 63: Real-Time Critical Clinical Notifications & Lab Alerts](journey/month-4/day-63.md)
   * [Week 14: Security Hardening & Penetration Testing](journey/month-4/week-14.md)
   * [Week 15: Docker Containerization & Cloud Deployment](journey/month-4/week-15.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)

@@ -6,8 +6,8 @@
 **Candidate & Project Lead:** Suryansh Swarn (`suryanshswarn@gmail.com`)  
 **Repository:** `https://github.com/SuryanshSwarn09/NIRMAYA`  
 **Pacing:** 4 Months / 16 Weeks / 80 Development Days  
-**Current Status:** Day 62 Completed (Phase 4 Active / Release `v0.3.0` Baseline / 458 Tests Passing)  
-**Next Horizon:** Day 63 (Month 4, Week 13 / Real-Time Critical Clinical Notifications & Lab Alerts)  
+**Current Status:** Day 63 Completed (Phase 4 Active / Release `v0.3.0` Baseline / 469 Tests Passing)  
+**Next Horizon:** Day 64 (Month 4, Week 13 / Zero-Knowledge Break-The-Glass Emergency Vault & Argon2id Keys)  
 **Standards Compliance:** HL7 FHIR Release 4 & Ayushman Bharat Digital Mission (ABDM) Gateway v0.5 (M1, M2, M3)  
 
 ---
@@ -20,7 +20,7 @@ This document serves as the authoritative, end-to-end Master Engineering Roadmap
 1. The **foundational motive and multi-tier architectural topology** powering NIRMAYA across Patients, Clinicians, Diagnostic Facilities, Pharmacies, and ABDM Network Nodes.
 2. The **complete day-by-day engineering progression from Day 1 to Day 80**, delineating verified implementations (Days 1–60) from planned upcoming milestones (Days 61–80).
 3. The **chronological record of architectural pivots, strategic scope expansions, and critical enhancements** introduced during development (including the Cal.com design system migration, Vercel monorepo fixes, Drug-Drug Interaction Clinical Decision Support, the Day 46 DigiLocker/Aadhaar 1-day extension, and ABDM Ambiguity Protection filters).
-4. The **system health metrics, testing benchmarks (458/458 green tests), and certification status** under NHA ABDM Gateway v0.5 standards.
+4. The **system health metrics, testing benchmarks (469/469 green tests), and certification status** under NHA ABDM Gateway v0.5 standards.
 
 ---
 
@@ -235,7 +235,7 @@ gantt
 ### Week 13: Distributed WebSockets, BTG Emergency Vault & Real-Time Queue (Days 61–65)
 - **Day 61 (Milestone 13-01) [COMPLETED]:** Distributed WebSocket gateway in FastAPI backed by dual-mode Redis Pub/Sub channels (with in-memory fallback), Supabase JWT authentication, clinical schemas (OPD queue updates, critical alerts, slot holds), stream endpoints (`/ws/events`, `/ws/facilities/{id}/queue`, `/ws/doctors/{id}/workspace`), and REST metrics API; 448/448 passing tests.
 - **Day 62 (Milestone 13-02) [COMPLETED]:** Live Clinician Consultation Queue Synchronization: instant push notifications when patients arrive, check in, undergo triage, or get called into rooms; custom React hook and live queue telemetry; 458/458 passing tests.
-- **Day 63:** Critical Laboratory Alert push notification system alerting clinicians within $< 100\text{ms}$ of abnormal panic-value lab results.
+- **Day 63 (Milestone 13-03) [COMPLETED]:** Real-Time Critical Clinical Notifications & Lab Alerts: automated screening of observations against LOINC panic limits (Potassium, Troponin, Glucose, Platelets, Creatinine), sub-10ms push alerts to doctor workspaces, structured clinician acknowledgement, and Cal.com stat panic toast banner; 469/469 passing tests.
 - **Day 64:** Zero-Knowledge Break-The-Glass (BTG) Emergency Health Profile Vault schemas, Argon2id key derivation, and audited emergency override API for ICU/ER clinicians.
 - **Day 65:** Cryptographic audit trail (SHA-256 hash-chaining) and automated SMS alert dispatch to patient emergency contacts upon BTG access.
 
@@ -284,12 +284,12 @@ During active implementation, several critical architectural enhancements and sc
 
 ## 8. Codebase Health, Verification Suite & Current Status
 
-As of **Day 62 (Phase 4 Active / Milestone 13-02 / Live Queue Synchronization Active)**:
-- **Backend Test Suite:** **458 / 458 tests passing (100% green in 72.17s)** across 26 test suites
-- **Real-Time WebSockets & Queue Sync:** 20 dedicated tests passing across JWT handshake authentication, dual-mode Pub/Sub adapter, OPD queue stream, critical lab alerts, live patient calling, room assignment, triage updates, and metrics API
+As of **Day 63 (Phase 4 Active / Milestone 13-03 / Real-Time Panic Alerts Active)**:
+- **Backend Test Suite:** **469 / 469 tests passing (100% green in 70.03s)** across 27 test suites
+- **Real-Time WebSockets, Queue & Panic Alerts:** 31 dedicated tests passing across JWT handshake authentication, dual-mode Pub/Sub adapter, OPD queue stream, critical lab panic thresholds, clinician acknowledgement audit, and live broadcast delivery
 - **ABDM & FHIR R4 Specific Suites:** 110 tests passing across M1, M2, M3, FHIR R4 Bundle Validation, Medical Ontology Binding, ABDM Sandbox Certification, and Security Penetration Testing
 - **Frontend Typecheck & Build:** Clean compilation with 0 TypeScript errors and 13/13 static routes rendered cleanly in Next.js 15.5.25
 - **Active Release Tag:** **`v0.3.0`** (Milestone `v0.4.0` in progress)
 - **Git Repository Branch:** `main` (synchronized with `origin/main`)
-- **Next Operational Milestone:** **Day 63 (Milestone 13-03: Real-Time Critical Clinical Notifications & Lab Alerts)**
+- **Next Operational Milestone:** **Day 64 (Milestone 13-04: Zero-Knowledge Break-The-Glass Emergency Vault)**
 
