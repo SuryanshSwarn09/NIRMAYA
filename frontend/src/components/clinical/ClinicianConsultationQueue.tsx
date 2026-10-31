@@ -9,6 +9,7 @@
  * Conforms to the Cal.com design system tokens (white canvas, subtle borders, high contrast).
  */
 import React, { useState, useMemo } from "react";
+import { useOpdQueueWebSocket } from "@/hooks/useOpdQueueWebSocket";
 import { 
   Calendar, 
   Clock, 
@@ -155,6 +156,72 @@ export function ClinicianConsultationQueue({
   const [statusFilter, setStatusFilter] = useState<"all" | "waiting" | "in_progress" | "completed">("all");
   const [typeFilter, setTypeFilter] = useState<"all" | "teleconsultation" | "in_clinic">("all");
 
+  // Real-time WebSocket connection to facility OPD queue stream
+  const { isConnected, connectionStatus } = useOpdQueueWebSocket({
+    facilityId: "IN0410000123",
+    onQueueUpdate: (payload) => {
+      if (payload && payload.patientName) {
+        setAppointments((prev) => {
+          const existingIdx = prev.findIndex(
+            (a) => a.patientId === payload.patientId || a.patientName === payload.patientName
+          );
+          if (existingIdx >= 0) {
+            const copy = [...prev];
+            copy[existingIdx] = {
+              ...copy[existingIdx],
+              status:
+                payload.status === "WAITING"
+                  ? "confirmed"
+                  : payload.status === "IN_CONSULTATION"
+                  ? "in_progress"
+                  : payload.status === "COMPLETED"
+                  ? "completed"
+                  : copy[existingIdx].status,
+              priority:
+                payload.triageLevel === "EMERGENT"
+                  ? "high"
+                  : payload.triageLevel === "URGENT"
+                  ? "urgent"
+                  : "routine",
+            };
+            return copy;
+          } else {
+            const newAppt: QueueAppointment = {
+              id: payload.queueEntryId || `queue-${Date.now()}`,
+              patientId: payload.patientId || `pat-${Date.now()}`,
+              patientName: payload.patientName,
+              patientAbha: payload.patientAbha || "Unlinked",
+              patientPhone: payload.patientPhone || "",
+              scheduledTime: "Walk-in (Live)",
+              scheduledDate: "Today",
+              appointmentType: "routine_checkup",
+              status: "confirmed",
+              priority:
+                payload.triageLevel === "EMERGENT"
+                  ? "high"
+                  : payload.triageLevel === "URGENT"
+                  ? "urgent"
+                  : "routine",
+              reason: payload.chiefComplaint || "OPD Walk-in consultation",
+            };
+            return [newAppt, ...prev];
+          }
+        });
+      }
+    },
+    onQueueCalled: (payload) => {
+      if (payload && (payload.patientId || payload.patientName)) {
+        setAppointments((prev) =>
+          prev.map((a) =>
+            a.patientId === payload.patientId || a.patientName === payload.patientName
+              ? { ...a, status: "in_progress" }
+              : a
+          )
+        );
+      }
+    },
+  });
+
   // Summary Metrics
   const metrics = useMemo(() => {
     const total = appointments.length;
@@ -219,6 +286,27 @@ export function ClinicianConsultationQueue({
 
   return (
     <div className="space-y-4">
+      {/* Live Stream Connectivity Telemetry */}
+      <div className="flex items-center justify-between px-1 py-0.5">
+        <div className="flex items-center gap-2">
+          <div
+            className={`h-2 w-2 rounded-full ${
+              isConnected ? "bg-[#059669] animate-pulse" : "bg-[#9CA3AF]"
+            }`}
+          />
+          <span className="text-[11px] font-medium text-[#4B5563]">
+            {isConnected
+              ? "Live Queue Sync (WebSocket Connected)"
+              : connectionStatus === "CONNECTING"
+              ? "Connecting Live Stream..."
+              : "Live Stream Standby"}
+          </span>
+        </div>
+        <span className="text-[10px] text-[#9CA3AF] font-mono tracking-wider">
+          FACILITY: IN0410000123
+        </span>
+      </div>
+
       {/* 1. Header & Metric Counter Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <button
