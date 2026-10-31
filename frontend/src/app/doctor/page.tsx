@@ -51,6 +51,7 @@ import {
   AsvsComplianceShieldCard,
   AdministrativeHierarchyViewerCard,
   ChainOfCommandDelegationCard,
+  TerritorialCommandCenterCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -561,6 +562,9 @@ export default function DoctorEMRPage() {
 
             {/* Chain of Command & Delegated Authority Console */}
             <ChainOfCommandDelegationCard />
+
+            {/* Public Health Command Center & Territorial Disease Surveillance */}
+            <TerritorialCommandCenterCard />
 
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">
