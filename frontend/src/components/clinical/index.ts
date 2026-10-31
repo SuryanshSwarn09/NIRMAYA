@@ -62,6 +62,7 @@ export {
   type AdministrativeUnitItem,
   type AdministrativeOfficerItem,
 } from "./AdministrativeHierarchyViewerCard";
+export { ChainOfCommandDelegationCard } from "./ChainOfCommandDelegationCard";
 
 
 
