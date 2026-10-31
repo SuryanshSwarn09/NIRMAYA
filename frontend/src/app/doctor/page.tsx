@@ -45,7 +45,8 @@ import {
   HprOnboardingCard,
   HipBridgeConsoleCard,
   ClinicalAlertToastSystem,
-  BreakTheGlassModal
+  BreakTheGlassModal,
+  AuditLedgerVerificationCard
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -541,6 +542,9 @@ export default function DoctorEMRPage() {
 
             {/* ABDM Milestone 2 HIP Bridge Service & Inbound Webhook Telemetry */}
             <HipBridgeConsoleCard />
+
+            {/* Cryptographic Audit Hash-Chain Ledger & Emergency SMS Dispatch */}
+            <AuditLedgerVerificationCard />
 
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">

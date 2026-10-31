@@ -38,3 +38,10 @@ export { PatientDiscoverySimulatorModal, type SimulationResult, type MatchScoreB
 export { CareContextLinkageModal, type CareContextLinkageModalProps } from "./CareContextLinkageModal";
 export { ClinicalAlertToastSystem } from "./ClinicalAlertToastSystem";
 export { BreakTheGlassModal, type BreakTheGlassModalProps, type EmergencyProfile } from "./BreakTheGlassModal";
+export { 
+  AuditLedgerVerificationCard, 
+  type AuditBlockItem, 
+  type VerificationResult, 
+  type EmergencyDispatchItem 
+} from "./AuditLedgerVerificationCard";
+
