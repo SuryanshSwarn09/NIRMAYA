@@ -21,7 +21,8 @@ import {
   Play,
   ArrowRight,
   Sparkles,
-  ExternalLink
+  ExternalLink,
+  Bell
 } from "lucide-react";
 import { DoctorSlotManager } from "@/components/appointments";
 import { 
@@ -40,8 +41,10 @@ import {
   INITIAL_MOCK_QUEUE,
   AbdmGatewayStatusCard,
   HprOnboardingCard,
-  HipBridgeConsoleCard
+  HipBridgeConsoleCard,
+  ClinicalAlertToastSystem
 } from "@/components/clinical";
+import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
 import { SoapNote } from "@/lib/api";
 
@@ -205,6 +208,17 @@ export default function DoctorEMRPage() {
   const [signedNotes, setSignedNotes] = useState<Record<string, SoapNote>>({});
   const [noteAttestationSuccess, setNoteAttestationSuccess] = useState<string | null>(null);
   const [prescriptionSuccess, setPrescriptionSuccess] = useState<string | null>(null);
+  const [isAlertsDrawerOpen, setIsAlertsDrawerOpen] = useState(false);
+
+  const {
+    alerts,
+    unreadCount,
+    latestPanicAlert,
+    acknowledgeAlert,
+    dismissPanicAlert,
+  } = useClinicalNotificationsWebSocket({
+    doctorId,
+  });
 
   // Clinician Keyboard Ergonomics: Alt+1..Alt+6 (and fast number keys outside form inputs)
   useEffect(() => {
@@ -300,6 +314,20 @@ export default function DoctorEMRPage() {
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <Badge variant="emerald" size="sm">Clinical Session Active</Badge>
+          <button
+            type="button"
+            onClick={() => setIsAlertsDrawerOpen(true)}
+            className="relative p-2 rounded-md border border-[#E5E7EB] hover:bg-gray-50 text-gray-700 transition-colors"
+            title="Clinical Alerts & Lab Panic Values"
+            aria-label="Open clinical alerts"
+          >
+            <Bell className="w-4 h-4" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white shadow-xs">
+                {unreadCount}
+              </span>
+            )}
+          </button>
           <Link href="/patient">
             <Button variant="secondary" size="sm">
               Switch to Patient View
@@ -721,6 +749,17 @@ export default function DoctorEMRPage() {
           setIsTelemedicineModalOpen(false);
           setActiveTab("soap");
         }}
+      />
+
+      {/* 6. Clinical Alerts, Lab Panic-Value Toast Banner & Drawer */}
+      <ClinicalAlertToastSystem
+        latestPanicAlert={latestPanicAlert}
+        alerts={alerts}
+        unreadCount={unreadCount}
+        isOpenDrawer={isAlertsDrawerOpen}
+        onCloseDrawer={() => setIsAlertsDrawerOpen(false)}
+        onAcknowledge={acknowledgeAlert}
+        onDismissPanic={dismissPanicAlert}
       />
 
     </div>
