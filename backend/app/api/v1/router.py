@@ -32,6 +32,7 @@ from app.api.v1.endpoints import (
     opd_queue,
     clinical_alerts,
     emergency_vault,
+    audit_ledger,
 )
 
 api_router = APIRouter()
@@ -56,6 +57,7 @@ api_router.include_router(websockets.router, prefix="/websockets", tags=["WebSoc
 api_router.include_router(opd_queue.router, prefix="/queue", tags=["OPD Consultation Queue & Live Sync"])
 api_router.include_router(clinical_alerts.router, prefix="/alerts", tags=["Clinical Alerts & Lab Panic Values"])
 api_router.include_router(emergency_vault.router, prefix="/emergency/btg", tags=["Break-The-Glass Emergency Access"])
+api_router.include_router(audit_ledger.router, prefix="/audit/ledger", tags=["Audit Ledger & Emergency Dispatch"])
 api_router.include_router(abdm.router, prefix="", tags=["ABDM Gateway & National Interoperability"])
 api_router.include_router(patients.router, prefix="/patients", tags=["Patient Vault"])
 api_router.include_router(doctors.router, prefix="/doctors", tags=["Doctor EMR"])
