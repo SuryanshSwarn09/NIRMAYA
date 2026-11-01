@@ -1,0 +1,161 @@
+version: '3.8'
+
+# ==============================================================================
+# NIRMAYA Production Multi-Service Container Orchestration Topology
+#
+# Services:
+# - postgres: PostgreSQL 16 Alpine with ltree extension & persistent storage
+# - redis: Redis 7 Alpine In-Memory Cache & WebSocket Pub/Sub broker
+# - backend: FastAPI ASGI API Server (Python 3.12 Alpine, non-root UID 10001)
+# - frontend: Next.js 15 Standalone UI (Node.js 20 Alpine, non-root UID 1001)
+# - caddy: Enterprise Reverse Proxy with Automated TLS 1.3 & HTTP/3
+# ==============================================================================
+
+networks:
+  nirmaya-net:
+    driver: bridge
+    name: nirmaya-net
+
+volumes:
+  postgres_data:
+    name: nirmaya_postgres_data
+  redis_data:
+    name: nirmaya_redis_data
+  caddy_data:
+    name: nirmaya_caddy_data
+  caddy_config:
+    name: nirmaya_caddy_config
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. PostgreSQL 16 Relational & LGD Hierarchical Store
+  # ----------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: nirmaya-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-nirmaya}
+      POSTGRES_USER: ${POSTGRES_USER:-nirmaya_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-nirmaya_secure_pass_2026}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - nirmaya-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-nirmaya_user} -d $${POSTGRES_DB:-nirmaya}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ----------------------------------------------------------------------------
+  # 2. Redis 7 Cache & WebSocket Pub/Sub Broker
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: nirmaya-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:-nirmaya_redis_pass_2026}"]
+    volumes:
+      - redis_data:/data
+    networks:
+      - nirmaya-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-nirmaya_redis_pass_2026}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ----------------------------------------------------------------------------
+  # 3. FastAPI Backend Application Server
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: nirmaya-backend:v0.4.0
+    container_name: nirmaya-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-nirmaya_user}:${POSTGRES_PASSWORD:-nirmaya_secure_pass_2026}@postgres:5432/${POSTGRES_DB:-nirmaya}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-nirmaya_redis_pass_2026}@redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-nirmaya_production_super_secret_jwt_key_2026_xyz}
+      ENVIRONMENT: production
+      NIRMAYA_CONTAINER: "1"
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-4}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://nirmaya.health,https://api.nirmaya.health,http://localhost}
+    networks:
+      - nirmaya-net
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # ----------------------------------------------------------------------------
+  # 4. Next.js 15 Standalone Frontend Application
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: nirmaya-frontend:v0.4.0
+    container_name: nirmaya-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.nirmaya.health}
+      NIRMAYA_CONTAINER: "1"
+    networks:
+      - nirmaya-net
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # ----------------------------------------------------------------------------
+  # 5. Caddy Automated TLS 1.3 Reverse Proxy & Ingress Gateway
+  # ----------------------------------------------------------------------------
+  caddy:
+    image: caddy:2-alpine
+    container_name: nirmaya-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    networks:
+      - nirmaya-net
+    healthcheck:
+      test: ["CMD", "caddy", "version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
