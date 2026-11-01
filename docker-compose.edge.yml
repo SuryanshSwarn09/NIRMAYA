@@ -1,0 +1,123 @@
+version: '3.8'
+
+# ==============================================================================
+# NIRMAYA Dual-Mode Edge Node Appliance - Low-Resource Local Clinic Topology
+#
+# Hardware Target: Intel NUC, Raspberry Pi 5, or solo practitioner laptop
+# Memory Budget: < 512MB RAM Total Footprint
+# Storage: Embedded Encrypted SQLite with Local Append-Only Clinical Event Log
+# ==============================================================================
+
+networks:
+  nirmaya-edge-net:
+    driver: bridge
+    name: nirmaya-edge-net
+
+volumes:
+  edge_data:
+    name: nirmaya_edge_data
+  edge_caddy_data:
+    name: nirmaya_edge_caddy_data
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. FastAPI Edge Backend (SQLite Embedded Mode)
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: nirmaya-backend:v0.4.0
+    container_name: nirmaya-edge-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////data/nirmaya_edge.db
+      ENVIRONMENT: edge
+      NIRMAYA_CONTAINER: "1"
+      NIRMAYA_EDGE_MODE: "1"
+      NIRMAYA_NODE_ID: ${NIRMAYA_NODE_ID:-EDGE-PHC-BIHAR-042}
+      SECRET_KEY: ${SECRET_KEY:-nirmaya_edge_clinic_secret_key_2026_xyz}
+      WEB_CONCURRENCY: 1
+      UPLINK_URL: ${UPLINK_URL:-https://api.nirmaya.health}
+      AUTO_SYNC_INTERVAL_SECONDS: ${AUTO_SYNC_INTERVAL_SECONDS:-300}
+    volumes:
+      - edge_data:/data
+    networks:
+      - nirmaya-edge-net
+    expose:
+      - "8000"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')\""]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ----------------------------------------------------------------------------
+  # 2. Next.js 15 Standalone Frontend Application
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: nirmaya-frontend:v0.4.0
+    container_name: nirmaya-edge-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+      NIRMAYA_CONTAINER: "1"
+      NIRMAYA_EDGE_MODE: "1"
+    networks:
+      - nirmaya-edge-net
+    expose:
+      - "3000"
+    deploy:
+      resources:
+        limits:
+          memory: 192M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ----------------------------------------------------------------------------
+  # 3. Local Caddy Gateway & mDNS Ingress
+  # ----------------------------------------------------------------------------
+  caddy:
+    image: caddy:2-alpine
+    container_name: nirmaya-edge-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.edge:/etc/caddy/Caddyfile:ro
+      - edge_caddy_data:/data
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_healthy
+    networks:
+      - nirmaya-edge-net
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+    healthcheck:
+      test: ["CMD", "caddy", "version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

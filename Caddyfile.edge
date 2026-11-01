@@ -1,0 +1,29 @@
+# ==============================================================================
+# NIRMAYA Healthcare Platform - Edge Node Caddy Ingress Gateway
+#
+# Configured for local offline clinic operation (LAN / mDNS / localhost)
+# ==============================================================================
+
+{
+    admin off
+    auto_https off
+}
+
+:80 {
+    encode zstd gzip
+
+    # Route WebSockets to Edge Backend
+    @websockets {
+        path /ws/*
+    }
+    reverse_proxy @websockets backend:8000
+
+    # Route REST API to Edge Backend
+    @api {
+        path /api/* /docs* /openapi.json
+    }
+    reverse_proxy @api backend:8000
+
+    # Route UI to Frontend
+    reverse_proxy * frontend:3000
+}
