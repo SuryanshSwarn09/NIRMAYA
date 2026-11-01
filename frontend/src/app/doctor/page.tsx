@@ -57,6 +57,7 @@ import {
   DockerOrchestrationCard,
   EdgeNodeSyncCard,
   LegacyHisFederationCard,
+  AcademicMonographViewerCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -585,6 +586,10 @@ export default function DoctorEMRPage() {
 
             {/* PostgreSQL Foreign Data Wrapper & Legacy HIS Federation */}
             <LegacyHisFederationCard />
+
+            {/* 80-Day Academic Project Monograph & Engineering Thesis */}
+            <AcademicMonographViewerCard />
+
 
 
             {/* 1. Active Encounter Header Card */}

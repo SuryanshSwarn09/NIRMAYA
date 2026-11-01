@@ -69,6 +69,8 @@ export { FrontendContainerCard } from "./FrontendContainerCard";
 export { DockerOrchestrationCard } from "./DockerOrchestrationCard";
 export { EdgeNodeSyncCard } from "./EdgeNodeSyncCard";
 export { LegacyHisFederationCard } from "./LegacyHisFederationCard";
+export { AcademicMonographViewerCard } from "./AcademicMonographViewerCard";
+
 
 
 
