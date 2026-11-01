@@ -585,7 +585,7 @@ class MonographService:
         """Return monograph title, table of contents, and aggregated metrics."""
         total_words = sum(c.word_count for c in self._chapters)
         total_diagrams = sum(c.diagrams_count for c in self._chapters)
-        total_proofs = sum(c.proofs_count for c in self._chapters)
+        total_proofs = len(self._proofs)
 
         return MonographMetadataResponse(
             title="NIRMAYA: A Sovereign, Interoperable, and Zero-Trust National Health Information Network",

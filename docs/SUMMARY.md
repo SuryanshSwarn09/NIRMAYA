@@ -113,6 +113,11 @@
     * [Day 75: PostgreSQL FDW & Legacy HIS Federation Adapter](journey/month-4/day-75.md)
 
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
+    * [Day 76: Academic Project Monograph & Engineering Thesis](journey/month-4/day-76.md)
+
+## Reports & Thesis Monographs
+* [Academic Project Monograph & Capstone Engineering Thesis](reports/nirmaya-academic-project-monograph-thesis.md)
+* [Master Engineering Roadmap (Days 1–80)](reports/master-engineering-roadmap-days-1-80.md)
 
 ## Audits & Retrospectives
 * [Week 1 Retrospective & Metrics](journey/month-1/week-1-review.md)
