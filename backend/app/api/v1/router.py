@@ -43,6 +43,7 @@ from app.api.v1.endpoints import (
     edge_sync,
     legacy_his,
     monograph,
+    benchmarks,
 )
 
 api_router = APIRouter()
@@ -89,6 +90,8 @@ api_router.include_router(orchestration.router, prefix="/admin/orchestration", t
 api_router.include_router(edge_sync.router, prefix="/edge", tags=["Edge Node Appliance & Offline Sync"])
 api_router.include_router(legacy_his.router, prefix="/his", tags=["Legacy HIS Federation & postgres_fdw"])
 api_router.include_router(monograph.router, prefix="/monograph", tags=["Academic Monograph & Engineering Thesis"])
+api_router.include_router(benchmarks.router, prefix="", tags=["Performance Benchmarks & SLAs"])
+
 
 
 
