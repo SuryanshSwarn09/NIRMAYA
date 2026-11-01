@@ -580,6 +580,15 @@ from app.schemas.orchestration import (
     HealthMeshStatus,
     ComposeAuditReport,
 )
+from app.schemas.edge_sync import (
+    SyncStateEnum,
+    ClinicalEventType,
+    ClinicalEventLogEntry,
+    EdgeNodeConfig,
+    SyncBatchRequest,
+    SyncBatchResponse,
+    EdgeNodeTelemetry,
+)
 
 
 
