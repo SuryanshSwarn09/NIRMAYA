@@ -56,6 +56,7 @@ import {
   FrontendContainerCard,
   DockerOrchestrationCard,
   EdgeNodeSyncCard,
+  LegacyHisFederationCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -581,6 +582,10 @@ export default function DoctorEMRPage() {
 
             {/* Dual-Mode Edge Node Appliance & Offline Event Log Sync */}
             <EdgeNodeSyncCard />
+
+            {/* PostgreSQL Foreign Data Wrapper & Legacy HIS Federation */}
+            <LegacyHisFederationCard />
+
 
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">
