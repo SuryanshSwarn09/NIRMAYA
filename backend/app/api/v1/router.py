@@ -40,6 +40,7 @@ from app.api.v1.endpoints import (
     command_center,
     container,
     orchestration,
+    edge_sync,
 )
 
 api_router = APIRouter()
@@ -83,6 +84,7 @@ api_router.include_router(delegation.router, prefix="/admin", tags=["Administrat
 api_router.include_router(command_center.router, prefix="/admin/command-center", tags=["Public Health Command Center & Disease Surveillance"])
 api_router.include_router(container.router, prefix="/admin/container", tags=["Container Runtime & Environment Conformance"])
 api_router.include_router(orchestration.router, prefix="/admin/orchestration", tags=["Container Orchestration & Reverse Proxy"])
+api_router.include_router(edge_sync.router, prefix="/edge", tags=["Edge Node Appliance & Offline Sync"])
 
 
 
