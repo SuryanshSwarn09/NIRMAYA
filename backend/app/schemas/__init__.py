@@ -650,6 +650,16 @@ from app.schemas.license_audit import (
     CycloneDXManifest,
     PreReleaseAuditReport,
 )
+from app.schemas.release import (
+    ReleaseChannelEnum,
+    HealthCheckStatusEnum,
+    ReleasePillarAudit,
+    ProductionDeploymentVerification,
+    CumulativeSystemMetrics,
+    MajorBreakthroughItem,
+    Phase5RoadmapItem,
+    MasterReleaseManifest,
+)
 
 
 
