@@ -45,6 +45,7 @@ from app.api.v1.endpoints import (
     monograph,
     benchmarks,
     demo,
+    audit,
 )
 
 api_router = APIRouter()
@@ -93,6 +94,7 @@ api_router.include_router(legacy_his.router, prefix="/his", tags=["Legacy HIS Fe
 api_router.include_router(monograph.router, prefix="/monograph", tags=["Academic Monograph & Engineering Thesis"])
 api_router.include_router(benchmarks.router, prefix="", tags=["Performance Benchmarks & SLAs"])
 api_router.include_router(demo.router, prefix="", tags=["Interactive Guided Demo & Presentation"])
+api_router.include_router(audit.router, prefix="", tags=["Pre-Release System Audit & License Compliance"])
 
 
 
