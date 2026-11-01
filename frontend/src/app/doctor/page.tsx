@@ -58,6 +58,7 @@ import {
   EdgeNodeSyncCard,
   LegacyHisFederationCard,
   AcademicMonographViewerCard,
+  PerformanceBenchmarkCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -589,6 +590,10 @@ export default function DoctorEMRPage() {
 
             {/* 80-Day Academic Project Monograph & Engineering Thesis */}
             <AcademicMonographViewerCard />
+
+            {/* Subsystem Performance & Interoperability Benchmark Suite */}
+            <PerformanceBenchmarkCard />
+
 
 
 
