@@ -2235,6 +2235,41 @@
   - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
   - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
 
+#### Day 74 (Thu) - Milestone 15-04: Dual-Mode Edge Node Appliance Packaging & Local-First Encrypted SQLite Sync Engine
+- **Focus:** Dual-Mode Edge Node Appliance Packaging (`docker-compose.edge.yml`), Low-Resource Hardware Constraint (< 512MB RAM Budget), Embedded Encrypted SQLite Local Database (`nirmaya_edge.db`), Local Caddy Ingress Gateway (`Caddyfile.edge`), Append-Only Clinical Event Log with SHA-256 Parent Hash Chaining, Deterministic Vector Clock Sequence Ordering & Merkle Root Calculation, Bidirectional Store-and-Forward Sync Engine (`push` / `pull`), Client-Side Offline Storage Adapter (`offlineQueue.ts`), FastAPI Edge REST Endpoints (`/api/v1/edge/*`), Cal.com `EdgeNodeSyncCard.tsx` Dashboard Component, and Dedicated Test Suite (`tests/test_edge_node_sync.py`).
+- **Executed Commits (Logical Atomic Cadence):**
+  1. `bbb0043: feat(schemas): define edge node appliance, clinical event log, and store-and-forward sync schemas`
+  2. `7ca1a85: feat(docker): implement turnkey edge node appliance compose topology and sqlite config`
+  3. `2d32156: feat(services): implement local-first append-only clinical event log and edge sync engine`
+  4. `074324f: feat(api): expose edge node sync push, pull, and telemetry rest endpoints`
+  5. `064e860: feat(frontend): implement client-side offline queue manager and EdgeNodeSyncCard with calcom design tokens`
+  6. `62f8a2c: test(deploy): author edge node sync test suite, publish day-74 log, and update documentation`
+- **Key Deliverables:**
+  - **Turnkey Edge Node Appliance Topology (`docker-compose.edge.yml`):**
+    - Multi-container topology for rural PHCs and solo practitioners constrained to < 512MB RAM total footprint (backend 256M, frontend 192M, caddy 64M).
+    - Embedded SQLite database connection (`sqlite+aiosqlite:////data/nirmaya_edge.db`) with persistent storage volume (`edge_data:/data`).
+    - Local Caddy reverse proxy (`Caddyfile.edge`) terminating HTTP/HTTPS on port 80/443 with mDNS support.
+  - **Append-Only Clinical Event Log & Sync Schemas (`backend/app/schemas/edge_sync.py`):**
+    - Modeled `ClinicalEventLogEntry` with SHA-256 parent hash chaining, `EdgeNodeConfig`, `SyncBatchRequest`, `SyncBatchResponse`, and `EdgeNodeTelemetry`.
+  - **Edge Sync Service Engine (`backend/app/services/edge_sync_service.py`):**
+    - Cryptographic hash chaining across offline clinical mutations (registrations, encounters, vitals, prescriptions, lab orders).
+    - Store-and-forward batch push/pull ingestion with Merkle tree calculation and conflict detection.
+    - Static configuration auditor scoring `docker-compose.edge.yml` at 100.0% compliance.
+  - **FastAPI Edge REST Endpoints (`backend/app/api/v1/endpoints/edge_sync.py`):**
+    - Mounted `/api/v1/edge/sync/push`, `/sync/pull`, `/status`, `/config`, and `/audit`.
+  - **Client-Side Offline Queue Manager (`frontend/src/lib/offlineQueue.ts`):**
+    - Local-first browser storage manager managing clinical event buffering in browser local storage.
+  - **Cal.com Frontend Dashboard Card (`frontend/src/components/clinical/EdgeNodeSyncCard.tsx`):**
+    - Monochrome UI displaying Edge Node status (`Online (Synced)` vs `Offline (Store & Forward Active)`), buffered events, and local encrypted storage meter.
+    - Mounted in `/doctor` clinical portal with clean Next.js 15 compilation.
+  - **Dedicated Test Suite (`backend/tests/test_edge_node_sync.py`):**
+    - 16 comprehensive unit, integration, and security tests verifying event log hash chaining, tamper detection, batch push/pull, Merkle calculation, and REST endpoints.
+- **Verification:**
+  - Dedicated Edge Node Sync Suite: **16/16 tests passing in `tests/test_edge_node_sync.py` (100% green in 1.92s)**.
+  - Full Cumulative Backend Test Suite: **614/614 tests passing (100% green across 38 test modules in 119.04s)**.
+  - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
+  - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
+
 ---
 *(Entries will be appended daily in sequential order across the 95-day roadmap)*
 

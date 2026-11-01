@@ -109,6 +109,7 @@
     * [Day 71: Multi-Stage Alpine Dockerfile & Non-Root Context](journey/month-4/day-71.md)
     * [Day 72: Next.js 15 Standalone Dockerfile & Asset Caching](journey/month-4/day-72.md)
     * [Day 73: Multi-Service Docker Compose & Caddy Ingress](journey/month-4/day-73.md)
+    * [Day 74: Dual-Mode Edge Appliance & Offline Event Log](journey/month-4/day-74.md)
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
 
 ## Audits & Retrospectives
