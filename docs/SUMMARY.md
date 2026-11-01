@@ -117,6 +117,7 @@
     * [Day 77: Interoperability & High-Throughput Performance Benchmarks](journey/month-4/day-77.md)
     * [Day 78: High-Definition Demo, Presentation Suite & Interactive Sandbox](journey/month-4/day-78.md)
     * [Day 79: Final System Audit, License Compliance & Documentation Sign-off](journey/month-4/day-79.md)
+    * [Day 80: Production Master Launch & Master Release v1.0.0](journey/month-4/day-80.md)
 
 
 ## Reports & Thesis Monographs
@@ -124,6 +125,7 @@
 * [Capstone Defense Presentation Deck (12 Slides)](reports/nirmaya-capstone-presentation-deck.md)
 * [Interactive Demonstration Walkthrough & Defense Script](reports/nirmaya-interactive-demo-script.md)
 * [Pre-Release System Audit, Open Source License Compliance & Software Bill of Materials (SBOM) Certification](reports/nirmaya-system-audit-and-license-compliance.md)
+* [Master Production Release Notes (v1.0.0)](reports/nirmaya-release-v1.0.0-master-notes.md)
 * [Master Engineering Roadmap (Days 1–80)](reports/master-engineering-roadmap-days-1-80.md)
 
 ## Audits & Retrospectives
@@ -146,6 +148,7 @@
 * [Week 12 Retrospective & Interoperability Gateway Audit](journey/month-3/week-12-review.md)
 * [Week 13 Retrospective & Real-Time Infrastructure Audit](journey/month-4/week-13-review.md)
 * [Week 14 Retrospective & Security Governance Review](journey/month-4/week-14-review.md)
+* [Month 4 Comprehensive Retrospective & Master Release v1.0.0](journey/month-4/month-4-retrospective.md)
 * [Month 3 Comprehensive Retrospective & Interoperability Gateway](journey/month-3/month-3-retrospective.md)
 * [Month 2 Comprehensive Retrospective & Observational Engine](journey/month-2/month-2-retrospective.md)
 
