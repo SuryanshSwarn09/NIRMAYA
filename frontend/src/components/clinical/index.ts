@@ -66,6 +66,7 @@ export { ChainOfCommandDelegationCard } from "./ChainOfCommandDelegationCard";
 export { TerritorialCommandCenterCard } from "./TerritorialCommandCenterCard";
 export { ContainerRuntimeCard } from "./ContainerRuntimeCard";
 export { FrontendContainerCard } from "./FrontendContainerCard";
+export { DockerOrchestrationCard } from "./DockerOrchestrationCard";
 
 
 

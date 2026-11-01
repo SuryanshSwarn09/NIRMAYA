@@ -54,6 +54,7 @@ import {
   TerritorialCommandCenterCard,
   ContainerRuntimeCard,
   FrontendContainerCard,
+  DockerOrchestrationCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -573,6 +574,9 @@ export default function DoctorEMRPage() {
 
             {/* Next.js 15 Standalone Frontend Container Telemetry */}
             <FrontendContainerCard />
+
+            {/* Turnkey Multi-Service Docker Compose & Caddy Ingress Topology */}
+            <DockerOrchestrationCard />
 
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">
