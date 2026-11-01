@@ -59,6 +59,7 @@ import {
   LegacyHisFederationCard,
   AcademicMonographViewerCard,
   PerformanceBenchmarkCard,
+  InteractiveDemoSandboxCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -593,6 +594,10 @@ export default function DoctorEMRPage() {
 
             {/* Subsystem Performance & Interoperability Benchmark Suite */}
             <PerformanceBenchmarkCard />
+
+            {/* Interactive Guided Demonstration & Defense Sandbox */}
+            <InteractiveDemoSandboxCard />
+
 
 
 
