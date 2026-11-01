@@ -46,6 +46,7 @@ from app.api.v1.endpoints import (
     benchmarks,
     demo,
     audit,
+    release,
 )
 
 api_router = APIRouter()
@@ -95,6 +96,7 @@ api_router.include_router(monograph.router, prefix="/monograph", tags=["Academic
 api_router.include_router(benchmarks.router, prefix="", tags=["Performance Benchmarks & SLAs"])
 api_router.include_router(demo.router, prefix="", tags=["Interactive Guided Demo & Presentation"])
 api_router.include_router(audit.router, prefix="", tags=["Pre-Release System Audit & License Compliance"])
+api_router.include_router(release.router, prefix="", tags=["Master Production Release v1.0.0"])
 
 
 
