@@ -628,6 +628,16 @@ from app.schemas.benchmark import (
     BenchmarkSuiteReport,
     BenchmarkExportResponse,
 )
+from app.schemas.demo import (
+    ScenarioCategoryEnum,
+    ScenarioExecutionStatus,
+    ScenarioStep,
+    DemoScenario,
+    ScenarioExecutionResult,
+    SlideItem,
+    SlideDeckMetadata,
+)
+
 
 
 
