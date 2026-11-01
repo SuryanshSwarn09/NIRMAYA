@@ -589,6 +589,24 @@ from app.schemas.edge_sync import (
     SyncBatchResponse,
     EdgeNodeTelemetry,
 )
+from app.schemas.legacy_his import (
+    LegacySystemType,
+    ConnectionStatusEnum,
+    FhirResourceTypeEnum,
+    LegacyConnectionConfig,
+    ServerHealthCheckResult,
+    LegacyPatientRecord,
+    LegacyEncounterRecord,
+    LegacyObservationRecord,
+    LegacyPrescriptionRecord,
+    NormalizedFhirTimelineEntry,
+    FederatedPatientView,
+    FederationQueryRequest,
+    FederationQueryResponse,
+    FederationEngineTelemetry,
+    SqlMedDdlResponse,
+)
+
 
 
 
