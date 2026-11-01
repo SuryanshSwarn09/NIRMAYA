@@ -1132,3 +1132,4 @@ COMMENT ON SCHEMA {schema} IS 'Federated read-only legacy HIS tables via postgre
 
 # Global singleton instance for injection
 legacy_his_service = LegacyHisFederationService()
+

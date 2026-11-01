@@ -2270,8 +2270,43 @@
   - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
   - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
 
+#### Day 75 (Fri) - Milestone 15-05: PostgreSQL Foreign Data Wrapper (postgres_fdw) & Legacy HIS Read-Only Federation Adapter
+- **Focus:** PostgreSQL 16 Foreign Data Wrapper (`postgres_fdw`), ISO/IEC 9075-9 SQL/MED Standard Specification, Zero-Downtime Read-Only Legacy Hospital Federation (PostgreSQL, MySQL/Bahmni, SQLite, Oracle), Strict AST-Based Mutation Blocking & `SET TRANSACTION READ ONLY` Enforcement, Bijective HL7 FHIR R4 Normalization Pipeline (Patient, Encounter, LOINC Observation, MedicationRequest), Multi-Tier In-Memory LRU Query Caching, Automated SQL/MED DDL Script Generator, FastAPI Federation REST Endpoints (`/api/v1/his/*`), Cal.com `LegacyHisFederationCard.tsx` Dashboard Component, and Dedicated Automated Test Suite (`tests/test_legacy_his_federation.py`).
+- **Executed Commits (Logical Atomic Cadence):**
+  1. `70b65e2: feat(schemas): define legacy his connection, foreign table mapping, and fhir normalization schemas`
+  2. `49614ed: feat(services): implement legacy his federation service with read-only guardrails, fhir translator, and sql/med ddl generator`
+  3. `0086dfe: feat(api): expose legacy his servers, federated query, fhir timeline, and ddl rest endpoints`
+  4. `e72c279: feat(frontend): implement LegacyHisFederationCard with calcom design tokens and mount in doctor portal`
+  5. `3d2f392: test(federation): author legacy his test suite, publish day-75 log, and update documentation`
+- **Key Deliverables:**
+  - **ISO/IEC 9075-9 SQL/MED & Foreign Data Wrapper Architecture:**
+    - Standardized PostgreSQL 16 `postgres_fdw` extension setup with isolated `foreign_his` schema.
+    - Automated DDL generator producing complete `CREATE SERVER`, `CREATE USER MAPPING`, and `CREATE FOREIGN TABLE` definitions for remote hospital instances.
+  - **Strict Read-Only Security Guardrails:**
+    - Session-level `SET TRANSACTION READ ONLY;` execution on all foreign connection sessions.
+    - Abstract syntax tree (AST) inspection engine prohibiting mutating tokens (`INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER`, `CREATE`, `TRUNCATE`, `EXEC`, `GRANT`, `REVOKE`, `MERGE`, `UPSERT`).
+  - **Bijective HL7 FHIR R4 Translation Pipeline:**
+    - Normalized disparate legacy schema tables (`pt_demographics`, `enc_encounters`, `lab_investigations`, `rx_medications`) into standard FHIR R4 resources.
+    - LOINC ontology mapping for laboratory observations (Fasting Glucose `1558-6`, HbA1c `4548-4`, Creatinine `2160-0`, Hemoglobin `718-7`, Potassium `2823-3`, eGFR `33914-3`).
+  - **Multi-Tier Caching & Telemetry Engine:**
+    - In-memory LRU cache with 300s TTL providing sub-15ms federated query latencies.
+    - Live federation telemetry tracking server ping health, query volume, cache hit ratio, and prevented mutation attempts.
+  - **FastAPI REST Endpoints (`/api/v1/his/*`):**
+    - Mounted `/servers`, `/servers/test`, `/patients`, `/patients/{id}/timeline`, `/import/fhir`, `/telemetry`, and `/ddl`.
+  - **Cal.com Frontend Dashboard Component (`LegacyHisFederationCard.tsx`):**
+    - High-density card following Cal.com tokens (`#ffffff` canvas, `#f5f5f5` card surfaces, `#111111` action buttons, `#e5e7eb` hairline borders).
+    - Multi-tab UI featuring Federated Patient Explorer, Foreign Servers Fleet, and PostgreSQL 16 SQL/MED DDL viewer. Mounted in `/doctor`.
+  - **Dedicated Test Suite (`backend/tests/test_legacy_his_federation.py`):**
+    - 16 comprehensive unit and integration tests covering security guardrails, SQL/MED DDL generation, FHIR normalization, cache hits, and REST endpoints.
+- **Verification:**
+  - Dedicated Legacy HIS Suite: **16/16 tests passing in `tests/test_legacy_his_federation.py` (100% green in 1.25s)**.
+  - Full Cumulative Backend Test Suite: **630/630 tests passing (100% green across 39 test modules in 173.69s)**.
+  - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
+  - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
+
 ---
 *(Entries will be appended daily in sequential order across the 95-day roadmap)*
+
 
 
 

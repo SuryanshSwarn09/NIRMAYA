@@ -195,3 +195,4 @@ class SqlMedDdlResponse(BaseModel):
     schema_name: str
     instructions: str
     foreign_tables: List[str]
+

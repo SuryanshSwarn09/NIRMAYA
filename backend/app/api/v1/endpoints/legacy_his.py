@@ -234,3 +234,4 @@ async def generate_sql_med_ddl(
         return legacy_his_service.generate_sql_med_ddl(server_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+

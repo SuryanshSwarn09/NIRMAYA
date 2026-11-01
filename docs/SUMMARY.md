@@ -110,6 +110,8 @@
     * [Day 72: Next.js 15 Standalone Dockerfile & Asset Caching](journey/month-4/day-72.md)
     * [Day 73: Multi-Service Docker Compose & Caddy Ingress](journey/month-4/day-73.md)
     * [Day 74: Dual-Mode Edge Appliance & Offline Event Log](journey/month-4/day-74.md)
+    * [Day 75: PostgreSQL FDW & Legacy HIS Federation Adapter](journey/month-4/day-75.md)
+
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
 
 ## Audits & Retrospectives
