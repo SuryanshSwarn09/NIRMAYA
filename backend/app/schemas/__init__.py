@@ -606,6 +606,18 @@ from app.schemas.legacy_his import (
     FederationEngineTelemetry,
     SqlMedDdlResponse,
 )
+from app.schemas.monograph import (
+    ProofCategoryEnum,
+    BenchmarkCategoryEnum,
+    BenchmarkStatusEnum,
+    ChapterSection,
+    MonographChapter,
+    ArchitecturalProof,
+    BenchmarkSummary,
+    CitationItem,
+    MonographMetadataResponse,
+)
+
 
 
 
