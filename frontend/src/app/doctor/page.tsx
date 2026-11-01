@@ -60,6 +60,7 @@ import {
   AcademicMonographViewerCard,
   PerformanceBenchmarkCard,
   InteractiveDemoSandboxCard,
+  SystemAuditLicenseCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -597,6 +598,9 @@ export default function DoctorEMRPage() {
 
             {/* Interactive Guided Demonstration & Defense Sandbox */}
             <InteractiveDemoSandboxCard />
+
+            {/* Pre-Release System Audit, Open-Source License Compliance & CycloneDX SBOM */}
+            <SystemAuditLicenseCard />
 
 
 

@@ -72,6 +72,7 @@ export { LegacyHisFederationCard } from "./LegacyHisFederationCard";
 export { AcademicMonographViewerCard } from "./AcademicMonographViewerCard";
 export { PerformanceBenchmarkCard } from "./PerformanceBenchmarkCard";
 export { InteractiveDemoSandboxCard } from "./InteractiveDemoSandboxCard";
+export { SystemAuditLicenseCard } from "./SystemAuditLicenseCard";
 
 
 
