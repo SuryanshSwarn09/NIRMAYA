@@ -41,6 +41,7 @@ from app.api.v1.endpoints import (
     container,
     orchestration,
     edge_sync,
+    legacy_his,
 )
 
 api_router = APIRouter()
@@ -85,6 +86,8 @@ api_router.include_router(command_center.router, prefix="/admin/command-center",
 api_router.include_router(container.router, prefix="/admin/container", tags=["Container Runtime & Environment Conformance"])
 api_router.include_router(orchestration.router, prefix="/admin/orchestration", tags=["Container Orchestration & Reverse Proxy"])
 api_router.include_router(edge_sync.router, prefix="/edge", tags=["Edge Node Appliance & Offline Sync"])
+api_router.include_router(legacy_his.router, prefix="/his", tags=["Legacy HIS Federation & postgres_fdw"])
+
 
 
 
