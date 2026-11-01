@@ -1,0 +1,84 @@
+# ==============================================================================
+# NIRMAYA Healthcare Platform - Production Caddy Reverse Proxy & Ingress
+#
+# Features:
+# - Automated TLS 1.3 Certificate Provisioning & OCSP Stapling
+# - HTTP/3 QUIC Transport Protocol Support
+# - Real-Time WebSocket Upgrading for Clinical Consultations & LOINC Panic Alerts
+# - Fast Path Multiplexing: /api/* and /ws/* -> backend:8000, /* -> frontend:3000
+# - High-Performance Response Compression (Zstandard & Gzip)
+# - Enterprise Defense-in-Depth Security Headers
+# ==============================================================================
+
+{
+    admin off
+    email {$ACME_EMAIL:admin@nirmaya.health}
+    servers {
+        protocols h1 h2 h3
+    }
+}
+
+# ------------------------------------------------------------------------------
+# Primary Healthcare Ingress Gateway
+# ------------------------------------------------------------------------------
+{$DOMAIN_NAME:localhost} {
+    # Modern TLS 1.3 Profile (Restricting legacy ciphers)
+    tls {
+        protocols tls1.3
+        ciphers TLS_AES_128_GCM_SHA256 TLS_AES_256_GCM_SHA384 TLS_CHACHA20_POLY1305_SHA256
+    }
+
+    # Enable Zstandard and Gzip Content-Encoding
+    encode zstd gzip
+
+    # Enterprise Healthcare Security Headers
+    header {
+        Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        -Server
+        -X-Powered-By
+    }
+
+    # --------------------------------------------------------------------------
+    # 1. Real-Time Distributed WebSockets (/ws/*)
+    # --------------------------------------------------------------------------
+    @websockets {
+        path /ws/*
+    }
+    reverse_proxy @websockets backend:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+        transport http {
+            keepalive 60s
+        }
+    }
+
+    # --------------------------------------------------------------------------
+    # 2. FastAPI REST Endpoints & Documentation (/api/*, /docs, /openapi.json)
+    # --------------------------------------------------------------------------
+    @api {
+        path /api/* /docs* /redoc* /openapi.json
+    }
+    reverse_proxy @api backend:8000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # --------------------------------------------------------------------------
+    # 3. Next.js 15 Standalone Frontend Application (Catch-All)
+    # --------------------------------------------------------------------------
+    reverse_proxy frontend:3000 {
+        header_up Host {host}
+        header_up X-Real-IP {remote_host}
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+}
