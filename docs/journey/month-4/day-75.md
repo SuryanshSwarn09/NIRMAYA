@@ -72,3 +72,4 @@ A destructive "rip-and-replace" or heavy ETL migration is non-viable due to medi
 - **Frontend Production Build:**
   - Next.js 15 Standalone output: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
   - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
+
