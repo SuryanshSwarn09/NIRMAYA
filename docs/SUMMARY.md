@@ -114,6 +114,8 @@
 
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
     * [Day 76: Academic Project Monograph & Engineering Thesis](journey/month-4/day-76.md)
+    * [Day 77: Interoperability & High-Throughput Performance Benchmarks](journey/month-4/day-77.md)
+
 
 ## Reports & Thesis Monographs
 * [Academic Project Monograph & Capstone Engineering Thesis](reports/nirmaya-academic-project-monograph-thesis.md)
