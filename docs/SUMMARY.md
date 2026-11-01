@@ -115,10 +115,13 @@
   * [Week 16: Academic Project Monograph & Final Release v1.0.0](journey/month-4/week-16.md)
     * [Day 76: Academic Project Monograph & Engineering Thesis](journey/month-4/day-76.md)
     * [Day 77: Interoperability & High-Throughput Performance Benchmarks](journey/month-4/day-77.md)
+    * [Day 78: High-Definition Demo, Presentation Suite & Interactive Sandbox](journey/month-4/day-78.md)
 
 
 ## Reports & Thesis Monographs
 * [Academic Project Monograph & Capstone Engineering Thesis](reports/nirmaya-academic-project-monograph-thesis.md)
+* [Capstone Defense Presentation Deck (12 Slides)](reports/nirmaya-capstone-presentation-deck.md)
+* [Interactive Demonstration Walkthrough & Defense Script](reports/nirmaya-interactive-demo-script.md)
 * [Master Engineering Roadmap (Days 1–80)](reports/master-engineering-roadmap-days-1-80.md)
 
 ## Audits & Retrospectives

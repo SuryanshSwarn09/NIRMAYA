@@ -2362,6 +2362,39 @@
   - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
   - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
 
+#### Day 78 (Mon) - Milestone 16-03: High-Definition Demo, Presentation Suite & Interactive Sandbox
+- **Focus:** Deterministic Demonstration Scenarios, Live Sandbox Execution Engine, Capstone Presentation Deck Engine, Timed Walkthrough Defense Script, Cal.com `InteractiveDemoSandboxCard.tsx` Frontend Component, FastAPI Interactive Demo Endpoints (`/api/v1/demo/*`), and Automated Test Suite (`tests/test_interactive_demo.py`).
+- **Executed Commits (Logical Atomic Cadence):**
+  1. `a62c667: feat(schemas): define interactive demo scenarios, sandbox execution, and slide deck schemas`
+  2. `681124a: feat(services): implement demo service with reproducible sandbox execution and slide deck metadata`
+  3. `95436dc: feat(api): expose interactive demo scenarios, execution, reset, and slide deck rest endpoints`
+  4. `c67f611: docs(demo): author 12-slide capstone defense deck and timed 10-minute walkthrough script`
+  5. `b23a719: feat(frontend): implement InteractiveDemoSandboxCard with calcom design tokens and mount in doctor portal`
+  6. `125f09e: test(demo): author interactive demo test suite, publish day-78 log, and update documentation`
+- **Key Deliverables:**
+  - **Deterministic Interactive Scenario Catalog:**
+    - `SCN-OPD-01`: Autonomous Rural OPD Intake to FHIR Export (5 steps, ABHA Verhoeff validation, LOINC vitals, DDI check, Merkle DAG block, ABDM M2 linkage).
+    - `SCN-BTG-02`: Emergency Break-The-Glass (BTG) Vault Access (5 steps, trauma override, Argon2id KDF, AES-256-GCM AEAD decryption, forensic ledger append, SMS alert).
+    - `SCN-SYNC-03`: Low-Bandwidth Edge Gateway Bi-Directional Delta Sync (5 steps, SQLite offline queue, vector clocks, cellular backhaul mutual TLS, conflict-free sync).
+    - `SCN-FED-04`: Cross-Hospital SQL/MED Foreign Data Wrapper Query (5 steps, postgres_fdw connect, read-only AST check, 14 legacy records join, bijective FHIR normalization, LRU cache).
+    - `SCN-IDSP-05`: Public Health Command Center & Disease Surveillance (5 steps, 6-tier LGD ltree traversal, syndromic telemetry aggregation, Dengue Rt=1.34 compute, Scoped TRBAC verification, directive broadcast).
+  - **Capstone Defense Presentation Deck Engine (`backend/app/services/demo_service.py`):**
+    - 12 comprehensive defense slides with ASCII system topology diagrams, mathematical formulations, and certified empirical benchmark scorecards.
+  - **FastAPI Interactive Demo REST Endpoints (`backend/app/api/v1/endpoints/demo.py`):**
+    - Mounted `/scenarios`, `/scenarios/{id}`, `/scenarios/{id}/execute`, `/reset`, and `/slides`.
+  - **Cal.com Frontend Dashboard Component (`InteractiveDemoSandboxCard.tsx`):**
+    - Monochrome component following Cal.com tokens with tabbed scenario stepper, live telemetry viewer, reset action, and slide deck reader. Mounted in `/doctor`.
+  - **Documentation & Scripts:**
+    - `docs/reports/nirmaya-capstone-presentation-deck.md`: 12-slide comprehensive defense deck.
+    - `docs/reports/nirmaya-interactive-demo-script.md`: Timed 10-minute live demonstration script with operator prompts, talking points, and defense Q&A.
+  - **Dedicated Test Suite (`backend/tests/test_interactive_demo.py`):**
+    - 17 comprehensive unit and integration tests verifying scenario models, execution flows, sandbox reset, slide deck metadata, and REST API routes.
+- **Verification:**
+  - Dedicated Interactive Demo Suite: **17/17 tests passing in `tests/test_interactive_demo.py` (100% green in 1.95s)**.
+  - Full Cumulative Backend Test Suite: **681/681 tests passing (100% green across 42 test modules in ~115s)**.
+  - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
+  - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
+
 ---
 *(Entries will be appended daily in sequential order across the 95-day roadmap)*
 

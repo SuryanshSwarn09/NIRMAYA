@@ -498,7 +498,7 @@ class DemoService:
 
         if scenario_id == "SCEN-01-CONSULTATION":
             # 1. Demographic lookup & Verhoeff check
-            assertions_verified.append("Patient Aarav Sharma (ABHA: 14-8291-0391-4821) verified via Dihedral D5 check digit")
+            assertions_verified.append("Patient Aarav Sharma (ABHA: 14-8291-0391-4821) verified via Verhoeff Dihedral D5 check digit")
             # 2. Vitals validation
             assertions_verified.append("Captured 3 LOINC observations (85354-9, 2339-0, 718-7) with zero panic threshold alerts")
             # 3. DDI check
