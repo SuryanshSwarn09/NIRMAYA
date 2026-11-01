@@ -55,6 +55,7 @@ import {
   ContainerRuntimeCard,
   FrontendContainerCard,
   DockerOrchestrationCard,
+  EdgeNodeSyncCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -577,6 +578,9 @@ export default function DoctorEMRPage() {
 
             {/* Turnkey Multi-Service Docker Compose & Caddy Ingress Topology */}
             <DockerOrchestrationCard />
+
+            {/* Dual-Mode Edge Node Appliance & Offline Event Log Sync */}
+            <EdgeNodeSyncCard />
 
             {/* 1. Active Encounter Header Card */}
             <Card variant="mockup" className="p-5 space-y-4">
