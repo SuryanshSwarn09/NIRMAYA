@@ -1,0 +1,459 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:7ad5123a-5533-41b2-b740-650b8acb45b1",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-11-01T11:30:36.118133Z",
+    "tools": [
+      {
+        "vendor": "NIRMAYA Security",
+        "name": "LicenseAuditEngine",
+        "version": "1.0.0"
+      }
+    ],
+    "component": {
+      "type": "application",
+      "name": "nirmaya",
+      "version": "1.0.0",
+      "description": "Networked Interoperable Records Medical Assets & Your Archives"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "fastapi",
+      "version": "0.115.0",
+      "description": "High-performance asynchronous ASGI web framework for REST API endpoints and OpenAPI schemas.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/fastapi/fastapi/blob/master/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/fastapi@0.115.0"
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "version": "2.9.2",
+      "description": "Data validation, serialization, and settings management using Python type annotations.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/pydantic/pydantic/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/pydantic@2.9.2"
+    },
+    {
+      "type": "library",
+      "name": "pydantic-settings",
+      "version": "2.5.2",
+      "description": "Hierarchical environment configuration and secrets management for FastAPI.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/pydantic/pydantic-settings/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/pydantic-settings@2.5.2"
+    },
+    {
+      "type": "library",
+      "name": "sqlmodel",
+      "version": "0.0.22",
+      "description": "Unified ORM combining SQLAlchemy Core and Pydantic models with PostgreSQL compatibility.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/fastapi/sqlmodel/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/sqlmodel@0.0.22"
+    },
+    {
+      "type": "library",
+      "name": "sqlalchemy",
+      "version": "2.0.35",
+      "description": "Comprehensive Python SQL toolkit, connection pooling, and relational object mapper.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/sqlalchemy/sqlalchemy/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/sqlalchemy@2.0.35"
+    },
+    {
+      "type": "library",
+      "name": "asyncpg",
+      "version": "0.29.0",
+      "description": "Fast asynchronous PostgreSQL driver implementing native binary protocol for asyncio.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/MagicStack/asyncpg/blob/master/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/asyncpg@0.29.0"
+    },
+    {
+      "type": "library",
+      "name": "cryptography",
+      "version": "43.0.1",
+      "description": "National standard cryptographic recipes: AES-256-GCM AEAD, Curve25519 ECDH, and HKDF.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/pyca/cryptography/blob/main/LICENSE.APACHE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/cryptography@43.0.1"
+    },
+    {
+      "type": "library",
+      "name": "redis",
+      "version": "5.0.8",
+      "description": "High-throughput client for Redis caching, Redlock distributed locking, and Pub/Sub fanout.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/redis/redis-py/blob/master/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/redis@5.0.8"
+    },
+    {
+      "type": "library",
+      "name": "passlib",
+      "version": "1.7.4",
+      "description": "Password hashing and verification framework supporting Argon2id and bcrypt.",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause",
+            "url": "https://foss.heptapod.net/python-libs/passlib/-/raw/branch/default/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/passlib@1.7.4"
+    },
+    {
+      "type": "library",
+      "name": "argon2-cffi",
+      "version": "23.1.0",
+      "description": "Memory-hard key derivation function implementation for Break-The-Glass emergency vault.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/hynek/argon2-cffi/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/argon2-cffi@23.1.0"
+    },
+    {
+      "type": "library",
+      "name": "python-jose",
+      "version": "3.3.0",
+      "description": "JSON Web Token (JWT) encoding, decoding, and signature verification with RS256/HS256.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/mpdavis/python-jose/blob/master/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/python-jose@3.3.0"
+    },
+    {
+      "type": "library",
+      "name": "httpx",
+      "version": "0.27.2",
+      "description": "Asynchronous HTTP/1.1 and HTTP/2 client for ABDM gateway communication and test fixtures.",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause",
+            "url": "https://github.com/encode/httpx/blob/master/LICENSE.md"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/httpx@0.27.2"
+    },
+    {
+      "type": "library",
+      "name": "uvicorn",
+      "version": "0.30.6",
+      "description": "Lightweight and lightning-fast ASGI server implementation using uvloop and httptools.",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause",
+            "url": "https://github.com/encode/uvicorn/blob/master/LICENSE.md"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/uvicorn@0.30.6"
+    },
+    {
+      "type": "library",
+      "name": "pytest",
+      "version": "8.3.3",
+      "description": "Test execution framework powering 681+ automated unit, integration, and security tests.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/pytest-dev/pytest/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/pytest@8.3.3"
+    },
+    {
+      "type": "library",
+      "name": "pytest-asyncio",
+      "version": "0.24.0",
+      "description": "Asyncio test fixtures and coroutine runner for asynchronous FastAPI endpoints.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/pytest-dev/pytest-asyncio/blob/master/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/pytest-asyncio@0.24.0"
+    },
+    {
+      "type": "library",
+      "name": "fhir.resources",
+      "version": "7.1.0",
+      "description": "HL7 FHIR Release 4 specification models and schema validation for Indian NRCeS profiles.",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause",
+            "url": "https://github.com/nazrulworld/fhir.resources/blob/master/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/fhir.resources@7.1.0"
+    },
+    {
+      "type": "library",
+      "name": "python-multipart",
+      "version": "0.0.10",
+      "description": "Streaming multipart parser for processing clinical lab attachment uploads.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/Kludex/python-multipart/blob/master/LICENSE.txt"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/python-multipart@0.0.10"
+    },
+    {
+      "type": "library",
+      "name": "alembic",
+      "version": "1.13.3",
+      "description": "Database schema migration management engine for PostgreSQL and SQLite edge nodes.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/sqlalchemy/alembic/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/alembic@1.13.3"
+    },
+    {
+      "type": "library",
+      "name": "phonenumbers",
+      "version": "8.13.45",
+      "description": "Indian mobile number normalization and validation library for Aadhaar OTP and carrier SMS.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/daviddrysdale/python-phonenumbers/blob/dev/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/phonenumbers@8.13.45"
+    },
+    {
+      "type": "library",
+      "name": "orjson",
+      "version": "3.10.7",
+      "description": "Fast, correct JSON serialization library achieving high throughput for FHIR bundle payloads.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/ijl/orjson/blob/master/LICENSE-APACHE"
+          }
+        }
+      ],
+      "purl": "pkg:pypi/orjson@3.10.7"
+    },
+    {
+      "type": "library",
+      "name": "next",
+      "version": "15.5.25",
+      "description": "Enterprise React framework with App Router, server-side rendering, and Standalone output.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/vercel/next.js/blob/canary/license.md"
+          }
+        }
+      ],
+      "purl": "pkg:npm/next@15.5.25"
+    },
+    {
+      "type": "library",
+      "name": "react",
+      "version": "19.0.0",
+      "description": "Declarative, component-based user interface library powering clinical doctor workspace.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/facebook/react/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:npm/react@19.0.0"
+    },
+    {
+      "type": "library",
+      "name": "react-dom",
+      "version": "19.0.0",
+      "description": "DOM renderer for React web application.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/facebook/react/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:npm/react-dom@19.0.0"
+    },
+    {
+      "type": "library",
+      "name": "tailwindcss",
+      "version": "4.0.0",
+      "description": "Utility-first styling framework implementing Cal.com monochrome design tokens.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/tailwindlabs/tailwindcss/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:npm/tailwindcss@4.0.0"
+    },
+    {
+      "type": "library",
+      "name": "lucide-react",
+      "version": "0.474.0",
+      "description": "Consistent, accessible clinical and navigational SVG icons for healthcare workflows.",
+      "licenses": [
+        {
+          "license": {
+            "id": "ISC",
+            "url": "https://github.com/lucide-icons/lucide/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:npm/lucide-react@0.474.0"
+    },
+    {
+      "type": "library",
+      "name": "clsx",
+      "version": "2.1.1",
+      "description": "High-speed utility for conditional className composition without runtime overhead.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/lukeed/clsx/blob/master/license"
+          }
+        }
+      ],
+      "purl": "pkg:npm/clsx@2.1.1"
+    },
+    {
+      "type": "library",
+      "name": "tailwind-merge",
+      "version": "3.0.1",
+      "description": "Utility function to efficiently merge Tailwind CSS classes in JS without style conflicts.",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/dcastil/tailwind-merge/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:npm/tailwind-merge@3.0.1"
+    },
+    {
+      "type": "library",
+      "name": "typescript",
+      "version": "5.7.3",
+      "description": "Type-safe compiler and language server ensuring 100% clean frontend compilation.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt"
+          }
+        }
+      ],
+      "purl": "pkg:npm/typescript@5.7.3"
+    },
+    {
+      "type": "library",
+      "name": "class-variance-authority",
+      "version": "0.7.1",
+      "description": "Component variant and size management for Cal.com Button, Badge, and Card primitives.",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://github.com/joe-bell/cva/blob/main/LICENSE"
+          }
+        }
+      ],
+      "purl": "pkg:npm/class-variance-authority@0.7.1"
+    }
+  ]
+}
