@@ -637,6 +637,19 @@ from app.schemas.demo import (
     SlideItem,
     SlideDeckMetadata,
 )
+from app.schemas.license_audit import (
+    LicenseTypeEnum,
+    DependencyEcosystemEnum,
+    ComplianceStatusEnum,
+    IntegrityCheckStatusEnum,
+    DependencyComponentItem,
+    LicenseSummaryScorecard,
+    SystemIntegrityCheckItem,
+    CycloneDXComponent,
+    CycloneDXMetadata,
+    CycloneDXManifest,
+    PreReleaseAuditReport,
+)
 
 
 
