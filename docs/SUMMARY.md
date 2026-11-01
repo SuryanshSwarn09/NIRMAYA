@@ -116,12 +116,14 @@
     * [Day 76: Academic Project Monograph & Engineering Thesis](journey/month-4/day-76.md)
     * [Day 77: Interoperability & High-Throughput Performance Benchmarks](journey/month-4/day-77.md)
     * [Day 78: High-Definition Demo, Presentation Suite & Interactive Sandbox](journey/month-4/day-78.md)
+    * [Day 79: Final System Audit, License Compliance & Documentation Sign-off](journey/month-4/day-79.md)
 
 
 ## Reports & Thesis Monographs
 * [Academic Project Monograph & Capstone Engineering Thesis](reports/nirmaya-academic-project-monograph-thesis.md)
 * [Capstone Defense Presentation Deck (12 Slides)](reports/nirmaya-capstone-presentation-deck.md)
 * [Interactive Demonstration Walkthrough & Defense Script](reports/nirmaya-interactive-demo-script.md)
+* [Pre-Release System Audit, Open Source License Compliance & Software Bill of Materials (SBOM) Certification](reports/nirmaya-system-audit-and-license-compliance.md)
 * [Master Engineering Roadmap (Days 1–80)](reports/master-engineering-roadmap-days-1-80.md)
 
 ## Audits & Retrospectives

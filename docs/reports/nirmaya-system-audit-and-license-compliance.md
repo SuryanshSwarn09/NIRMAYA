@@ -47,8 +47,8 @@ The machine-readable CycloneDX 1.5 JSON manifest is officially archived at [`doc
 
 | License Classification | Permissive? | Python (PyPI) Packages | Node.js (npm) Packages | Total Packages | Distribution Percentage |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **MIT** | Yes | 10 | 6 | 16 | 55.17% |
-| **Apache-2.0** | Yes | 6 | 2 | 8 | 27.59% |
+| **MIT** | Yes | 9 | 6 | 15 | 51.72% |
+| **Apache-2.0** | Yes | 7 | 2 | 9 | 31.03% |
 | **BSD-3-Clause** | Yes | 4 | 0 | 4 | 13.79% |
 | **ISC** | Yes | 0 | 1 | 1 | 3.45% |
 | **Copyleft (GPL / AGPL)** | No | **0** | **0** | **0** | **0.00%** |
