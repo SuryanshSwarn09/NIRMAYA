@@ -118,9 +118,11 @@
     * [Day 78: High-Definition Demo, Presentation Suite & Interactive Sandbox](journey/month-4/day-78.md)
     * [Day 79: Final System Audit, License Compliance & Documentation Sign-off](journey/month-4/day-79.md)
     * [Day 80: Production Master Launch & Master Release v1.0.0](journey/month-4/day-80.md)
-
+  * [Week 17: Dependent & Family Health Proxy and Zero-Contamination Architecture](journey/month-4/week-17.md)
+    * [Day 81: Dependent & Family Health Proxy Schema & Zero-Contamination Architecture](journey/month-4/day-81.md)
 
 ## Reports & Thesis Monographs
+* [Family Proxy Access & Zero-Contamination Architecture](reports/nirmaya-family-proxy-access-architecture.md)
 * [Academic Project Monograph & Capstone Engineering Thesis](reports/nirmaya-academic-project-monograph-thesis.md)
 * [Capstone Defense Presentation Deck (12 Slides)](reports/nirmaya-capstone-presentation-deck.md)
 * [Interactive Demonstration Walkthrough & Defense Script](reports/nirmaya-interactive-demo-script.md)

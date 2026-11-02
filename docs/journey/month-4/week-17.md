@@ -23,3 +23,4 @@
 3. **Multi-Tier Verification Authority:** Proxy linkages require cryptographically verified proof (DigiLocker birth certificate, Aadhaar e-KYC demographic match, or legal court guardianship orders).
 4. **Scope-Restricted Privileges:** Access scopes are explicitly bounded to Full Management, Appointments Only, Records View Only, or Emergency Only.
 5. **Immutable Forensic Ledger:** All proxy actions generate tamper-evident audit records capturing guardian identity, dependent identity, action, and timestamp.
+

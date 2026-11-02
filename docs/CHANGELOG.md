@@ -2461,6 +2461,45 @@
   - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
   - Official Tag: **`v1.0.0` tagged and verified on remote**.
 
+#### Day 81 (Mon) - Milestone 17-01: Dependent & Family Health Proxy Schema & Zero-Contamination Architecture
+- **Focus:** DPDP Act 2023 Section 9 Compliance, Sovereign Zero-Contamination Architecture, Dependent Minor and Senior Health Proxy Relational Models (`backend/app/models/family_proxy.py`), Pydantic Schemas (`backend/app/schemas/family_proxy.py`), Family Proxy Management Service (`backend/app/services/family_proxy_service.py`), FastAPI REST Endpoints (`/api/v1/patients/proxy/*`), Cal.com Frontend Dashboard Component (`FamilyProxyRelationshipCard.tsx`), and Automated Test Suite (`backend/tests/test_family_proxy.py`).
+- **Executed Commits (Logical Atomic Cadence - Method 2 Stamped):**
+  1. `0178624: feat(schemas): define dependent and family health proxy models, verification tiers, and audit schemas`
+  2. `23f2b2f: feat(services): implement family proxy management service with zero-contamination isolation and verification authority`
+  3. `00d93eb: feat(api): expose family proxy endpoints with DPDP Act Sec 9 consent validation and audit logging`
+  4. `4983a98: docs(architecture): publish family proxy access and zero-contamination architecture specification`
+  5. `c1009f7: feat(frontend): implement FamilyProxyRelationshipCard with calcom design tokens and mount in doctor workspace`
+  6. `5d600e8: test(family_proxy): author family proxy test suite, publish day-81 log, and update documentation`
+- **Key Deliverables:**
+  - **DPDP Act 2023 Section 9 Legal & Architectural Compliance:**
+    - Guaranteed verifiable parental/guardian consent attestation before establishing minor proxy delegations.
+    - Strict prohibition of child tracking, profiling, or cross-contamination into adult records.
+  - **Zero-Contamination Architecture:**
+    - Every human dependent (minor child or senior parent) holds an independent, sovereign `PatientProfile` and distinct ABHA identity.
+    - Clinical resources (Observations, Conditions, MedicationRequests) never colocate with or contaminate guardian records.
+  - **Multi-Tier Verification Authority:**
+    - Tier 1: DigiLocker verified birth certificate cryptographic SHA-256 fingerprinting.
+    - Tier 2: Aadhaar demographic e-KYC cross-matching.
+    - Tier 3: Judicial court legal guardianship orders.
+    - Tier 4: Self-attested emergency delegation.
+  - **Age-of-Majority Dynamic Guard:**
+    - Automatic DOB evaluation enforcing that minor child proxies are strictly younger than 18.
+  - **Granular Privilege Scoping & Enforcement Interceptor:**
+    - Explicit scopes: `FULL_MANAGEMENT`, `APPOINTMENTS_ONLY`, `RECORDS_VIEW_ONLY`, `EMERGENCY_RESTRICTED`.
+    - Real-time authorization check endpoint (`POST /api/v1/patients/proxy/authorize-action`).
+  - **Immutable Forensic Audit Ledger:**
+    - Tamper-evident logging of all proxy access attempts with actor ID, target ID, action verb, network origin, and authorization status.
+  - **Cal.com Frontend Dashboard (`FamilyProxyRelationshipCard.tsx`):**
+    - Dependent switcher tabs for Aarav Sharma (8y minor) and Kavita Sharma (68y senior).
+    - Demographic sovereignty card, invariant verification checklist, clinical care summary, and audit table. Mounted in `/doctor`.
+  - **Dedicated Test Suite (`backend/tests/test_family_proxy.py`):**
+    - 25 comprehensive unit and integration tests verifying schemas, zero-contamination invariants, consent mandates, age-of-majority guards, revocations, and all REST endpoints.
+- **Verification:**
+  - Dedicated Family Proxy Suite: **25/25 tests passing in `tests/test_family_proxy.py` (100% green in 0.69s)**.
+  - Full Cumulative Backend Test Suite: **737/737 tests passing (100% green across 45 test modules in 102.78s)**.
+  - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
+  - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
+
 ---
 *(Entries will be appended daily in sequential order across the 95-day roadmap)*
 

@@ -123,3 +123,4 @@ Each audit event records:
 | **INV-PROXY-03** | Age of Majority: Minor child relationships require dependent age under 18. | ISO date validator | Verified |
 | **INV-PROXY-04** | Document Provenance: All non-provisional linkages record SHA-256 document hash. | Cryptographic hash check | Verified |
 | **INV-PROXY-05** | Immutable Audit: Every proxy action appends to forensic ledger. | Audit service verification | Verified |
+
