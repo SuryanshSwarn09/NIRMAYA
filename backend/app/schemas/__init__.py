@@ -660,6 +660,15 @@ from app.schemas.release import (
     Phase5RoadmapItem,
     MasterReleaseManifest,
 )
+from app.schemas.family_proxy import (
+    RelationshipTypeEnum,
+    VerificationAuthorityEnum,
+    ProxyAccessScopeEnum,
+    ProxyRelationshipStatusEnum,
+    FamilyProxyCreateRequest,
+    FamilyProxyResponse,
+    ProxyAuditLogItem,
+)
 
 
 

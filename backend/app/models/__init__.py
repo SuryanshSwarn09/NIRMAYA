@@ -51,6 +51,7 @@ from app.models.medication_request import MedicationRequest
 from app.models.medication_dispense import MedicationDispense
 from app.models.observation import ClinicalObservation
 from app.models.patient import PatientProfile
+from app.models.family_proxy import PatientProxyRelationship, ProxyAuditLog
 from app.models.soap_note import SoapNote
 from app.models.user import User
 
@@ -109,5 +110,7 @@ __all__ = [
     "AdminLevelEnum",
     "GovtDesignationEnum",
     "LTreePath",
+    "PatientProxyRelationship",
+    "ProxyAuditLog",
 ]
 
