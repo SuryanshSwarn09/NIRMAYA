@@ -131,3 +131,4 @@ class ProxyAuditLog(Base, UUIDPrimaryKeyMixin):
         default=True,
         nullable=False,
     )
+

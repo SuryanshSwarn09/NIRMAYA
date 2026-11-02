@@ -74,6 +74,11 @@ export { PerformanceBenchmarkCard } from "./PerformanceBenchmarkCard";
 export { InteractiveDemoSandboxCard } from "./InteractiveDemoSandboxCard";
 export { SystemAuditLicenseCard } from "./SystemAuditLicenseCard";
 export { ProductionReleaseCard } from "./ProductionReleaseCard";
+export {
+  FamilyProxyRelationshipCard,
+  type DependentRelationshipUI,
+  type AuditLogUI,
+} from "./FamilyProxyRelationshipCard";
 
 
 

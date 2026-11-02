@@ -62,6 +62,7 @@ import {
   InteractiveDemoSandboxCard,
   SystemAuditLicenseCard,
   ProductionReleaseCard,
+  FamilyProxyRelationshipCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -605,6 +606,9 @@ export default function DoctorEMRPage() {
 
             {/* Production Master Launch & Release v1.0.0 Celebration Card */}
             <ProductionReleaseCard />
+
+            {/* Dependent & Family Health Proxy Manager (DPDP Act 2023 Sec 9 Compliance) */}
+            <FamilyProxyRelationshipCard />
 
 
 

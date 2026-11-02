@@ -45,7 +45,7 @@ class FamilyProxyCreateRequest(BaseModel):
     relationship_type: RelationshipTypeEnum
     verification_tier: VerificationAuthorityEnum
     verification_document_id: Optional[str] = Field(None, description="External verification document reference (e.g. DigiLocker doc ID)")
-    verification_document_hash: str = Field(..., description="SHA-256 fingerprint of relationship verification proof")
+    verification_document_hash: str = Field(default="0" * 64, description="SHA-256 fingerprint of relationship verification proof")
     access_scope: ProxyAccessScopeEnum = Field(default=ProxyAccessScopeEnum.FULL_MANAGEMENT)
     dependent_dob_iso: Optional[str] = Field(None, description="Dependent date of birth YYYY-MM-DD for age-of-majority evaluation")
     guardian_consent_attestation: bool = Field(..., description="Verifiable consent attestation complying with DPDP Act Sec 9")
@@ -80,3 +80,4 @@ class ProxyAuditLogItem(BaseModel):
     ip_address: str = "127.0.0.1"
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     authorized: bool = True
+

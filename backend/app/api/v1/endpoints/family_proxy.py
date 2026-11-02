@@ -43,13 +43,12 @@ class ProxyRevokeRequest(BaseModel):
     response_model=List[FamilyProxyResponse],
 )
 async def list_relationships(
+    response: Response,
     guardian_id: Optional[str] = Query(None, description="Optional filter by guardian patient ID"),
-    response: Response = None,
 ) -> List[FamilyProxyResponse]:
     """Retrieve all proxy relationships or those matching the guardian."""
-    if response:
-        for header, value in get_container_security_headers().items():
-            response.headers[header] = value
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
 
     if guardian_id:
         return family_proxy_service.list_dependents_for_guardian(guardian_id)
@@ -63,13 +62,12 @@ async def list_relationships(
     response_model=List[FamilyProxyResponse],
 )
 async def list_dependents(
+    response: Response,
     guardian_id: str = Query("pat-priya-sharma-01", description="Guardian patient ID"),
-    response: Response = None,
 ) -> List[FamilyProxyResponse]:
     """List active dependents for the specified guardian."""
-    if response:
-        for header, value in get_container_security_headers().items():
-            response.headers[header] = value
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
     return family_proxy_service.list_dependents_for_guardian(guardian_id)
 
 
@@ -82,12 +80,11 @@ async def list_dependents(
 )
 async def establish_relationship(
     request: FamilyProxyCreateRequest,
-    response: Response = None,
+    response: Response,
 ) -> FamilyProxyResponse:
     """Create a new verified proxy relationship."""
-    if response:
-        for header, value in get_container_security_headers().items():
-            response.headers[header] = value
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
 
     try:
         return family_proxy_service.establish_proxy_relationship(request)
@@ -103,12 +100,11 @@ async def establish_relationship(
 )
 async def get_relationship(
     relationship_id: str,
-    response: Response = None,
+    response: Response,
 ) -> FamilyProxyResponse:
     """Retrieve details of a single proxy relationship."""
-    if response:
-        for header, value in get_container_security_headers().items():
-            response.headers[header] = value
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
 
     rel = family_proxy_service.get_relationship(relationship_id)
     if not rel:
@@ -128,12 +124,11 @@ async def get_relationship(
 async def revoke_relationship(
     relationship_id: str,
     payload: ProxyRevokeRequest,
-    response: Response = None,
+    response: Response,
 ) -> FamilyProxyResponse:
     """Revoke proxy relationship privileges."""
-    if response:
-        for header, value in get_container_security_headers().items():
-            response.headers[header] = value
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
 
     try:
         return family_proxy_service.revoke_proxy_relationship(
@@ -156,12 +151,11 @@ async def revoke_relationship(
 )
 async def get_proxy_audit_trail(
     relationship_id: str,
-    response: Response = None,
+    response: Response,
 ) -> List[ProxyAuditLogItem]:
     """Retrieve audit log items for a specific relationship."""
-    if response:
-        for header, value in get_container_security_headers().items():
-            response.headers[header] = value
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
 
     return family_proxy_service.get_audit_logs(relationship_id=relationship_id)
 
@@ -174,12 +168,11 @@ async def get_proxy_audit_trail(
 )
 async def check_proxy_authorization(
     request: ProxyAuthorizationCheckRequest,
-    response: Response = None,
+    response: Response,
 ) -> ProxyAuthorizationCheckResponse:
     """Evaluate proxy action permission."""
-    if response:
-        for header, value in get_container_security_headers().items():
-            response.headers[header] = value
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
 
     is_allowed = family_proxy_service.verify_proxy_access_permission(
         guardian_id=request.guardian_id,
@@ -193,3 +186,4 @@ async def check_proxy_authorization(
         action=request.action,
         evaluated_at=datetime.now(timezone.utc),
     )
+

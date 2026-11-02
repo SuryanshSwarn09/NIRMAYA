@@ -264,3 +264,4 @@ class FamilyProxyService:
 
 # Global singleton instance
 family_proxy_service = FamilyProxyService()
+
