@@ -47,6 +47,7 @@ from app.api.v1.endpoints import (
     demo,
     audit,
     release,
+    family_proxy,
 )
 
 api_router = APIRouter()
@@ -97,6 +98,7 @@ api_router.include_router(benchmarks.router, prefix="", tags=["Performance Bench
 api_router.include_router(demo.router, prefix="", tags=["Interactive Guided Demo & Presentation"])
 api_router.include_router(audit.router, prefix="", tags=["Pre-Release System Audit & License Compliance"])
 api_router.include_router(release.router, prefix="", tags=["Master Production Release v1.0.0"])
+api_router.include_router(family_proxy.router, prefix="", tags=["Dependent & Family Health Proxy (DPDP Act Sec 9)"])
 
 
 
