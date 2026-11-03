@@ -79,6 +79,10 @@ export {
   type DependentRelationshipUI,
   type AuditLogUI,
 } from "./FamilyProxyRelationshipCard";
+export {
+  ChildAbhaBindingCard,
+  type ChildAbhaIssuedState,
+} from "./ChildAbhaBindingCard";
 
 
 

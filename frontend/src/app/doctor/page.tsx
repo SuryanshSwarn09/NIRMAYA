@@ -63,6 +63,7 @@ import {
   SystemAuditLicenseCard,
   ProductionReleaseCard,
   FamilyProxyRelationshipCard,
+  ChildAbhaBindingCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -609,6 +610,9 @@ export default function DoctorEMRPage() {
 
             {/* Dependent & Family Health Proxy Manager (DPDP Act 2023 Sec 9 Compliance) */}
             <FamilyProxyRelationshipCard />
+
+            {/* ABDM Child-ABHA Issuance & Demographic Binding (ABDM M1 & DPDP Act Sec 9) */}
+            <ChildAbhaBindingCard />
 
 
 

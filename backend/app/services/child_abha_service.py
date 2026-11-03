@@ -86,12 +86,11 @@ class ChildAbhaService:
                 raise
             raise ValueError(f"Invalid child date of birth format: {req.child_dob_iso}. Expected YYYY-MM-DD.")
 
-        # 3. Mint 14-digit ABDM Child-ABHA
-        part1 = random.randint(10, 99)
+        # 3. Mint 14-digit ABDM Child-ABHA (starting with 14-)
         part2 = random.randint(1000, 9999)
         part3 = random.randint(1000, 9999)
         part4 = random.randint(1000, 9999)
-        child_abha_number = f"{part1}-{part2}-{part3}-{part4}"
+        child_abha_number = f"14-{part2}-{part3}-{part4}"
 
         # 4. Mint unique ABHA Address handle
         if req.preferred_abha_address and "@abdm" in req.preferred_abha_address:
