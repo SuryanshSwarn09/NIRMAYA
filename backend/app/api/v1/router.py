@@ -48,6 +48,7 @@ from app.api.v1.endpoints import (
     audit,
     release,
     family_proxy,
+    child_abha,
 )
 
 api_router = APIRouter()
@@ -99,6 +100,7 @@ api_router.include_router(demo.router, prefix="", tags=["Interactive Guided Demo
 api_router.include_router(audit.router, prefix="", tags=["Pre-Release System Audit & License Compliance"])
 api_router.include_router(release.router, prefix="", tags=["Master Production Release v1.0.0"])
 api_router.include_router(family_proxy.router, prefix="", tags=["Dependent & Family Health Proxy (DPDP Act Sec 9)"])
+api_router.include_router(child_abha.router, prefix="", tags=["ABDM Child-ABHA Linkage & Verified Demographic Proxy Binding"])
 
 
 
