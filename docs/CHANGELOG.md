@@ -2500,6 +2500,39 @@
   - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
   - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
 
+#### Day 82 (Tue) - Milestone 17-02: ABDM Child ABHA Linkage & Verified Demographic Proxy Binding
+- **Focus:** ABDM M1 Child-ABHA Generation Protocol, Parent/Guardian Aadhaar OTP Binding, DPDP Act 2023 Section 9 Verifiable Consent, Sovereign Dependent Patient Profile Provisioning, DigiLocker Municipal Birth Certificate Verification Adapter, HL7 FHIR Release 4 `RelatedPerson` NRCeS-Compliant Serializer, Cal.com `ChildAbhaBindingCard.tsx` Frontend Component, and Automated Test Suite (`backend/tests/test_child_abha_linkage.py`).
+- **Executed Commits (Logical Atomic Cadence - Method 2 Stamped):**
+  1. `4639d04: feat(schemas): define child abha issuance, digilocker verification, and fhir relatedperson models`
+  2. `e1e38c5: feat(services): implement child abha minting engine, digilocker adapter, and fhir serializer`
+  3. `ad394ea: feat(api): expose child abha issuance, digilocker verification, and fhir relatedperson endpoints`
+  4. `12eb3ff: feat(frontend): implement ChildAbhaBindingCard with calcom tokens and mount in doctor portal`
+  5. `f45d687: test(child_abha): author child abha linkage test suite, publish day-82 log, and update documentation`
+- **Key Deliverables:**
+  - **ABDM M1 Parent-Authorized Child-ABHA Minting:**
+    - Parent Aadhaar OTP challenge with 10-minute session expiration.
+    - Generation of 14-digit ABDM compliant Child ABHA (`14-XXXX-XXXX-XXXX`) and federated ABHA address (`<child>@abdm`).
+    - Age-of-majority constraint enforcement restricting child flow strictly to minors under 18 years.
+  - **Sovereign Dependent Identity Provisioning:**
+    - Independent `PatientProfile` UUID (`pat-child-<uuid>`) provisioned for the minor, preserving zero-contamination isolation.
+    - Family proxy delegation created with `FULL_MANAGEMENT` scope under DPDP Act Sec 9.
+  - **DigiLocker Birth Certificate Verification Adapter:**
+    - Verification of municipal birth certificates against DigiLocker National Issuer Registry.
+    - Deterministic SHA-256 cryptographic document fingerprinting.
+  - **HL7 FHIR R4 `RelatedPerson` Bidirectional Serializer:**
+    - Full conformance with NRCeS guidelines and HL7 v3 `RoleCode` vocabulary (`PRN`, `CHILD`, `GUARD`).
+    - Output format includes dependent patient reference, relationship code, telecom, and period bounds.
+  - **Cal.com Frontend Dashboard Component (`ChildAbhaBindingCard.tsx`):**
+    - 4-step onboarding wizard: Parent OTP, Child Demographics, DigiLocker Verification, and Issued Child-ABHA Credential Card.
+    - Live offline QR code display and collapsible HL7 FHIR R4 JSON inspector. Mounted in `/doctor`.
+  - **Dedicated Test Suite (`backend/tests/test_child_abha_linkage.py`):**
+    - 24 comprehensive unit and integration tests verifying schemas, OTP generation, age-of-majority constraints, DigiLocker hashes, FHIR serialization, and all REST endpoints.
+- **Verification:**
+  - Dedicated Child ABHA Suite: **24/24 tests passing in `tests/test_child_abha_linkage.py` (100% green in 1.30s)**.
+  - Full Cumulative Backend Test Suite: **761/761 tests passing (100% green across 46 test modules in 96.09s)**.
+  - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
+  - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
+
 ---
 *(Entries will be appended daily in sequential order across the 95-day roadmap)*
 

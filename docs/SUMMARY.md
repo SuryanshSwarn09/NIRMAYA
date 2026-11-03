@@ -120,6 +120,7 @@
     * [Day 80: Production Master Launch & Master Release v1.0.0](journey/month-4/day-80.md)
   * [Week 17: Dependent & Family Health Proxy and Zero-Contamination Architecture](journey/month-4/week-17.md)
     * [Day 81: Dependent & Family Health Proxy Schema & Zero-Contamination Architecture](journey/month-4/day-81.md)
+    * [Day 82: ABDM Child ABHA Linkage & Verified Demographic Proxy Binding](journey/month-4/day-82.md)
 
 ## Reports & Thesis Monographs
 * [Family Proxy Access & Zero-Contamination Architecture](reports/nirmaya-family-proxy-access-architecture.md)

@@ -1,3 +1,4 @@
+
 # Day 81: Dependent & Family Health Proxy Schema & Zero-Contamination Architecture
 
 **Milestone:** 17-01  
@@ -27,6 +28,7 @@ The subsystem features multi-tier verification authority (DigiLocker birth certi
 ### 2. Family Proxy Management Service
 
 Implemented in [`backend/app/services/family_proxy_service.py`](file:///e:/nirmaya-side/backend/app/services/family_proxy_service.py):
+
 - **Zero-Contamination Guard:** Enforces distinct identities between guardian and dependent (`guardian_id != dependent_id`).
 - **Verifiable Consent Enforcement:** Mandates verifiable guardian consent attestation under DPDP Act 2023 Sec 9.
 - **Age-of-Majority Engine:** Evaluates dependent age dynamically from date of birth; prevents minor child proxy creation for individuals $\ge 18$.
@@ -37,6 +39,7 @@ Implemented in [`backend/app/services/family_proxy_service.py`](file:///e:/nirma
 ### 3. FastAPI Family Proxy REST API (`/api/v1/patients/proxy/*`)
 
 Authored in [`backend/app/api/v1/endpoints/family_proxy.py`](file:///e:/nirmaya-side/backend/app/api/v1/endpoints/family_proxy.py) and mounted in [`backend/app/api/v1/router.py`](file:///e:/nirmaya-side/backend/app/api/v1/router.py):
+
 - `GET /api/v1/patients/proxy/relationships`: Retrieve all proxy relationships or filter by guardian.
 - `GET /api/v1/patients/proxy/dependents`: List active verified dependents for a guardian.
 - `POST /api/v1/patients/proxy/relationships`: Establish new verified proxy linkage with DPDP Act Sec 9 validation (HTTP 201).
@@ -48,6 +51,7 @@ Authored in [`backend/app/api/v1/endpoints/family_proxy.py`](file:///e:/nirmaya-
 ### 4. Cal.com Design System Frontend Dashboard
 
 Implemented in [`frontend/src/components/clinical/FamilyProxyRelationshipCard.tsx`](file:///e:/nirmaya-side/frontend/src/components/clinical/FamilyProxyRelationshipCard.tsx) and mounted in [`frontend/src/app/doctor/page.tsx`](file:///e:/nirmaya-side/frontend/src/app/doctor/page.tsx):
+
 - **Guardian Identity Header:** Displays Dr. Priya Sharma (`pat-priya-sharma-01`), DPDP Act Sec 9 compliance badge, and ABDM UHI Proxy indicator.
 - **Dependent Switcher Tabs:** Seamless switching between Aarav Sharma (Son, Minor 8 yrs) and Kavita Sharma (Mother, Senior 68 yrs).
 - **Demographic & Sovereignty Card:** Displays isolated ABHA number, internal patient UUID, verification authority, and document SHA-256 hash.
