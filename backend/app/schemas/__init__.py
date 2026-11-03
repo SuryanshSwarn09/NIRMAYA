@@ -669,6 +669,16 @@ from app.schemas.family_proxy import (
     FamilyProxyResponse,
     ProxyAuditLogItem,
 )
+from app.schemas.child_abha import (
+    ChildGenderEnum,
+    ChildAbhaOtpRequest,
+    ChildAbhaOtpResponse,
+    ChildAbhaRegistrationRequest,
+    ChildAbhaRegistrationResponse,
+    DigiLockerDocumentVerificationRequest,
+    DigiLockerDocumentVerificationResponse,
+    FhirRelatedPersonRepresentation,
+)
 
 
 
