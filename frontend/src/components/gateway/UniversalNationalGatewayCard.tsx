@@ -120,11 +120,21 @@ export function UniversalNationalGatewayCard({
           "Gateway API endpoint not found (HTTP 404). Backend service is not connected to this deployment."
         );
       }
+      if (resp.status === 429) {
+        throw new Error(
+          "Rate limit reached (HTTP 429): Too many verification requests. Please wait 30 to 60 seconds before trying again."
+        );
+      }
       throw new Error(`Gateway returned unexpected response format (HTTP ${resp.status}).`);
     }
 
     const data = await resp.json();
     if (!resp.ok) {
+      if (resp.status === 429) {
+        throw new Error(
+          data.detail || data.message || "Rate limit reached (HTTP 429): Too many verification attempts. Please retry shortly."
+        );
+      }
       throw new Error(data.detail || data.message || `Authentication error (HTTP ${resp.status})`);
     }
     return data;
