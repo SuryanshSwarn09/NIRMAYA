@@ -21,10 +21,23 @@ export interface AuthContextType {
   role: UserRole | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password?: string) => Promise<boolean>;
+  login: (email: string, password?: string, roleHint?: UserRole) => Promise<boolean>;
   loginWithToken: (token: string, user: AuthUser) => void;
   loginAsDemoRole: (role: UserRole) => Promise<boolean>;
   logout: () => void;
+}
+
+export function getPortalRouteForRole(role?: UserRole | null): string {
+  switch (role) {
+    case "doctor":
+      return "/doctor";
+    case "lab":
+      return "/lab";
+    case "admin":
+      return "/admin";
+    default:
+      return "/patient";
+  }
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -110,7 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAuthCookies(newToken, newUser.role);
   };
 
-  const login = async (email: string, _password?: string): Promise<boolean> => {
+  const login = async (email: string, _password?: string, roleHint?: UserRole): Promise<boolean> => {
     setIsLoading(true);
     try {
       // Determine if matching a demo persona
@@ -118,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         (p) => p.email.toLowerCase() === email.toLowerCase()
       );
 
-      const targetRole = matchedPersona ? matchedPersona.role : "patient";
+      const targetRole: UserRole = roleHint || (matchedPersona ? matchedPersona.role : "patient");
       const targetSub = matchedPersona ? matchedPersona.id : `user-${Date.now()}`;
 
       // Request signed JWT from backend test-token endpoint
@@ -144,10 +157,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return true;
     } catch {
       // Fallback client simulation if backend is not actively responding
+      const fallbackRole: UserRole = roleHint || "patient";
       const fallbackUser: AuthUser = {
         id: `sim-${Date.now()}`,
         email,
-        role: "patient",
+        role: fallbackRole,
         fullName: email.split("@")[0],
         isVerified: true,
       };

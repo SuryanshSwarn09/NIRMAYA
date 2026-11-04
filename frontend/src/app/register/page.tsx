@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { Button, Card, Badge } from "@/components/ui";
-import { useAuth, type UserRole } from "@/context/AuthContext";
+import { useAuth, getPortalRouteForRole, type UserRole } from "@/context/AuthContext";
 import { PatientPasswordlessAuthCard } from "@/components/patient";
 import { 
   ShieldCheck, 
@@ -17,18 +17,25 @@ import {
   Mail, 
   Lock, 
   CreditCard,
-  Building2
+  Building2,
+  RefreshCw
 } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { loginWithToken } = useAuth();
+  const { isAuthenticated, user, isLoading, loginWithToken } = useAuth();
   const [role, setRole] = useState<UserRole>("patient");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [idNumber, setIdNumber] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      window.location.href = getPortalRouteForRole(user.role);
+    }
+  }, [isAuthenticated, user, isLoading]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,16 +55,22 @@ export default function RegisterPage() {
 
       loginWithToken(`jwt-token-${Date.now()}`, newUser);
       setIsSubmitting(false);
-
-      if (role === "doctor") {
-        router.push("/doctor");
-      } else if (role === "lab") {
-        router.push("/lab");
-      } else {
-        router.push("/patient");
-      }
+      window.location.href = getPortalRouteForRole(role);
     }, 600);
   };
+
+  if (isLoading || (isAuthenticated && user)) {
+    return (
+      <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-white">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <RefreshCw className="h-6 w-6 animate-spin text-[#111111]" />
+          <p className="text-xs font-semibold text-[#111111]">
+            Redirecting to your authorized workspace...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-white">

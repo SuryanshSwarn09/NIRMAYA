@@ -8,6 +8,23 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const token = request.cookies.get("nirmaya_token")?.value;
+  const role = request.cookies.get("nirmaya_role")?.value?.toLowerCase();
+
+  // If already authenticated and visiting login or register, redirect immediately to their portal
+  const isAuthPage = pathname === "/login" || pathname === "/register";
+  if (isAuthPage && token && role) {
+    const dest =
+      role === "doctor"
+        ? "/doctor"
+        : role === "lab"
+        ? "/lab"
+        : role === "admin"
+        ? "/admin"
+        : "/patient";
+    return NextResponse.redirect(new URL(dest, request.url));
+  }
+
   // Protected application workspaces
   const isProtectedPortal =
     pathname.startsWith("/patient") ||
@@ -18,9 +35,6 @@ export function middleware(request: NextRequest) {
   if (!isProtectedPortal) {
     return NextResponse.next();
   }
-
-  const token = request.cookies.get("nirmaya_token")?.value;
-  const role = request.cookies.get("nirmaya_role")?.value?.toLowerCase();
 
   // 1. Unauthenticated requests are redirected to login with returnUrl
   if (!token || !role) {
@@ -55,6 +69,8 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/login",
+    "/register",
     "/patient/:path*",
     "/doctor/:path*",
     "/lab/:path*",

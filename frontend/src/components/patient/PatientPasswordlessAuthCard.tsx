@@ -15,6 +15,7 @@ import {
   FileText
 } from "lucide-react";
 import { Button, Badge, Card } from "@/components/ui";
+import { useAuth } from "@/context/AuthContext";
 
 interface PatientPasswordlessAuthCardProps {
   onSuccess?: () => void;
@@ -22,6 +23,7 @@ interface PatientPasswordlessAuthCardProps {
 
 export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAuthCardProps) {
   const router = useRouter();
+  const { loginWithToken } = useAuth();
 
   // Tab mode: 'digilocker' | 'aadhaar_otp' | 'mobile_fallback'
   const [authMode, setAuthMode] = useState<"digilocker" | "aadhaar_otp" | "mobile_fallback">("digilocker");
@@ -115,10 +117,15 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
       }
 
       const patientData = authData.data;
-      localStorage.setItem("nirmaya_token", patientData.access_token);
-      localStorage.setItem("nirmaya_user_id", patientData.user_id);
-      localStorage.setItem("nirmaya_patient_id", patientData.patient_id);
-      localStorage.setItem("nirmaya_user_role", "patient");
+      const authUser = {
+        id: patientData.user_id,
+        email: `${patientData.user_id.slice(0, 8)}@abdm`,
+        role: "patient" as const,
+        fullName: patientData.name || "Authenticated Citizen",
+        abhaId: patientData.abha_number,
+        isVerified: true,
+      };
+      loginWithToken(patientData.access_token, authUser);
 
       setSuccessInfo({
         name: patientData.name,
@@ -128,8 +135,8 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
 
       setTimeout(() => {
         if (onSuccess) onSuccess();
-        router.push("/patient");
-      }, 1200);
+        window.location.href = "/patient";
+      }, 500);
     } catch (err: any) {
       setErrorMessage(err.message || "An unexpected error occurred during DigiLocker auth.");
     } finally {
@@ -226,10 +233,15 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
       }
 
       const patientData = authData.data;
-      localStorage.setItem("nirmaya_token", patientData.access_token);
-      localStorage.setItem("nirmaya_user_id", patientData.user_id);
-      localStorage.setItem("nirmaya_patient_id", patientData.patient_id);
-      localStorage.setItem("nirmaya_user_role", "patient");
+      const authUser = {
+        id: patientData.user_id,
+        email: `${patientData.user_id.slice(0, 8)}@abdm`,
+        role: "patient" as const,
+        fullName: patientData.name || "Authenticated Citizen",
+        abhaId: patientData.abha_number,
+        isVerified: true,
+      };
+      loginWithToken(patientData.access_token, authUser);
 
       setSuccessInfo({
         name: patientData.name,
@@ -239,8 +251,8 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
 
       setTimeout(() => {
         if (onSuccess) onSuccess();
-        router.push("/patient");
-      }, 1200);
+        window.location.href = "/patient";
+      }, 500);
     } catch (err: any) {
       setErrorMessage(err.message || "Aadhaar OTP verification failed.");
     } finally {
@@ -279,10 +291,15 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
       }
 
       const patientData = data.data;
-      localStorage.setItem("nirmaya_token", patientData.access_token);
-      localStorage.setItem("nirmaya_user_id", patientData.user_id);
-      localStorage.setItem("nirmaya_patient_id", patientData.patient_id);
-      localStorage.setItem("nirmaya_user_role", "patient");
+      const authUser = {
+        id: patientData.user_id,
+        email: `${patientData.user_id.slice(0, 8)}@abdm`,
+        role: "patient" as const,
+        fullName: patientData.name || "Authenticated Citizen",
+        abhaId: patientData.abha_number,
+        isVerified: true,
+      };
+      loginWithToken(patientData.access_token, authUser);
 
       setSuccessInfo({
         name: patientData.name,
@@ -292,8 +309,8 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
 
       setTimeout(() => {
         if (onSuccess) onSuccess();
-        router.push("/patient");
-      }, 1200);
+        window.location.href = "/patient";
+      }, 500);
     } catch (err: any) {
       setErrorMessage(err.message || "Failed to authenticate via mobile fallback.");
     } finally {

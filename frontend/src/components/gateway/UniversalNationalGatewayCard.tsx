@@ -22,7 +22,7 @@ import {
   Clock
 } from "lucide-react";
 import { Button, Badge, Card } from "@/components/ui";
-import { useAuth, DEMO_PERSONAS, type UserRole } from "@/context/AuthContext";
+import { useAuth, DEMO_PERSONAS, getPortalRouteForRole, type UserRole } from "@/context/AuthContext";
 
 export type NationalRole = "citizen" | "doctor" | "lab" | "pharmacy";
 export type CitizenAuthChannel = "aadhaar_otp" | "digilocker" | "abha_mobile" | "offline_emergency";
@@ -164,10 +164,7 @@ export function UniversalNationalGatewayCard({
 
     loginWithToken(sessionData.access_token, authUser);
     if (onSuccess) onSuccess();
-    if (role === "doctor") router.push("/doctor");
-    else if (role === "lab") router.push("/lab");
-    else if (role === "admin") router.push("/admin");
-    else router.push("/patient");
+    window.location.href = getPortalRouteForRole(role);
   };
 
   // 1. Aadhaar OTP Challenge
@@ -294,11 +291,11 @@ export function UniversalNationalGatewayCard({
       return;
     }
     setErrorMessage(null);
-    const ok = await login(proEmail, proPassword);
+    const targetRole: UserRole = activeRole === "doctor" ? "doctor" : activeRole === "lab" ? "lab" : "patient";
+    const ok = await login(proEmail, proPassword, targetRole);
     if (ok) {
-      if (activeRole === "doctor") router.push("/doctor");
-      else if (activeRole === "lab") router.push("/lab");
-      else router.push("/patient");
+      if (onSuccess) onSuccess();
+      window.location.href = getPortalRouteForRole(targetRole);
     } else {
       setErrorMessage("Authentication failed. Please verify credentials or select a demo persona.");
     }
@@ -308,9 +305,8 @@ export function UniversalNationalGatewayCard({
     setErrorMessage(null);
     const ok = await loginAsDemoRole(role);
     if (ok) {
-      if (role === "doctor") router.push("/doctor");
-      else if (role === "lab") router.push("/lab");
-      else router.push("/patient");
+      if (onSuccess) onSuccess();
+      window.location.href = getPortalRouteForRole(role);
     }
   };
 

@@ -1,12 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { UniversalNationalGatewayCard } from "@/components/gateway";
 import { Badge } from "@/components/ui";
+import { useAuth, getPortalRouteForRole } from "@/context/AuthContext";
+import { RefreshCw } from "lucide-react";
 
 export default function LoginPage() {
+  const { isAuthenticated, user, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      window.location.href = getPortalRouteForRole(user.role);
+    }
+  }, [isAuthenticated, user, isLoading]);
+
+  if (isLoading || (isAuthenticated && user)) {
+    return (
+      <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-white">
+        <div className="flex flex-col items-center gap-3 text-center">
+          <RefreshCw className="h-6 w-6 animate-spin text-[#111111]" />
+          <p className="text-xs font-semibold text-[#111111]">
+            Redirecting to your authorized workspace...
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-white">
       <div className="w-full max-w-xl space-y-6">

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/common/BrandLogo";
 import { Badge, Button } from "@/components/ui";
 import { MAIN_NAV_ITEMS } from "@/config/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, getPortalRouteForRole } from "@/context/AuthContext";
 import { Menu, X, LogOut, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -78,7 +78,7 @@ export function Navbar({
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2.5">
               <Link
-                href={user.role === "doctor" ? "/doctor" : "/patient"}
+                href={getPortalRouteForRole(user.role)}
                 className="flex items-center gap-2 py-1 px-2 rounded-full border border-[#e5e7eb] hover:bg-[#f8f9fa] transition-colors"
               >
                 <div className="h-7 w-7 rounded-full bg-[#111111] text-white flex items-center justify-center font-bold text-xs">
