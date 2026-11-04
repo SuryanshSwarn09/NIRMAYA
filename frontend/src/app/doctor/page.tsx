@@ -46,22 +46,6 @@ import {
   HipBridgeConsoleCard,
   ClinicalAlertToastSystem,
   BreakTheGlassModal,
-  AuditLedgerVerificationCard,
-  SecurityScanReportCard,
-  AsvsComplianceShieldCard,
-  AdministrativeHierarchyViewerCard,
-  ChainOfCommandDelegationCard,
-  TerritorialCommandCenterCard,
-  ContainerRuntimeCard,
-  FrontendContainerCard,
-  DockerOrchestrationCard,
-  EdgeNodeSyncCard,
-  LegacyHisFederationCard,
-  AcademicMonographViewerCard,
-  PerformanceBenchmarkCard,
-  InteractiveDemoSandboxCard,
-  SystemAuditLicenseCard,
-  ProductionReleaseCard,
   FamilyProxyRelationshipCard,
   ChildAbhaBindingCard,
   GuardianConsentDelegationCard,
@@ -617,54 +601,6 @@ export default function DoctorEMRPage() {
 
             {/* ABDM Milestone 2 HIP Bridge Service & Inbound Webhook Telemetry */}
             <HipBridgeConsoleCard />
-
-            {/* Cryptographic Audit Hash-Chain Ledger & Emergency SMS Dispatch */}
-            <AuditLedgerVerificationCard />
-
-            {/* Static Security (SAST) Scanner & Connection Pool Telemetry */}
-            <SecurityScanReportCard />
-
-            {/* OWASP ASVS Level 2 Verification & DoS Rate-Limiting Shield */}
-            <AsvsComplianceShieldCard />
-
-            {/* Indian LGD 6-Tier Administrative Hierarchy & Governance */}
-            <AdministrativeHierarchyViewerCard />
-
-            {/* Chain of Command & Delegated Authority Console */}
-            <ChainOfCommandDelegationCard />
-
-            {/* Public Health Command Center & Territorial Disease Surveillance */}
-            <TerritorialCommandCenterCard />
-
-            {/* OCI Container Runtime & Production Deployment Telemetry */}
-            <ContainerRuntimeCard />
-
-            {/* Next.js 15 Standalone Frontend Container Telemetry */}
-            <FrontendContainerCard />
-
-            {/* Turnkey Multi-Service Docker Compose & Caddy Ingress Topology */}
-            <DockerOrchestrationCard />
-
-            {/* Dual-Mode Edge Node Appliance & Offline Event Log Sync */}
-            <EdgeNodeSyncCard />
-
-            {/* PostgreSQL Foreign Data Wrapper & Legacy HIS Federation */}
-            <LegacyHisFederationCard />
-
-            {/* 80-Day Academic Project Monograph & Engineering Thesis */}
-            <AcademicMonographViewerCard />
-
-            {/* Subsystem Performance & Interoperability Benchmark Suite */}
-            <PerformanceBenchmarkCard />
-
-            {/* Interactive Guided Demonstration & Defense Sandbox */}
-            <InteractiveDemoSandboxCard />
-
-            {/* Pre-Release System Audit, Open-Source License Compliance & CycloneDX SBOM */}
-            <SystemAuditLicenseCard />
-
-            {/* Production Master Launch & Release v1.0.0 Celebration Card */}
-            <ProductionReleaseCard />
 
             {/* Dependent & Family Health Proxy Manager (DPDP Act 2023 Sec 9 Compliance) */}
             <FamilyProxyRelationshipCard />

@@ -3,16 +3,17 @@ import type { NextRequest } from "next/server";
 
 /**
  * Next.js Edge Middleware for NIRMAYA:
- * Enforces session authentication and clinical role boundaries across portal routes.
+ * Enforces strict 4-quadrant role boundaries across patient, clinician, laboratory, and administrative portals.
  */
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protected clinical portals
+  // Protected application workspaces
   const isProtectedPortal =
     pathname.startsWith("/patient") ||
     pathname.startsWith("/doctor") ||
-    pathname.startsWith("/lab");
+    pathname.startsWith("/lab") ||
+    pathname.startsWith("/admin");
 
   if (!isProtectedPortal) {
     return NextResponse.next();
@@ -21,21 +22,31 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("nirmaya_token")?.value;
   const role = request.cookies.get("nirmaya_role")?.value?.toLowerCase();
 
-  // If no active auth token exists, redirect to login with returnUrl
-  if (!token) {
+  // 1. Unauthenticated requests are redirected to login with returnUrl
+  if (!token || !role) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("returnUrl", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Role-boundary guards for specialized clinical workspaces
-  if (pathname.startsWith("/doctor") && role === "patient") {
-    // Redirect patients trying to access doctor workspace to patient vault
+  // 2. Administrator role has supervisory authorization across all workspaces
+  if (role === "admin") {
+    return NextResponse.next();
+  }
+
+  // 3. Strict 4-Quadrant Partitioning:
+  // - Patient / Citizen role is strictly confined to /patient
+  if (role === "patient" && !pathname.startsWith("/patient")) {
     return NextResponse.redirect(new URL("/patient", request.url));
   }
 
-  if (pathname.startsWith("/patient") && role === "lab") {
-    // Redirect lab persona trying to access patient vault to lab gateway
+  // - Clinician / Doctor role is strictly confined to /doctor
+  if (role === "doctor" && !pathname.startsWith("/doctor")) {
+    return NextResponse.redirect(new URL("/doctor", request.url));
+  }
+
+  // - Laboratory Technician role is strictly confined to /lab
+  if (role === "lab" && !pathname.startsWith("/lab")) {
     return NextResponse.redirect(new URL("/lab", request.url));
   }
 
@@ -47,5 +58,6 @@ export const config = {
     "/patient/:path*",
     "/doctor/:path*",
     "/lab/:path*",
+    "/admin/:path*",
   ],
 };
