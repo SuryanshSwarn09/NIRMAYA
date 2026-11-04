@@ -187,6 +187,7 @@ class NationalGatewayService:
 
         token_payload = {
             "sub": user_id,
+            "email": "arun.patel@example.com",
             "role": "patient",
             "session_id": session_id,
             "channel": GatewayAuthChannel.AADHAAR_OTP.value,
@@ -258,6 +259,7 @@ class NationalGatewayService:
 
         token_payload = {
             "sub": user_id,
+            "email": "arun.patel@example.com",
             "role": "patient",
             "session_id": session_id,
             "channel": GatewayAuthChannel.DIGILOCKER.value,
@@ -339,6 +341,7 @@ class NationalGatewayService:
 
         token_payload = {
             "sub": user_id,
+            "email": "priya.sharma@example.com",
             "role": "patient",
             "session_id": session_id,
             "channel": GatewayAuthChannel.ABHA_MOBILE.value,
@@ -413,7 +416,8 @@ class NationalGatewayService:
 
         token_payload = {
             "sub": user_id,
-            "role": "emergency_responder",
+            "email": "dr.rajesh@nirmaya.health",
+            "role": "doctor",
             "session_id": session_id,
             "channel": GatewayAuthChannel.OFFLINE_EMERGENCY.value,
             "emergency_seal": emergency_seal,
