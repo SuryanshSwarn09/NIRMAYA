@@ -679,6 +679,16 @@ from app.schemas.child_abha import (
     DigiLockerDocumentVerificationResponse,
     FhirRelatedPersonRepresentation,
 )
+from app.schemas.guardian_delegation import (
+    ConsentPurposeEnum,
+    DelegatedConsentStatusEnum,
+    DelegatedConsentGrantRequest,
+    DelegatedConsentArtifactResponse,
+    ScopedProxyTokenRequest,
+    ScopedProxyTokenResponse,
+    DelegatedConsentRevokeRequest,
+    ConsentAuditTrailItem,
+)
 
 
 
