@@ -49,6 +49,7 @@ from app.api.v1.endpoints import (
     release,
     family_proxy,
     child_abha,
+    guardian_delegation,
 )
 
 api_router = APIRouter()
@@ -101,6 +102,7 @@ api_router.include_router(audit.router, prefix="", tags=["Pre-Release System Aud
 api_router.include_router(release.router, prefix="", tags=["Master Production Release v1.0.0"])
 api_router.include_router(family_proxy.router, prefix="", tags=["Dependent & Family Health Proxy (DPDP Act Sec 9)"])
 api_router.include_router(child_abha.router, prefix="", tags=["ABDM Child-ABHA Linkage & Verified Demographic Proxy Binding"])
+api_router.include_router(guardian_delegation.router, prefix="", tags=["Guardian Access Delegation & ABDM Consent Interceptor"])
 
 
 
