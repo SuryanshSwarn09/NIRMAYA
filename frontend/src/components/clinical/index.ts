@@ -83,6 +83,12 @@ export {
   ChildAbhaBindingCard,
   type ChildAbhaIssuedState,
 } from "./ChildAbhaBindingCard";
+export {
+  GuardianConsentDelegationCard,
+  type PendingConsentRequest,
+  type ActiveConsentArtifact,
+  type EphemeralTokenState,
+} from "./GuardianConsentDelegationCard";
 
 
 

@@ -64,6 +64,7 @@ import {
   ProductionReleaseCard,
   FamilyProxyRelationshipCard,
   ChildAbhaBindingCard,
+  GuardianConsentDelegationCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -613,6 +614,9 @@ export default function DoctorEMRPage() {
 
             {/* ABDM Child-ABHA Issuance & Demographic Binding (ABDM M1 & DPDP Act Sec 9) */}
             <ChildAbhaBindingCard />
+
+            {/* Guardian Consent Delegation & Scoped Token Interceptor (ABDM M3 & DPDP Act Sec 9) */}
+            <GuardianConsentDelegationCard />
 
 
 
