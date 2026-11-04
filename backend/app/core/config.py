@@ -42,6 +42,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3000",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "https://nirmaya-tau.vercel.app",
+        "https://nirmaya.vercel.app",
     ]
 
     # Database Configuration (PostgreSQL 16)

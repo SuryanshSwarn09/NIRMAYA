@@ -37,7 +37,7 @@ export function UniversalNationalGatewayCard({
   onSuccess,
 }: UniversalNationalGatewayCardProps) {
   const router = useRouter();
-  const { login, loginAsDemoRole, isLoading: authLoading } = useAuth();
+  const { login, loginWithToken, loginAsDemoRole, isLoading: authLoading } = useAuth();
 
   // Active role selector
   const [activeRole, setActiveRole] = useState<NationalRole>(initialRole);
@@ -98,26 +98,97 @@ export function UniversalNationalGatewayCard({
     setAadhaarInput(formatted);
   };
 
+  // Defensive API helper to prevent HTML parsing SyntaxErrors
+  const postGateway = async <T,>(url: string, body: unknown): Promise<{ success: boolean; data: T; message?: string }> => {
+    let resp: Response;
+    try {
+      resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    } catch {
+      throw new Error(
+        "Unable to reach NIRMAYA Health Gateway API. Please verify the backend service is running and accessible."
+      );
+    }
+
+    const contentType = resp.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      if (resp.status === 404) {
+        throw new Error(
+          "Gateway API endpoint not found (HTTP 404). Backend service is not connected to this deployment."
+        );
+      }
+      throw new Error(`Gateway returned unexpected response format (HTTP ${resp.status}).`);
+    }
+
+    const data = await resp.json();
+    if (!resp.ok) {
+      throw new Error(data.detail || data.message || `Authentication error (HTTP ${resp.status})`);
+    }
+    return data;
+  };
+
+  interface GatewaySessionData {
+    session_id: string;
+    access_token: string;
+    user_role: string;
+    auth_channel: string;
+    user_id: string;
+    name: string;
+    abha_address?: string;
+    abha_number?: string;
+  }
+
+  // Preserve real session credentials and route to authorized workspace
+  const establishGatewaySession = (sessionData: GatewaySessionData, defaultRole: UserRole) => {
+    const role: UserRole =
+      sessionData.user_role === "doctor"
+        ? "doctor"
+        : sessionData.user_role === "lab"
+        ? "lab"
+        : sessionData.user_role === "admin"
+        ? "admin"
+        : defaultRole;
+
+    const authUser = {
+      id: sessionData.user_id,
+      email: sessionData.abha_address
+        ? `${sessionData.abha_address.replace("@", "")}@abdm`
+        : `${sessionData.user_id.slice(0, 8)}@nirmaya.health`,
+      role,
+      fullName: sessionData.name || "Authenticated Citizen",
+      isVerified: true,
+    };
+
+    loginWithToken(sessionData.access_token, authUser);
+    if (onSuccess) onSuccess();
+    if (role === "doctor") router.push("/doctor");
+    else if (role === "lab") router.push("/lab");
+    else if (role === "admin") router.push("/admin");
+    else router.push("/patient");
+  };
+
   // 1. Aadhaar OTP Challenge
   const handleAadhaarChallenge = async () => {
     setIsLoading(true);
     setErrorMessage(null);
     setSuccessMessage(null);
     try {
-      const resp = await fetch("/api/v1/gateway/auth/aadhaar/challenge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ aadhaar_number: aadhaarInput }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.detail || "Failed to initiate Aadhaar OTP challenge.");
+      interface ChallengeData {
+        txn_id: string;
+        masked_mobile: string;
       }
+      const data = await postGateway<ChallengeData>(
+        "/api/v1/gateway/auth/aadhaar/challenge",
+        { aadhaar_number: aadhaarInput }
+      );
       setAadhaarTxnId(data.data.txn_id);
       setMaskedMobile(data.data.masked_mobile);
       setAadhaarStep("verify");
       setCooldown(60);
-      setSuccessMessage(data.message);
+      setSuccessMessage(data.message || "OTP challenge sent successfully.");
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : "Challenge failed.");
     } finally {
@@ -131,23 +202,15 @@ export function UniversalNationalGatewayCard({
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const resp = await fetch("/api/v1/gateway/auth/aadhaar/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const data = await postGateway<GatewaySessionData>(
+        "/api/v1/gateway/auth/aadhaar/verify",
+        {
           txn_id: aadhaarTxnId,
           otp: aadhaarOtp,
           remember_me: rememberMe,
-        }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.detail || "Invalid Aadhaar verification code.");
-      }
-      // Demo session fallback into local auth context
-      await loginAsDemoRole("patient");
-      if (onSuccess) onSuccess();
-      router.push("/patient");
+        }
+      );
+      establishGatewaySession(data.data, "patient");
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : "Verification failed.");
     } finally {
@@ -160,23 +223,16 @@ export function UniversalNationalGatewayCard({
     setDigiLockerLoading(true);
     setErrorMessage(null);
     try {
-      const resp = await fetch("/api/v1/gateway/auth/digilocker/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const data = await postGateway<GatewaySessionData>(
+        "/api/v1/gateway/auth/digilocker/verify",
+        {
           code: "sandbox_auth_code_dl",
           state: "sandbox_state_csrf",
           code_verifier: "pkce_verifier_demo",
           remember_me: rememberMe,
-        }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.detail || "DigiLocker e-KYC verification failed.");
-      }
-      await loginAsDemoRole("patient");
-      if (onSuccess) onSuccess();
-      router.push("/patient");
+        }
+      );
+      establishGatewaySession(data.data, "patient");
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : "DigiLocker error.");
     } finally {
@@ -189,23 +245,16 @@ export function UniversalNationalGatewayCard({
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const resp = await fetch("/api/v1/gateway/auth/mobile/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const data = await postGateway<GatewaySessionData>(
+        "/api/v1/gateway/auth/mobile/verify",
+        {
           mobile_number: mobileNumber,
           otp: mobileOtp,
           abha_identifier: abhaHandle,
           remember_me: rememberMe,
-        }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.detail || "Mobile OTP verification failed.");
-      }
-      await loginAsDemoRole("patient");
-      if (onSuccess) onSuccess();
-      router.push("/patient");
+        }
+      );
+      establishGatewaySession(data.data, "patient");
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : "Mobile authentication error.");
     } finally {
@@ -218,25 +267,18 @@ export function UniversalNationalGatewayCard({
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const resp = await fetch("/api/v1/gateway/auth/emergency/bypass", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const data = await postGateway<GatewaySessionData>(
+        "/api/v1/gateway/auth/emergency/bypass",
+        {
           facility_id: facilityId,
           clinician_id: clinicianId,
           patient_identifier: traumaPatientId,
           emergency_reason: emergencyReason,
           triage_level: emergencyTriage,
           tamper_attestation: tamperAttestation,
-        }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        throw new Error(data.detail || "Emergency bypass issuance failed.");
-      }
-      await loginAsDemoRole("doctor");
-      if (onSuccess) onSuccess();
-      router.push("/doctor");
+        }
+      );
+      establishGatewaySession(data.data, "doctor");
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : "Emergency bypass error.");
     } finally {
