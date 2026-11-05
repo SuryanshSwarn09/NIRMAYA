@@ -16,7 +16,12 @@ import {
   PatientTabId,
   VitalMetricType,
   TelemedicineReadinessModal,
-  AbhaCreationModal
+  AbhaCreationModal,
+  CalcomDependentSwitcher,
+  PediatricImmunizationTimeline,
+  GeriatricCareAssessmentCard,
+  DependentContext,
+  SEEDED_CONTEXTS,
 } from "@/components/patient";
 import { 
   ClinicalSlotPicker, 
@@ -73,6 +78,7 @@ const CLINICIANS = [
 export default function PatientVaultPage() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<PatientTabId>("overview");
+  const [selectedContext, setSelectedContext] = useState<DependentContext>(SEEDED_CONTEXTS[0]);
   const [consentActive, setConsentActive] = useState(true);
 
   // ABHA ID Card & QR Verification States (Day 32, Day 44)
@@ -860,11 +866,26 @@ export default function PatientVaultPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-white min-h-screen">
       
+      {/* 0. Cal.com Dependent Family Persona Switcher (DPDP Act 2023 Sec 9) */}
+      <CalcomDependentSwitcher
+        activeContextId={selectedContext.id}
+        onContextChange={(ctx) => setSelectedContext(ctx)}
+      />
+
+      {/* Segmented Pediatric & Geriatric Workflow Isolation Panels */}
+      {selectedContext.type === "PEDIATRIC_MINOR" && (
+        <PediatricImmunizationTimeline />
+      )}
+
+      {selectedContext.type === "GERIATRIC_SENIOR" && (
+        <GeriatricCareAssessmentCard />
+      )}
+
       {/* 1. Cal.com Patient Header Shell */}
       <PatientHeader
-        patientName={user?.fullName || "Arun Patel"}
-        abhaId={user?.abhaId || "91-8472-1092-4821"}
-        abhaAddress="arun.patel@abdm"
+        patientName={selectedContext.type === "SELF" ? (user?.fullName || "Arun Patel") : selectedContext.name}
+        abhaId={selectedContext.type === "SELF" ? (user?.abhaId || "91-8472-1092-4821") : selectedContext.abha}
+        abhaAddress={selectedContext.type === "SELF" ? "arun.patel@abdm" : `${selectedContext.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@abdm`}
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onExportFhir={() => alert("Downloading encrypted HL7 FHIR Bundle...")}

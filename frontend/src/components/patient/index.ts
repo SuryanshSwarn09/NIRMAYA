@@ -19,3 +19,6 @@ export * from "./DigiLockerAuthCard";
 export * from "./AadhaarOtpVerificationModal";
 export * from "./AbhaCreationModal";
 export * from "./PatientPasswordlessAuthCard";
+export * from "./CalcomDependentSwitcher";
+export * from "./PediatricImmunizationTimeline";
+export * from "./GeriatricCareAssessmentCard";
