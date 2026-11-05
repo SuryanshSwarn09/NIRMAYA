@@ -13,6 +13,7 @@ Validates:
 """
 
 import json
+import time
 import pytest
 from starlette.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
@@ -95,13 +96,21 @@ class TestWebSocketAuthenticationAndLifecycle:
 
             # Subscribe
             websocket.send_text(json.dumps({"action": "subscribe", "channel": target_channel}))
-            # Verify metric shows channel subscribed
-            metrics = ws_manager.get_metrics()
+            # Verify metric shows channel subscribed (polling for async event loop processing)
+            for _ in range(20):
+                metrics = ws_manager.get_metrics()
+                if target_channel in metrics.channelSubscribers:
+                    break
+                time.sleep(0.05)
             assert target_channel in metrics.channelSubscribers
 
             # Unsubscribe
             websocket.send_text(json.dumps({"action": "unsubscribe", "channel": target_channel}))
-            metrics = ws_manager.get_metrics()
+            for _ in range(20):
+                metrics = ws_manager.get_metrics()
+                if target_channel not in metrics.channelSubscribers:
+                    break
+                time.sleep(0.05)
             assert target_channel not in metrics.channelSubscribers
 
 

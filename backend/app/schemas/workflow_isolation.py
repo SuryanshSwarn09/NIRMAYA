@@ -39,7 +39,7 @@ class DependentContextSummary(BaseModel):
     """Summary of an available patient context for session switching."""
     patient_id: str = Field(..., description="Unique sovereign PatientProfile UUID")
     display_name: str = Field(..., description="Legal demographic name")
-    abha_number: str = Field(..., description="14-digit ABDM ABHA Number or handle")
+    abha_number: Optional[str] = Field("14-XXXX-XXXX-XXXX", description="14-digit ABDM ABHA Number or handle")
     context_type: ContextTypeEnum = Field(..., description="Categorization of clinical context")
     age: int = Field(..., description="Chronological age in years")
     gender: str = Field(..., description="Administrative gender (Male/Female/Other)")

@@ -306,14 +306,17 @@ class WorkflowIsolationService:
             else:
                 ctx_type = ContextTypeEnum.SELF
 
+            dep_name = dep.dependent_name or f"Dependent ({dep.dependent_patient_id})"
+            dep_abha = dep.dependent_abha or "14-XXXX-XXXX-XXXX"
+
             contexts.append(
                 DependentContextSummary(
                     patient_id=dep.dependent_patient_id,
-                    display_name=dep.dependent_name,
-                    abha_number=dep.dependent_abha,
+                    display_name=dep_name,
+                    abha_number=dep_abha,
                     context_type=ctx_type,
                     age=dep.dependent_age,
-                    gender="Female" if "Kavita" in dep.dependent_name else "Male",
+                    gender="Female" if "Kavita" in dep_name else "Male",
                     proxy_relationship_id=dep.relationship_id,
                     relationship_type=dep.relationship_type.value,
                     access_scope=dep.access_scope.value,

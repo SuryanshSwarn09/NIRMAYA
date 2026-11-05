@@ -122,6 +122,7 @@
     * [Day 81: Dependent & Family Health Proxy Schema & Zero-Contamination Architecture](journey/month-4/day-81.md)
     * [Day 82: ABDM Child ABHA Linkage & Verified Demographic Proxy Binding](journey/month-4/day-82.md)
     * [Day 83: Guardian Access Delegation Protocols & Consent Artifact Interceptor](journey/month-4/day-83.md)
+    * [Day 84: Pediatric and Geriatric Workflow Isolation with Cal.com Dependent Switcher](journey/month-4/day-84.md)
 
 ## Reports & Thesis Monographs
 * [Family Proxy Access & Zero-Contamination Architecture](reports/nirmaya-family-proxy-access-architecture.md)

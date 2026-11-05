@@ -2540,7 +2540,7 @@
   2. `7af1267: feat(services): implement guardian consent interceptor, delegation token engine, and artifact manager`
   3. `689b05b: feat(api): expose guardian consent delegation, token exchange, and revocation endpoints`
   4. `d289fcb: feat(frontend): implement GuardianConsentDelegationCard with calcom tokens and mount in doctor portal`
-  5. `feat/test: test(delegation): author guardian consent delegation test suite, publish day-83 log, and update documentation`
+  5. `a51b2bc: test(delegation): author guardian consent delegation test suite, publish day-83 log, and update documentation`
 - **Key Deliverables:**
   - **Inbound ABDM Consent Request Interceptor:**
     - Real-time evaluation of data exchange requests directed to dependent minors.
@@ -2563,6 +2563,35 @@
 - **Verification:**
   - Dedicated Guardian Delegation Suite: **30/30 tests passing in `tests/test_guardian_delegation.py` (100% green in 0.79s)**.
   - Full Cumulative Backend Test Suite: **791/791 tests passing (100% green across 47 test modules)**.
+  - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
+  - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
+
+#### Day 84 (Thu) - Milestone 17-04: Pediatric and Geriatric Workflow Isolation with Cal.com Dependent Switcher
+- **Focus:** Cal.com Dependent Context Switcher, Universal Immunization Programme (UIP) Timeline & WHO Growth Percentiles, Comprehensive Geriatric Assessment (CGA) & Beers Criteria Polypharmacy Audit, Dynamic EHR View Segmentation, Zero-Contamination Boundary Verification, and Automated Test Suite (`backend/tests/test_workflow_isolation.py`).
+- **Executed Commits (Logical Atomic Cadence - Method 2 Stamped):**
+  1. `98a910f: feat(schemas): define workflow isolation, pediatric immunization, and geriatric assessment models`
+  2. `e6ee2c5: feat(services): implement workflow isolation engine, uip immunization timeline, and geriatric assessment`
+  3. `1120141: feat(api): expose workflow isolation, context switching, pediatric, and geriatric endpoints`
+  4. `583fc37: feat(frontend): implement CalcomDependentSwitcher, PediatricTimeline, and GeriatricAssessment in patient vault`
+  5. `feat/test: test(workflow): author workflow isolation test suite, publish day-84 log, and update documentation`
+- **Key Deliverables:**
+  - **Cal.com Dependent Persona Switcher (`CalcomDependentSwitcher.tsx`):**
+    - Minimalist segment control in patient vault header allowing 1-click toggling between Personal Vault (Self), Child Minor (Pediatric), and Senior Parent (Geriatric).
+    - Verification pills, sovereign isolation indicators, and active relationship metadata.
+  - **Pediatric Workflow Isolation (`PediatricImmunizationTimeline.tsx`):**
+    - India Universal Immunization Programme (UIP) vaccination schedule with administered/scheduled status pills, batch IDs, and healthcare provider references.
+    - Anthropometric child growth telemetry tracking weight and height percentiles against official WHO standards.
+  - **Geriatric Workflow Isolation (`GeriatricCareAssessmentCard.tsx`):**
+    - Multidimensional senior evaluation dashboard featuring Fried Frailty Phenotype score (2/5 Pre-Frail).
+    - Beers Criteria polypharmacy audit flagging high-risk drug-drug and drug-age interactions.
+    - Timed Up & Go (TUG) mobility and fall risk grading (13.8s Moderate Risk) and Katz ADL independence scorecard (5/6).
+  - **Dynamic EHR View Segmentation:**
+    - Automatically filters active clinical vault views, ensuring child immunizations are segregated from adult cardiology records and senior frailty assessments.
+  - **Dedicated Test Suite (`backend/tests/test_workflow_isolation.py`):**
+    - 29 comprehensive unit and integration tests verifying context classification, switching authorization, UIP milestone management, WHO percentile bounds, CGA metrics, and all REST endpoints.
+- **Verification:**
+  - Dedicated Workflow Isolation Suite: **29/29 tests passing in `tests/test_workflow_isolation.py` (100% green in 1.15s)**.
+  - Full Cumulative Backend Test Suite: **820/820 tests passing (100% green across 48 test modules)**.
   - Next.js 15 Production Build: **13/13 static and dynamic routes compiled cleanly** (`npm run build`).
   - TypeScript Typecheck: **100% clean compilation** (`tsc --noEmit`).
 
