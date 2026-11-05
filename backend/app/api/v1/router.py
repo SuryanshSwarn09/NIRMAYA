@@ -50,6 +50,7 @@ from app.api.v1.endpoints import (
     family_proxy,
     child_abha,
     guardian_delegation,
+    workflow_isolation,
 )
 
 api_router = APIRouter()
@@ -103,6 +104,7 @@ api_router.include_router(release.router, prefix="", tags=["Master Production Re
 api_router.include_router(family_proxy.router, prefix="", tags=["Dependent & Family Health Proxy (DPDP Act Sec 9)"])
 api_router.include_router(child_abha.router, prefix="", tags=["ABDM Child-ABHA Linkage & Verified Demographic Proxy Binding"])
 api_router.include_router(guardian_delegation.router, prefix="", tags=["Guardian Access Delegation & ABDM Consent Interceptor"])
+api_router.include_router(workflow_isolation.router, prefix="", tags=["Workflow Isolation & Dependent EHR View Segmentation"])
 
 
 
