@@ -89,6 +89,15 @@ export {
   type ActiveConsentArtifact,
   type EphemeralTokenState,
 } from "./GuardianConsentDelegationCard";
+export {
+  MultiGuardianConflictResolutionCard,
+  type CustodyMode,
+  type GuardianItem,
+  type DisputeRecord,
+  type DualSignItem,
+  type AuditLedgerItem,
+} from "./MultiGuardianConflictResolutionCard";
+
 
 
 

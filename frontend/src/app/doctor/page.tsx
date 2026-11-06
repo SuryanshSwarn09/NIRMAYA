@@ -65,6 +65,7 @@ import {
   FamilyProxyRelationshipCard,
   ChildAbhaBindingCard,
   GuardianConsentDelegationCard,
+  MultiGuardianConflictResolutionCard,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -617,6 +618,9 @@ export default function DoctorEMRPage() {
 
             {/* Guardian Consent Delegation & Scoped Token Interceptor (ABDM M3 & DPDP Act Sec 9) */}
             <GuardianConsentDelegationCard />
+
+            {/* Multi-Guardian Concurrency & Conflict Resolution Engine (DPDP Act Sec 9 & GWA 1890) */}
+            <MultiGuardianConflictResolutionCard />
 
 
 
