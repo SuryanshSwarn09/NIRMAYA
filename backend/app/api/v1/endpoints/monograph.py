@@ -13,6 +13,8 @@ from app.schemas.monograph import (
     CitationItem,
     MonographChapter,
     MonographMetadataResponse,
+    IeeeManuscriptDay91Overview,
+    TableIRelatedWorksMatrix,
 )
 from app.services.monograph_service import monograph_service
 
@@ -129,3 +131,35 @@ async def list_academic_citations(response: Response) -> List[CitationItem]:
     for header, value in get_container_security_headers().items():
         response.headers[header] = value
     return monograph_service.list_citations()
+
+
+# =============================================================================
+# IEEE Capstone Research Manuscript Endpoints (Phase 6: Days 91–95)
+# =============================================================================
+
+@router.get(
+    "/manuscript/day91",
+    response_model=IeeeManuscriptDay91Overview,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Day 91 IEEE Capstone Research Manuscript Overview",
+    description="Returns Title, 250-word Abstract, 10 Index Terms, 6 Core Scientific Contributions, and Table I Comparative Matrix.",
+)
+async def get_ieee_manuscript_day91_endpoint(response: Response) -> IeeeManuscriptDay91Overview:
+    """Retrieve full Day 91 IEEE manuscript deliverable packet."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_ieee_manuscript_day91()
+
+
+@router.get(
+    "/manuscript/table-1",
+    response_model=TableIRelatedWorksMatrix,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table I: Summary of Related Approaches & Research Gaps",
+    description="Returns multi-parameter comparative matrix evaluating NIRMAYA against OpenMRS, Bahmni, Epic, Medplum, and ABDM Reference.",
+)
+async def get_table_1_matrix_endpoint(response: Response) -> TableIRelatedWorksMatrix:
+    """Retrieve Table I comparative evaluation matrix."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_table_1_matrix()

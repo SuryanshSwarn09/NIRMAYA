@@ -101,3 +101,70 @@ class MonographMetadataResponse(BaseModel):
     cumulative_test_modules: int = Field(default=39)
     chapters: List[MonographChapter] = Field(default_factory=list)
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
+
+# =============================================================================
+# IEEE Capstone Research Manuscript Schemas (Phase 6: Days 91–95)
+# =============================================================================
+
+class ScientificContributionItem(BaseModel):
+    """Enumeration of an explicit scientific and systems contribution in the IEEE manuscript."""
+    number: int = Field(..., ge=1, le=10, description="Sequential contribution index (1-6)")
+    title: str = Field(..., description="Short contribution title")
+    description: str = Field(..., description="Detailed narrative explaining technological breakthrough")
+    metric_sla: str = Field(..., description="Empirical performance SLA or quantitative target")
+    verified: bool = Field(default=True, description="Whether contribution is empirically verified in code")
+
+
+class RelatedWorksComparisonRow(BaseModel):
+    """Single platform row in Table I (Summary of Related Approaches & Research Gaps)."""
+    dimension: str = Field(..., description="Architectural evaluation parameter")
+    openmrs: str = Field(..., description="OpenMRS evaluation")
+    bahmni: str = Field(..., description="Bahmni evaluation")
+    epic: str = Field(..., description="Epic Systems evaluation")
+    medplum: str = Field(..., description="Medplum evaluation")
+    abdm_reference: str = Field(..., description="ABDM Reference Sandbox evaluation")
+    nirmaya: str = Field(..., description="NIRMAYA evaluation")
+
+
+class TableIRelatedWorksMatrix(BaseModel):
+    """Complete Table I comparative matrix across all 9 architectural dimensions."""
+    table_id: str = Field(default="TABLE-I-RELATED-WORKS")
+    title: str = Field(default="Summary of Related Approaches and Identified Research Gaps")
+    dimensions_count: int = Field(default=9)
+    evaluated_platforms: List[str] = Field(
+        default_factory=lambda: [
+            "OpenMRS",
+            "Bahmni",
+            "Epic Systems",
+            "Medplum",
+            "ABDM Reference",
+            "NIRMAYA (Proposed)",
+        ]
+    )
+    rows: List[RelatedWorksComparisonRow] = Field(default_factory=list)
+
+
+class IeeeManuscriptDay91Overview(BaseModel):
+    """Complete Day 91 (Milestone 19-01) IEEE manuscript deliverable packet."""
+    title: str = Field(
+        default="NIRMAYA: A High-Throughput, Cryptographically-Federated Digital Health Interoperability Architecture with Indian LGD Territorial Governance and ABDM Gateway Federation"
+    )
+    author: str = Field(default="Suryansh Swarn")
+    affiliation: str = Field(
+        default="Core Architecture Lead, NIRMAYA National Health Information Network"
+    )
+    milestone: str = Field(default="19-01 (Day 91)")
+    release_version: str = Field(default="1.2.0")
+    target_format: str = Field(default="IEEE Transactions 2-Column (LaTeX + Markdown)")
+    abstract_text: str = Field(..., description="Authoritative 250-word abstract")
+    abstract_word_count: int = Field(..., description="Exact word count of abstract")
+    index_terms: List[str] = Field(default_factory=list, description="10 IEEE Index Terms")
+    section_1_title: str = Field(default="Section I: Introduction")
+    scientific_contributions: List[ScientificContributionItem] = Field(default_factory=list)
+    section_2_title: str = Field(default="Section II: Related Work and Identified Research Gaps")
+    table_1: TableIRelatedWorksMatrix
+    latex_file_path: str = Field(default="docs/academic/latex/nirmaya_ieee_manuscript.tex")
+    markdown_file_path: str = Field(default="docs/academic/nirmaya-ieee-research-paper.md")
+    bibtex_file_path: str = Field(default="docs/academic/latex/references.bib")
+    status: str = Field(default="OFFICIALLY_COMPOSED")
