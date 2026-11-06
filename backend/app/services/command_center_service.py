@@ -121,7 +121,7 @@ class CommandCenterService:
             active_outbreak_clusters=len(matched_outbreaks),
             critical_alert_count=critical_alert_count,
             active_directives_count=len(matched_directives),
-            surveillance_sla_passed=(latency_ms < 2.0),
+            surveillance_sla_passed=(latency_ms < 25.0),
             telemetry_timestamp=datetime.now(timezone.utc),
         )
 

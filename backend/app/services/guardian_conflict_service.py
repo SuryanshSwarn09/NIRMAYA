@@ -273,9 +273,15 @@ class GuardianConflictService:
 
         # 3. Active Custody Dispute Check for Non-Revocation Actions
         if is_disputed:
+            is_court = any(
+                d.get("dependent_patient_id") == dep_id
+                and d.get("status") == GuardianDisputeStatusEnum.COURT_SUB_JUDICE
+                for d in self._disputes.values()
+            ) or bool(request.legal_order_reference)
+
             dispute_status = (
                 GuardianDisputeStatusEnum.COURT_SUB_JUDICE
-                if request.legal_order_reference
+                if is_court
                 else GuardianDisputeStatusEnum.ACTIVE_DISPUTE
             )
             locked = [
