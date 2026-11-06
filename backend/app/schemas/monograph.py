@@ -225,3 +225,76 @@ class IeeeManuscriptDay92Overview(BaseModel):
     latex_file_path: str = Field(default="docs/academic/latex/nirmaya_ieee_manuscript.tex")
     markdown_file_path: str = Field(default="docs/academic/nirmaya-ieee-research-paper.md")
     status: str = Field(default="OFFICIALLY_COMPOSED")
+
+
+
+# =============================================================================
+# IEEE Capstone Research Manuscript Schemas - Day 93 (Milestone 19-03)
+# =============================================================================
+
+class TraceTableStepItem(BaseModel):
+    """Single step in Table II (End-to-End Cryptographic Encounter Life-Cycle)."""
+    step_number: int = Field(..., ge=1, le=20, description="Sequential step index")
+    operational_phase: str = Field(..., description="System life-cycle phase")
+    cryptographic_primitive: str = Field(..., description="Underlying mathematical or security primitive")
+    complexity_time: str = Field(..., description="Big-O asymptotic runtime complexity")
+    complexity_space: str = Field(..., description="Big-O auxiliary space complexity")
+    measured_p99_sla_ms: float = Field(..., description="Measured P99 latency in milliseconds")
+    security_invariant_enforced: str = Field(..., description="Guaranteed architectural or security invariant")
+
+
+class TraceTableSummary(BaseModel):
+    """Complete Table II encounter trace table."""
+    table_id: str = Field(default="TABLE-II-ENCOUNTER-TRACE")
+    title: str = Field(
+        default="Illustrative Example Trace Table: End-to-End Cryptographic and Clinical Encounter Life-Cycle"
+    )
+    total_steps: int = Field(default=8)
+    total_p99_latency_budget_ms: float = Field(..., description="Sum of individual P99 SLAs")
+    steps: List[TraceTableStepItem] = Field(default_factory=list)
+
+
+class NotationItem(BaseModel):
+    """Single mathematical or cryptographic notation definition in Table III."""
+    symbol: str = Field(..., description="Plain-text or ASCII symbol representation")
+    latex_symbol: str = Field(..., description="LaTeX mathematical expression for symbol")
+    algebraic_domain: str = Field(..., description="Mathematical algebraic domain or data structure")
+    formal_description: str = Field(..., description="Formal operational definition and purpose")
+    first_occurrence: str = Field(..., description="Equation, Algorithm, or Section where first defined")
+
+
+class NotationTableSummary(BaseModel):
+    """Complete Table III mathematical notation catalog."""
+    table_id: str = Field(default="TABLE-III-NOTATION")
+    title: str = Field(default="Summary of Mathematical and Cryptographic Notation")
+    symbols_count: int = Field(default=16)
+    items: List[NotationItem] = Field(default_factory=list)
+
+
+class FamilyProxyStateTransitionItem(BaseModel):
+    """Discrete state transition within the Section III-F family proxy state machine."""
+    from_state: str = Field(..., description="Initial proxy state")
+    trigger_event: str = Field(..., description="Initiating action or clock event")
+    condition_predicate: str = Field(..., description="Boolean invariant required for transition")
+    to_state: str = Field(..., description="Resultant proxy state")
+    security_action: str = Field(..., description="Cryptographic or access control action taken")
+
+
+class IeeeManuscriptDay93Overview(BaseModel):
+    """Complete Day 93 (Milestone 19-03) IEEE manuscript deliverable packet."""
+    title: str = Field(
+        default="NIRMAYA: A High-Throughput, Cryptographically-Federated Digital Health Interoperability Architecture with Indian LGD Territorial Governance and ABDM Gateway Federation"
+    )
+    milestone: str = Field(default="19-03 (Day 93)")
+    release_version: str = Field(default="1.2.0")
+    section_3_f_title: str = Field(default="Section III-F: Family Health Proxy Logic & Age-of-Majority State Machine")
+    vault_separation_formula: str = Field(..., description="Mathematical formula for vault key separation")
+    dual_consent_formula: str = Field(..., description="Consensus logic for dual-guardian dispute interceptor")
+    age_majority_formula: str = Field(..., description="State transition predicate for age-of-majority conversion")
+    state_transitions: List[FamilyProxyStateTransitionItem] = Field(default_factory=list)
+    algorithm_3: AlgorithmListingItem
+    table_2_trace: TraceTableSummary
+    table_3_notation: NotationTableSummary
+    latex_file_path: str = Field(default="docs/academic/latex/nirmaya_ieee_manuscript.tex")
+    markdown_file_path: str = Field(default="docs/academic/nirmaya-ieee-research-paper.md")
+    status: str = Field(default="OFFICIALLY_COMPOSED")

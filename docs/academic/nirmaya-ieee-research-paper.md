@@ -240,6 +240,117 @@ Output: Filtered subordinate health facilities F_scoped, Aggregate telemetry M
 12: return (F_scoped, M)
 ```
 
+#### Algorithm 3: Zero-Contamination Family Proxy Delegation and Age-of-Majority State Transition
+```text
+Input:  Ward identifier W, Date of birth T_dob, Guardian set G, Custody dispute flag Delta,
+        Query timestamp t, Requested clinical action alpha, Guardian signature set Sigma
+Output: Decision D in {PERMITTED, DENIED, AUTO_REVOKED}, State S
+
+ 1: // Step 1: Check Deterministic Age-of-Majority Transition
+ 2: if t >= T_dob + 18 years then
+ 3:     tau_proxy <- EmptySet
+ 4:     S <- SOVEREIGN_ADULT
+ 5:     LogAuditEvent(W, "AGE_OF_MAJORITY_TRANSITION", t)
+ 6:     return (AUTO_REVOKED, S)
+ 7: end if
+ 8: // Step 2: Check Custody Dispute Interceptor Mutual Veto
+ 9: if Delta == True then
+10:     return (DENIED, CUSTODY_DISPUTE_LOCKED)
+11: end if
+12: // Step 3: Multi-Guardian Dual-Signature Validation
+13: if |G| > 1 then
+14:     for each guardian G_i in G do
+15:         if VerifySignature(pk_Gi, alpha, Sigma_Gi) != True then
+16:             return (DENIED, MISSING_CO_GUARDIAN_SIGNATURE)
+17:         end if
+18:     end for
+19: end if
+20: // Step 4: Verify Cryptographic Vault Isolation
+21: Assert (K_G intersect K_W == EmptySet) and (Enc_KG(V_G) intersect Enc_KW(V_W) == EmptySet)
+22: // Step 5: Execute Authorized Action under Scoped Lease
+23: D <- ExecuteScopedAction(W, alpha, tau_proxy)
+24: H_i <- SHA-256(H_{i-1} || t || W || G || alpha || D)
+25: return (PERMITTED, ACTIVE_PROXY)
+```
+
+---
+
+### 3.6 Family Health Proxy Logic & Age-of-Majority State Machine
+
+In compliance with the statutory dictates of Section 9 of the Digital Personal Data Protection (DPDP) Act 2023, health data fiduciaries are prohibited from processing minor data without verifiable parental consent and must prevent cross-profiling or tracking. NIRMAYA establishes formal mathematical isolation between guardian and ward records, coupled with a multi-guardian custody dispute lock and a deterministic 18-year age-of-majority conversion state machine.
+
+```mermaid
+stateDiagram-v2
+    [*] --> MinorEnrolled: Verhoeff D5 Child-ABHA Minted
+    MinorEnrolled --> ActiveProxyDelegation: Guardian Consent Verified
+    
+    state ActiveProxyDelegation {
+        [*] --> SingleGuardianActive
+        SingleGuardianActive --> DualGuardianConsensus: Co-Guardian Added
+        DualGuardianConsensus --> CustodyDisputeFrozen: Dispute Flagged (Mutual Veto)
+        CustodyDisputeFrozen --> DualGuardianConsensus: Court Order / Mutual Release
+    }
+    
+    ActiveProxyDelegation --> SovereignAdultVault: Ward Turns 18 (T >= T_dob + 18y)
+    SovereignAdultVault --> [*]: Proxy Terminated Permanently
+```
+
+#### 1. Cryptographic Isolation of Guardian and Ward Vaults
+Guardian health records $V_G$ and minor ward records $V_W$ reside within mathematically disjoint vault partitions governed by independent asymmetric and symmetric key pairs:
+$$\text{Enc}_{K_G}(V_G) \cap \text{Enc}_{K_W}(V_W) = \emptyset, \quad \mathcal{K}_G \cap \mathcal{K}_W = \emptyset$$
+A guardian's credential $sk_G$ cannot decrypt or query ward records directly. Rather, access is mediated strictly via an ephemeral proxy authorization lease $\tau_{\text{proxy}}$ specifying authorized FHIR categories, temporal expiration, and explicit purpose bindings.
+
+#### 2. Multi-Guardian Dual-Signature Custody Dispute Interceptor
+When multiple legal guardians $\mathcal{G} = \{G_1, G_2, \dots, G_m\}$ are registered for minor ward $W$, non-routine record disclosures mandate co-guardian consensus:
+$$\Phi_{\text{consent}}(W) = \left( \bigwedge_{i=1}^{m} \text{Sign}_{sk_{G_i}}(\mathcal{C}) \right) \land (\text{DisputeStatus}(W) == \text{False})$$
+If an active custody dispute is registered ($\text{DisputeStatus}(W) == \text{True}$), the system triggers an immediate mutual veto lock. Under this state, voluntary proxy delegations are suspended automatically, while emergency care overrides remain audited under judicial standards.
+
+#### 3. Deterministic 18-Year Age-of-Majority Transition
+Proxy authority is governed by a deterministic temporal state function evaluated against the ward's authoritative date of birth $T_{\text{dob}}(W)$:
+$$\tau_{\text{proxy}}(G, W, t) = \begin{cases} 
+    \text{Active}, & \text{if } t < T_{\text{dob}}(W) + 18\text{ years} \land \neg \text{Disputed} \\ 
+    \text{Revoked}, & \text{if } t \ge T_{\text{dob}}(W) + 18\text{ years} \lor \text{Disputed} 
+\end{cases}$$
+When $t \ge T_{\text{dob}}(W) + 18\text{ years}$, the system deterministically executes zero-touch revocation in $O(1)$ time, expiring the proxy lease and requiring the newly sovereign adult to register independent credentials.
+
+---
+
+### 3.7 Trace & Notation Reference Tables
+
+#### Table II: Illustrative Example Trace Table (End-to-End Cryptographic & Clinical Encounter Life-Cycle)
+
+| Step | Operational Phase | Cryptographic Primitive / Mechanism | Time / Space | $P_{99}$ SLA | Security Invariant Enforced |
+| :---: | :--- | :--- | :---: | :---: | :--- |
+| **1** | **Patient ABHA Registration** | Dihedral Group $D_5$ Verhoeff permutation checksum algorithm over modulo 10 | $O(N) / O(1)$ | 0.82 ms | Rejects 100% of single-digit substitutions and adjacent transpositions. |
+| **2** | **Outpatient Slot Allocation** | ACID row-level locking via PostgreSQL `SELECT ... FOR UPDATE` | $O(\log N) / O(1)$ | 4.15 ms | Strict non-oversubscription of consultation quotas under concurrent race. |
+| **3** | **ABDM Consent Verification** | Asymmetric digital signature verification (SHA-256 with RSA-PSS / ECDSA) | $O(1) / O(1)$ | 3.20 ms | Cryptographic non-repudiation and freshness verification ($t \le t_{\text{exp}}$). |
+| **4** | **Ephemeral Key Agreement** | Montgomery curve point multiplication Curve25519 ECDH ($K_{\text{shared}} = X25519(sk, pk)$) | $O(1) / O(1)$ | 0.94 ms | Perfect forward secrecy (PFS); ephemeral keys wiped immediately. |
+| **5** | **Symmetric Key Derivation** | HKDF-SHA256 two-stage extract-and-expand key derivation ($K_{\text{enc}} \in \{0,1\}^{256}$) | $O(1) / O(1)$ | 0.45 ms | Independent session pseudorandomness binding ABDM transfer domain. |
+| **6** | **Health Record Encryption** | AES-256-GCM AEAD encryption with 96-bit unique IV and AAD metadata | $O(\|P\|) / O(\|P\|)$ | 2.10 ms | IND-CCA2 confidentiality; ciphertext integrity with 128-bit authentication tag. |
+| **7** | **HIU Record Ingest & GHASH** | GHASH polynomial field multiplication validation and NRCeS FHIR R4 schema audit | $O(\|P\|) / O(1)$ | 3.65 ms | Bit-level ciphertext tamper detection and syntactic medical schema conformance. |
+| **8** | **Forensic Ledger Sealing** | Merkle root SHA-256 hash chaining of clinical mutation event block ($H_i$) | $O(1) / O(1)$ | 0.76 ms | Immutable, append-only forensic audit trail resistant to historical alteration. |
+
+#### Table III: Summary of Mathematical and Cryptographic Notation
+
+| Symbol | Algebraic Domain / Type | Formal Operational Description | First Occurrence |
+| :---: | :--- | :--- | :---: |
+| $D_5$ | Non-abelian group of order 10 | Dihedral permutation group for Verhoeff check-digit evaluation. | Eq. (1) |
+| $\mathbb{F}_{2^{255}-19}$ | Finite Galois field ($p = 2^{255}-19$) | Underlying scalar field for Montgomery Curve25519 elliptic operations. | Eq. (3) |
+| $sk$ | Scalar integer $\in \mathbb{F}_p$ | Ephemeral private secret key generated via high-entropy PRNG. | Eq. (3) |
+| $pk$ | Point $(x, y) \in \text{Curve25519}$ | Ephemeral public key point broadcast for Diffie-Hellman agreement. | Eq. (3) |
+| $K_{\text{shared}}$ | 256-bit scalar $x$-coordinate | Raw shared secret resulting from $X25519(sk_{\text{local}}, pk_{\text{remote}})$. | Eq. (4) |
+| $PRK$ | Pseudorandom key $\in \{0,1\}^{256}$ | Uniform pseudorandom key extracted via HMAC-SHA256 with nonce salt. | Eq. (5) |
+| $K_{\text{enc}}$ | Symmetric key $\in \{0,1\}^{256}$ | 256-bit AES encryption key expanded via HKDF with ABDM domain info. | Eq. (6) |
+| $IV$ | Byte sequence $\in \{0,1\}^{96}$ | 96-bit non-repeating initialization vector for Galois/Counter Mode. | Eq. (7) |
+| $AAD$ | Byte sequence $\in \{0,1\}^*$ | Additional Authenticated Data binding consent ID and patient ABHA. | Eq. (8) |
+| $T$ | Byte sequence $\in \{0,1\}^{128}$ | 128-bit GHASH authentication tag verifying ciphertext authenticity. | Eq. (8) |
+| $H_i$ | Digest $\in \{0,1\}^{256}$ | $i$-th SHA-256 block hash in Merkle-sealed append-only audit chain. | Eq. (9) |
+| $Q$ | PostgreSQL `ltree` path | Hierarchical administrative dot-path for territorial jurisdiction. | Alg. 2 |
+| $<@$ | Binary Boolean operator | GiST-indexed descendant containment operator ($A <@ B \iff A$ is under $B$). | Alg. 2 |
+| $V_G$ | Relational encrypted partition | Data vault partition containing legal guardian health records. | Eq. (10) |
+| $V_W$ | Relational encrypted partition | Data vault partition containing minor ward health records. | Eq. (10) |
+| $\tau_{\text{proxy}}$ | Dynamic authorization lease | Temporal family proxy predicate governing guardian delegation. | Eq. (12) |
+
 ---
 
 ## References

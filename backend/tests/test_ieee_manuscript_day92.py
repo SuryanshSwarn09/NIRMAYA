@@ -61,7 +61,7 @@ def test_day92_latex_section3_and_algorithms_exist():
 def test_day92_algorithm_listings_specifications():
     """Verify Algorithm 1 and 2 listings, complexities, and inputs/outputs."""
     algos = monograph_service.get_algorithm_listings()
-    assert len(algos) == 2
+    assert len(algos) >= 2
 
     algo1 = algos[0]
     assert algo1.number == 1
@@ -197,3 +197,4 @@ def test_day92_journey_log_exists():
     assert "Day 92: Threat Model, Dual-Plane Air-Gap Topology" in content
     assert "19-02" in content
     assert len(content) > 3000
+

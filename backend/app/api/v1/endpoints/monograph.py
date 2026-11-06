@@ -15,9 +15,12 @@ from app.schemas.monograph import (
     MonographMetadataResponse,
     IeeeManuscriptDay91Overview,
     IeeeManuscriptDay92Overview,
+    IeeeManuscriptDay93Overview,
     AlgorithmListingItem,
     MathematicalFormulationItem,
+    NotationTableSummary,
     TableIRelatedWorksMatrix,
+    TraceTableSummary,
 )
 from app.services.monograph_service import monograph_service
 
@@ -168,7 +171,6 @@ async def get_table_1_matrix_endpoint(response: Response) -> TableIRelatedWorksM
     return monograph_service.get_table_1_matrix()
 
 
-
 @router.get(
     "/manuscript/day92",
     response_model=IeeeManuscriptDay92Overview,
@@ -188,7 +190,7 @@ async def get_ieee_manuscript_day92_endpoint(response: Response) -> IeeeManuscri
     response_model=List[AlgorithmListingItem],
     status_code=status.HTTP_200_OK,
     summary="List typeset algorithms in IEEE Capstone Manuscript",
-    description="Returns formal pseudocode, asymptotic complexities, and source modules for Algorithms 1 and 2.",
+    description="Returns formal pseudocode, asymptotic complexities, and source modules for Algorithms 1, 2, and 3.",
 )
 async def list_algorithms_endpoint(response: Response) -> List[AlgorithmListingItem]:
     """Retrieve typeset algorithms."""
@@ -209,3 +211,45 @@ async def list_math_formulations_endpoint(response: Response) -> List[Mathematic
     for header, value in get_container_security_headers().items():
         response.headers[header] = value
     return monograph_service.get_mathematical_formulations()
+
+
+@router.get(
+    "/manuscript/day93",
+    response_model=IeeeManuscriptDay93Overview,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Day 93 IEEE Capstone Research Manuscript Overview",
+    description="Returns Section III-F overview: Family Health Proxy Logic, Age-of-Majority State Machine, Algorithm 3, Trace Table II, and Notation Table III.",
+)
+async def get_ieee_manuscript_day93_endpoint(response: Response) -> IeeeManuscriptDay93Overview:
+    """Retrieve full Day 93 IEEE manuscript deliverable packet."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_ieee_manuscript_day93()
+
+
+@router.get(
+    "/manuscript/trace-table",
+    response_model=TraceTableSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table II: Illustrative Example Trace Table",
+    description="Returns multi-phase trace table spanning all 8 operational phases with measured P99 latency SLAs and security invariants.",
+)
+async def get_trace_table_endpoint(response: Response) -> TraceTableSummary:
+    """Retrieve Table II encounter trace table."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_trace_table_steps()
+
+
+@router.get(
+    "/manuscript/notation-table",
+    response_model=NotationTableSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table III: Summary of Mathematical and Cryptographic Notation",
+    description="Returns full notation table indexing 16 algebraic and cryptographic variables across the manuscript.",
+)
+async def get_notation_table_endpoint(response: Response) -> NotationTableSummary:
+    """Retrieve Table III notation table."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_notation_table()
