@@ -168,3 +168,60 @@ class IeeeManuscriptDay91Overview(BaseModel):
     markdown_file_path: str = Field(default="docs/academic/nirmaya-ieee-research-paper.md")
     bibtex_file_path: str = Field(default="docs/academic/latex/references.bib")
     status: str = Field(default="OFFICIALLY_COMPOSED")
+
+
+
+# =============================================================================
+# IEEE Capstone Research Manuscript Schemas - Day 92 (Milestone 19-02)
+# =============================================================================
+
+class AlgorithmListingItem(BaseModel):
+    """Typeset algorithm specification in the IEEE Capstone Manuscript."""
+    algorithm_id: str = Field(..., description="Canonical ID (e.g., ALG-01-CRYPTO-TRANSFER)")
+    number: int = Field(..., ge=1, le=10, description="Algorithm index (1 or 2)")
+    title: str = Field(..., description="Formal algorithm title")
+    complexity_time: str = Field(..., description="Big-O asymptotic runtime complexity")
+    complexity_space: str = Field(..., description="Big-O auxiliary space complexity")
+    inputs: List[str] = Field(default_factory=list, description="Input parameters")
+    outputs: List[str] = Field(default_factory=list, description="Output parameters")
+    pseudocode: str = Field(..., description="Step-by-step formatted pseudocode")
+    target_module: str = Field(..., description="Backend source module implementing algorithm")
+
+
+class MathematicalFormulationItem(BaseModel):
+    """Core mathematical model and equation in Section III-D."""
+    formulation_id: str = Field(..., description="Canonical ID (e.g., MATH-01-VERHOEFF-D5)")
+    equation_number: int = Field(..., ge=1, le=10, description="Equation number in paper")
+    title: str = Field(..., description="Theoretical concept name")
+    latex_formula: str = Field(..., description="LaTeX representation of formula")
+    algebraic_domain: str = Field(..., description="Mathematical algebraic domain or group")
+    security_invariant: str = Field(..., description="Guaranteed security or structural invariant")
+    implementation_function: str = Field(..., description="Python function verifying invariant")
+
+
+class ThreatModelItem(BaseModel):
+    """Adversary class definition in Section III-A."""
+    adversary_code: str = Field(..., description="Symbolic code (e.g., A_net, A_broker, A_edge)")
+    title: str = Field(..., description="Adversary classification name")
+    formal_model: str = Field(..., description="Underlying theoretical model (e.g., Dolev-Yao)")
+    capabilities: List[str] = Field(default_factory=list, description="Permitted adversary actions")
+    mitigation_mechanism: str = Field(..., description="Cryptographic or architectural mitigation")
+    security_target: str = Field(..., description="Protected security objective")
+
+
+class IeeeManuscriptDay92Overview(BaseModel):
+    """Complete Day 92 (Milestone 19-02) IEEE manuscript deliverable packet."""
+    title: str = Field(
+        default="NIRMAYA: A High-Throughput, Cryptographically-Federated Digital Health Interoperability Architecture with Indian LGD Territorial Governance and ABDM Gateway Federation"
+    )
+    milestone: str = Field(default="19-02 (Day 92)")
+    release_version: str = Field(default="1.2.0")
+    section_3_title: str = Field(default="Section III: System Architecture and Mathematical Formulations")
+    threat_model: List[ThreatModelItem] = Field(default_factory=list)
+    dual_plane_topology_description: str = Field(..., description="Sovereign Governance Plane vs Federated Data Plane")
+    consent_pipeline_phases: List[str] = Field(default_factory=list)
+    mathematical_formulations: List[MathematicalFormulationItem] = Field(default_factory=list)
+    algorithms: List[AlgorithmListingItem] = Field(default_factory=list)
+    latex_file_path: str = Field(default="docs/academic/latex/nirmaya_ieee_manuscript.tex")
+    markdown_file_path: str = Field(default="docs/academic/nirmaya-ieee-research-paper.md")
+    status: str = Field(default="OFFICIALLY_COMPOSED")

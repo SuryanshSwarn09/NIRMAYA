@@ -28,3 +28,4 @@ Month 5 (Phase 6: Weeks 19 & 20, Days 91 to 100) bridges operational engineering
 |---|---|---|---|
 | **Week 19** | IEEE Capstone Manuscript & Empirical Benchmarks | Days 91–95 | IEEE 2-column paper authoring, Table I matrix, Algorithms 1–3, Wilcoxon statistical tests, Camera-ready `.tex` compilation. |
 | **Week 20** | National Rollout Runbook & Sovereign Archival | Days 96–100 | Multi-facility deployment runbook, final defense slide deck, and Release `v1.2.0` archival. |
+

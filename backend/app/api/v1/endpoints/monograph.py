@@ -14,6 +14,9 @@ from app.schemas.monograph import (
     MonographChapter,
     MonographMetadataResponse,
     IeeeManuscriptDay91Overview,
+    IeeeManuscriptDay92Overview,
+    AlgorithmListingItem,
+    MathematicalFormulationItem,
     TableIRelatedWorksMatrix,
 )
 from app.services.monograph_service import monograph_service
@@ -163,3 +166,46 @@ async def get_table_1_matrix_endpoint(response: Response) -> TableIRelatedWorksM
     for header, value in get_container_security_headers().items():
         response.headers[header] = value
     return monograph_service.get_table_1_matrix()
+
+
+
+@router.get(
+    "/manuscript/day92",
+    response_model=IeeeManuscriptDay92Overview,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Day 92 IEEE Capstone Research Manuscript Overview",
+    description="Returns Section III overview: Threat Model, Dual-Plane Topology, 5 Mathematical Formulations, and Algorithms 1 & 2.",
+)
+async def get_ieee_manuscript_day92_endpoint(response: Response) -> IeeeManuscriptDay92Overview:
+    """Retrieve full Day 92 IEEE manuscript deliverable packet."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_ieee_manuscript_day92()
+
+
+@router.get(
+    "/manuscript/algorithms",
+    response_model=List[AlgorithmListingItem],
+    status_code=status.HTTP_200_OK,
+    summary="List typeset algorithms in IEEE Capstone Manuscript",
+    description="Returns formal pseudocode, asymptotic complexities, and source modules for Algorithms 1 and 2.",
+)
+async def list_algorithms_endpoint(response: Response) -> List[AlgorithmListingItem]:
+    """Retrieve typeset algorithms."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_algorithm_listings()
+
+
+@router.get(
+    "/manuscript/math-formulations",
+    response_model=List[MathematicalFormulationItem],
+    status_code=status.HTTP_200_OK,
+    summary="List formal mathematical formulations in Section III-D",
+    description="Returns LaTeX formulas, algebraic groups, and security invariants for Verhoeff, Curve25519, HKDF, AES-GCM, and Merkle chains.",
+)
+async def list_math_formulations_endpoint(response: Response) -> List[MathematicalFormulationItem]:
+    """Retrieve mathematical formulations."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_mathematical_formulations()

@@ -3,6 +3,7 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
+\usepackage{algorithm}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
@@ -122,10 +123,144 @@ To formalize the specific technological voids addressed by this work, Table~\ref
 
 As demonstrated in Table~\ref{tab:related_works}, NIRMAYA is the sole architecture that simultaneously satisfies native HL7 FHIR R4 conformance, production-certified ABDM Milestone M1--M3 cryptography, statutory DPDP Act Section 9 family isolation, sub-2ms Indian LGD territorial traversal, and sub-50ms outpatient consultation velocity within an edge hardware footprint constrained to under 512MB RAM.
 
-\section{Conclusion of Day 91 Milestone}
-This section completes the foundational components of the IEEE Capstone Research Manuscript for Day 91 (Milestone 19-01). The companion mathematical formulations, formal threat models, algorithms, and empirical benchmark tables are detailed in subsequent milestones.
+\section{System Architecture and Mathematical Formulations}
+
+\subsection{Threat Model and Formal Security Guarantees}
+We formalize the security of NIRMAYA under an explicit multi-adversary framework reflecting the operational realities of Indian national public health networks:
+
+\subsubsection{Adversary Capabilities}
+\begin{enumerate}
+    \item \textbf{Active Network Adversary ($\mathcal{A}_{\text{net}}$):} Modeled via the standard Dolev-Yao formalism~\cite{owasp_asvs}. $\mathcal{A}_{\text{net}}$ controls all public transit infrastructure between health facilities, state data centers, and ABDM gateways, possessing the capability to intercept, drop, modify, inject, and replay arbitrary network packets.
+    \item \textbf{Honest-but-Curious Cloud Broker ($\mathcal{A}_{\text{broker}}$):} Models centralized cloud infrastructure providers, intermediate consent managers, and message routing nodes. $\mathcal{A}_{\text{broker}}$ faithfully forwards messages according to protocol specifications but actively analyzes stored payloads, metadata, and transmission timing to infer citizen clinical profiles or demographic linkages.
+    \item \textbf{Physical Edge Adversary ($\mathcal{A}_{\text{edge}}$):} Models malicious actors possessing local, unmonitored physical access to hardware edge appliances deployed at remote Primary Health Centres (PHCs), or rogue operators attempting horizontal privilege escalation.
+\end{enumerate}
+
+\subsubsection{Statutory Privacy Mandates (DPDP Act 2023 Sec 9)}
+Under Section 9 of the Digital Personal Data Protection (DPDP) Act 2023~\cite{dpdp_act_2023}, health data fiduciaries are explicitly prohibited from: (1) undertaking tracking or behavioral monitoring of children, (2) targeted advertising directed at minors, and (3) processing minor health data without verifiable parental consent. NIRMAYA establishes mathematical isolation ensuring guardian health profiles remain cryptographically segregated from dependent minor records with zero longitudinal contamination.
+
+\subsubsection{Security Theorems}
+\begin{itemize}
+    \item \textbf{Theorem 1 (Semantic Payload Confidentiality):} Under the Decisional Diffie-Hellman (DDH) assumption on Curve25519 and IND-CCA2 security of AES-256-GCM, no probabilistic polynomial-time (PPT) adversary $\mathcal{A}_{\text{broker}}$ or $\mathcal{A}_{\text{net}}$ can distinguish between encryptions of two chosen clinical bundles without the ephemeral secret key:
+    \begin{equation}
+        \mathbf{Adv}_{\text{NIRMAYA}}^{\text{IND-CCA2}}(\mathcal{A}) \le \mathbf{Adv}_{\text{Curve25519}}^{\text{DDH}}(\mathcal{B}) + \mathbf{Adv}_{\text{AES-256-GCM}}^{\text{AEAD}}(\mathcal{C}) + \epsilon
+    \end{equation}
+    \item \textbf{Theorem 2 (Forward Secrecy):} Ephemeral Curve25519 key negotiation guarantees that future compromise of a Health Information Provider (HIP) or Health Information User (HIU) long-term identity does not expose historical encrypted transfers.
+    \item \textbf{Theorem 3 (Strict Downward Territorial Isolation):} Under Scoped TRBAC, any administrative mutation $P_{\text{in}}$ at node $u$ must satisfy $P_{\text{in}} \subseteq P_{\text{out}}(u)$, preventing horizontal and upward privilege escalation across the 6-tier LGD directory.
+\end{itemize}
+
+\subsection{Dual-Plane Air-Gap Topology}
+NIRMAYA achieves national resilience through a decoupled dual-plane architecture:
+\begin{itemize}
+    \item \textbf{Sovereign National Governance Plane:} Houses the 6-tier Indian LGD administrative directory (PostgreSQL \texttt{ltree}), Scoped TRBAC authorization enforcement, Argon2id Zero-Knowledge emergency Break-The-Glass (BTG) vault, and immutable SHA-256 Merkle audit logs.
+    \item \textbf{Federated Clinical Data Plane:} Manages patient encounters, HL7 FHIR R4 Bundles, and peer-to-peer encrypted health record transfers. Crucially, clinical payloads never traverse the central gateway in plaintext; intermediate routing nodes operate exclusively as blind ciphertext forwarders.
+\end{itemize}
+
+\subsection{Inbound Consent Notification and Ephemeral Key Pipeline}
+The data exchange pipeline executes across four discrete asynchronous phases:
+\begin{enumerate}
+    \item \textbf{Consent Artifact Verification:} The HIU receives an ABDM digital consent artifact signed by the citizen. The artifact encodes permitted FHIR categories, date ranges, and expiry timestamps.
+    \item \textbf{Ephemeral Key Advertisement:} The HIU generates an ephemeral Curve25519 key pair $(sk_{\text{HIU}}, pk_{\text{HIU}})$ and registers $pk_{\text{HIU}}$ and an unguessable non-zero nonce with the HIP via the gateway.
+    \item \textbf{Diffie-Hellman Secret Agreement:} The HIP generates its own ephemeral key pair $(sk_{\text{HIP}}, pk_{\text{HIP}})$, computes the shared secret point $K_{\text{shared}} = \text{X25519}(sk_{\text{HIP}}, pk_{\text{HIU}})$, and derives a 256-bit symmetric key via HKDF-SHA256.
+    \item \textbf{Authenticated Encryption and Streaming:} The clinical bundle is serialized to FHIR JSON, encrypted under AES-256-GCM, and dispatched to the HIU with the HIP's ephemeral public key and 128-bit authentication tag.
+\end{enumerate}
+
+\subsection{Mathematical Formulations}
+
+\subsubsection{Dihedral Group $D_5$ Verhoeff Checksum}
+To detect single-digit transcription errors and adjacent transposition errors across 12-digit Aadhaar and 14-digit ABHA numbers, NIRMAYA employs the Dihedral Group $D_5$ Verhoeff permutation arithmetic~\cite{verhoeff_checksum}. A sequence of decimal digits $c_{n-1} c_{n-2} \dots c_1 c_0$ is valid if and only if:
+\begin{equation}
+    \sum_{i=0}^{n-1} F(i+1, c_i) = 0 \quad \text{over } D_5
+\end{equation}
+where $F(i, c) = \sigma^i(c)$ represents the permutation matrix applied to digit $c$ at position $i$, and group multiplication $\otimes$ is defined by the non-commutative symmetries of the regular pentagon.
+
+\subsubsection{Curve25519 ECDH Key Agreement}
+Ephemeral key agreement utilizes the Montgomery curve defined over the prime field $\mathbb{F}_{2^{255}-19}$~\cite{bernstein_curve25519}:
+\begin{equation}
+    y^2 = x^3 + 486662x^2 + x \pmod{2^{255}-19}
+\end{equation}
+Given secret scalar $sk \in 2^{254} + 8\{0, 1, \dots, 2^{251}-1\}$ and base point $G = (9, \dots)$, the public key point is computed as $pk = sk \cdot G$. The shared Diffie-Hellman secret is determined by:
+\begin{equation}
+    K_{\text{shared}} = \text{X25519}(sk_A, pk_B) = \text{X25519}(sk_B, pk_A)
+\end{equation}
+
+\subsubsection{HKDF-SHA256 Extract-and-Expand}
+The 256-bit symmetric encryption key $K_{\text{enc}}$ is derived via HMAC-based Extract-and-Expand Key Derivation:
+\begin{align}
+    PRK &= \text{HMAC-SHA256}(salt = \text{Nonce}_{\text{HIU}} \oplus \text{Nonce}_{\text{HIP}}, K_{\text{shared}}) \\
+    K_{\text{enc}} &= \text{HMAC-SHA256}(PRK, \text{info} = \text{``ABDM-FHIR-AES256-GCM''} \parallel 0x01)
+\end{align}
+
+\subsubsection{AES-256-GCM Authenticated Encryption with Associated Data}
+The plaintext FHIR bundle $P$ is encrypted with initialization vector $IV$ and authenticated associated data $AAD$ (encoding the consent identifier):
+\begin{align}
+    C &= P \oplus \text{AES-CTR}_{K_{\text{enc}}}(J_0) \\
+    T &= \text{GHASH}_H(AAD \parallel C \parallel \text{len}(AAD) \parallel \text{len}(C)) \oplus \text{AES}_{K_{\text{enc}}}(J_0)
+\end{align}
+where $H = \text{AES}_{K_{\text{enc}}}(0^{128})$ is the hash subkey and $T \in \{0, 1\}^{128}$ is the authentication tag.
+
+\subsubsection{Merkle Hash-Chaining for Forensic Audit Ledger}
+Each clinical encounter event $E_i$ is bound into a cryptographically sealed SHA-256 hash chain:
+\begin{equation}
+    H_i = \text{SHA-256}(H_{i-1} \parallel \text{Timestamp}_i \parallel \text{ActorID}_i \parallel \text{Action}_i \parallel \text{PayloadHash}_i)
+\end{equation}
+ensuring absolute tamper-evidence against retroactive record manipulation.
+
+\subsection{Typeset Core Algorithms}
+
+Algorithms~\ref{alg:crypto_transfer} and~\ref{alg:lgd_traversal} formalize the core computational routines of NIRMAYA.
+
+\begin{algorithm}[t]
+\caption{Asynchronous Curve25519-HKDF-AES256 Encrypted Health Information Transfer Protocol}
+\label{alg:crypto_transfer}
+\begin{algorithmic}[1]
+\REQUIRE Inbound consent artifact $\mathcal{C}$, Patient ABHA $\mathcal{A}$, HIU ephemeral public key $pk_{\text{HIU}}$, Nonce $N_{\text{HIU}}$
+\ENSURE Encrypted FHIR Bundle ciphertext $C$, Authentication tag $T$, HIP ephemeral public key $pk_{\text{HIP}}$
+\STATE \textbf{Validate} $\text{VerifySignature}(\mathcal{C}) == \text{True}$ \AND $\text{Now}() \le \mathcal{C}.\text{expiresAt}$
+\IF{not valid}
+    \RETURN $\text{Error}(\text{INVALID\_CONSENT\_ARTIFACT})$
+\ENDIF
+\STATE $sk_{\text{HIP}} \leftarrow \text{RandomScalar}(256)$
+\STATE $pk_{\text{HIP}} \leftarrow \text{Curve25519\_BasePointMult}(sk_{\text{HIP}})$
+\STATE $N_{\text{HIP}} \leftarrow \text{RandomBytes}(32)$
+\STATE $K_{\text{shared}} \leftarrow \text{X25519}(sk_{\text{HIP}}, pk_{\text{HIU}})$
+\STATE $salt \leftarrow N_{\text{HIU}} \oplus N_{\text{HIP}}$
+\STATE $PRK \leftarrow \text{HMAC-SHA256}(salt, K_{\text{shared}})$
+\STATE $K_{\text{enc}} \leftarrow \text{HMAC-SHA256}(PRK, \text{``ABDM-M3-DATA-TRANSFER''} \parallel 0x01)$
+\STATE $P_{\text{FHIR}} \leftarrow \text{FetchAndNormalizeRecord}(\mathcal{A}, \mathcal{C}.\text{categories})$
+\STATE $IV \leftarrow \text{RandomBytes}(12)$
+\STATE $AAD \leftarrow \text{Serialize}(\mathcal{C}.\text{consentID} \parallel \mathcal{A})$
+\STATE $(C, T) \leftarrow \text{AES-256-GCM-Encrypt}(K_{\text{enc}}, IV, P_{\text{FHIR}}, AAD)$
+\STATE \textbf{SecureWipe}($sk_{\text{HIP}}, K_{\text{shared}}, PRK, K_{\text{enc}}$)
+\RETURN $(C, T, pk_{\text{HIP}}, N_{\text{HIP}}, IV)$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t]
+\caption{Sub-2ms 6-Tier Indian LGD Territorial Scope Traversal with PostgreSQL \texttt{ltree}}
+\label{alg:lgd_traversal}
+\begin{algorithmic}[1]
+\REQUIRE Root query path $Q \in \text{ltree}$ (e.g., \texttt{IN.DL.CENTRAL}), Target operational role $\mathcal{R}$, Facility catalog $\mathcal{F}$
+\ENSURE Filtered subordinate health facilities $\mathcal{F}_{\text{scoped}}$, Aggregate telemetry $\mathcal{M}$
+\STATE \textbf{Index Scan:} Execute GiST hierarchical path match:
+\STATE $\mathcal{S}_{\text{matched}} \leftarrow \{f \in \mathcal{F} \mid f.\text{path} <@ Q\}$ \COMMENT{Sub-2ms GiST Index Traversal}
+\STATE $\mathcal{F}_{\text{scoped}} \leftarrow \emptyset$
+\FORALL{$f \in \mathcal{S}_{\text{matched}}$}
+    \STATE $P_{\text{facility}} \leftarrow \text{EvaluateTRBAC}(f.\text{path}, \mathcal{R})$
+    \IF{$P_{\text{facility}} \subseteq P_{\text{requester}}$}
+        \STATE $\mathcal{F}_{\text{scoped}} \leftarrow \mathcal{F}_{\text{scoped}} \cup \{f\}$
+    \ENDIF
+\ENDFOR
+\STATE $\mathcal{M}.\text{activeClinicians} \leftarrow \sum_{f \in \mathcal{F}_{\text{scoped}}} f.\text{activeDoctors}$
+\STATE $\mathcal{M}.\text{pendingQueue} \leftarrow \sum_{f \in \mathcal{F}_{\text{scoped}}} f.\text{queueDepth}$
+\RETURN $(\mathcal{F}_{\text{scoped}}, \mathcal{M})$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Conclusion of Day 92 Milestone}
+This completes Section III (System Architecture, Threat Model, Mathematical Formulations, and Algorithms 1 \& 2) of the IEEE Capstone Research Manuscript for Day 92 (Milestone 19-02). Subsequent sections cover the implementation specifications and empirical benchmarks.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
 \end{document}
+

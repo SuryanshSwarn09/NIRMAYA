@@ -97,6 +97,151 @@ As demonstrated in Table I, NIRMAYA is the sole architecture that simultaneously
 
 ---
 
+## Section III: System Architecture and Mathematical Formulations
+
+### 3.1 Threat Model & Security Goals
+NIRMAYA formalizes its security under a multi-adversary framework reflecting the operational realities of Indian national public health networks:
+
+1. **Active Network Adversary ($\mathcal{A}_{\text{net}}$):** Modeled via standard Dolev-Yao assumptions. Controls all intermediate transit infrastructure between facilities, state data centers, and ABDM gateways, possessing the capability to intercept, drop, modify, inject, and replay network packets.
+2. **Honest-but-Curious Cloud Broker ($\mathcal{A}_{\text{broker}}$):** Models centralized cloud hosting providers, intermediate consent managers, and message relays that faithfully forward messages per protocol specifications but actively inspect stored payloads, metadata, and transmission timing to infer citizen profiles or demographic linkages.
+3. **Physical Edge Adversary ($\mathcal{A}_{\text{edge}}$):** Models actors possessing local, unmonitored physical access to hardware edge appliances deployed at remote Primary Health Centres (PHCs), or rogue operators attempting horizontal privilege escalation.
+
+#### Statutory Privacy Mandates (DPDP Act 2023 Sec 9)
+Under Section 9 of the Digital Personal Data Protection (DPDP) Act 2023 [4], health data fiduciaries are explicitly prohibited from:
+- Undertaking tracking or behavioral monitoring of children.
+- Targeted advertising directed at minors.
+- Processing minor health data without verifiable parental consent.
+
+NIRMAYA establishes mathematical isolation ensuring guardian health profiles remain cryptographically segregated from dependent minor records with zero longitudinal contamination.
+
+#### Formal Security Theorems
+- **Theorem 1 (Semantic Payload Confidentiality):** Under the Decisional Diffie-Hellman (DDH) assumption on Curve25519 and IND-CCA2 security of AES-256-GCM, no probabilistic polynomial-time (PPT) adversary $\mathcal{A}_{\text{broker}}$ or $\mathcal{A}_{\text{net}}$ can distinguish between encryptions of two chosen clinical bundles without the ephemeral secret key:
+  $$\mathbf{Adv}_{\text{NIRMAYA}}^{\text{IND-CCA2}}(\mathcal{A}) \le \mathbf{Adv}_{\text{Curve25519}}^{\text{DDH}}(\mathcal{B}) + \mathbf{Adv}_{\text{AES-256-GCM}}^{\text{AEAD}}(\mathcal{C}) + \epsilon$$
+- **Theorem 2 (Forward Secrecy):** Ephemeral Curve25519 key negotiation guarantees that future compromise of a Health Information Provider (HIP) or Health Information User (HIU) long-term identity does not expose historical encrypted transfers.
+- **Theorem 3 (Strict Downward Territorial Isolation):** Under Scoped TRBAC, any administrative mutation $P_{\text{in}}$ at node $u$ must satisfy $P_{\text{in}} \subseteq P_{\text{out}}(u)$, preventing horizontal and upward privilege escalation across the 6-tier LGD directory.
+
+---
+
+### 3.2 Dual-Plane Air-Gap Topology
+
+NIRMAYA achieves national operational resilience through a decoupled dual-plane architecture:
+
+```mermaid
+flowchart TD
+    subgraph GovernancePlane["Sovereign National Governance Plane"]
+        LGD["6-Tier Indian LGD Directory (PostgreSQL ltree + GiST)"]
+        TRBAC["Scoped TRBAC Interceptor (Pin <= Pout)"]
+        BTG["Argon2id Zero-Knowledge Emergency BTG Vault"]
+        Audit["Immutable Forensic Audit Trail (SHA-256 Merkle Chain)"]
+        LGD --> TRBAC
+        TRBAC --> BTG
+        BTG --> Audit
+    end
+
+    subgraph ClinicalDataPlane["Federated Clinical Data Plane"]
+        Encounters["Patient Clinical Encounters & SOAP Notes"]
+        FHIR["HL7 FHIR R4 Bundles & NRCeS Profiles"]
+        ECDH["Curve25519 Ephemeral Key Agreement"]
+        AESGCM["AES-256-GCM Authenticated Stream"]
+        Encounters --> FHIR
+        FHIR --> ECDH
+        ECDH --> AESGCM
+    end
+
+    GovernancePlane -.->|Air-Gap Policy Attestation| ClinicalDataPlane
+```
+
+1. **Sovereign National Governance Plane:** Houses the 6-tier Indian LGD administrative directory (PostgreSQL `ltree`), Scoped TRBAC authorization enforcement, Argon2id Zero-Knowledge emergency Break-The-Glass (BTG) vault, and immutable SHA-256 Merkle audit logs.
+2. **Federated Clinical Data Plane:** Manages patient encounters, HL7 FHIR R4 Bundles, and peer-to-peer encrypted health record transfers. Crucially, clinical payloads never traverse the central gateway in plaintext; intermediate routing nodes operate exclusively as blind ciphertext forwarders.
+
+---
+
+### 3.3 Inbound Consent Notification and Ephemeral Key Pipeline
+
+The data exchange pipeline executes across four discrete asynchronous phases:
+1. **Consent Artifact Verification:** The HIU receives an ABDM digital consent artifact signed by the citizen. The artifact encodes permitted FHIR categories, date ranges, and expiry timestamps.
+2. **Ephemeral Key Advertisement:** The HIU generates an ephemeral Curve25519 key pair $(sk_{\text{HIU}}, pk_{\text{HIU}})$ and registers $pk_{\text{HIU}}$ and an unguessable non-zero nonce with the HIP via the gateway.
+3. **Diffie-Hellman Secret Agreement:** The HIP generates its own ephemeral key pair $(sk_{\text{HIP}}, pk_{\text{HIP}})$, computes the shared secret point $K_{\text{shared}} = \text{X25519}(sk_{\text{HIP}}, pk_{\text{HIU}})$, and derives a 256-bit symmetric key via HKDF-SHA256.
+4. **Authenticated Encryption and Streaming:** The clinical bundle is serialized to FHIR JSON, encrypted under AES-256-GCM, and dispatched to the HIU with the HIP's ephemeral public key and 128-bit authentication tag.
+
+---
+
+### 3.4 Mathematical Formulations
+
+#### 1. Dihedral Group $D_5$ Verhoeff Checksum
+To detect single-digit transcription errors and adjacent transposition errors across 12-digit Aadhaar and 14-digit ABHA numbers, NIRMAYA employs the Dihedral Group $D_5$ Verhoeff permutation arithmetic [7]. A sequence of decimal digits $c_{n-1} c_{n-2} \dots c_1 c_0$ is valid if and only if:
+$$\sum_{i=0}^{n-1} F(i+1, c_i) = 0 \quad \text{over } D_5$$
+where $F(i, c) = \sigma^i(c)$ represents the permutation matrix applied to digit $c$ at position $i$, and group multiplication $\otimes$ is defined by the non-commutative symmetries of the regular pentagon.
+
+#### 2. Curve25519 ECDH Key Agreement
+Ephemeral key agreement utilizes the Montgomery curve defined over the prime field $\mathbb{F}_{2^{255}-19}$ [6]:
+$$y^2 = x^3 + 486662x^2 + x \pmod{2^{255}-19}$$
+Given secret scalar $sk \in 2^{254} + 8\{0, 1, \dots, 2^{251}-1\}$ and base point $G = (9, \dots)$, the public key point is computed as $pk = sk \cdot G$. The shared Diffie-Hellman secret is determined by:
+$$K_{\text{shared}} = \text{X25519}(sk_A, pk_B) = \text{X25519}(sk_B, pk_A)$$
+
+#### 3. HKDF-SHA256 Extract-and-Expand
+The 256-bit symmetric encryption key $K_{\text{enc}}$ is derived via HMAC-based Extract-and-Expand Key Derivation:
+$$PRK = \text{HMAC-SHA256}(salt = \text{Nonce}_{\text{HIU}} \oplus \text{Nonce}_{\text{HIP}}, K_{\text{shared}})$$
+$$K_{\text{enc}} = \text{HMAC-SHA256}(PRK, \text{info} = \text{"ABDM-FHIR-AES256-GCM"} \parallel 0x01)$$
+
+#### 4. AES-256-GCM Authenticated Encryption with Associated Data
+The plaintext FHIR bundle $P$ is encrypted with initialization vector $IV$ and authenticated associated data $AAD$ (encoding the consent identifier):
+$$C = P \oplus \text{AES-CTR}_{K_{\text{enc}}}(J_0)$$
+$$T = \text{GHASH}_H(AAD \parallel C \parallel \text{len}(AAD) \parallel \text{len}(C)) \oplus \text{AES}_{K_{\text{enc}}}(J_0)$$
+where $H = \text{AES}_{K_{\text{enc}}}(0^{128})$ is the hash subkey and $T \in \{0, 1\}^{128}$ is the authentication tag.
+
+#### 5. Merkle Hash-Chaining for Forensic Audit Ledger
+Each clinical encounter event $E_i$ is bound into a cryptographically sealed SHA-256 hash chain:
+$$H_i = \text{SHA-256}(H_{i-1} \parallel \text{Timestamp}_i \parallel \text{ActorID}_i \parallel \text{Action}_i \parallel \text{PayloadHash}_i)$$
+ensuring absolute tamper-evidence against retroactive record manipulation.
+
+---
+
+### 3.5 Core System Algorithms
+
+#### Algorithm 1: Asynchronous Curve25519-HKDF-AES256 Encrypted Transfer Protocol
+```text
+Input:  Inbound consent artifact C, Patient ABHA A, HIU ephemeral public key pk_HIU, Nonce N_HIU
+Output: Encrypted FHIR Bundle ciphertext C_enc, Authentication tag T, HIP public key pk_HIP
+
+ 1: Validate VerifySignature(C) == True and Now() <= C.expiresAt
+ 2: if not valid then return Error(INVALID_CONSENT_ARTIFACT)
+ 3: sk_HIP <- RandomScalar(256)
+ 4: pk_HIP <- Curve25519_BasePointMult(sk_HIP)
+ 5: N_HIP <- RandomBytes(32)
+ 6: K_shared <- X25519(sk_HIP, pk_HIU)
+ 7: salt <- N_HIU XOR N_HIP
+ 8: PRK <- HMAC-SHA256(salt, K_shared)
+ 9: K_enc <- HMAC-SHA256(PRK, "ABDM-M3-DATA-TRANSFER" || 0x01)
+10: P_FHIR <- FetchAndNormalizeRecord(A, C.categories)
+11: IV <- RandomBytes(12)
+12: AAD <- Serialize(C.consentID || A)
+13: (C_enc, T) <- AES-256-GCM-Encrypt(K_enc, IV, P_FHIR, AAD)
+14: SecureWipe(sk_HIP, K_shared, PRK, K_enc)
+15: return (C_enc, T, pk_HIP, N_HIP, IV)
+```
+
+#### Algorithm 2: Sub-2ms 6-Tier Indian LGD Territorial Scope Traversal with PostgreSQL ltree
+```text
+Input:  Root query path Q in ltree (e.g., IN.DL.CENTRAL), Target role R, Facility catalog F
+Output: Filtered subordinate health facilities F_scoped, Aggregate telemetry M
+
+ 1: // Execute GiST index hierarchical containment scan
+ 2: S_matched <- {f in F | f.path <@ Q}  // Sub-2ms GiST Index Traversal
+ 3: F_scoped <- EmptySet
+ 4: for each facility f in S_matched do
+ 5:     P_facility <- EvaluateTRBAC(f.path, R)
+ 6:     if P_facility subset_or_equal P_requester then
+ 7:         F_scoped <- F_scoped UNION {f}
+ 8:     end if
+ 9: end for
+10: M.activeClinicians <- Sum(f.activeDoctors for f in F_scoped)
+11: M.pendingQueue <- Sum(f.queueDepth for f in F_scoped)
+12: return (F_scoped, M)
+```
+
+---
+
 ## References
 
 - [1] V. Patel et al., "Assuring health coverage for all in India," *The Lancet*, vol. 386, no. 10011, pp. 2422–2435, Dec. 2015.
@@ -113,3 +258,4 @@ As demonstrated in Table I, NIRMAYA is the sole architecture that simultaneously
 - [12] A. Biryukov, D. Dinu, and D. Khovratovich, "Argon2: New Generation of Memory-Hard Functions for Password Hashing and Other Applications," in *Proc. IEEE European Symp. Security and Privacy (EuroS&P)*, 2016, pp. 292–302.
 - [13] Ministry of Electronics and Information Technology (MeitY), "Guidelines for Indian Government Websites (GIGW 3.0): Quality Framework for Digital Public Services," National Informatics Centre (NIC), Govt. of India, Rep. GIGW-2023-V3, 2023.
 - [14] J. Manico, D. Cuthbert, and A. van der Stock, "OWASP Application Security Verification Standard (ASVS) Version 4.0.3," Open Web Application Security Project (OWASP), May 2021.
+
