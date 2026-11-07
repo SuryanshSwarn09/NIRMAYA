@@ -16,11 +16,17 @@ from app.schemas.monograph import (
     IeeeManuscriptDay91Overview,
     IeeeManuscriptDay92Overview,
     IeeeManuscriptDay93Overview,
+    IeeeManuscriptDay94Overview,
     AlgorithmListingItem,
     MathematicalFormulationItem,
     NotationTableSummary,
     TableIRelatedWorksMatrix,
     TraceTableSummary,
+    TableIVTestbedSummary,
+    TableVGatewayIngressSummary,
+    TableVICryptoPipelineSummary,
+    TableVIILgdTraversalSummary,
+    TableVIIIStatisticalSignificanceSummary,
 )
 from app.services.monograph_service import monograph_service
 
@@ -253,3 +259,91 @@ async def get_notation_table_endpoint(response: Response) -> NotationTableSummar
     for header, value in get_container_security_headers().items():
         response.headers[header] = value
     return monograph_service.get_notation_table()
+
+
+# =============================================================================
+# Day 94 (Milestone 19-04) Empirical Evaluation & Benchmark Endpoints
+# =============================================================================
+
+@router.get(
+    "/manuscript/day94",
+    response_model=IeeeManuscriptDay94Overview,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Day 94 IEEE Capstone Research Manuscript Overview",
+    description="Returns Section IV overview: Testbed Specs (Table IV), Gateway Benchmarks (Table V), Crypto Pipeline (Table VI), LGD Traversal (Table VII), and Statistical Tests (Table VIII).",
+)
+async def get_ieee_manuscript_day94_endpoint(response: Response) -> IeeeManuscriptDay94Overview:
+    """Retrieve full Day 94 IEEE manuscript deliverable packet."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_ieee_manuscript_day94()
+
+
+@router.get(
+    "/manuscript/table-4",
+    response_model=TableIVTestbedSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table IV: Experimental Testbed Specifications",
+    description="Returns testbed node clusters, edge mini-PC hardware, PostgreSQL ltree engine, and load injector specs.",
+)
+async def get_table_4_endpoint(response: Response) -> TableIVTestbedSummary:
+    """Retrieve Table IV testbed environment specifications."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_table_4_testbed()
+
+
+@router.get(
+    "/manuscript/table-5",
+    response_model=TableVGatewayIngressSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table V: High-Throughput Gateway Ingress Benchmarks",
+    description="Returns saturation metrics from 1,000 to 50,000 req/s, P50-P99 latencies, CPU utilization, and error rates.",
+)
+async def get_table_5_endpoint(response: Response) -> TableVGatewayIngressSummary:
+    """Retrieve Table V gateway ingress benchmarks."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_table_5_gateway_ingress()
+
+
+@router.get(
+    "/manuscript/table-6",
+    response_model=TableVICryptoPipelineSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table VI: End-to-End Cryptographic Transfer Pipeline Breakdown",
+    description="Returns phase-by-phase comparison of Curve25519, HKDF, AES-256-GCM, and NRCeS validation against OpenMRS and Bahmni.",
+)
+async def get_table_6_endpoint(response: Response) -> TableVICryptoPipelineSummary:
+    """Retrieve Table VI cryptographic pipeline comparison."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_table_6_crypto_pipeline()
+
+
+@router.get(
+    "/manuscript/table-7",
+    response_model=TableVIILgdTraversalSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table VII: Indian LGD 6-Tier Hierarchical Traversal Latency",
+    description="Returns indexing benchmarks: PostgreSQL ltree with GiST vs Recursive CTE vs Nested Set Model across 788 districts and 28k facilities.",
+)
+async def get_table_7_endpoint(response: Response) -> TableVIILgdTraversalSummary:
+    """Retrieve Table VII LGD traversal benchmarks."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_table_7_lgd_traversal()
+
+
+@router.get(
+    "/manuscript/table-8",
+    response_model=TableVIIIStatisticalSignificanceSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Table VIII: Statistical Hypothesis Testing & Effect Size Summary",
+    description="Returns two-tailed paired t-test and Wilcoxon signed-rank test results (p < 0.001, Cohen's d > 1.8) over 10,000 executions.",
+)
+async def get_table_8_endpoint(response: Response) -> TableVIIIStatisticalSignificanceSummary:
+    """Retrieve Table VIII statistical significance summary."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_table_8_statistical_significance()
