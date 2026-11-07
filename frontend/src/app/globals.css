@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import "ux4g-web-components/styles.css";
+@import "tailwindcss";
 
 @theme {
   --color-primary: #0b4d8c;
