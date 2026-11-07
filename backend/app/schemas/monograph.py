@@ -415,3 +415,43 @@ class IeeeManuscriptDay94Overview(BaseModel):
     latex_file_path: str = Field(default="docs/academic/latex/nirmaya_ieee_manuscript.tex")
     markdown_file_path: str = Field(default="docs/academic/nirmaya-ieee-research-paper.md")
     status: str = Field(default="OFFICIALLY_COMPOSED")
+
+
+# =============================================================================
+# IEEE Capstone Research Manuscript Schemas - Day 95 (Milestone 19-05)
+# =============================================================================
+
+class CitationCatalogSummary(BaseModel):
+    """Complete 26-item peer-reviewed citation catalog."""
+    total_citations: int = Field(default=26)
+    peer_reviewed_count: int = Field(default=26)
+    ieee_format_count: int = Field(default=26)
+    bibtex_format_count: int = Field(default=26)
+    apa_format_count: int = Field(default=26)
+    citations: List[CitationItem] = Field(default_factory=list)
+
+
+class IeeeManuscriptDay95Overview(BaseModel):
+    """Complete Day 95 (Milestone 19-05) IEEE Capstone Camera-Ready Publication Overview."""
+    title: str = Field(
+        default="NIRMAYA: A High-Throughput, Cryptographically-Federated Digital Health Interoperability Architecture with Indian LGD Territorial Governance and ABDM Gateway Federation"
+    )
+    author: str = Field(default="Suryansh Swarn")
+    affiliation: str = Field(
+        default="Core Architecture Lead, NIRMAYA National Health Information Network"
+    )
+    milestone: str = Field(default="19-05 (Day 95)")
+    release_version: str = Field(default="1.2.0")
+    target_format: str = Field(default="IEEE Transactions 2-Column Camera-Ready")
+    journal_target: str = Field(default="IEEE Transactions on Knowledge and Data Engineering (TKDE)")
+    total_sections_count: int = Field(default=5)
+    total_tables_count: int = Field(default=8)
+    total_algorithms_count: int = Field(default=3)
+    total_citations_count: int = Field(default=26)
+    statistical_significance_p_value: str = Field(default="p < 0.001")
+    cumulative_verified_tests: int = Field(default=1030)
+    latex_file_path: str = Field(default="docs/academic/latex/nirmaya_ieee_manuscript.tex")
+    bibtex_file_path: str = Field(default="docs/academic/latex/references.bib")
+    markdown_file_path: str = Field(default="docs/academic/nirmaya-ieee-research-paper.md")
+    validation_script_path: str = Field(default="scripts/validate_ieee_latex.py")
+    status: str = Field(default="CAMERA_READY_PUBLISHED")

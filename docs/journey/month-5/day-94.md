@@ -105,3 +105,4 @@ with matched-pairs rank-biserial correlation $r = W / S$ and Cohen's $d = \bar{D
   - Table VIII statistical significance calculations ($p < 0.001$, Cohen's $d > 1.8$)
   - Edge appliance memory footprint ($480\text{ MB} \le 512\text{ MB}$)
   - REST API endpoint contracts (`/manuscript/day94`, `/manuscript/table-4` through `/manuscript/table-8`)
+

@@ -27,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-National digital public health infrastructures in high-density developing nations confront severe structural tensions between longitudinal record interoperability, sovereign zero-trust data protection, and low-latency clinical operation. In India, fragmented health systems across 1.4 billion citizens are aggravated by an urban-rural diagnostic divide, intermittent edge connectivity at rural Primary Health Centres, and decades of clinical history marooned within legacy relational databases. This paper presents \textbf{NIRMAYA}, an authoritative, production-certified digital health interoperability architecture and longitudinal patient vault engineered for national scale. NIRMAYA establishes four novel systems paradigms: (1) a 6-tier sovereign administrative hierarchy modeled on the Indian Local Government Directory (LGD), indexed via PostgreSQL \texttt{ltree} GiST structures yielding sub-2ms hierarchical scope traversals; (2) an asynchronous Ayushman Bharat Digital Mission (ABDM) Milestone M1--M3 cryptographic gateway executing Curve25519 Elliptic Curve Diffie-Hellman (ECDH) key agreement, HKDF-SHA256 key derivation, and AES-256-GCM authenticated payload encryption; (3) a Digital Personal Data Protection (DPDP) Act 2023 Section 9 compliant zero-contamination family health proxy vault with Dihedral Group $D_5$ Verhoeff child-ABHA binding and multi-guardian custody dispute locking; and (4) an express 45-second outpatient consultation pipeline achieving sub-50ms ($P_{99} = 18.5\text{ ms}$) atomic prescription signing alongside a 50,000 req/s distributed token-bucket rate limiter. Across an exhaustive 981-test empirical verification suite spanning 54 modules, NIRMAYA demonstrates $100\%$ compliance with OWASP ASVS Level 2, zero copyleft dependency contamination, and full alignment with HL7 FHIR Release 4 and Guidelines for Indian Government Websites (GIGW 3.0).
+National digital public health infrastructures in high-density developing nations confront severe structural tensions between longitudinal record interoperability, sovereign zero-trust data protection, and low-latency clinical operation. In India, fragmented health systems across 1.4 billion citizens are aggravated by an urban-rural diagnostic divide, intermittent edge connectivity at rural Primary Health Centres, and decades of clinical history marooned within legacy relational databases. This paper presents \textbf{NIRMAYA}, an authoritative, production-certified digital health interoperability architecture and longitudinal patient vault engineered for national scale. NIRMAYA establishes four novel systems paradigms: (1) a 6-tier sovereign administrative hierarchy modeled on the Indian Local Government Directory (LGD), indexed via PostgreSQL \texttt{ltree} GiST structures yielding sub-2ms hierarchical scope traversals; (2) an asynchronous Ayushman Bharat Digital Mission (ABDM) Milestone M1--M3 cryptographic gateway executing Curve25519 Elliptic Curve Diffie-Hellman (ECDH) key agreement, HKDF-SHA256 key derivation, and AES-256-GCM authenticated payload encryption; (3) a Digital Personal Data Protection (DPDP) Act 2023 Section 9 compliant zero-contamination family health proxy vault with Dihedral Group $D_5$ Verhoeff child-ABHA binding and multi-guardian custody dispute locking; and (4) an express 45-second outpatient consultation pipeline achieving sub-50ms ($P_{99} = 18.5\text{ ms}$) atomic prescription signing alongside a 50,000 req/s distributed token-bucket rate limiter. Across an exhaustive 981-test empirical verification suite spanning 54 modules, NIRMAYA demonstrates $100\%$ compliance with OWASP ASVS Level 2, zero copyleft dependency contamination, and full alignment with HL7 FHIR Release 4 and Guidelines for Indian Government Websites (GIGW 3.0)~\cite{gigw_3_0}.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -39,7 +39,7 @@ Digital Public Infrastructure (DPI), Health Level Seven (HL7) FHIR Release 4, Ay
 \section{Introduction}
 \IEEEPARSTART{T}{he} delivery of public healthcare in high-density, developing nations represents one of the most demanding systems engineering challenges in modern digital governance. In the Republic of India, serving a heterogeneous population of 1.4 billion citizens across 36 States and Union Territories, healthcare delivery remains acutely fragmented across tertiary quaternary teaching hospitals, district general facilities, Community Health Centres (CHCs), and rural Primary Health Centres (PHCs)~\cite{patel_opd_congestion}. 
 
-Despite recent nationwide initiatives under the Ayushman Bharat Digital Mission (ABDM)~\cite{nha_abdm_2023}, the overwhelming majority of patient-clinician interactions remain confined to physical paper records and transient thermal receipts. Empirical clinical audits reveal that greater than $78\%$ of ambulatory paper prescriptions in public healthcare environments are lost, damaged, or unreadable within six months of issuance. Consequently, clinicians frequently treat patients suffering from chronic comorbidities (such as Type-II diabetes mellitus and hypertensive heart disease) without access to historical diagnostic telemetry, leading to repeated laboratory testing, adverse drug interactions (ADIs), and degraded longitudinal outcomes.
+Despite recent nationwide initiatives under the National Digital Health Blueprint (NDHB)~\cite{mohfw_ndhb_2019} and the Ayushman Bharat Digital Mission (ABDM)~\cite{nha_abdm_2023}, the overwhelming majority of patient-clinician interactions remain confined to physical paper records and transient thermal receipts. Empirical clinical audits reveal that greater than $78\%$ of ambulatory paper prescriptions in public healthcare environments are lost, damaged, or unreadable within six months of issuance. Consequently, clinicians frequently treat patients suffering from chronic comorbidities (such as Type-II diabetes mellitus and hypertensive heart disease) without access to historical diagnostic telemetry, leading to repeated laboratory testing, adverse drug interactions (ADIs), and degraded longitudinal outcomes.
 
 Furthermore, public hospital Outpatient Departments (OPDs) in India operate under extreme temporal compression. A single physician in an urban civil or district hospital typically conducts between 60 and 100 consultations within a single 4-hour morning session, leaving an average consultation window of merely 45 to 90 seconds per patient. Conventional Electronic Medical Record (EMR) systems—predominantly designed for fee-for-service Western billing paradigms—impose complex multi-modal navigation, extensive drop-down selections, and high input latency, causing clinicians to abandon digital data entry in favor of paper registers.
 
@@ -61,7 +61,7 @@ To resolve the Digital Public Health Trilemma at national scale, this paper intr
     \item \textbf{Deterministic ABDM Milestone M1--M3 Asynchronous Cryptographic Bridge:} We implement a production-grade cryptographic pipeline conforming to ABDM Fidelius specifications, utilizing Curve25519 Elliptic Curve Diffie-Hellman (ECDH)~\cite{bernstein_curve25519}, HKDF-SHA256, and AES-256-GCM authenticated encryption, achieving sub-1ms key agreement and zero plaintext persistence during Health Information User (HIU) transfers.
     \item \textbf{DPDP Act 2023 Section 9 Zero-Contamination Family Health Proxy Engine:} We formulate a cryptographically isolated family proxy architecture with Dihedral Group $D_5$ Verhoeff checksum validation~\cite{verhoeff_checksum} for minor child-ABHA minting, accompanied by a dual-signature multi-guardian dispute interceptor that prevents record disclosure during parental legal disputes.
     \item \textbf{High-Density 50,000 req/s National Gateway Token-Bucket Rate Shield:} We engineer a multi-modal gateway supporting Aadhaar demographic OTP, DigiLocker OAuth2 PKCE, SIM fallback, and emergency break-the-glass access, defended by a tiered token-bucket rate limiter absorbing 50,000 req/s bursts without thread starvation.
-    \item \textbf{Express 45-Second Outpatient Consultation Ergonomics:} We design an optimized clinician cockpit featuring one-click SNOMED CT and ICD-10 complaint chips, automated drug-drug interaction blocking, and an atomic cryptographic prescription signing pipeline completing in $18.5\text{ ms}$ ($P_{99}$), well within the 50ms clinical SLA.
+    \item \textbf{Express 45-Second Outpatient Consultation Ergonomics:} We design an optimized clinician cockpit conforming to Guidelines for Indian Government Websites (GIGW 3.0)~\cite{gigw_3_0}, featuring one-click SNOMED CT and ICD-10 complaint chips, automated drug-drug interaction blocking, and an atomic cryptographic prescription signing pipeline completing in $18.5\text{ ms}$ ($P_{99}$), well within the 50ms clinical SLA.
     \item \textbf{Low-Resource Edge Appliance and SQL/MED Legacy HIS Federation:} We engineer an edge container appliance operating within a $< 512\text{MB}$ RAM hardware budget, coupled with an ISO/IEC 9075-9 SQL/MED foreign data wrapper engine~\cite{iso_sql_med} that dynamically translates legacy relational databases into valid HL7 FHIR R4 Bundles with zero database migration downtime.
 \end{enumerate}
 
@@ -72,7 +72,7 @@ The remainder of this manuscript is organized as follows: Section~II reviews rel
 The challenge of digital health interoperability has catalyzed significant research across medical informatics, distributed systems, and applied cryptography. Existing literature broadly partitions into four architectural paradigms:
 
 \subsection{Traditional Enterprise Hospital Information Systems}
-Monolithic enterprise platforms such as Epic Systems and Cerner Corporation dominate tertiary private and academic medical centers. These architectures utilize centralized, proprietary relational schemas with proprietary caching engines. While they provide comprehensive inpatient workflows, their architectures are cost-prohibitive for developing nation public health deployments, require persistent high-bandwidth network connectivity, and lack native integration with sovereign Indian administrative hierarchies such as the Local Government Directory (LGD). Furthermore, interoperability is typically achieved via bolt-on SMART-on-FHIR interfaces~\cite{mandel_smart_fhir} that introduce high latency and do not support decentralized consent-driven data exchange.
+Monolithic enterprise platforms such as Epic Systems and Cerner Corporation dominate tertiary private and academic medical centers. These architectures utilize centralized, proprietary relational schemas with proprietary caching engines. While they provide comprehensive inpatient workflows, their architectures are cost-prohibitive for developing nation public health deployments, require persistent high-bandwidth network connectivity, and lack native integration with sovereign Indian administrative hierarchies such as the Local Government Directory (LGD). Furthermore, interoperability is typically achieved via bolt-on SMART-on-FHIR interfaces~\cite{mandel_smart_fhir} or legacy Health Information Exchange (HIE) gateways~\cite{gunter_hie_2014} that introduce high latency and do not support decentralized consent-driven data exchange.
 
 \subsection{Open-Source Developing-World EMRs}
 OpenMRS~\cite{seebregts_openmrs} has served as a foundational open-source medical record system for global health initiatives, particularly in sub-Saharan Africa. Bahmni~\cite{bahmni_architecture}, spearheaded by ThoughtWorks, integrates OpenMRS with OpenELIS (laboratory) and Odoo (billing) into a unified hospital information stack. However, both platforms exhibit fundamental architectural limitations when evaluated against Indian national DPI requirements:
@@ -130,7 +130,7 @@ We formalize the security of NIRMAYA under an explicit multi-adversary framework
 
 \subsubsection{Adversary Capabilities}
 \begin{enumerate}
-    \item \textbf{Active Network Adversary ($\mathcal{A}_{\text{net}}$):} Modeled via the standard Dolev-Yao formalism~\cite{owasp_asvs}. $\mathcal{A}_{\text{net}}$ controls all public transit infrastructure between health facilities, state data centers, and ABDM gateways, possessing the capability to intercept, drop, modify, inject, and replay arbitrary network packets.
+    \item \textbf{Active Network Adversary ($\mathcal{A}_{\text{net}}$):} Modeled via the standard Dolev-Yao formalism~\cite{dolev_yao,owasp_asvs}. $\mathcal{A}_{\text{net}}$ controls all public transit infrastructure between health facilities, state data centers, and ABDM gateways, possessing the capability to intercept, drop, modify, inject, and replay arbitrary network packets.
     \item \textbf{Honest-but-Curious Cloud Broker ($\mathcal{A}_{\text{broker}}$):} Models centralized cloud infrastructure providers, intermediate consent managers, and message routing nodes. $\mathcal{A}_{\text{broker}}$ faithfully forwards messages according to protocol specifications but actively analyzes stored payloads, metadata, and transmission timing to infer citizen clinical profiles or demographic linkages.
     \item \textbf{Physical Edge Adversary ($\mathcal{A}_{\text{edge}}$):} Models malicious actors possessing local, unmonitored physical access to hardware edge appliances deployed at remote Primary Health Centres (PHCs), or rogue operators attempting horizontal privilege escalation.
 \end{enumerate}
@@ -140,18 +140,18 @@ Under Section 9 of the Digital Personal Data Protection (DPDP) Act 2023~\cite{dp
 
 \subsubsection{Security Theorems}
 \begin{itemize}
-    \item \textbf{Theorem 1 (Semantic Payload Confidentiality):} Under the Decisional Diffie-Hellman (DDH) assumption on Curve25519 and IND-CCA2 security of AES-256-GCM, no probabilistic polynomial-time (PPT) adversary $\mathcal{A}_{\text{broker}}$ or $\mathcal{A}_{\text{net}}$ can distinguish between encryptions of two chosen clinical bundles without the ephemeral secret key:
+    \item \textbf{Theorem 1 (Semantic Payload Confidentiality):} Under the Decisional Diffie-Hellman (DDH) assumption on Curve25519 and IND-CCA2 security of AES-256-GCM~\cite{goldreich_crypto}, no probabilistic polynomial-time (PPT) adversary $\mathcal{A}_{\text{broker}}$ or $\mathcal{A}_{\text{net}}$ can distinguish between encryptions of two chosen clinical bundles without the ephemeral secret key:
     \begin{equation}
         \mathbf{Adv}_{\text{NIRMAYA}}^{\text{IND-CCA2}}(\mathcal{A}) \le \mathbf{Adv}_{\text{Curve25519}}^{\text{DDH}}(\mathcal{B}) + \mathbf{Adv}_{\text{AES-256-GCM}}^{\text{AEAD}}(\mathcal{C}) + \epsilon
     \end{equation}
     \item \textbf{Theorem 2 (Forward Secrecy):} Ephemeral Curve25519 key negotiation guarantees that future compromise of a Health Information Provider (HIP) or Health Information User (HIU) long-term identity does not expose historical encrypted transfers.
-    \item \textbf{Theorem 3 (Strict Downward Territorial Isolation):} Under Scoped TRBAC, any administrative mutation $P_{\text{in}}$ at node $u$ must satisfy $P_{\text{in}} \subseteq P_{\text{out}}(u)$, preventing horizontal and upward privilege escalation across the 6-tier LGD directory.
+    \item \textbf{Theorem 3 (Strict Downward Territorial Isolation):} Under Scoped TRBAC~\cite{sandhu_rbac}, any administrative mutation $P_{\text{in}}$ at node $u$ must satisfy $P_{\text{in}} \subseteq P_{\text{out}}(u)$, preventing horizontal and upward privilege escalation across the 6-tier LGD directory.
 \end{itemize}
 
 \subsection{Dual-Plane Air-Gap Topology}
 NIRMAYA achieves national resilience through a decoupled dual-plane architecture:
 \begin{itemize}
-    \item \textbf{Sovereign National Governance Plane:} Houses the 6-tier Indian LGD administrative directory (PostgreSQL \texttt{ltree}), Scoped TRBAC authorization enforcement, Argon2id Zero-Knowledge emergency Break-The-Glass (BTG) vault, and immutable SHA-256 Merkle audit logs.
+    \item \textbf{Sovereign National Governance Plane:} Houses the 6-tier Indian LGD administrative directory (PostgreSQL \texttt{ltree}), Scoped TRBAC authorization enforcement, Argon2id Zero-Knowledge emergency Break-The-Glass (BTG) vault~\cite{biryukov_argon2}, and immutable SHA-256 Merkle audit logs.
     \item \textbf{Federated Clinical Data Plane:} Manages patient encounters, HL7 FHIR R4 Bundles, and peer-to-peer encrypted health record transfers. Crucially, clinical payloads never traverse the central gateway in plaintext; intermediate routing nodes operate exclusively as blind ciphertext forwarders.
 \end{itemize}
 
@@ -174,7 +174,7 @@ To detect single-digit transcription errors and adjacent transposition errors ac
 where $F(i, c) = \sigma^i(c)$ represents the permutation matrix applied to digit $c$ at position $i$, and group multiplication $\otimes$ is defined by the non-commutative symmetries of the regular pentagon.
 
 \subsubsection{Curve25519 ECDH Key Agreement}
-Ephemeral key agreement utilizes the Montgomery curve defined over the prime field $\mathbb{F}_{2^{255}-19}$~\cite{bernstein_curve25519}:
+Ephemeral key agreement utilizes the Diffie-Hellman principle~\cite{diffie_hellman} over the Montgomery curve defined over the prime field $\mathbb{F}_{2^{255}-19}$~\cite{bernstein_curve25519}:
 \begin{equation}
     y^2 = x^3 + 486662x^2 + x \pmod{2^{255}-19}
 \end{equation}
@@ -184,14 +184,14 @@ Given secret scalar $sk \in 2^{254} + 8\{0, 1, \dots, 2^{251}-1\}$ and base poin
 \end{equation}
 
 \subsubsection{HKDF-SHA256 Extract-and-Expand}
-The 256-bit symmetric encryption key $K_{\text{enc}}$ is derived via HMAC-based Extract-and-Expand Key Derivation:
+The 256-bit symmetric encryption key $K_{\text{enc}}$ is derived via HMAC-based Extract-and-Expand Key Derivation (HKDF)~\cite{krawczyk_hkdf}:
 \begin{align}
     PRK &= \text{HMAC-SHA256}(salt = \text{Nonce}_{\text{HIU}} \oplus \text{Nonce}_{\text{HIP}}, K_{\text{shared}}) \\
     K_{\text{enc}} &= \text{HMAC-SHA256}(PRK, \text{info} = \text{``ABDM-FHIR-AES256-GCM''} \parallel 0x01)
 \end{align}
 
 \subsubsection{AES-256-GCM Authenticated Encryption with Associated Data}
-The plaintext FHIR bundle $P$ is encrypted with initialization vector $IV$ and authenticated associated data $AAD$ (encoding the consent identifier):
+The plaintext FHIR bundle $P$ is encrypted via AES-256-GCM AEAD~\cite{dworkin_gcm} with initialization vector $IV$ and authenticated associated data $AAD$ (encoding the consent identifier):
 \begin{align}
     C &= P \oplus \text{AES-CTR}_{K_{\text{enc}}}(J_0) \\
     T &= \text{GHASH}_H(AAD \parallel C \parallel \text{len}(AAD) \parallel \text{len}(C)) \oplus \text{AES}_{K_{\text{enc}}}(J_0)
@@ -199,7 +199,7 @@ The plaintext FHIR bundle $P$ is encrypted with initialization vector $IV$ and a
 where $H = \text{AES}_{K_{\text{enc}}}(0^{128})$ is the hash subkey and $T \in \{0, 1\}^{128}$ is the authentication tag.
 
 \subsubsection{Merkle Hash-Chaining for Forensic Audit Ledger}
-Each clinical encounter event $E_i$ is bound into a cryptographically sealed SHA-256 hash chain:
+Each clinical encounter event $E_i$ is bound into a cryptographically sealed Merkle hash chain~\cite{merkle_tree}:
 \begin{equation}
     H_i = \text{SHA-256}(H_{i-1} \parallel \text{Timestamp}_i \parallel \text{ActorID}_i \parallel \text{Action}_i \parallel \text{PayloadHash}_i)
 \end{equation}
@@ -350,6 +350,7 @@ At timestamp $t \ge T_{\text{dob}}(W) + 18\text{ years}$, the system determinist
 \small
 \begin{tabularx}{\columnwidth}{clX}
 \toprule
+
 \textbf{Symbol} & \textbf{Algebraic Domain / Type} & \textbf{Formal Operational Description} \\
 \midrule
 $D_5$ & Non-abelian group of order 10 & Dihedral permutation group for Verhoeff check-digit evaluation. \\
@@ -473,25 +474,25 @@ As shown in Table~\ref{tab:lgd_benchmarks}, \texttt{ltree} with GiST achieves a 
 To guarantee resilience in low-connectivity rural health outposts, the complete NIRMAYA edge node appliance operates within a strict 512MB RAM ceiling. Memory profiling via \texttt{cgroups} revealed an aggregate resident set size (RSS) of $480\text{ MB}$, apportioned as: FastAPI ASGI backend ($242\text{ MB}$), Next.js standalone frontend ($154\text{ MB}$), Caddy TLS reverse proxy ($48\text{ MB}$), and embedded SQLite local transaction log ($36\text{ MB}$). Docker image sizes were optimized via multi-stage Alpine builds to $118\text{ MB}$ for the backend and $142\text{ MB}$ for the frontend, permitting rapid flashing over bandwidth-constrained satellite links.
 
 \subsection{Statistical Significance Testing and Effect Size Analysis}
-To substantiate all empirical performance gains under rigorous scientific standards, we conducted both parametric (paired Student's $t$-test) and non-parametric (Wilcoxon signed-rank test) hypothesis evaluations across $n = 10,000$ paired execution runs.
+To substantiate all empirical performance gains under rigorous scientific standards, we conducted both parametric (paired Student's $t$-test)~\cite{student_1908} and non-parametric (Wilcoxon signed-rank test)~\cite{wilcoxon_1945} hypothesis evaluations across $n = 10,000$ paired execution runs.
 
 \subsubsection{Hypothesis Formulation}
 Let $\mu_{\text{baseline}}$ and $\mu_{\text{NIRMAYA}}$ represent the mean operational latencies of baseline systems and NIRMAYA, respectively. We test the null hypothesis $H_0: \mu_{\text{NIRMAYA}} \ge \mu_{\text{baseline}}$ against the alternative hypothesis $H_1: \mu_{\text{NIRMAYA}} < \mu_{\text{baseline}}$.
 
 \subsubsection{Test Statistics}
-For parametric comparisons, the paired $t$-statistic is computed as:
+For parametric comparisons, the paired $t$-statistic is computed as~\cite{student_1908}:
 \begin{equation}
     \label{eq:ttest}
     t = \frac{\bar{D} - \mu_0}{s_D / \sqrt{n}}
 \end{equation}
 where $\bar{D}$ is the sample mean difference, $s_D$ is the sample standard deviation of differences, and degrees of freedom $df = n - 1 = 9,999$.
 
-For skewed latency distributions, the non-parametric Wilcoxon signed-rank test statistic is computed over ranked absolute differences $R_i$:
+For skewed latency distributions, the non-parametric Wilcoxon signed-rank test statistic~\cite{wilcoxon_1945} is computed over ranked absolute differences $R_i$:
 \begin{equation}
     \label{eq:wilcoxon}
     W = \sum_{i=1}^{n'} \left[ \text{sgn}(x_{\text{base},i} - x_{\text{NIR},i}) \cdot R_i \right], \quad z = \frac{W - \frac{n'(n'+1)}{4}}{\sqrt{\frac{n'(n'+1)(2n'+1)}{24}}}
 \end{equation}
-Effect sizes are characterized via Cohen's $d = \bar{D} / s_D$ and matched-pairs rank-biserial correlation $r = W / S$, where $S = n'(n'+1)/2$.
+Effect sizes are characterized via Cohen's $d = \bar{D} / s_D$~\cite{cohen_1988} and matched-pairs rank-biserial correlation $r = W / S$, where $S = n'(n'+1)/2$.
 
 \begin{table*}[t]
 \caption{Statistical Hypothesis Testing and Effect Size Summary ($n = 10,000$ Paired Executions)}
@@ -514,7 +515,12 @@ Edge Cold-Start Initialization & Bahmni Docker & 42.10 s & 62.30 & 58.70 & $p < 
 As detailed in Table~\ref{tab:statistical_tests}, all evaluated dimensions reject the null hypothesis $H_0$ with overwhelming significance ($p < 0.001$). Large effect sizes (Cohen's $d > 1.8$ across all dimensions, peaking at $d = 3.85$ for outpatient prescription signing) confirm that NIRMAYA's empirical performance advantages are systematic architectural breakthroughs rather than stochastic variations.
 
 \section{Conclusion and Future Directions}
-This paper presented NIRMAYA, an authoritative, cryptographically-federated digital health interoperability architecture engineered for national scale. Future publications will detail cross-border federation with international SMART-on-FHIR registries and post-quantum lattice-based key agreement mechanisms.
+\label{sec:conclusion}
+This paper presented NIRMAYA, an authoritative, production-certified, and cryptographically-federated digital health interoperability architecture engineered for national-scale public healthcare delivery in high-density developing nations. By harmonizing a 6-tier sovereign administrative hierarchy modeled on the Indian Local Government Directory (LGD), an asynchronous ABDM Milestone M1--M3 cryptographic gateway executing Curve25519-HKDF-AES256 authenticated transfers, a statutory DPDP Act 2023 Section 9 zero-contamination family proxy engine, and an express 45-second outpatient consultation pipeline, NIRMAYA definitively resolves the Digital Public Health Trilemma.
+
+Across an exhaustive empirical evaluation testbed encompassing 50,000 req/s ingress stress testing, micro-benchmarks over 788 districts, and parametric/non-parametric hypothesis testing ($n = 10,000$ trials), NIRMAYA achieved statistically decisive performance advantages ($p < 0.001$, Cohen's $d > 1.8$) over existing enterprise and open-source systems, reducing end-to-end cryptographic transfer latency by $14.8\times$ compared to Bahmni ($7.14\text{ ms}$ vs $105.8\text{ ms}$) and hierarchical administrative traversal latency by $32.5\times$ via PostgreSQL \texttt{ltree} GiST indexing ($1.42\text{ ms}$ vs $46.20\text{ ms}$). Crucially, NIRMAYA maintains these velocity and security guarantees within an edge appliance footprint constrained to 480MB RAM, enabling resilient offline-first deployment at remote Primary Health Centres.
+
+Future research directions will investigate: (1) post-quantum hybrid cryptographic migration combining Curve25519 with Module Lattice-Based Key Encapsulation (ML-KEM / NIST FIPS 203) for long-term quantum resistance; (2) cross-border federation with international SMART-on-FHIR and International Patient Summary (IPS) networks; and (3) zero-knowledge verifiable credentials for decentralized epidemiological disease surveillance without centralized record pooling.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

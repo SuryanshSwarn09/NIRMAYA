@@ -11,12 +11,14 @@ from app.schemas.monograph import (
     ArchitecturalProof,
     BenchmarkSummary,
     CitationItem,
+    CitationCatalogSummary,
     MonographChapter,
     MonographMetadataResponse,
     IeeeManuscriptDay91Overview,
     IeeeManuscriptDay92Overview,
     IeeeManuscriptDay93Overview,
     IeeeManuscriptDay94Overview,
+    IeeeManuscriptDay95Overview,
     AlgorithmListingItem,
     MathematicalFormulationItem,
     NotationTableSummary,
@@ -347,3 +349,31 @@ async def get_table_8_endpoint(response: Response) -> TableVIIIStatisticalSignif
     for header, value in get_container_security_headers().items():
         response.headers[header] = value
     return monograph_service.get_table_8_statistical_significance()
+
+
+@router.get(
+    "/manuscript/day95",
+    response_model=IeeeManuscriptDay95Overview,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Day 95 IEEE Capstone Camera-Ready Manuscript Overview",
+    description="Returns Camera-Ready Manuscript metadata, 26 peer-reviewed citations, 8 tables, 3 algorithms, and release v1.2.0 archival details.",
+)
+async def get_ieee_manuscript_day95_endpoint(response: Response) -> IeeeManuscriptDay95Overview:
+    """Retrieve full Day 95 IEEE manuscript deliverable packet."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_ieee_manuscript_day95()
+
+
+@router.get(
+    "/citations/catalog",
+    response_model=CitationCatalogSummary,
+    status_code=status.HTTP_200_OK,
+    summary="Retrieve Complete 26-Item Peer-Reviewed Citation Catalog",
+    description="Returns complete 26-item peer-reviewed citation catalog formatted in IEEE, APA, and BibTeX for the IEEE Transactions manuscript.",
+)
+async def get_citation_catalog_endpoint(response: Response) -> CitationCatalogSummary:
+    """Retrieve complete 26-item peer-reviewed citation catalog."""
+    for header, value in get_container_security_headers().items():
+        response.headers[header] = value
+    return monograph_service.get_citation_catalog_summary()

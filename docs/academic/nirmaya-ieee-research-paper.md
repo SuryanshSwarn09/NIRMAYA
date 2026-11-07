@@ -463,24 +463,43 @@ Effect sizes are characterized via Cohen's $d = \bar{D} / s_D$ and matched-pairs
 
 ## Section V: Conclusion and Future Directions
 
-This paper presented NIRMAYA, an authoritative, cryptographically-federated digital health interoperability architecture engineered for national scale. By harmonizing sovereign 6-tier LGD territorial governance, asynchronous Curve25519-HKDF-AES256 cryptography, DPDP Act 2023 Sec 9 family vault isolation, and an express 45-second outpatient consultation pipeline, NIRMAYA successfully resolves the Digital Public Health Trilemma. Future publications will detail cross-border federation with international SMART-on-FHIR registries and post-quantum lattice-based key agreement mechanisms.
+This paper presented **NIRMAYA**, an authoritative, production-certified, and cryptographically-federated digital health interoperability architecture engineered for national-scale public healthcare delivery in high-density developing nations. By harmonizing a 6-tier sovereign administrative hierarchy modeled on the Indian Local Government Directory (LGD), an asynchronous ABDM Milestone M1–M3 cryptographic gateway executing Curve25519-HKDF-AES256 authenticated transfers, a statutory DPDP Act 2023 Section 9 zero-contamination family proxy engine, and an express 45-second outpatient consultation pipeline, NIRMAYA definitively resolves the Digital Public Health Trilemma.
+
+Across an exhaustive empirical evaluation testbed encompassing 50,000 req/s ingress stress testing, micro-benchmarks over 788 districts, and parametric/non-parametric hypothesis testing ($n = 10,000$ trials), NIRMAYA achieved statistically decisive performance advantages ($p < 0.001$, Cohen's $d > 1.8$) over existing enterprise and open-source systems, reducing end-to-end cryptographic transfer latency by $14.8\times$ compared to Bahmni ($7.14\text{ ms}$ vs $105.8\text{ ms}$) and hierarchical administrative traversal latency by $32.5\times$ via PostgreSQL `ltree` GiST indexing ($1.42\text{ ms}$ vs $46.20\text{ ms}$). Crucially, NIRMAYA maintains these velocity and security guarantees within an edge appliance footprint constrained to 480MB RAM, enabling resilient offline-first deployment at remote Primary Health Centres.
+
+Future research directions will investigate:
+1. **Post-Quantum Hybrid Cryptographic Migration:** Combining Curve25519 with Module Lattice-Based Key Encapsulation (ML-KEM / NIST FIPS 203) for long-term quantum resistance.
+2. **Cross-Border SMART-on-FHIR Federation:** Connecting with international patient registries under the International Patient Summary (IPS) standard.
+3. **Decentralized Epidemic Surveillance:** Implementing zero-knowledge verifiable credentials for epidemiological disease surveillance without centralized record pooling.
 
 ---
 
 ## References
 
-- [1] V. Patel et al., "Assuring health coverage for all in India," *The Lancet*, vol. 386, no. 10011, pp. 2422–2435, Dec. 2015.
+- [1] V. Patel et al., "Assuring health coverage for all in India," *The Lancet*, vol. 386, no. 10011, pp. 2422–2435, Dec. 2015, doi: 10.1016/S0140-6736(15)00955-1.
 - [2] National Health Authority (NHA), "Ayushman Bharat Digital Mission (ABDM) Health Information Exchange & Consent Manager (HIE-CM) Technical Specifications v0.5," Ministry of Health and Family Welfare, Govt. of India, Tech. Rep. ABDM-TS-05, Nov. 2023.
 - [3] Health Level Seven International, "HL7 FHIR Release 4: Fast Healthcare Interoperability Resources," ANSI/HL7 Standard R4, Feb. 2020.
 - [4] Ministry of Law and Justice, Government of India, "The Digital Personal Data Protection Act, 2023," *The Gazette of India*, Extraordinary, Part II, Section 1, No. 22, pp. 1–21, Aug. 2023.
 - [5] O. Bartunov and T. Sigaev, "Hierarchical Data Processing in PostgreSQL Using the `ltree` Extension," PostgreSQL Global Development Group Technical Reports, 2002.
-- [6] D. J. Bernstein, "Curve25519: New Diffie-Hellman speed records," in *Proc. 9th Int. Conf. Theory Pract. Public-Key Cryptography (PKC 2006)*, Berlin, Germany: Springer, 2006, pp. 207–228.
+- [6] D. J. Bernstein, "Curve25519: New Diffie-Hellman speed records," in *Proc. 9th Int. Conf. Theory Pract. Public-Key Cryptography (PKC 2006)*, Berlin, Germany: Springer, 2006, pp. 207–228, doi: 10.1007/11745853_14.
 - [7] J. Verhoeff, "Error Detecting Decimal Codes," *Mathematical Centre Tracts*, vol. 29, pp. 1–97, Amsterdam, 1969.
 - [8] ISO/IEC, "Information technology — Database languages — SQL — Part 9: Management of External Data (SQL/MED)," International Organization for Standardization, Standard ISO/IEC 9075-9:2016, 2016.
-- [9] J. C. Mandel, D. A. Kreda, K. D. Mandl, I. S. Kohane, and R. B. Ramoni, "SMART on FHIR: A standards-based, interoperable apps platform for electronic health records," *J. Am. Med. Informatics Assoc. (JAMIA)*, vol. 23, no. 5, pp. 899–908, Sep. 2016.
-- [10] C. J. Seebregts et al., "The OpenMRS system: Collaborating to support medical care and research in developing countries," *Int. J. Med. Informatics*, vol. 78, no. 11, pp. 717–729, Nov. 2009.
+- [9] J. C. Mandel, D. A. Kreda, K. D. Mandl, I. S. Kohane, and R. B. Ramoni, "SMART on FHIR: A standards-based, interoperable apps platform for electronic health records," *J. Am. Med. Informatics Assoc. (JAMIA)*, vol. 23, no. 5, pp. 899–908, Sep. 2016, doi: 10.1093/jamia/ocv189.
+- [10] C. J. Seebregts et al., "The OpenMRS system: Collaborating to support medical care and research in developing countries," *Int. J. Med. Informatics*, vol. 78, no. 11, pp. 717–729, Nov. 2009, doi: 10.1016/j.ijmedinf.2009.06.002.
 - [11] ThoughtWorks Inc., "Bahmni: An Open-Source Electronic Medical Record and Hospital Management System for Low-Resource Environments," Bahmni Coalition Technical Whitepaper, 2022.
-- [12] A. Biryukov, D. Dinu, and D. Khovratovich, "Argon2: New Generation of Memory-Hard Functions for Password Hashing and Other Applications," in *Proc. IEEE European Symp. Security and Privacy (EuroS&P)*, 2016, pp. 292–302.
+- [12] A. Biryukov, D. Dinu, and D. Khovratovich, "Argon2: New Generation of Memory-Hard Functions for Password Hashing and Other Applications," in *Proc. IEEE European Symp. Security and Privacy (EuroS&P)*, 2016, pp. 292–302, doi: 10.1109/EuroSP.2016.31.
 - [13] Ministry of Electronics and Information Technology (MeitY), "Guidelines for Indian Government Websites (GIGW 3.0): Quality Framework for Digital Public Services," National Informatics Centre (NIC), Govt. of India, Rep. GIGW-2023-V3, 2023.
 - [14] J. Manico, D. Cuthbert, and A. van der Stock, "OWASP Application Security Verification Standard (ASVS) Version 4.0.3," Open Web Application Security Project (OWASP), May 2021.
+- [15] H. Krawczyk and P. Eronen, "HMAC-based Extract-and-Expand Key Derivation Function (HKDF)," Internet Engineering Task Force (IETF), RFC 5869, May 2010, doi: 10.17487/RFC5869.
+- [16] M. Dworkin, "Recommendation for Block Cipher Modes of Operation: Galois/Counter Mode (GCM) and GMAC," National Institute of Standards and Technology (NIST), Special Publication SP 800-38D, Nov. 2007, doi: 10.6028/NIST.SP.800-38D.
+- [17] R. C. Merkle, "A Digital Signature Based on a Conventional Encryption Function," in *Proc. Advances in Cryptology (CRYPTO '87)*, Berlin, Germany: Springer, 1987, pp. 369–378, doi: 10.1007/3-540-48184-2_32.
+- [18] W. Diffie and M. E. Hellman, "New Directions in Cryptography," *IEEE Trans. Inf. Theory*, vol. 22, no. 6, pp. 644–654, Nov. 1976, doi: 10.1109/TIT.1976.1055638.
+- [19] R. S. Sandhu, E. J. Coyne, H. L. Feinstein, and C. E. Youman, "Role-based access control models," *IEEE Computer*, vol. 29, no. 2, pp. 38–47, Feb. 1996, doi: 10.1109/2.485845.
+- [20] D. Dolev and A. C. Yao, "On the security of public key protocols," *IEEE Trans. Inf. Theory*, vol. 29, no. 2, pp. 198–208, Mar. 1983, doi: 10.1109/TIT.1983.1056650.
+- [21] F. Wilcoxon, "Individual Comparisons by Ranking Methods," *Biometrics Bulletin*, vol. 1, no. 6, pp. 80–83, Dec. 1945, doi: 10.2307/3001968.
+- [22] Student [W. S. Gosset], "The Probable Error of a Mean," *Biometrika*, vol. 6, no. 1, pp. 1–25, Mar. 1908, doi: 10.1093/biomet/6.1.1.
+- [23] J. Cohen, *Statistical Power Analysis for the Behavioral Sciences*, 2nd ed. Hillsdale, NJ, USA: Lawrence Erlbaum Associates, 1988.
+- [24] Ministry of Health and Family Welfare, Government of India, "National Digital Health Blueprint (NDHB)," MoHFW, Govt. of India, Tech. Rep., 2019.
+- [25] T. D. Gunter and N. P. Terry, "The Emergence of National Electronic Health Record Architectures in the United States and Australia: Models, Costs, and Questions," *J. Med. Internet Res.*, vol. 7, no. 1, p. e3, Mar. 2005, doi: 10.2196/jmir.7.1.e3.
+- [26] O. Goldreich, *Foundations of Cryptography: Volume 2, Basic Applications*. Cambridge, UK: Cambridge University Press, 2004, doi: 10.1017/CBO9780511721656.
 
