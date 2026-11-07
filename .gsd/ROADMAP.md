@@ -66,7 +66,7 @@ updated: 2026-11-07T22:33:00Z
 **Days:** 96+
 
 **Wave Breakdown:**
-- [ ] **Wave 1:** Core Foundations (Design Tokens, Noto Typography, GIGW 3.0 Header/Footer, & UI Primitives)
+- [x] **Wave 1:** Core Foundations (Design Tokens, Noto Typography, GIGW 3.0 Header/Footer, & UI Primitives) - Completed
 - [ ] **Wave 2:** Citizen & Identity (Citizen Health Vault, Official ABHA Card, & Landing/Auth Flows)
 - [ ] **Wave 3:** Professional Consoles (Doctor Clinical EMR, Diagnostic Lab, & Public Health Command Center)
 

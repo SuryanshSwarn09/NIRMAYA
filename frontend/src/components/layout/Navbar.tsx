@@ -4,10 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/common/BrandLogo";
-import { Badge, Button } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { MAIN_NAV_ITEMS } from "@/config/navigation";
 import { useAuth, getPortalRouteForRole } from "@/context/AuthContext";
-import { Menu, X, LogOut, User } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -30,19 +30,19 @@ export function Navbar({
   };
 
   return (
-    <header className="sticky top-0 z-40 h-16 bg-white border-b border-[#e5e7eb] transition-colors">
+    <header className="sticky top-0 z-40 h-16 bg-white border-b border-[#d1d5db] shadow-xs transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
-        {/* Brand Wordmark & Geometric Mark with Subtle Network Pill */}
+        {/* Brand Identity with ABDM National Health Stack Certification Pill */}
         <div className="flex items-center gap-3">
           <BrandLogo size="md" />
-          <div className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#f8f9fa] border border-[#e5e7eb] text-[11px] text-[#4b5563] font-medium">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />
-            <span>Network Active</span>
+          <div className="hidden xl:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#e8f1f9] border border-[#b9d5ee] text-[11px] text-[#0b4d8c] font-semibold">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#046a38]" />
+            <span>ABDM National Gateway Active</span>
           </div>
         </div>
 
-        {/* Center Desktop Navigation Links (Inter 14px / 500) */}
-        <nav className="hidden lg:flex items-center gap-1">
+        {/* Center Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-1" aria-label="Main Navigation">
           {MAIN_NAV_ITEMS.map((item) => {
             const isActive =
               pathname === item.href ||
@@ -53,10 +53,10 @@ export function Navbar({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-sm font-medium transition-colors select-none",
+                  "flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-sm font-medium transition-colors select-none",
                   isActive
-                    ? "bg-[#f5f5f5] text-[#111111] font-semibold"
-                    : "text-[#6b7280] hover:text-[#111111] hover:bg-[#f8f9fa]"
+                    ? "bg-[#e8f1f9] text-[#0b4d8c] font-bold border-b-2 border-[#0b4d8c]"
+                    : "text-[#4b5563] hover:text-[#0b4d8c] hover:bg-[#f0f4f8]"
                 )}
               >
                 <span>{item.title}</span>
@@ -67,7 +67,7 @@ export function Navbar({
             href="https://suryanshs-projects.gitbook.io/nirmaya-docs"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] text-sm font-medium text-[#6b7280] hover:text-[#111111] hover:bg-[#f8f9fa] transition-colors select-none"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-sm font-medium text-[#4b5563] hover:text-[#0b4d8c] hover:bg-[#f0f4f8] transition-colors select-none"
           >
             <span>Documentation</span>
           </a>
@@ -79,16 +79,16 @@ export function Navbar({
             <div className="flex items-center gap-2.5">
               <Link
                 href={getPortalRouteForRole(user.role)}
-                className="flex items-center gap-2 py-1 px-2 rounded-full border border-[#e5e7eb] hover:bg-[#f8f9fa] transition-colors"
+                className="flex items-center gap-2 py-1 px-2.5 rounded-full border border-[#b9d5ee] bg-[#f8fbfd] hover:bg-[#e8f1f9] transition-colors"
               >
-                <div className="h-7 w-7 rounded-full bg-[#111111] text-white flex items-center justify-center font-bold text-xs">
+                <div className="h-7 w-7 rounded-full bg-[#0b4d8c] text-white flex items-center justify-center font-bold text-xs">
                   {getInitials(user.fullName)}
                 </div>
                 <div className="hidden sm:flex flex-col text-left">
                   <span className="text-xs font-semibold text-[#111111] leading-tight">
                     {user.fullName || user.email.split("@")[0]}
                   </span>
-                  <span className="text-[10px] uppercase font-bold text-[#059669] leading-tight">
+                  <span className="text-[10px] uppercase font-bold text-[#046a38] leading-tight">
                     {user.role}
                   </span>
                 </div>
@@ -97,7 +97,7 @@ export function Navbar({
               <button
                 onClick={logout}
                 title="Sign Out"
-                className="h-8 w-8 flex items-center justify-center rounded-full border border-[#e5e7eb] text-[#6b7280] hover:text-[#111111] hover:bg-[#f5f5f5] transition-colors cursor-pointer"
+                className="h-8 w-8 flex items-center justify-center rounded-full border border-[#d1d5db] text-[#4b5563] hover:text-[#0b4d8c] hover:bg-[#f0f4f8] transition-colors cursor-pointer"
                 aria-label="Sign Out"
               >
                 <LogOut className="h-3.5 w-3.5" />
@@ -107,7 +107,7 @@ export function Navbar({
             <div className="hidden sm:flex items-center gap-3">
               <Link
                 href="/login"
-                className="text-sm font-semibold text-[#111111] hover:text-[#6b7280] px-2 py-1.5 transition-colors select-none"
+                className="text-sm font-semibold text-[#0b4d8c] hover:text-[#083c6f] px-2 py-1.5 transition-colors select-none"
               >
                 Sign In
               </Link>
@@ -119,10 +119,10 @@ export function Navbar({
             </div>
           )}
 
-          {/* Mobile Menu Toggle Button (36px circular) */}
+          {/* Mobile Menu Toggle Button */}
           <button
             onClick={onToggleMobileMenu}
-            className="lg:hidden h-9 w-9 flex items-center justify-center rounded-full border border-[#e5e7eb] text-[#111111] hover:bg-[#f5f5f5] transition-colors"
+            className="lg:hidden h-9 w-9 flex items-center justify-center rounded-md border border-[#d1d5db] text-[#111111] hover:bg-[#f0f4f8] transition-colors"
             aria-label={isMobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
           >
             {isMobileMenuOpen ? (

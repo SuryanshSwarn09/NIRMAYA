@@ -28,49 +28,49 @@ export function Badge({
   dot = false,
   ...props
 }: BadgeProps) {
-  // Modern Pastel Badge Palette
-  const variantStyles = {
-    default: "bg-[#f5f5f5] text-[#111111] border-[#e5e7eb]",
-    neutral: "bg-[#f5f5f5] text-[#111111] border-[#e5e7eb]",
-    verified: "bg-[#ecfdf5] text-[#065f46] border-[#a7f3d0]",
-    pending: "bg-[#fff7ed] text-[#9a3412] border-[#fed7aa]",
-    warning: "bg-[#fff7ed] text-[#ea580c] border-[#fed7aa]",
-    critical: "bg-[#fef2f2] text-[#991b1b] border-[#fecaca]",
-    fhir: "bg-[#f8f9fa] text-[#111111] border-[#e5e7eb]",
-    abdm: "bg-[#f5f3ff] text-[#5b21b6] border-[#ddd6fe]",
-    outline: "bg-transparent text-[#111111] border-[#e5e7eb]",
-    orange: "bg-[#fff7ed] text-[#ea580c] border-[#fed7aa]",
-    pink: "bg-[#fdf2f8] text-[#db2777] border-[#fbcfe8]",
-    violet: "bg-[#f5f3ff] text-[#7c3aed] border-[#ddd6fe]",
-    emerald: "bg-[#ecfdf5] text-[#059669] border-[#a7f3d0]",
+  // Official UX4G Government Badge Palette
+  const variantStyles: Record<string, string> = {
+    default: "ux4g-badge bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
+    neutral: "ux4g-badge bg-[#f3f4f6] text-[#374151] border-[#d1d5db]",
+    verified: "ux4g-badge ux4g-badge-success bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
+    pending: "ux4g-badge ux4g-badge-warning bg-[#fff4e5] text-[#b45309] border-[#fed7aa]",
+    warning: "ux4g-badge ux4g-badge-warning bg-[#fff4e5] text-[#b45309] border-[#fed7aa]",
+    critical: "ux4g-badge ux4g-badge-danger bg-[#fde8e8] text-[#9b1c1c] border-[#f8b4b4]",
+    fhir: "ux4g-badge bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
+    abdm: "ux4g-badge bg-[#f3e8ff] text-[#6b21a8] border-[#d8b4fe]",
+    outline: "ux4g-badge bg-transparent text-[#0b4d8c] border-2 border-[#0b4d8c]",
+    orange: "ux4g-badge bg-[#fff5ea] text-[#f47920] border-[#ffd9af]",
+    pink: "ux4g-badge bg-[#fdf2f8] text-[#be185d] border-[#fbcfe8]",
+    violet: "ux4g-badge bg-[#f3e8ff] text-[#6b21a8] border-[#d8b4fe]",
+    emerald: "ux4g-badge bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
   };
 
-  const dotColors = {
-    default: "bg-[#111111]",
+  const dotColors: Record<string, string> = {
+    default: "bg-[#0b4d8c]",
     neutral: "bg-[#6b7280]",
-    verified: "bg-[#10b981]",
-    pending: "bg-[#f59e0b]",
-    warning: "bg-[#f59e0b]",
-    critical: "bg-[#ef4444]",
-    fhir: "bg-[#3b82f6]",
+    verified: "bg-[#046a38]",
+    pending: "bg-[#f47920]",
+    warning: "bg-[#f47920]",
+    critical: "bg-[#db372d]",
+    fhir: "bg-[#0b4d8c]",
     abdm: "bg-[#8b5cf6]",
-    outline: "bg-[#6b7280]",
-    orange: "bg-[#fb923c]",
+    outline: "bg-[#0b4d8c]",
+    orange: "bg-[#f47920]",
     pink: "bg-[#ec4899]",
     violet: "bg-[#8b5cf6]",
-    emerald: "bg-[#34d399]",
+    emerald: "bg-[#046a38]",
   };
 
   const sizeStyles = {
-    sm: "px-2.5 py-0.5 text-[11px] leading-tight font-medium",
-    md: "px-3 py-1 text-xs font-medium", // Standard 4px 12px pill
+    sm: "px-2 py-0.5 text-[10px] gap-1",
+    md: "px-2.5 py-0.5 text-[11px] gap-1.5",
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-[6px] border transition-colors select-none",
-        variantStyles[variant],
+        "inline-flex items-center font-bold rounded-[4px] border leading-none transition-colors select-none",
+        variantStyles[variant] || variantStyles.default,
         sizeStyles[size],
         className
       )}
@@ -78,8 +78,10 @@ export function Badge({
     >
       {dot && (
         <span
-          className={cn("h-1.5 w-1.5 rounded-full", dotColors[variant])}
-          aria-hidden="true"
+          className={cn(
+            "h-1.5 w-1.5 rounded-full flex-shrink-0",
+            dotColors[variant] || "bg-[#0b4d8c]"
+          )}
         />
       )}
       {children}

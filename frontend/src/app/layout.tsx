@@ -1,19 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
 import { AppShell } from "@/components/layout";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "NIRMAYA | Unified Health Interoperability Network",
@@ -45,9 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth bg-white text-[#111111]">
+    <html lang="en" data-theme="light" className="scroll-smooth bg-[#fafafa] text-[#171717]">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-white text-[#111111] selection:bg-slate-200 selection:text-black`}
+        className="font-sans antialiased bg-[#fafafa] text-[#171717] selection:bg-blue-100 selection:text-[#0b4d8c]"
       >
         <AppShell>{children}</AppShell>
       </body>

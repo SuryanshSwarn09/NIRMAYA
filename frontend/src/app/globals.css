@@ -1,10 +1,11 @@
 @import "tailwindcss";
+@import "ux4g-web-components/styles.css";
 
 @theme {
-  --color-primary: #111111;
-  --color-primary-active: #242424;
+  --color-primary: #0b4d8c;
+  --color-primary-active: #083c6f;
   --color-primary-disabled: #e5e7eb;
-  --color-ink: #111111;
+  --color-ink: #171717;
   --color-body: #374151;
   --color-muted: #6b7280;
   --color-muted-soft: #898989;
@@ -19,17 +20,20 @@
   --color-on-primary: #ffffff;
   --color-on-dark: #ffffff;
   --color-on-dark-soft: #a1a1aa;
-  --color-brand-accent: #3b82f6;
-  --color-success: #10b981;
+  --color-brand-accent: #0b4d8c;
+  --color-gov-blue: #0b4d8c;
+  --color-gov-saffron: #f47920;
+  --color-gov-green: #046a38;
+  --color-success: #046a38;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-badge-orange: #fb923c;
   --color-badge-pink: #ec4899;
   --color-badge-violet: #8b5cf6;
-  --color-badge-emerald: #34d399;
+  --color-badge-emerald: #046a38;
 
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: "Noto Sans", "Noto Sans Devanagari", "Hind", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
   --shadow-cal-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-cal-md: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -37,16 +41,69 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #111111;
-  --card: #f5f5f5;
-  --card-foreground: #111111;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
   --card-border: #e5e7eb;
-  --primary: #111111;
+  --primary: #0b4d8c;
   --primary-foreground: #ffffff;
+  --secondary: #f47920;
+  --secondary-foreground: #ffffff;
+  --success: #046a38;
+  --success-foreground: #ffffff;
   --muted: #6b7280;
   --border: #e5e7eb;
-  --radius-card: 12px;
-  --radius-btn: 8px;
+  --radius-card: 8px;
+  --radius-btn: 6px;
+
+  /* =========================================================================
+     APPROVED UX4G SOVEREIGN GOVERNMENT OF INDIA THEME OVERRIDES
+     ========================================================================= */
+  /* Primary: Ashoka Navy / India Blue (#0B4D8C) */
+  --ux4g-color-primary-50: #e8f1f9 !important;
+  --ux4g-color-primary-100: #cde0f1 !important;
+  --ux4g-color-primary-200: #9bc1e4 !important;
+  --ux4g-color-primary-300: #649fd5 !important;
+  --ux4g-color-primary-400: #3b82c4 !important;
+  --ux4g-color-primary-500: #1e68ad !important;
+  --ux4g-color-primary-600: #0b4d8c !important;
+  --ux4g-color-primary-700: #083c6f !important;
+  --ux4g-color-primary-800: #062d53 !important;
+  --ux4g-color-primary-900: #041f3b !important;
+  --ux4g-color-primary-950: #021223 !important;
+
+  /* Secondary: Tiranga Saffron (#F47920) */
+  --ux4g-color-secondary-50: #fff5ea !important;
+  --ux4g-color-secondary-100: #ffebd6 !important;
+  --ux4g-color-secondary-200: #ffd9af !important;
+  --ux4g-color-secondary-300: #ffbe6f !important;
+  --ux4g-color-secondary-400: #f98e3b !important;
+  --ux4g-color-secondary-500: #f67214 !important;
+  --ux4g-color-secondary-600: #f47920 !important;
+  --ux4g-color-secondary-700: #d45f0d !important;
+  --ux4g-color-secondary-800: #a74605 !important;
+  --ux4g-color-secondary-900: #6e2a02 !important;
+  --ux4g-color-secondary-950: #3d1400 !important;
+
+  /* Tertiary / Success: India Green (#046A38) */
+  --ux4g-color-green-500: #058245 !important;
+  --ux4g-color-green-600: #046a38 !important;
+  --ux4g-color-green-700: #03522b !important;
+  --ux4g-color-green-800: #023a1e !important;
+  --ux4g-color-tertiary-600: #046a38 !important;
+
+  /* Semantic Brand Overrides */
+  --ux4g-text-brand-primary-default: #0b4d8c !important;
+  --ux4g-bg-primary-strong: #0b4d8c !important;
+  --ux4g-bg-primary-strong-hover: #083c6f !important;
+  --ux4g-bg-secondary-strong: #f47920 !important;
+  --ux4g-bg-secondary-strong-hover: #d45f0d !important;
+  --ux4g-border-color-primary-strong: #0b4d8c !important;
+  --ux4g-border-color-primary-hover: #083c6f !important;
+  --ux4g-ring-color-primary: #0b4d8c !important;
+
+  /* Typography Font Overrides */
+  --ux4g-font-family-base: var(--font-noto-sans), var(--font-noto-devanagari), "Noto Sans", system-ui, sans-serif !important;
 }
 
 * {
