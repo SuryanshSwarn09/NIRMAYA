@@ -61,16 +61,16 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
   return (
     <section
       aria-labelledby="tile-visits-title"
-      className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md"
+      className="rounded-xl border border-[#0b4d8c]/20 bg-white p-5 shadow-sm transition hover:shadow-md ux4g-card ux4g-card-elevated"
     >
       {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 pb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#0b4d8c]/20 pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-900 text-xs font-semibold text-white">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#0b4d8c] text-xs font-semibold text-white">
               3
             </span>
-            <h2 id="tile-visits-title" className="text-base font-semibold text-gray-900">
+            <h2 id="tile-visits-title" className="text-base font-semibold text-[#0b4d8c]">
               {t("citizen.tile3.title", "Tile 3: Past Consultations & Reports")}
             </h2>
           </div>
@@ -80,14 +80,14 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-1 text-xs">
+        <div className="flex items-center rounded-lg border border-[#0b4d8c]/20 bg-[#f0f6ff] p-1 text-xs">
           <button
             type="button"
             onClick={() => setFilter("all")}
-            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
+            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "all"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-[#0b4d8c] text-white shadow-sm font-semibold"
+                : "text-gray-600 hover:text-[#0b4d8c]"
             }`}
           >
             {locale === "hi" ? "सभी" : "All"} ({visits.length})
@@ -95,10 +95,10 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
           <button
             type="button"
             onClick={() => setFilter("prescription")}
-            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
+            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "prescription"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-[#0b4d8c] text-white shadow-sm font-semibold"
+                : "text-gray-600 hover:text-[#0b4d8c]"
             }`}
           >
             {locale === "hi" ? "पर्चे" : "Prescriptions"}
@@ -106,10 +106,10 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
           <button
             type="button"
             onClick={() => setFilter("diagnostic")}
-            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
+            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "diagnostic"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+                ? "bg-[#0b4d8c] text-white shadow-sm font-semibold"
+                : "text-gray-600 hover:text-[#0b4d8c]"
             }`}
           >
             {locale === "hi" ? "रिपोर्ट्स" : "Reports"}

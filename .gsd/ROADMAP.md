@@ -15,8 +15,8 @@ updated: 2026-11-07T22:33:00Z
 - [ ] Typography integration: Google Noto Sans & Noto Sans Devanagari via `next/font/google` for clean bilingual rendering.
 - [ ] GIGW 3.0 Standard Accessibility Toolbar: A-/A/A+ font size adjuster, high-contrast mode toggle, skip-to-main-content landmark, bilingual English / हिन्दी toggle.
 - [ ] Official Government of India Header Bar with Ashok Stambh national emblem and MoHFW / National Health Authority (NHA) credentials.
-- [ ] Wave 1: Design Tokens, Noto Typography, GIGW 3.0 Header/Footer, and modernized UI Primitives (`Button`, `Card`, `Badge`, `Input`).
-- [ ] Wave 2: Citizen Health Vault, Official ABHA Card redesign, and Landing / Authentication portals (`/`, `/login`, `/register`, `/patient`).
+- [x] Wave 1: Design Tokens, Noto Typography, GIGW 3.0 Header/Footer, and modernized UI Primitives (`Button`, `Card`, `Badge`, `Input`).
+- [x] Wave 2: Citizen Health Vault, Official ABHA Card redesign, and Landing / Authentication portals (`/`, `/login`, `/register`, `/patient`).
 - [ ] Wave 3: Professional Consoles: Doctor EMR (`/doctor`), Diagnostic Lab (`/lab`), and Public Health Command Center (`/admin`).
 - [ ] 100% Mobile responsiveness across rural smartphone viewports and zero TypeScript errors (`tsc --noEmit`).
 
@@ -67,7 +67,7 @@ updated: 2026-11-07T22:33:00Z
 
 **Wave Breakdown:**
 - [x] **Wave 1:** Core Foundations (Design Tokens, Noto Typography, GIGW 3.0 Header/Footer, & UI Primitives) - Completed
-- [ ] **Wave 2:** Citizen & Identity (Citizen Health Vault, Official ABHA Card, & Landing/Auth Flows)
+- [x] **Wave 2:** Citizen & Identity (Citizen Health Vault, Official ABHA Card, & Landing/Auth Flows) - Completed
 - [ ] **Wave 3:** Professional Consoles (Doctor Clinical EMR, Diagnostic Lab, & Public Health Command Center)
 
 **Verification:**

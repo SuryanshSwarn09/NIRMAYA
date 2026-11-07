@@ -322,14 +322,14 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
     <div className="space-y-4">
       {/* Success Notification Banner */}
       {successInfo && (
-        <div className="p-4 rounded-[8px] bg-[#f0fdf4] border border-[#bbf7d0] text-sm text-[#166534] flex items-center gap-3">
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-[#16a34a]" />
+        <div className="ux4g-alert ux4g-alert-info p-4 rounded-[8px] bg-[#f0f6ff] border border-[#0b4d8c]/20 text-sm text-[#0b4d8c] flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-[#046a38]" />
           <div>
-            <p className="font-semibold">
+            <p className="font-semibold text-[#0b4d8c]">
               {successInfo.isNew ? "Account Created & Verified!" : "Welcome Back!"}
             </p>
-            <p className="text-xs text-[#15803d]">
-              {successInfo.name} &bull; ABHA: <span className="font-mono font-medium">{successInfo.abhaNumber}</span>
+            <p className="text-xs text-[#374151]">
+              {successInfo.name} &bull; ABHA: <span className="font-mono font-bold text-[#0b4d8c]">{successInfo.abhaNumber}</span>
             </p>
           </div>
         </div>
@@ -337,24 +337,24 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
 
       {/* Error Banner */}
       {errorMessage && (
-        <div className="p-3.5 rounded-[8px] bg-[#fef2f2] border border-[#fecaca] text-xs text-[#991b1b] flex items-center gap-2">
+        <div className="ux4g-alert ux4g-alert-danger p-3.5 rounded-[8px] bg-[#fef2f2] border border-[#fecaca] text-xs text-[#991b1b] flex items-center gap-2">
           <AlertCircle className="h-4 w-4 shrink-0 text-[#dc2626]" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {/* Mode Navigation Tabs */}
-      <div className="grid grid-cols-3 gap-1 p-1 bg-[#f9fafb] rounded-[8px] border border-[#e5e7eb] text-xs">
+      <div className="grid grid-cols-3 gap-1 p-1 bg-[#f0f6ff] rounded-[8px] border border-[#0b4d8c]/20 text-xs">
         <button
           type="button"
           onClick={() => {
             setAuthMode("digilocker");
             setErrorMessage(null);
           }}
-          className={`py-2 px-1 text-center font-medium rounded-[6px] transition-colors cursor-pointer ${
+          className={`ux4g-btn ux4g-btn-s py-2 px-1 text-center font-medium rounded-[6px] transition-colors cursor-pointer ${
             authMode === "digilocker"
-              ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-              : "text-[#6b7280] hover:text-[#111827]"
+              ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+              : "text-[#4b5563] hover:text-[#0b4d8c]"
           }`}
         >
           DigiLocker 1-Click
@@ -365,10 +365,10 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
             setAuthMode("aadhaar_otp");
             setErrorMessage(null);
           }}
-          className={`py-2 px-1 text-center font-medium rounded-[6px] transition-colors cursor-pointer ${
+          className={`ux4g-btn ux4g-btn-s py-2 px-1 text-center font-medium rounded-[6px] transition-colors cursor-pointer ${
             authMode === "aadhaar_otp"
-              ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-              : "text-[#6b7280] hover:text-[#111827]"
+              ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+              : "text-[#4b5563] hover:text-[#0b4d8c]"
           }`}
         >
           Aadhaar OTP
@@ -379,10 +379,10 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
             setAuthMode("mobile_fallback");
             setErrorMessage(null);
           }}
-          className={`py-2 px-1 text-center font-medium rounded-[6px] transition-colors cursor-pointer ${
+          className={`ux4g-btn ux4g-btn-s py-2 px-1 text-center font-medium rounded-[6px] transition-colors cursor-pointer ${
             authMode === "mobile_fallback"
-              ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-              : "text-[#6b7280] hover:text-[#111827]"
+              ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+              : "text-[#4b5563] hover:text-[#0b4d8c]"
           }`}
         >
           Mobile Fallback
@@ -392,13 +392,13 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
       {/* TAB 1: DigiLocker 1-Click */}
       {authMode === "digilocker" && (
         <div className="space-y-4 pt-1">
-          <div className="p-4 rounded-[8px] border border-[#e5e7eb] bg-white space-y-3">
+          <div className="p-4 rounded-[8px] border border-[#0b4d8c]/20 bg-white space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-full bg-[#f3f4f6] flex items-center justify-center shrink-0 border border-[#e5e7eb]">
-                <ShieldCheck className="h-5 w-5 text-[#111827]" />
+              <div className="h-9 w-9 rounded-full bg-[#f0f6ff] flex items-center justify-center shrink-0 border border-[#0b4d8c]/20">
+                <ShieldCheck className="h-5 w-5 text-[#0b4d8c]" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-[#111827]">Government e-KYC Verification</p>
+                <p className="text-sm font-semibold text-[#0b4d8c]">Government e-KYC Verification</p>
                 <p className="text-xs text-[#6b7280]">
                   Instant sign-in & certified 14-digit ABHA minting via UIDAI e-Aadhaar
                 </p>
@@ -407,15 +407,15 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
 
             <ul className="text-xs text-[#4b5563] space-y-1.5 pl-1 pt-1">
               <li className="flex items-center gap-2">
-                <Check className="h-3.5 w-3.5 text-[#16a34a] shrink-0" />
+                <Check className="h-3.5 w-3.5 text-[#046a38] shrink-0" />
                 <span>Zero manual typing &bull; No password required</span>
               </li>
               <li className="flex items-center gap-2">
-                <Check className="h-3.5 w-3.5 text-[#16a34a] shrink-0" />
+                <Check className="h-3.5 w-3.5 text-[#046a38] shrink-0" />
                 <span>Auto-creates your account if you are a new patient</span>
               </li>
               <li className="flex items-center gap-2">
-                <Check className="h-3.5 w-3.5 text-[#16a34a] shrink-0" />
+                <Check className="h-3.5 w-3.5 text-[#046a38] shrink-0" />
                 <span>Protected by RFC 7636 PKCE S256 military-grade encryption</span>
               </li>
             </ul>
@@ -424,7 +424,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
               type="button"
               variant="primary"
               size="md"
-              className="w-full mt-2"
+              className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full mt-2"
               isLoading={isLoading}
               onClick={handleDigiLockerLogin}
             >
@@ -442,7 +442,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
             <div className="space-y-3">
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-[#111827] flex items-center gap-1.5">
-                  <Smartphone className="h-3.5 w-3.5 text-[#6b7280]" />
+                  <Smartphone className="h-3.5 w-3.5 text-[#0b4d8c]" />
                   12-Digit Aadhaar Number
                 </label>
                 <input
@@ -450,7 +450,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
                   value={aadhaarInput}
                   onChange={handleAadhaarChange}
                   placeholder="9184 7210 4821"
-                  className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm font-mono tracking-wider text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#111827] transition-colors"
+                  className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm font-mono tracking-wider text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
                 />
                 <p className="text-[11px] text-[#6b7280]">
                   OTP will be sent to the mobile number registered with your Aadhaar card.
@@ -461,7 +461,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
                 type="button"
                 variant="primary"
                 size="md"
-                className="w-full"
+                className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full"
                 isLoading={isLoading}
                 onClick={handleSendAadhaarOtp}
               >
@@ -472,11 +472,11 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
           ) : (
             <div className="space-y-3.5">
               <div className="p-3 rounded-[8px] bg-[#f9fafb] border border-[#e5e7eb] text-xs text-[#374151] flex items-center justify-between">
-                <span>OTP sent to: <strong className="font-mono text-[#111827]">{maskedMobile}</strong></span>
+                <span>OTP sent to: <strong className="font-mono text-[#0b4d8c]">{maskedMobile}</strong></span>
                 <button
                   type="button"
                   onClick={() => setOtpStep("input")}
-                  className="text-xs text-[#111827] font-semibold underline hover:text-black cursor-pointer"
+                  className="text-xs text-[#0b4d8c] font-semibold underline hover:text-[#083561] cursor-pointer"
                 >
                   Change
                 </button>
@@ -484,7 +484,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
 
               <div className="space-y-1">
                 <label className="text-xs font-semibold text-[#111827] flex items-center gap-1.5">
-                  <KeyRound className="h-3.5 w-3.5 text-[#6b7280]" />
+                  <KeyRound className="h-3.5 w-3.5 text-[#0b4d8c]" />
                   Enter 6-Digit OTP
                 </label>
                 <input
@@ -493,7 +493,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
                   value={otpValue}
                   onChange={(e) => setOtpValue(e.target.value.replace(/\D/g, ""))}
                   placeholder="123456"
-                  className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-base text-center font-mono tracking-[0.3em] font-semibold text-[#111827] focus:outline-none focus:border-[#111827] transition-colors"
+                  className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-base text-center font-mono tracking-[0.3em] font-semibold text-[#111827] focus:outline-none focus:border-[#0b4d8c] transition-colors"
                 />
               </div>
 
@@ -505,7 +505,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
                     type="button"
                     onClick={handleSendAadhaarOtp}
                     disabled={isLoading}
-                    className="text-[#111827] font-semibold underline hover:text-black cursor-pointer flex items-center gap-1"
+                    className="text-[#0b4d8c] font-semibold underline hover:text-[#083561] cursor-pointer flex items-center gap-1"
                   >
                     <RefreshCw className="h-3 w-3" />
                     Resend OTP
@@ -518,7 +518,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
                 type="button"
                 variant="primary"
                 size="md"
-                className="w-full"
+                className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full"
                 isLoading={isLoading}
                 onClick={handleVerifyAadhaarOtp}
               >
@@ -535,7 +535,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
         <div className="space-y-3 pt-1">
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#111827] flex items-center gap-1.5">
-              <Smartphone className="h-3.5 w-3.5 text-[#6b7280]" />
+              <Smartphone className="h-3.5 w-3.5 text-[#0b4d8c]" />
               Active Mobile Number
             </label>
             <input
@@ -544,13 +544,13 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
               value={fallbackMobile}
               onChange={(e) => setFallbackMobile(e.target.value.replace(/\D/g, ""))}
               placeholder="9876543210"
-              className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm font-mono text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#111827] transition-colors"
+              className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm font-mono text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
             />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#111827] flex items-center gap-1.5">
-              <FileText className="h-3.5 w-3.5 text-[#6b7280]" />
+              <FileText className="h-3.5 w-3.5 text-[#0b4d8c]" />
               ABHA Address / Number (Optional)
             </label>
             <input
@@ -558,13 +558,13 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
               value={fallbackAbha}
               onChange={(e) => setFallbackAbha(e.target.value)}
               placeholder="name@abdm or 91-xxxx-xxxx-xxxx"
-              className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#111827] transition-colors"
+              className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
             />
           </div>
 
           <div className="space-y-1">
             <label className="text-xs font-semibold text-[#111827] flex items-center gap-1.5">
-              <KeyRound className="h-3.5 w-3.5 text-[#6b7280]" />
+              <KeyRound className="h-3.5 w-3.5 text-[#0b4d8c]" />
               SMS Verification OTP
             </label>
             <input
@@ -573,10 +573,10 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
               value={fallbackOtp}
               onChange={(e) => setFallbackOtp(e.target.value.replace(/\D/g, ""))}
               placeholder="123456"
-              className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-base text-center font-mono tracking-[0.3em] font-semibold text-[#111827] focus:outline-none focus:border-[#111827] transition-colors"
+              className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-base text-center font-mono tracking-[0.3em] font-semibold text-[#111827] focus:outline-none focus:border-[#0b4d8c] transition-colors"
             />
             <p className="text-[11px] text-[#6b7280]">
-              Simulation OTP is <code className="font-mono text-[#111827]">123456</code>.
+              Simulation OTP is <code className="font-mono text-[#0b4d8c]">123456</code>.
             </p>
           </div>
 
@@ -584,7 +584,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
             type="button"
             variant="primary"
             size="md"
-            className="w-full"
+            className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full"
             isLoading={isLoading}
             onClick={handleMobileFallbackLogin}
           >
@@ -601,7 +601,7 @@ export function PatientPasswordlessAuthCard({ onSuccess }: PatientPasswordlessAu
             type="checkbox"
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
-            className="h-4 w-4 rounded border-[#d1d5db] text-[#111827] focus:ring-[#111827]"
+            className="h-4 w-4 rounded border-[#d1d5db] text-[#0b4d8c] focus:ring-[#0b4d8c]"
           />
           <span>Remember this device for <strong>30 days</strong> (No daily OTP required)</span>
         </label>

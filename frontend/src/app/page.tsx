@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Badge, Button, Card, CardTitle, CardDescription, NavPillGroup } from "@/components/ui";
+import { NationalEmblem } from "@/components/common/NationalEmblem";
 import { 
   ShieldCheck, 
   Activity, 
@@ -29,20 +30,20 @@ export default function Home() {
 
   return (
     <div className="space-y-24 pb-20 bg-white">
-      {/* 1. HERO BAND (7/5 Desktop Grid, White Canvas, Modern SaaS Rhythm) */}
+      {/* 1. HERO BAND (7/5 Desktop Grid, UX4G Sovereign Design) */}
       <section className="pt-12 pb-16 lg:pt-20 lg:pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
             {/* Left 7 Columns: Editorial Headline & 2 Primary CTAs */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#f8f9fa] border border-[#e5e7eb] text-xs font-medium text-[#111111]">
-                <span className="h-2 w-2 rounded-full bg-[#10b981]" />
-                <span>ABDM & HL7 FHIR R4 Interoperable</span>
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#f0f6ff] border border-[#0b4d8c]/20 text-xs font-semibold text-[#0b4d8c]">
+                <NationalEmblem size="sm" />
+                <span>Government of India • ABDM & HL7 FHIR R4 Interoperable</span>
               </div>
 
-              <h1 className="display-xl text-[#111111]">
-                HL7 FHIR R4 & ABDM Digital Health Network Infrastructure
+              <h1 className="display-xl text-[#0b4d8c]">
+                National Digital Health Infrastructure for 1.4 Billion Citizens
               </h1>
 
               <p className="text-base sm:text-lg text-[#374151] leading-relaxed max-w-2xl font-normal">
@@ -50,34 +51,34 @@ export default function Home() {
                 into an interoperable, consent-driven network anchored on HL7 FHIR R4 and the Ayushman Bharat Digital Mission (ABDM).
               </p>
 
-              {/* 2 Focused Primary CTAs (No clutter) */}
+              {/* 2 Focused Primary CTAs (UX4G Standard) */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link href="/patient">
-                  <Button variant="primary" size="lg">
+                  <Button variant="primary" size="lg" className="ux4g-btn ux4g-btn-primary ux4g-btn-l shadow-sm">
                     <span>Access Patient Vault</span>
                     <ArrowRight className="h-4 w-4 ml-1" />
                   </Button>
                 </Link>
                 <Link href="/doctor">
-                  <Button variant="secondary" size="lg">
+                  <Button variant="outline-primary" size="lg" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-l">
                     <Stethoscope className="h-4 w-4 mr-1.5" />
                     <span>Provider EMR</span>
                   </Button>
                 </Link>
               </div>
 
-              {/* 3 Sleek Trust Pillars (Replaces 6-item checklist wall) */}
+              {/* 3 Sleek Trust Pillars */}
               <div className="pt-6 border-t border-[#e5e7eb] flex flex-wrap items-center gap-6 text-xs text-[#4b5563] font-medium">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-[#10b981]" />
+                  <ShieldCheck className="h-4 w-4 text-[#046a38]" />
                   <span>Patient-Sovereign Consent</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-[#111111]" />
+                  <Activity className="h-4 w-4 text-[#0b4d8c]" />
                   <span>Zero Clinic & Lab Silos</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Lock className="h-4 w-4 text-[#111111]" />
+                  <Lock className="h-4 w-4 text-[#0b4d8c]" />
                   <span>HL7 FHIR R4 & ABHA Ready</span>
                 </div>
               </div>
@@ -85,11 +86,11 @@ export default function Home() {
 
             {/* Right 5 Columns: Hero App Mockup Card with Real Booking Chrome */}
             <div className="lg:col-span-5">
-              <Card variant="hero-mockup" className="relative">
+              <Card variant="hero-mockup" className="relative ux4g-card ux4g-card-elevated">
                 {/* Doctor Chrome Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-[8px] bg-[#f5f5f5] border border-[#e5e7eb] flex items-center justify-center font-bold text-sm text-[#111111]">
+                    <div className="h-10 w-10 rounded-[8px] bg-[#f0f6ff] border border-[#0b4d8c]/20 flex items-center justify-center font-bold text-sm text-[#0b4d8c]">
                       AS
                     </div>
                     <div>
@@ -97,7 +98,7 @@ export default function Home() {
                         <span className="text-sm font-semibold text-[#111111]">
                           Dr. Ananya Sharma
                         </span>
-                        <UserCheck className="h-3.5 w-3.5 text-[#10b981]" />
+                        <UserCheck className="h-3.5 w-3.5 text-[#046a38]" />
                       </div>
                       <p className="text-xs text-[#6b7280]">
                         Chief Cardiologist • AIIMS New Delhi
@@ -116,7 +117,7 @@ export default function Home() {
                       <Clock className="h-3.5 w-3.5 text-[#6b7280]" />
                       30 Min Clinical Consultation
                     </span>
-                    <span className="font-semibold text-[#111111]">
+                    <span className="font-semibold text-[#0b4d8c] font-mono">
                       ABHA ID: 91-8472-1092-4821
                     </span>
                   </div>
@@ -132,9 +133,9 @@ export default function Home() {
                         <button
                           key={date}
                           onClick={() => setSelectedDate(date)}
-                          className={`py-2 text-xs font-medium rounded-[8px] border transition-all text-center cursor-pointer ${
+                          className={`ux4g-btn ux4g-btn-s py-2 text-xs font-medium rounded-[8px] border transition-all text-center cursor-pointer ${
                             selectedDate === date
-                              ? "bg-[#111111] text-white border-[#111111] shadow-xs"
+                              ? "bg-[#0b4d8c] text-white border-[#0b4d8c] shadow-xs"
                               : "bg-[#f8f9fa] text-[#374151] border-[#e5e7eb] hover:bg-[#f5f5f5]"
                           }`}
                         >
@@ -155,9 +156,9 @@ export default function Home() {
                           <button
                             key={slot}
                             onClick={() => setSelectedSlot(slot)}
-                            className={`py-2 px-3 text-xs font-medium rounded-[8px] border transition-all text-left flex items-center justify-between cursor-pointer ${
+                            className={`ux4g-btn ux4g-btn-s py-2 px-3 text-xs font-medium rounded-[8px] border transition-all text-left flex items-center justify-between cursor-pointer ${
                               selectedSlot === slot
-                                ? "bg-[#111111] text-white border-[#111111]"
+                                ? "bg-[#0b4d8c] text-white border-[#0b4d8c]"
                                 : "bg-white text-[#374151] border-[#e5e7eb] hover:bg-[#f5f5f5]"
                             }`}
                           >
@@ -175,7 +176,7 @@ export default function Home() {
                 {/* Confirm Action Button */}
                 <div className="pt-3 border-t border-[#e5e7eb]">
                   <Link href="/patient" className="block w-full">
-                    <Button variant="primary" size="md" className="w-full">
+                    <Button variant="primary" size="md" className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full">
                       Book Clinical Consultation
                     </Button>
                   </Link>
@@ -188,11 +189,11 @@ export default function Home() {
       </section>
 
       {/* 2. SIGNATURE NAV-PILL-GROUP CLINICAL PRODUCT SWITCHER */}
-      <section className="py-12 border-y border-[#e5e7eb] bg-white">
+      <section className="py-12 border-y border-[#e5e7eb] bg-[#f8fafc]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           <div className="text-center max-w-2xl mx-auto space-y-4">
-            <h2 className="display-md text-[#111111]">
+            <h2 className="display-md text-[#0b4d8c]">
               Explore the Three Network Pillars
             </h2>
             <p className="text-sm sm:text-base text-[#6b7280]">
@@ -228,11 +229,11 @@ export default function Home() {
           {/* Interactive Pillar Mockup Zone */}
           <div className="max-w-4xl mx-auto">
             {selectedPillar === "patient" && (
-              <Card variant="mockup" className="space-y-5">
+              <Card variant="mockup" className="ux4g-card ux4g-card-elevated space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="h-5 w-5 text-[#111111]" />
-                    <span className="font-semibold text-sm text-[#111111]">
+                    <ShieldCheck className="h-5 w-5 text-[#0b4d8c]" />
+                    <span className="font-semibold text-sm text-[#0b4d8c]">
                       Longitudinal Health Record Locker
                     </span>
                   </div>
@@ -242,10 +243,10 @@ export default function Home() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                   <div className="p-3.5 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] space-y-1">
                     <div className="text-[#6b7280]">Ayushman Bharat ID</div>
-                    <div className="font-semibold text-sm text-[#111111]">
+                    <div className="font-semibold text-sm text-[#0b4d8c] font-mono">
                       91-8472-1092-4821
                     </div>
-                    <div className="text-[11px] text-[#059669]">
+                    <div className="text-[11px] text-[#046a38]">
                       Verified by NHA Sandbox
                     </div>
                   </div>
@@ -263,7 +264,7 @@ export default function Home() {
                     <div className="font-semibold text-sm text-[#111111]">
                       Lipid Profile (Normal)
                     </div>
-                    <div className="text-[11px] text-[#059669]">
+                    <div className="text-[11px] text-[#046a38]">
                       Apollo Diagnostics • Sealed
                     </div>
                   </div>
@@ -272,7 +273,7 @@ export default function Home() {
                 <div className="flex items-center justify-between pt-2 text-xs text-[#6b7280]">
                   <span>Consent Delegation: Revocable any time by patient.</span>
                   <Link href="/patient">
-                    <Button variant="secondary" size="sm">
+                    <Button variant="outline-primary" size="sm" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s">
                       Open Patient Vault
                     </Button>
                   </Link>
@@ -281,11 +282,11 @@ export default function Home() {
             )}
 
             {selectedPillar === "doctor" && (
-              <Card variant="mockup" className="space-y-5">
+              <Card variant="mockup" className="ux4g-card ux4g-card-elevated space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-2">
-                    <Stethoscope className="h-5 w-5 text-[#111111]" />
-                    <span className="font-semibold text-sm text-[#111111]">
+                    <Stethoscope className="h-5 w-5 text-[#0b4d8c]" />
+                    <span className="font-semibold text-sm text-[#0b4d8c]">
                       Provider EMR • Digital Consultation & E-Prescription
                     </span>
                   </div>
@@ -299,7 +300,7 @@ export default function Home() {
                       <span className="font-semibold text-[#111111] text-sm">Patient: Arun Patel</span>
                       <span className="text-[#6b7280] ml-2">42y, Male • ABHA: 91-8472-1092-4821</span>
                     </div>
-                    <span className="font-mono text-[11px] text-[#059669] bg-[#ecfdf5] px-2 py-0.5 rounded border border-[#a7f3d0]">
+                    <span className="font-mono text-[11px] text-[#046a38] bg-[#ecfdf5] px-2 py-0.5 rounded border border-[#a7f3d0]">
                       Diagnosis: Essential Hypertension (ICD-10 I10)
                     </span>
                   </div>
@@ -320,7 +321,7 @@ export default function Home() {
                 <div>
                   <button
                     onClick={() => setShowDoctorFhir(!showDoctorFhir)}
-                    className="text-xs text-[#6b7280] hover:text-[#111111] flex items-center gap-1 font-medium transition-colors cursor-pointer"
+                    className="text-xs text-[#0b4d8c] hover:underline flex items-center gap-1 font-medium transition-colors cursor-pointer"
                   >
                     <Code2 className="h-3.5 w-3.5" />
                     <span>{showDoctorFhir ? "Hide FHIR R4 Schema" : "Inspect Under-the-Hood FHIR R4 Bundle (JSON)"}</span>
@@ -328,7 +329,7 @@ export default function Home() {
                   </button>
 
                   {showDoctorFhir && (
-                    <div className="mt-2.5 p-3.5 bg-[#111111] text-[#f3f4f6] rounded-lg font-mono text-[11px] overflow-x-auto max-h-48 border border-[#262626]">
+                    <div className="mt-2.5 p-3.5 bg-[#0b4d8c] text-[#f0f6ff] rounded-lg font-mono text-[11px] overflow-x-auto max-h-48 border border-[#083561]">
                       <pre>{JSON.stringify({
                         resourceType: "MedicationRequest",
                         id: "medrx-cardio-9102",
@@ -346,7 +347,7 @@ export default function Home() {
                 <div className="flex items-center justify-between pt-1 text-xs text-[#6b7280]">
                   <span>Instant history review & structured e-prescriptions.</span>
                   <Link href="/doctor">
-                    <Button variant="secondary" size="sm">
+                    <Button variant="outline-primary" size="sm" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s">
                       Open Doctor EMR
                     </Button>
                   </Link>
@@ -355,11 +356,11 @@ export default function Home() {
             )}
 
             {selectedPillar === "lab" && (
-              <Card variant="mockup" className="space-y-5">
+              <Card variant="mockup" className="ux4g-card ux4g-card-elevated space-y-5">
                 <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-2">
-                    <FlaskConical className="h-5 w-5 text-[#111111]" />
-                    <span className="font-semibold text-sm text-[#111111]">
+                    <FlaskConical className="h-5 w-5 text-[#0b4d8c]" />
+                    <span className="font-semibold text-sm text-[#0b4d8c]">
                       Diagnostic Gateway • Pathology & LOINC Ingestion
                     </span>
                   </div>
@@ -373,8 +374,8 @@ export default function Home() {
                       <span className="font-semibold text-[#111111] text-sm">Apollo Diagnostics Central</span>
                       <span className="text-[#6b7280] ml-2">Facility HFR: HFR-DEL-91024</span>
                     </div>
-                    <span className="text-[11px] text-[#059669] font-medium flex items-center gap-1">
-                      <FileCheck2 className="h-3.5 w-3.5 text-[#10b981]" />
+                    <span className="text-[11px] text-[#046a38] font-medium flex items-center gap-1">
+                      <FileCheck2 className="h-3.5 w-3.5 text-[#046a38]" />
                       SHA-256 Tamper-Sealed
                     </span>
                   </div>
@@ -382,11 +383,11 @@ export default function Home() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                     <div className="p-2.5 bg-white rounded border border-[#e5e7eb]">
                       <div className="text-[11px] text-[#6b7280]">Fasting Blood Glucose (LOINC 1558-6)</div>
-                      <div className="text-sm font-semibold text-[#111111] mt-0.5">94 mg/dL <span className="text-xs font-normal text-[#059669]">(Normal)</span></div>
+                      <div className="text-sm font-semibold text-[#111111] mt-0.5">94 mg/dL <span className="text-xs font-normal text-[#046a38]">(Normal)</span></div>
                     </div>
                     <div className="p-2.5 bg-white rounded border border-[#e5e7eb]">
                       <div className="text-[11px] text-[#6b7280]">Total Serum Cholesterol (LOINC 2093-3)</div>
-                      <div className="text-sm font-semibold text-[#111111] mt-0.5">185 mg/dL <span className="text-xs font-normal text-[#059669]">(Desirable)</span></div>
+                      <div className="text-sm font-semibold text-[#111111] mt-0.5">185 mg/dL <span className="text-xs font-normal text-[#046a38]">(Desirable)</span></div>
                     </div>
                   </div>
                 </div>
@@ -395,7 +396,7 @@ export default function Home() {
                 <div>
                   <button
                     onClick={() => setShowLabFhir(!showLabFhir)}
-                    className="text-xs text-[#6b7280] hover:text-[#111111] flex items-center gap-1 font-medium transition-colors cursor-pointer"
+                    className="text-xs text-[#0b4d8c] hover:underline flex items-center gap-1 font-medium transition-colors cursor-pointer"
                   >
                     <Code2 className="h-3.5 w-3.5" />
                     <span>{showLabFhir ? "Hide FHIR Schema" : "Inspect Under-the-Hood DiagnosticReport (JSON)"}</span>
@@ -403,7 +404,7 @@ export default function Home() {
                   </button>
 
                   {showLabFhir && (
-                    <div className="mt-2.5 p-3.5 bg-[#111111] text-[#f3f4f6] rounded-lg font-mono text-[11px] overflow-x-auto max-h-48 border border-[#262626]">
+                    <div className="mt-2.5 p-3.5 bg-[#0b4d8c] text-[#f0f6ff] rounded-lg font-mono text-[11px] overflow-x-auto max-h-48 border border-[#083561]">
                       <pre>{JSON.stringify({
                         resourceType: "DiagnosticReport",
                         id: "dr-apollo-0925",
@@ -420,7 +421,7 @@ export default function Home() {
                 <div className="flex items-center justify-between pt-1 text-xs text-[#6b7280]">
                   <span>Accredited diagnostic ingestion directly into patient vault.</span>
                   <Link href="/lab">
-                    <Button variant="secondary" size="sm">
+                    <Button variant="outline-primary" size="sm" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s">
                       Open Diagnostic Gateway
                     </Button>
                   </Link>
@@ -432,11 +433,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. FEATURE CARDS GRID (Clean Modern Surfaces, 0 Benchmarking Noise) */}
+      {/* 3. FEATURE CARDS GRID (UX4G Standard Cards) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
           <Badge variant="default">Enterprise Guarantees</Badge>
-          <h2 className="display-md text-[#111111]">
+          <h2 className="display-md text-[#0b4d8c]">
             Engineered for Uncompromising Interoperability
           </h2>
           <p className="text-sm sm:text-base text-[#6b7280]">
@@ -446,12 +447,12 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: Self-Sovereign Consent */}
-          <Card variant="feature" className="p-6 flex flex-col justify-between">
+          <Card variant="feature" className="ux4g-card ux4g-card-elevated p-6 flex flex-col justify-between border-t-4 border-t-[#0b4d8c]">
             <div>
-              <div className="h-10 w-10 rounded-[8px] bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
+              <div className="h-10 w-10 rounded-[8px] bg-[#f0f6ff] border border-[#0b4d8c]/20 flex items-center justify-center text-[#0b4d8c] mb-5 shadow-xs">
                 <Lock className="h-5 w-5" />
               </div>
-              <CardTitle>Self-Sovereign Consent</CardTitle>
+              <CardTitle className="text-[#0b4d8c]">Self-Sovereign Consent</CardTitle>
               <CardDescription className="mt-2 text-sm leading-relaxed text-[#6b7280]">
                 Patients maintain cryptographic ownership over their health data. Grant, inspect, or revoke clinical access with one tap.
               </CardDescription>
@@ -459,12 +460,12 @@ export default function Home() {
           </Card>
 
           {/* Card 2: FHIR R4 Bundle Compliance */}
-          <Card variant="feature" className="p-6 flex flex-col justify-between">
+          <Card variant="feature" className="ux4g-card ux4g-card-elevated p-6 flex flex-col justify-between border-t-4 border-t-[#f47920]">
             <div>
-              <div className="h-10 w-10 rounded-[8px] bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
+              <div className="h-10 w-10 rounded-[8px] bg-[#fff7ed] border border-[#f47920]/20 flex items-center justify-center text-[#f47920] mb-5 shadow-xs">
                 <FileText className="h-5 w-5" />
               </div>
-              <CardTitle>HL7 FHIR R4 Standards</CardTitle>
+              <CardTitle className="text-[#0b4d8c]">HL7 FHIR R4 Standards</CardTitle>
               <CardDescription className="mt-2 text-sm leading-relaxed text-[#6b7280]">
                 Universal schema compatibility for Patients, Practitioners, Encounters, Observations, and DiagnosticReports eliminates vendor lock-in.
               </CardDescription>
@@ -472,12 +473,12 @@ export default function Home() {
           </Card>
 
           {/* Card 3: Tamper-Evident Security */}
-          <Card variant="feature" className="p-6 flex flex-col justify-between">
+          <Card variant="feature" className="ux4g-card ux4g-card-elevated p-6 flex flex-col justify-between border-t-4 border-t-[#046a38]">
             <div>
-              <div className="h-10 w-10 rounded-[8px] bg-white border border-[#e5e7eb] flex items-center justify-center text-[#111111] mb-5 shadow-xs">
+              <div className="h-10 w-10 rounded-[8px] bg-[#f0fdf4] border border-[#046a38]/20 flex items-center justify-center text-[#046a38] mb-5 shadow-xs">
                 <ShieldCheck className="h-5 w-5" />
               </div>
-              <CardTitle>Tamper-Evident Records</CardTitle>
+              <CardTitle className="text-[#0b4d8c]">Tamper-Evident Records</CardTitle>
               <CardDescription className="mt-2 text-sm leading-relaxed text-[#6b7280]">
                 Every diagnostic PDF and prescription is stamped with SHA-256 integrity digests, preventing record tampering across disparate facilities.
               </CardDescription>
@@ -486,27 +487,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. PRE-FOOTER LIGHT CTA BAND (#f5f5f5 Card, 48px Padding, Display-sm) */}
+      {/* 4. PRE-FOOTER LIGHT CTA BAND (UX4G Government Card) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-[12px] bg-[#f5f5f5] p-10 sm:p-14 text-center space-y-6 border border-transparent">
+        <div className="rounded-[12px] bg-[#f0f6ff] p-10 sm:p-14 text-center space-y-6 border border-[#0b4d8c]/20">
           <div className="max-w-2xl mx-auto space-y-3">
-            <h3 className="display-sm text-[#111111]">
+            <h3 className="display-sm text-[#0b4d8c]">
               Smarter, simpler clinical records and scheduling.
             </h3>
-            <p className="text-sm sm:text-base text-[#6b7280] leading-relaxed">
+            <p className="text-sm sm:text-base text-[#374151] leading-relaxed">
               Join the unified healthcare network. Connect with your ABHA identifier in under 60 seconds.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link href="/register">
-              <Button variant="primary" size="lg">
+              <Button variant="primary" size="lg" className="ux4g-btn ux4g-btn-primary ux4g-btn-l shadow-sm">
                 <span>Create ABHA Profile</span>
                 <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
             <Link href="/doctor">
-              <Button variant="secondary" size="lg">
+              <Button variant="outline-primary" size="lg" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-l">
                 Provider Onboarding
               </Button>
             </Link>

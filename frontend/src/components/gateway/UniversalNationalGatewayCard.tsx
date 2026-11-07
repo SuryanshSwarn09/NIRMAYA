@@ -323,20 +323,20 @@ export function UniversalNationalGatewayCard({
   return (
     <div className="w-full max-w-xl mx-auto space-y-4">
       {/* 1. Indian National Government Health Header & Helplines */}
-      <div className="rounded-[10px] border border-[#e5e7eb] bg-white overflow-hidden shadow-xs">
+      <div className="rounded-[10px] border border-[#0b4d8c]/20 bg-white overflow-hidden shadow-xs ux4g-card ux4g-card-elevated">
         {/* Tricolor Micro-Strip */}
-        <div className="h-1 w-full flex">
-          <div className="h-full w-1/3 bg-[#ff9933]" />
+        <div className="h-1.5 w-full flex">
+          <div className="h-full w-1/3 bg-[#f47920]" />
           <div className="h-full w-1/3 bg-white" />
-          <div className="h-full w-1/3 bg-[#138808]" />
+          <div className="h-full w-1/3 bg-[#046a38]" />
         </div>
 
         {/* National Helplines Strip */}
-        <div className="px-4 py-2.5 bg-[#f9fafb] border-b border-[#e5e7eb] flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div className="px-4 py-2.5 bg-[#f0f6ff] border-b border-[#0b4d8c]/20 flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2 text-[#374151]">
-            <span className="font-semibold text-[#111827]">National Helplines:</span>
-            <span className="inline-flex items-center gap-1 font-mono text-[#111827] bg-white px-2 py-0.5 rounded border border-[#e5e7eb]">
-              <PhoneCall className="h-3 w-3 text-[#111827]" />
+            <span className="font-semibold text-[#0b4d8c]">National Helplines:</span>
+            <span className="inline-flex items-center gap-1 font-mono text-[#0b4d8c] bg-white px-2 py-0.5 rounded border border-[#0b4d8c]/20 font-semibold">
+              <PhoneCall className="h-3 w-3 text-[#0b4d8c]" />
               1075 (Tele-Consultation)
             </span>
             <span className="inline-flex items-center gap-1 font-mono text-[#991b1b] bg-[#fef2f2] px-2 py-0.5 rounded border border-[#fecaca]">
@@ -350,20 +350,20 @@ export function UniversalNationalGatewayCard({
 
         {/* 2. Four-Role Segmented Control */}
         <div className="p-3 bg-white border-b border-[#e5e7eb]">
-          <div className="text-[11px] font-semibold text-[#6b7280] uppercase tracking-wider mb-2">
+          <div className="text-[11px] font-semibold text-[#0b4d8c] uppercase tracking-wider mb-2">
             Select Healthcare Access Portal
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 bg-[#f9fafb] rounded-[8px] border border-[#e5e7eb] text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 bg-[#f0f6ff] rounded-[8px] border border-[#0b4d8c]/20 text-xs">
             <button
               type="button"
               onClick={() => {
                 setActiveRole("citizen");
                 setErrorMessage(null);
               }}
-              className={`py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`ux4g-btn ux4g-btn-s py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeRole === "citizen"
-                  ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-                  : "text-[#6b7280] hover:text-[#111827]"
+                  ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                  : "text-[#4b5563] hover:text-[#0b4d8c]"
               }`}
             >
               <User className="h-3.5 w-3.5" />
@@ -376,10 +376,10 @@ export function UniversalNationalGatewayCard({
                 setActiveRole("doctor");
                 setErrorMessage(null);
               }}
-              className={`py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`ux4g-btn ux4g-btn-s py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeRole === "doctor"
-                  ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-                  : "text-[#6b7280] hover:text-[#111827]"
+                  ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                  : "text-[#4b5563] hover:text-[#0b4d8c]"
               }`}
             >
               <Stethoscope className="h-3.5 w-3.5" />
@@ -392,10 +392,10 @@ export function UniversalNationalGatewayCard({
                 setActiveRole("lab");
                 setErrorMessage(null);
               }}
-              className={`py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`ux4g-btn ux4g-btn-s py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeRole === "lab"
-                  ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-                  : "text-[#6b7280] hover:text-[#111827]"
+                  ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                  : "text-[#4b5563] hover:text-[#0b4d8c]"
               }`}
             >
               <FlaskConical className="h-3.5 w-3.5" />
@@ -408,10 +408,10 @@ export function UniversalNationalGatewayCard({
                 setActiveRole("pharmacy");
                 setErrorMessage(null);
               }}
-              className={`py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+              className={`ux4g-btn ux4g-btn-s py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                 activeRole === "pharmacy"
-                  ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-                  : "text-[#6b7280] hover:text-[#111827]"
+                  ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                  : "text-[#4b5563] hover:text-[#0b4d8c]"
               }`}
             >
               <Pill className="h-3.5 w-3.5" />
@@ -423,14 +423,14 @@ export function UniversalNationalGatewayCard({
         {/* 3. Main Role Card Body */}
         <div className="p-5 sm:p-6 space-y-4">
           {errorMessage && (
-            <div className="p-3 rounded-[8px] bg-[#fef2f2] border border-[#fecaca] text-xs text-[#991b1b] flex items-center gap-2">
+            <div className="ux4g-alert ux4g-alert-danger p-3 rounded-[8px] bg-[#fef2f2] border border-[#fecaca] text-xs text-[#991b1b] flex items-center gap-2">
               <AlertTriangle className="h-4 w-4 shrink-0 text-[#ef4444]" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {successMessage && (
-            <div className="p-3 rounded-[8px] bg-[#ecfdf5] border border-[#a7f3d0] text-xs text-[#065f46] flex items-center gap-2">
+            <div className="ux4g-alert ux4g-alert-info p-3 rounded-[8px] bg-[#ecfdf5] border border-[#a7f3d0] text-xs text-[#065f46] flex items-center gap-2">
               <CheckCircle2 className="h-4 w-4 shrink-0 text-[#10b981]" />
               <span>{successMessage}</span>
             </div>
@@ -441,24 +441,24 @@ export function UniversalNationalGatewayCard({
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[#f3f4f6]">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#111827]">Universal Citizen Gateway</h3>
+                  <h3 className="text-sm font-semibold text-[#0b4d8c]">Universal Citizen Gateway</h3>
                   <p className="text-xs text-[#6b7280]">Select preferred digital identity verification channel</p>
                 </div>
                 <Badge variant="verified" size="sm">Passwordless</Badge>
               </div>
 
               {/* Citizen Channel Segmented Navigation */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-[#f9fafb] rounded-[8px] border border-[#e5e7eb] text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-[#f0f6ff] rounded-[8px] border border-[#0b4d8c]/20 text-xs">
                 <button
                   type="button"
                   onClick={() => {
                     setActiveChannel("aadhaar_otp");
                     setErrorMessage(null);
                   }}
-                  className={`py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`ux4g-btn ux4g-btn-s py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeChannel === "aadhaar_otp"
-                      ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-                      : "text-[#6b7280] hover:text-[#111827]"
+                      ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                      : "text-[#4b5563] hover:text-[#0b4d8c]"
                   }`}
                 >
                   <Fingerprint className="h-3 w-3" />
@@ -471,10 +471,10 @@ export function UniversalNationalGatewayCard({
                     setActiveChannel("digilocker");
                     setErrorMessage(null);
                   }}
-                  className={`py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`ux4g-btn ux4g-btn-s py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeChannel === "digilocker"
-                      ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-                      : "text-[#6b7280] hover:text-[#111827]"
+                      ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                      : "text-[#4b5563] hover:text-[#0b4d8c]"
                   }`}
                 >
                   <FileCheck2 className="h-3 w-3" />
@@ -487,10 +487,10 @@ export function UniversalNationalGatewayCard({
                     setActiveChannel("abha_mobile");
                     setErrorMessage(null);
                   }}
-                  className={`py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`ux4g-btn ux4g-btn-s py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeChannel === "abha_mobile"
-                      ? "bg-white text-[#111827] shadow-xs border border-[#e5e7eb]"
-                      : "text-[#6b7280] hover:text-[#111827]"
+                      ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                      : "text-[#4b5563] hover:text-[#0b4d8c]"
                   }`}
                 >
                   <Smartphone className="h-3 w-3" />
@@ -503,9 +503,9 @@ export function UniversalNationalGatewayCard({
                     setActiveChannel("offline_emergency");
                     setErrorMessage(null);
                   }}
-                  className={`py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                  className={`ux4g-btn ux4g-btn-s py-1.5 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1 cursor-pointer ${
                     activeChannel === "offline_emergency"
-                      ? "bg-[#fef2f2] text-[#991b1b] shadow-xs border border-[#fecaca]"
+                      ? "bg-[#fef2f2] text-[#991b1b] shadow-xs border border-[#fecaca] font-semibold"
                       : "text-[#6b7280] hover:text-[#991b1b]"
                   }`}
                 >
@@ -516,9 +516,9 @@ export function UniversalNationalGatewayCard({
 
               {/* Channel 1: Aadhaar OTP Form */}
               {activeChannel === "aadhaar_otp" && (
-                <div className="p-4 rounded-[8px] border border-[#e5e7eb] bg-[#f9fafb] space-y-3.5">
+                <div className="p-4 rounded-[8px] border border-[#0b4d8c]/20 bg-[#f8fafc] space-y-3.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-[#111827]">UIDAI Demographic OTP Challenge</span>
+                    <span className="font-semibold text-[#0b4d8c]">UIDAI Demographic OTP Challenge</span>
                     <Badge variant="abdm" size="sm">Direct UIDAI</Badge>
                   </div>
 
@@ -526,7 +526,7 @@ export function UniversalNationalGatewayCard({
                     <div className="space-y-3">
                       <div className="space-y-1">
                         <label className="text-xs font-semibold text-[#111827] flex items-center gap-1">
-                          <Fingerprint className="h-3.5 w-3.5 text-[#6b7280]" />
+                          <Fingerprint className="h-3.5 w-3.5 text-[#0b4d8c]" />
                           12-Digit Aadhaar Number
                         </label>
                         <input
@@ -535,7 +535,7 @@ export function UniversalNationalGatewayCard({
                           onChange={handleAadhaarChange}
                           placeholder="XXXX XXXX XXXX"
                           maxLength={14}
-                          className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-sm tracking-wider text-[#111827] focus:outline-none focus:border-[#111827]"
+                          className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-sm tracking-wider text-[#111827] focus:outline-none focus:border-[#0b4d8c]"
                         />
                         <p className="text-[11px] text-[#6b7280]">
                           Demo test Aadhaar: 9184 7210 4821
@@ -545,7 +545,7 @@ export function UniversalNationalGatewayCard({
                       <Button
                         type="button"
                         variant="primary"
-                        className="w-full justify-center"
+                        className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full justify-center"
                         disabled={isLoading || aadhaarInput.replace(/\s/g, "").length !== 12}
                         onClick={handleAadhaarChallenge}
                       >
@@ -567,7 +567,7 @@ export function UniversalNationalGatewayCard({
                           <button
                             type="button"
                             onClick={handleAadhaarChallenge}
-                            className="text-[#111827] font-semibold underline hover:text-black cursor-pointer"
+                            className="text-[#0b4d8c] font-semibold underline hover:text-[#083561] cursor-pointer"
                           >
                             Resend
                           </button>
@@ -576,7 +576,7 @@ export function UniversalNationalGatewayCard({
 
                       <div className="space-y-1">
                         <label className="text-xs font-semibold text-[#111827] flex items-center gap-1">
-                          <Lock className="h-3.5 w-3.5 text-[#6b7280]" />
+                          <Lock className="h-3.5 w-3.5 text-[#0b4d8c]" />
                           Enter 6-Digit OTP
                         </label>
                         <input
@@ -585,14 +585,14 @@ export function UniversalNationalGatewayCard({
                           onChange={(e) => setAadhaarOtp(e.target.value.slice(0, 6))}
                           placeholder="123456"
                           maxLength={6}
-                          className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-base tracking-widest text-[#111827] text-center focus:outline-none focus:border-[#111827]"
+                          className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-base tracking-widest text-[#111827] text-center focus:outline-none focus:border-[#0b4d8c]"
                         />
                       </div>
 
                       <Button
                         type="button"
                         variant="primary"
-                        className="w-full justify-center"
+                        className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full justify-center"
                         disabled={isLoading || aadhaarOtp.length !== 6}
                         onClick={handleAadhaarVerify}
                       >
@@ -610,13 +610,13 @@ export function UniversalNationalGatewayCard({
 
               {/* Channel 2: DigiLocker e-KYC */}
               {activeChannel === "digilocker" && (
-                <div className="p-4 rounded-[8px] border border-[#e5e7eb] bg-[#f9fafb] space-y-3.5 text-center">
+                <div className="p-4 rounded-[8px] border border-[#0b4d8c]/20 bg-[#f8fafc] space-y-3.5 text-center">
                   <div className="h-10 w-10 mx-auto rounded-full bg-[#ecfdf5] border border-[#a7f3d0] flex items-center justify-center">
-                    <FileCheck2 className="h-5 w-5 text-[#065f46]" />
+                    <FileCheck2 className="h-5 w-5 text-[#046a38]" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-semibold text-[#111827]">1-Click DigiLocker Verified Login</h4>
-                    <p className="text-[11px] text-[#6b7280] max-w-sm mx-auto mt-1">
+                    <h4 className="text-xs font-semibold text-[#0b4d8c]">1-Click DigiLocker Verified Login</h4>
+                    <p className="text-[11px] text-[#4b5563] max-w-sm mx-auto mt-1">
                       Instantly pulls certified demographic claims and reserved ABHA handle from your DigiLocker e-Aadhaar vault.
                     </p>
                   </div>
@@ -624,7 +624,7 @@ export function UniversalNationalGatewayCard({
                   <Button
                     type="button"
                     variant="primary"
-                    className="w-full justify-center"
+                    className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full justify-center"
                     disabled={digiLockerLoading}
                     onClick={handleDigiLockerKyc}
                   >
@@ -640,9 +640,9 @@ export function UniversalNationalGatewayCard({
 
               {/* Channel 3: ABHA Mobile Fallback */}
               {activeChannel === "abha_mobile" && (
-                <div className="p-4 rounded-[8px] border border-[#e5e7eb] bg-[#f9fafb] space-y-3.5">
+                <div className="p-4 rounded-[8px] border border-[#0b4d8c]/20 bg-[#f8fafc] space-y-3.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-[#111827]">Active SIM Mobile Fallback</span>
+                    <span className="font-semibold text-[#0b4d8c]">Active SIM Mobile Fallback</span>
                     <Badge variant="neutral" size="sm">SIM Verification</Badge>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -653,7 +653,7 @@ export function UniversalNationalGatewayCard({
                         value={mobileNumber}
                         onChange={(e) => setMobileNumber(e.target.value.slice(0, 10))}
                         placeholder="9876543210"
-                        className="w-full h-10 px-3 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-sm text-[#111827] focus:outline-none focus:border-[#111827]"
+                        className="ux4g-input ux4g-input-m w-full h-10 px-3 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-sm text-[#111827] focus:outline-none focus:border-[#0b4d8c]"
                       />
                     </div>
                     <div className="space-y-1">
@@ -663,7 +663,7 @@ export function UniversalNationalGatewayCard({
                         value={mobileOtp}
                         onChange={(e) => setMobileOtp(e.target.value.slice(0, 6))}
                         placeholder="123456"
-                        className="w-full h-10 px-3 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-sm text-[#111827] text-center focus:outline-none focus:border-[#111827]"
+                        className="ux4g-input ux4g-input-m w-full h-10 px-3 rounded-[8px] border border-[#e5e7eb] bg-white font-mono text-sm text-[#111827] text-center focus:outline-none focus:border-[#0b4d8c]"
                       />
                     </div>
                   </div>
@@ -675,14 +675,14 @@ export function UniversalNationalGatewayCard({
                       value={abhaHandle}
                       onChange={(e) => setAbhaHandle(e.target.value)}
                       placeholder="username@abdm"
-                      className="w-full h-10 px-3 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] focus:outline-none focus:border-[#111827]"
+                      className="ux4g-input ux4g-input-m w-full h-10 px-3 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] focus:outline-none focus:border-[#0b4d8c]"
                     />
                   </div>
 
                   <Button
                     type="button"
                     variant="primary"
-                    className="w-full justify-center"
+                    className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full justify-center"
                     disabled={isLoading || mobileNumber.length !== 10}
                     onClick={handleAbhaMobileLogin}
                   >
@@ -717,7 +717,7 @@ export function UniversalNationalGatewayCard({
                         type="text"
                         value={facilityId}
                         onChange={(e) => setFacilityId(e.target.value)}
-                        className="w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white font-mono text-xs text-[#111827]"
+                        className="ux4g-input ux4g-input-m w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white font-mono text-xs text-[#111827]"
                       />
                     </div>
                     <div className="space-y-1">
@@ -726,7 +726,7 @@ export function UniversalNationalGatewayCard({
                         type="text"
                         value={clinicianId}
                         onChange={(e) => setClinicianId(e.target.value)}
-                        className="w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white font-mono text-xs text-[#111827]"
+                        className="ux4g-input ux4g-input-m w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white font-mono text-xs text-[#111827]"
                       />
                     </div>
                   </div>
@@ -737,7 +737,7 @@ export function UniversalNationalGatewayCard({
                       type="text"
                       value={traumaPatientId}
                       onChange={(e) => setTraumaPatientId(e.target.value)}
-                      className="w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white font-mono text-xs text-[#111827]"
+                      className="ux4g-input ux4g-input-m w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white font-mono text-xs text-[#111827]"
                     />
                   </div>
 
@@ -747,14 +747,14 @@ export function UniversalNationalGatewayCard({
                       type="text"
                       value={emergencyReason}
                       onChange={(e) => setEmergencyReason(e.target.value)}
-                      className="w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white text-xs text-[#111827]"
+                      className="ux4g-input ux4g-input-m w-full h-9 px-3 rounded-[6px] border border-[#fecaca] bg-white text-xs text-[#111827]"
                     />
                   </div>
 
                   <Button
                     type="button"
                     variant="primary"
-                    className="w-full justify-center bg-[#991b1b] hover:bg-[#7f1d1d] text-white"
+                    className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full justify-center bg-[#991b1b] hover:bg-[#7f1d1d] text-white"
                     disabled={isLoading}
                     onClick={handleEmergencyBypass}
                   >
@@ -775,7 +775,7 @@ export function UniversalNationalGatewayCard({
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-3.5 w-3.5 rounded border-[#d1d5db] text-[#111827] focus:ring-0"
+                    className="h-3.5 w-3.5 rounded border-[#d1d5db] text-[#0b4d8c] focus:ring-0"
                   />
                   <span>Keep this device authenticated for 30 days (National Security SLA)</span>
                 </label>
@@ -786,7 +786,7 @@ export function UniversalNationalGatewayCard({
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-[#f3f4f6]">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#111827]">
+                  <h3 className="text-sm font-semibold text-[#0b4d8c]">
                     {activeRole === "doctor" && "Doctor & Practitioner Console (EMR)"}
                     {activeRole === "lab" && "Diagnostic Laboratory & Pathology Desk"}
                     {activeRole === "pharmacy" && "Pharmacy Dispensation & Drug Registry"}
@@ -816,7 +816,7 @@ export function UniversalNationalGatewayCard({
                         ? "lab@apollo.nirmaya.in"
                         : "pharmacy@civilhospital.in"
                     }
-                    className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] focus:outline-none focus:border-[#111827]"
+                    className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] focus:outline-none focus:border-[#0b4d8c]"
                   />
                 </div>
 
@@ -827,11 +827,11 @@ export function UniversalNationalGatewayCard({
                     value={proPassword}
                     onChange={(e) => setProPassword(e.target.value)}
                     placeholder="Enter practitioner password"
-                    className="w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] focus:outline-none focus:border-[#111827]"
+                    className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] focus:outline-none focus:border-[#0b4d8c]"
                   />
                 </div>
 
-                <Button type="submit" variant="primary" className="w-full justify-center">
+                <Button type="submit" variant="primary" className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full justify-center">
                   <span>Sign In to {activeRole.toUpperCase()} Portal</span>
                   <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
@@ -846,10 +846,10 @@ export function UniversalNationalGatewayCard({
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full justify-start text-xs h-9 bg-white hover:bg-[#f9fafb]"
+                    className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s w-full justify-start text-xs h-9 bg-white hover:bg-[#f0f6ff]"
                     onClick={() => handleDemoSignIn("doctor")}
                   >
-                    <Stethoscope className="h-3.5 w-3.5 mr-2 text-[#111827]" />
+                    <Stethoscope className="h-3.5 w-3.5 mr-2 text-[#0b4d8c]" />
                     <span>Sign in as Dr. Ananya Sharma (Cardiologist, AIIMS)</span>
                   </Button>
                 )}
@@ -857,10 +857,10 @@ export function UniversalNationalGatewayCard({
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full justify-start text-xs h-9 bg-white hover:bg-[#f9fafb]"
+                    className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s w-full justify-start text-xs h-9 bg-white hover:bg-[#f0f6ff]"
                     onClick={() => handleDemoSignIn("lab")}
                   >
-                    <FlaskConical className="h-3.5 w-3.5 mr-2 text-[#111827]" />
+                    <FlaskConical className="h-3.5 w-3.5 mr-2 text-[#0b4d8c]" />
                     <span>Sign in as Apollo Diagnostics Lab Technician</span>
                   </Button>
                 )}
@@ -868,10 +868,10 @@ export function UniversalNationalGatewayCard({
                   <Button
                     type="button"
                     variant="outline"
-                    className="w-full justify-start text-xs h-9 bg-white hover:bg-[#f9fafb]"
+                    className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s w-full justify-start text-xs h-9 bg-white hover:bg-[#f0f6ff]"
                     onClick={() => handleDemoSignIn("patient")}
                   >
-                    <Pill className="h-3.5 w-3.5 mr-2 text-[#111827]" />
+                    <Pill className="h-3.5 w-3.5 mr-2 text-[#0b4d8c]" />
                     <span>Sign in as Civil Hospital Dispensary Officer</span>
                   </Button>
                 )}

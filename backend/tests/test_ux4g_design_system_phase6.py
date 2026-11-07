@@ -113,3 +113,80 @@ def test_ux4g_card_and_primitives():
     assert "ux4g-alert-info" in alert_path.read_text(encoding="utf-8")
     assert "ux4g-alert-warning" in alert_path.read_text(encoding="utf-8")
     assert "ux4g-alert-danger" in alert_path.read_text(encoding="utf-8")
+
+
+def test_wave2_landing_page_ux4g_classes():
+    """Verify Landing Page (page.tsx) integrates NationalEmblem and UX4G button/card classes."""
+    page_path = FRONTEND_DIR / "src" / "app" / "page.tsx"
+    assert page_path.exists()
+    content = page_path.read_text(encoding="utf-8")
+    assert "NationalEmblem" in content
+    assert "ux4g-btn ux4g-btn-primary ux4g-btn-l" in content
+    assert "ux4g-btn ux4g-btn-outline-primary" in content
+    assert "ux4g-card ux4g-card-elevated" in content
+
+
+def test_wave2_login_and_gateway_ux4g_classes():
+    """Verify LoginPage and UniversalNationalGatewayCard implement UX4G inputs, buttons, and alerts."""
+    login_path = FRONTEND_DIR / "src" / "app" / "login" / "page.tsx"
+    assert login_path.exists()
+    login_content = login_path.read_text(encoding="utf-8")
+    assert "NationalEmblem" in login_content
+
+    gateway_path = FRONTEND_DIR / "src" / "components" / "gateway" / "UniversalNationalGatewayCard.tsx"
+    assert gateway_path.exists()
+    gw_content = gateway_path.read_text(encoding="utf-8")
+    assert "ux4g-input ux4g-input-m" in gw_content
+    assert "ux4g-btn ux4g-btn-primary ux4g-btn-m" in gw_content
+    assert "ux4g-card ux4g-card-elevated" in gw_content
+    assert "ux4g-alert" in gw_content
+
+
+def test_wave2_register_and_passwordless_classes():
+    """Verify Registration page and PatientPasswordlessAuthCard use UX4G inputs and buttons."""
+    reg_path = FRONTEND_DIR / "src" / "app" / "register" / "page.tsx"
+    assert reg_path.exists()
+    reg_content = reg_path.read_text(encoding="utf-8")
+    assert "NationalEmblem" in reg_content
+    assert "ux4g-input ux4g-input-m" in reg_content
+    assert "ux4g-card ux4g-card-elevated" in reg_content
+
+    card_path = FRONTEND_DIR / "src" / "components" / "patient" / "PatientPasswordlessAuthCard.tsx"
+    assert card_path.exists()
+    card_content = card_path.read_text(encoding="utf-8")
+    assert "ux4g-input ux4g-input-m" in card_content
+    assert "ux4g-btn ux4g-btn-primary ux4g-btn-m" in card_content
+    assert "ux4g-alert" in card_content
+
+
+def test_wave2_official_abha_card_nha_specs():
+    """Verify DigitalAbhaCard and DpiHealthIdTile embed NationalEmblem, tricolor, and 14-digit ABHA."""
+    card_path = FRONTEND_DIR / "src" / "components" / "patient" / "DigitalAbhaCard.tsx"
+    assert card_path.exists()
+    content = card_path.read_text(encoding="utf-8")
+    assert "NationalEmblem" in content
+    assert "#f47920" in content
+    assert "#046a38" in content
+    assert "ABHA Number (14 Digits)" in content
+    assert "ux4g-card ux4g-card-elevated" in content
+
+    tile_path = FRONTEND_DIR / "src" / "components" / "patient" / "DpiHealthIdTile.tsx"
+    assert tile_path.exists()
+    tile_content = tile_path.read_text(encoding="utf-8")
+    assert "NationalEmblem" in tile_content
+    assert "ux4g-card ux4g-card-elevated" in tile_content
+    assert "ux4g-btn ux4g-btn-primary ux4g-btn-l" in tile_content
+
+
+def test_wave2_patient_vault_and_demographic_banner():
+    """Verify Patient Vault mode switcher and PatientDemographicBanner adhere to UX4G styles."""
+    vault_path = FRONTEND_DIR / "src" / "app" / "patient" / "page.tsx"
+    assert vault_path.exists()
+    vault_content = vault_path.read_text(encoding="utf-8")
+    assert "ux4g-btn ux4g-btn-s" in vault_content
+
+    banner_path = FRONTEND_DIR / "src" / "components" / "clinical" / "PatientDemographicBanner.tsx"
+    assert banner_path.exists()
+    banner_content = banner_path.read_text(encoding="utf-8")
+    assert "ux4g-card ux4g-card-elevated" in banner_content
+    assert "ux4g-btn ux4g-btn-s" in banner_content

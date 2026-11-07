@@ -96,12 +96,12 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
   };
 
   return (
-    <Card variant="mockup" className="p-0 overflow-hidden border border-[#e5e7eb] bg-white shadow-xs">
+    <Card variant="mockup" className="p-0 overflow-hidden border border-[#0b4d8c]/20 bg-white shadow-xs ux4g-card ux4g-card-elevated">
       {/* Tile Title Strip */}
-      <div className="px-5 py-3 bg-[#f9fafb] border-b border-[#e5e7eb] flex items-center justify-between">
+      <div className="px-5 py-3 bg-[#f0f6ff]/40 border-b border-[#0b4d8c]/20 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-[#3b82f6]" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[#111827]">
+          <span className="h-2 w-2 rounded-full bg-[#0b4d8c]" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#0b4d8c]">
             {t("citizen.tile2.title", "Tile 2: Today's Active Medicines (Daily Schedule)")}
           </h3>
         </div>
@@ -109,10 +109,10 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
           <button
             type="button"
             onClick={handleSpeakMedicines}
-            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-white border border-[#e5e7eb] hover:bg-[#f3f4f6] text-[#374151] cursor-pointer"
+            className="ux4g-btn ux4g-btn-s inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-white border border-[#0b4d8c]/20 hover:bg-[#f0f6ff] text-[#0b4d8c] cursor-pointer"
             title="Listen to medicine instructions (Audio readout)"
           >
-            <Volume2 className="h-3 w-3 text-[#059669]" />
+            <Volume2 className="h-3 w-3 text-[#046a38]" />
             <span>{t("nav.listen", "Listen")}</span>
           </button>
           <Badge variant="neutral" size="sm">

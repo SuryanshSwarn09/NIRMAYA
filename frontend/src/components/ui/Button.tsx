@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "link" | "danger" | "emerald";
+  variant?: "primary" | "secondary" | "outline" | "outline-primary" | "ghost" | "link" | "danger" | "emerald";
   size?: "sm" | "md" | "lg" | "icon";
   isLoading?: boolean;
 }
@@ -27,6 +27,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       primary: "ux4g-btn-primary bg-[#0b4d8c] text-white hover:bg-[#083c6f] active:bg-[#062d53] border border-[#0b4d8c]",
       secondary: "ux4g-btn-tonal-primary bg-[#e8f1f9] text-[#0b4d8c] hover:bg-[#d0e4f5] border border-[#b9d5ee]",
       outline: "ux4g-btn-outline-primary bg-white text-[#0b4d8c] border border-[#0b4d8c] hover:bg-[#e8f1f9]",
+      "outline-primary": "ux4g-btn-outline-primary bg-white text-[#0b4d8c] border border-[#0b4d8c] hover:bg-[#e8f1f9]",
       ghost: "ux4g-btn-text-primary bg-transparent text-[#0b4d8c] hover:bg-[#f0f4f8]",
       link: "bg-transparent text-[#0b4d8c] hover:underline p-0 h-auto font-semibold",
       danger: "ux4g-btn-danger bg-[#db372d] text-white hover:bg-[#b3251e] border border-[#db372d]",

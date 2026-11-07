@@ -15,6 +15,7 @@ import {
   Volume2
 } from "lucide-react";
 import { Card, Button, Badge } from "@/components/ui";
+import { NationalEmblem } from "@/components/common/NationalEmblem";
 import { useAccessibility } from "@/context/AccessibilityContext";
 import { DpiQrCheckInModal } from "./DpiQrCheckInModal";
 
@@ -62,19 +63,19 @@ export function DpiHealthIdTile({
 
   return (
     <>
-      <Card variant="mockup" className="p-0 overflow-hidden border border-[#e5e7eb] bg-white shadow-xs">
+      <Card variant="mockup" className="p-0 overflow-hidden border border-[#0b4d8c]/20 bg-white shadow-xs ux4g-card ux4g-card-elevated">
         {/* Tricolor Micro-Strip Header */}
-        <div className="h-1 w-full flex">
-          <div className="h-full w-1/3 bg-[#ff9933]" />
+        <div className="h-1.5 w-full flex">
+          <div className="h-full w-1/3 bg-[#f47920]" />
           <div className="h-full w-1/3 bg-white" />
-          <div className="h-full w-1/3 bg-[#138808]" />
+          <div className="h-full w-1/3 bg-[#046a38]" />
         </div>
 
         {/* Tile Title Strip */}
-        <div className="px-5 py-3 bg-[#f9fafb] border-b border-[#e5e7eb] flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-[#10b981]" />
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#111827]">
+        <div className="px-5 py-3 bg-[#f0f6ff]/40 border-b border-[#0b4d8c]/20 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <NationalEmblem size="sm" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#0b4d8c]">
               {t("citizen.tile1.title", "Tile 1: My Health ID (ABHA Card)")}
             </h3>
           </div>
@@ -178,7 +179,7 @@ export function DpiHealthIdTile({
               type="button"
               variant="primary"
               size="lg"
-              className="flex-1 justify-center h-12 text-sm font-semibold shadow-xs"
+              className="ux4g-btn ux4g-btn-primary ux4g-btn-l flex-1 justify-center h-12 text-sm font-semibold shadow-xs"
               onClick={() => setIsQrModalOpen(true)}
             >
               <QrCode className="h-4 w-4 mr-2" />
@@ -188,7 +189,7 @@ export function DpiHealthIdTile({
               type="button"
               variant="outline"
               size="lg"
-              className="justify-center h-12 text-xs bg-white hover:bg-[#f9fafb]"
+              className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-l justify-center h-12 text-xs bg-white hover:bg-[#f0f6ff]"
               onClick={() => alert(`ABHA Card for ${patientName} is digitally stamped under Ayushman Bharat Digital Mission.`)}
             >
               <Download className="h-4 w-4 mr-1.5" />

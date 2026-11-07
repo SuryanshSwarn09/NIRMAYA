@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Badge, Button } from "@/components/ui";
+import { NationalEmblem } from "@/components/common/NationalEmblem";
 import { 
   QrCode, 
   RotateCcw, 
@@ -16,7 +17,6 @@ import {
   User as UserIcon,
   Sparkles,
   ExternalLink,
-  Landmark
 } from "lucide-react";
 import { generateQrSvgString, encodeAbdmQrPayload, AbdmQrClaims } from "@/lib/qr";
 
@@ -137,10 +137,10 @@ export function DigitalAbhaCard({
           title="Click to flip card"
         >
           {/* ====================================================================
-              FRONT FACE (Ayushman Bharat Health Account ID)
+              FRONT FACE (Ayushman Bharat Health Account ID - Official NHA Spec)
               ==================================================================== */}
           <div
-            className="w-full rounded-[16px] bg-white border border-[#e5e7eb] shadow-md overflow-hidden flex flex-col justify-between"
+            className="w-full rounded-[16px] bg-white border border-[#0b4d8c]/30 shadow-md overflow-hidden flex flex-col justify-between ux4g-card ux4g-card-elevated"
             style={{
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
@@ -148,20 +148,17 @@ export function DigitalAbhaCard({
           >
             {/* National Tricolor Top Banner */}
             <div className="h-2 w-full flex">
-              <div className="h-full w-1/3 bg-[#FF9933]" />
+              <div className="h-full w-1/3 bg-[#f47920]" />
               <div className="h-full w-1/3 bg-white" />
-              <div className="h-full w-1/3 bg-[#138808]" />
+              <div className="h-full w-1/3 bg-[#046a38]" />
             </div>
 
-            {/* Header: NHA Emblem & Title */}
-            <div className="px-5 pt-3.5 pb-2.5 flex items-center justify-between border-b border-[#f3f4f6] bg-[#fafafa]">
+            {/* Header: Official Ashok Stambh Emblem & NHA Title */}
+            <div className="px-5 pt-3.5 pb-2.5 flex items-center justify-between border-b border-[#f3f4f6] bg-[#f0f6ff]/40">
               <div className="flex items-center gap-2.5">
-                {/* Government Emblem Symbol */}
-                <div className="h-8 w-8 rounded-[8px] bg-[#111111] text-white flex items-center justify-center font-bold text-xs shadow-xs shrink-0 border border-[#262626]">
-                  <Landmark className="h-4 w-4 text-white" />
-                </div>
+                <NationalEmblem size="sm" />
                 <div>
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-[#6b7280]">
+                  <div className="text-[10px] uppercase font-bold tracking-wider text-[#0b4d8c]">
                     National Health Authority • Govt. of India
                   </div>
                   <div className="text-xs font-bold text-[#111111] tracking-tight">
@@ -181,13 +178,13 @@ export function DigitalAbhaCard({
             <div className="p-4 sm:p-5 grid grid-cols-12 gap-3.5 items-center">
               {/* Photo & Hologram */}
               <div className="col-span-3 flex flex-col items-center justify-center">
-                <div className="relative h-20 w-20 rounded-[8px] bg-[#f3f4f6] border border-[#e5e7eb] overflow-hidden flex items-center justify-center shadow-inner">
-                  <div className="h-full w-full flex flex-col items-center justify-center bg-[#f3f4f6] text-[#4b5563]">
-                    <UserIcon className="h-10 w-10 text-[#9ca3af]" />
+                <div className="relative h-20 w-20 rounded-[8px] bg-[#f0f6ff] border border-[#0b4d8c]/20 overflow-hidden flex items-center justify-center shadow-inner">
+                  <div className="h-full w-full flex flex-col items-center justify-center bg-[#f0f6ff] text-[#0b4d8c]">
+                    <UserIcon className="h-10 w-10 text-[#0b4d8c]/60" />
                   </div>
                   {/* Security Authenticity Seal */}
-                  <div className="absolute bottom-1 right-1 h-5 w-5 rounded-[4px] bg-[#111111] border border-[#374151] flex items-center justify-center shadow-xs">
-                    <ShieldCheck className="h-3 w-3 text-[#10b981]" />
+                  <div className="absolute bottom-1 right-1 h-5 w-5 rounded-[4px] bg-[#0b4d8c] border border-white flex items-center justify-center shadow-xs">
+                    <ShieldCheck className="h-3 w-3 text-white" />
                   </div>
                 </div>
                 <span className="text-[9px] font-semibold text-[#6b7280] mt-1 uppercase tracking-wider">
@@ -198,7 +195,7 @@ export function DigitalAbhaCard({
               {/* Patient Core Identity */}
               <div className="col-span-5 space-y-1">
                 <div>
-                  <span className="text-[10px] uppercase font-semibold text-[#898989] tracking-wider block">
+                  <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
                     Cardholder Name
                   </span>
                   <div className="text-sm sm:text-base font-bold text-[#111111] tracking-tight leading-tight">
@@ -207,10 +204,10 @@ export function DigitalAbhaCard({
                 </div>
 
                 <div>
-                  <span className="text-[10px] uppercase font-semibold text-[#898989] tracking-wider block">
+                  <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
                     ABHA Address
                   </span>
-                  <div className="text-xs font-semibold text-[#3b82f6] font-mono truncate">
+                  <div className="text-xs font-semibold text-[#0b4d8c] font-mono truncate">
                     {abhaAddress}
                   </div>
                 </div>
@@ -223,7 +220,7 @@ export function DigitalAbhaCard({
 
               {/* Vector QR Code */}
               <div className="col-span-4 flex flex-col items-center justify-center">
-                <div className="relative p-1.5 rounded-[10px] bg-white border border-[#e5e7eb] shadow-xs flex items-center justify-center">
+                <div className="relative p-1.5 rounded-[10px] bg-white border border-[#0b4d8c]/20 shadow-xs flex items-center justify-center">
                   {qrLoading ? (
                     <div className="h-20 w-20 flex items-center justify-center text-[#9ca3af] animate-pulse">
                       <QrCode className="h-8 w-8" />
@@ -235,19 +232,19 @@ export function DigitalAbhaCard({
                     />
                   )}
                 </div>
-                <span className="text-[9px] font-mono text-[#6b7280] mt-1 text-center">
+                <span className="text-[9px] font-mono text-[#0b4d8c] mt-1 text-center font-semibold">
                   Scan to Verify
                 </span>
               </div>
             </div>
 
             {/* Bottom Number Bar: 14-Digit ABHA ID */}
-            <div className="px-5 py-2.5 bg-[#f8f9fa] border-t border-[#e5e7eb] flex items-center justify-between">
+            <div className="px-5 py-2.5 bg-[#f0f6ff]/50 border-t border-[#0b4d8c]/20 flex items-center justify-between">
               <div>
-                <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
+                <span className="text-[10px] uppercase font-semibold text-[#0b4d8c] tracking-wider block">
                   ABHA Number (14 Digits)
                 </span>
-                <span className="text-sm sm:text-base font-mono font-bold tracking-wider text-[#111111]">
+                <span className="text-sm sm:text-base font-mono font-bold tracking-wider text-[#0b4d8c]">
                   {abhaId}
                 </span>
               </div>
@@ -256,16 +253,16 @@ export function DigitalAbhaCard({
                 <button
                   type="button"
                   onClick={handleCopyAbhaId}
-                  className="px-2.5 py-1 rounded-[6px] bg-white border border-[#e5e7eb] text-[11px] font-semibold text-[#374151] hover:bg-[#f3f4f6] flex items-center gap-1 transition-colors"
+                  className="ux4g-btn ux4g-btn-s px-2.5 py-1 rounded-[6px] bg-white border border-[#0b4d8c]/20 text-[11px] font-semibold text-[#0b4d8c] hover:bg-[#f0f6ff] flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   {copiedId ? (
                     <>
-                      <Check className="h-3 w-3 text-[#10b981]" />
-                      <span className="text-[#10b981]">Copied</span>
+                      <Check className="h-3 w-3 text-[#046a38]" />
+                      <span className="text-[#046a38]">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="h-3 w-3 text-[#6b7280]" />
+                      <Copy className="h-3 w-3 text-[#0b4d8c]" />
                       <span>Copy</span>
                     </>
                   )}
@@ -278,7 +275,7 @@ export function DigitalAbhaCard({
               BACK FACE (Medical Emergency, Jurisdiction & ABDM Security)
               ==================================================================== */}
           <div
-            className="absolute inset-0 w-full h-full rounded-[16px] bg-[#ffffff] border border-[#e5e7eb] shadow-md overflow-hidden flex flex-col justify-between"
+            className="absolute inset-0 w-full h-full rounded-[16px] bg-[#ffffff] border border-[#0b4d8c]/30 shadow-md overflow-hidden flex flex-col justify-between ux4g-card ux4g-card-elevated"
             style={{
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
@@ -287,27 +284,27 @@ export function DigitalAbhaCard({
           >
             {/* National Tricolor Top Banner */}
             <div className="h-2 w-full flex">
-              <div className="h-full w-1/3 bg-[#FF9933]" />
+              <div className="h-full w-1/3 bg-[#f47920]" />
               <div className="h-full w-1/3 bg-white" />
-              <div className="h-full w-1/3 bg-[#138808]" />
+              <div className="h-full w-1/3 bg-[#046a38]" />
             </div>
 
             {/* Header: Emergency & Verification Notice */}
-            <div className="px-5 pt-3 pb-2 flex items-center justify-between border-b border-[#f3f4f6] bg-[#fafafa]">
+            <div className="px-5 pt-3 pb-2 flex items-center justify-between border-b border-[#f3f4f6] bg-[#f0f6ff]/40">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-[#10b981]" />
-                <span className="text-xs font-bold text-[#111111] uppercase tracking-wide">
+                <ShieldCheck className="h-4 w-4 text-[#046a38]" />
+                <span className="text-xs font-bold text-[#0b4d8c] uppercase tracking-wide">
                   Emergency Medical Profile & Health Node
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-[#6b7280]">
+              <span className="text-[10px] font-mono text-[#0b4d8c] font-semibold">
                 SEC-ID: {abhaId.slice(-4)}
               </span>
             </div>
 
             {/* Back Face Body: Key Health Data */}
             <div className="p-4 sm:p-5 grid grid-cols-2 gap-3 text-xs">
-              <div className="p-2.5 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] space-y-0.5">
+              <div className="p-2.5 rounded-[8px] bg-[#f8fafc] border border-[#e5e7eb] space-y-0.5">
                 <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
                   Blood Group
                 </span>
@@ -317,14 +314,14 @@ export function DigitalAbhaCard({
                 </span>
               </div>
 
-              <div className="p-2.5 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] space-y-0.5">
+              <div className="p-2.5 rounded-[8px] bg-[#f8fafc] border border-[#e5e7eb] space-y-0.5">
                 <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
                   Organ Donor Status
                 </span>
-                <span className="text-xs font-bold text-[#059669] flex items-center gap-1">
+                <span className="text-xs font-bold text-[#046a38] flex items-center gap-1">
                   {organDonor ? (
                     <>
-                      <Check className="h-3.5 w-3.5 text-[#059669]" />
+                      <Check className="h-3.5 w-3.5 text-[#046a38]" />
                       <span>Registered Donor (NHO)</span>
                     </>
                   ) : (
@@ -333,7 +330,7 @@ export function DigitalAbhaCard({
                 </span>
               </div>
 
-              <div className="p-2.5 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] space-y-0.5">
+              <div className="p-2.5 rounded-[8px] bg-[#f8fafc] border border-[#e5e7eb] space-y-0.5">
                 <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
                   Jurisdiction / State Node
                 </span>
@@ -343,7 +340,7 @@ export function DigitalAbhaCard({
                 </span>
               </div>
 
-              <div className="p-2.5 rounded-[8px] bg-[#f8f9fa] border border-[#e5e7eb] space-y-0.5">
+              <div className="p-2.5 rounded-[8px] bg-[#f8fafc] border border-[#e5e7eb] space-y-0.5">
                 <span className="text-[10px] uppercase font-semibold text-[#6b7280] tracking-wider block">
                   Emergency Contact
                 </span>
@@ -352,6 +349,12 @@ export function DigitalAbhaCard({
                   {emergencyContact}
                 </span>
               </div>
+            </div>
+
+            {/* Back Footer Bar: Official DPI Disclaimer */}
+            <div className="px-5 py-2.5 bg-[#f0f6ff]/50 border-t border-[#0b4d8c]/20 flex items-center justify-between text-[10px] text-[#6b7280]">
+              <span>Ayushman Bharat Digital Mission (ABDM) • Ministry of Health & Family Welfare</span>
+              <span className="font-mono text-[#0b4d8c] font-semibold">GIGW 3.0 / ISO 27001</span>
             </div>
 
             {/* ABDM Disclaimer & Simulated Barcode Strip */}

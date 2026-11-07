@@ -86,13 +86,13 @@ export function PatientDemographicBanner({
   const hasAllergies = patient.allergies && patient.allergies.length > 0;
 
   return (
-    <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-xs overflow-hidden transition-all">
+    <div className="bg-white rounded-xl border border-[#0b4d8c]/20 shadow-xs overflow-hidden transition-all ux4g-card ux4g-card-elevated">
       {/* 1. Primary Clinical Demographics Strip */}
       <div className="p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         
         {/* Left: Patient Avatar & Core Demographics */}
         <div className="flex items-start sm:items-center gap-3.5">
-          <div className="h-12 w-12 rounded-full bg-[#111111] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
+          <div className="h-12 w-12 rounded-full bg-[#0b4d8c] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
             {patient.name
               .split(" ")
               .map((n) => n[0])
@@ -101,7 +101,7 @@ export function PatientDemographicBanner({
 
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-[#111827]">
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-[#0b4d8c]">
                 {patient.name}
               </h2>
 
@@ -118,8 +118,8 @@ export function PatientDemographicBanner({
               )}
 
               {isConsultationActive && (
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#059669] bg-[#ECFDF5] px-2.5 py-0.5 rounded-md border border-[#A7F3D0]">
-                  <span className="h-2 w-2 rounded-full bg-[#059669] animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#046a38] bg-[#ECFDF5] px-2.5 py-0.5 rounded-md border border-[#A7F3D0]">
+                  <span className="h-2 w-2 rounded-full bg-[#046a38] animate-pulse" />
                   Active Encounter
                 </span>
               )}
@@ -127,16 +127,16 @@ export function PatientDemographicBanner({
 
             {/* ABHA & National Identity */}
             <div className="flex items-center gap-2 flex-wrap text-xs text-[#6B7280]">
-              <span className="inline-flex items-center gap-1 font-mono text-[#059669] bg-[#ECFDF5] px-2 py-0.5 rounded border border-[#A7F3D0]">
-                <ShieldCheck className="h-3.5 w-3.5" />
+              <span className="inline-flex items-center gap-1 font-mono text-[#0b4d8c] bg-[#f0f6ff] px-2 py-0.5 rounded border border-[#0b4d8c]/20 font-semibold">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#046a38]" />
                 ABHA: {patient.abhaNumber}
                 <button
                   type="button"
                   onClick={handleCopyAbha}
                   title="Copy ABHA ID"
-                  className="ml-1 hover:text-[#047857] cursor-pointer"
+                  className="ml-1 hover:text-[#0b4d8c] cursor-pointer"
                 >
-                  {copiedAbha ? <Check className="h-3 w-3 text-[#059669]" /> : <Copy className="h-3 w-3" />}
+                  {copiedAbha ? <Check className="h-3 w-3 text-[#046a38]" /> : <Copy className="h-3 w-3" />}
                 </button>
               </span>
 
@@ -166,7 +166,7 @@ export function PatientDemographicBanner({
                   <span className="text-[#4B5563]">HR: {patient.latestVitals.hr}</span>
                 )}
                 {patient.latestVitals.spo2 && (
-                  <span className="text-[#059669] font-medium">SpO2: {patient.latestVitals.spo2}</span>
+                  <span className="text-[#046a38] font-medium">SpO2: {patient.latestVitals.spo2}</span>
                 )}
               </div>
             </div>
@@ -177,7 +177,7 @@ export function PatientDemographicBanner({
               <button
                 type="button"
                 onClick={onViewFullRecord}
-                className="py-1.5 px-3 rounded-lg border border-[#E5E7EB] bg-white text-xs font-semibold text-[#374151] hover:bg-[#F9FAFB] transition-all flex items-center gap-1 cursor-pointer"
+                className="ux4g-btn ux4g-btn-s py-1.5 px-3 rounded-lg border border-[#0b4d8c]/20 bg-white text-xs font-semibold text-[#0b4d8c] hover:bg-[#f0f6ff] transition-all flex items-center gap-1 cursor-pointer"
               >
                 <span>Full Chart</span>
                 <ExternalLink className="h-3 w-3" />
@@ -187,7 +187,7 @@ export function PatientDemographicBanner({
             <button
               type="button"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="p-1.5 rounded-lg border border-[#E5E7EB] bg-white text-[#4B5563] hover:text-[#111827] hover:bg-[#F9FAFB] transition-all cursor-pointer"
+              className="ux4g-btn ux4g-btn-s p-1.5 rounded-lg border border-[#0b4d8c]/20 bg-white text-[#0b4d8c] hover:bg-[#f0f6ff] transition-all cursor-pointer"
               title={isExpanded ? "Collapse Details" : "Expand Demographics & Clinical Profile"}
             >
               {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}

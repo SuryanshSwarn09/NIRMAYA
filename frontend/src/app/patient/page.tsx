@@ -898,7 +898,7 @@ export default function PatientVaultPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-white min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 bg-[#f8fafc] min-h-screen">
       
       {/* 0. Cal.com Dependent Family Persona Switcher (DPDP Act 2023 Sec 9) */}
       <CalcomDependentSwitcher
@@ -907,27 +907,27 @@ export default function PatientVaultPage() {
       />
 
       {/* Mode Switcher: CoWIN/DigiLocker 3-Tile Citizen Portal vs Specialist Clinical Vault */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#e5e7eb] pb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#0b4d8c]/20 pb-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#111827]">
+          <h1 className="text-xl font-bold tracking-tight text-[#0b4d8c]">
             {portalMode === "citizen_tiles"
               ? "Citizen Health Portal (CoWIN/DigiLocker DPI)"
               : "Specialist Health Vault"}
           </h1>
-          <p className="text-xs text-[#6b7280]">
+          <p className="text-xs text-[#4b5563]">
             {portalMode === "citizen_tiles"
               ? "Fast 3-tile citizen layout: ABHA QR card, plain daily schedule, and hospital visits."
               : "Full longitudinal clinical EHR: FHIR resources, vitals telemetry, problem lists, and WebRTC."}
           </p>
         </div>
-        <div className="flex items-center rounded-lg border border-[#e5e7eb] bg-[#f9fafb] p-1 text-xs">
+        <div className="flex items-center rounded-lg border border-[#0b4d8c]/20 bg-[#f0f6ff] p-1 text-xs">
           <button
             type="button"
             onClick={() => setPortalMode("citizen_tiles")}
-            className={`rounded-md px-3 py-1.5 font-semibold transition ${
+            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1.5 font-semibold transition cursor-pointer ${
               portalMode === "citizen_tiles"
-                ? "bg-[#111827] text-white shadow-xs"
-                : "text-[#4b5563] hover:text-[#111827]"
+                ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                : "text-[#4b5563] hover:text-[#0b4d8c]"
             }`}
           >
             3-Tile Citizen View
@@ -935,10 +935,10 @@ export default function PatientVaultPage() {
           <button
             type="button"
             onClick={() => setPortalMode("clinical_vault")}
-            className={`rounded-md px-3 py-1.5 font-semibold transition ${
+            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1.5 font-semibold transition cursor-pointer ${
               portalMode === "clinical_vault"
-                ? "bg-[#111827] text-white shadow-xs"
-                : "text-[#4b5563] hover:text-[#111827]"
+                ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
+                : "text-[#4b5563] hover:text-[#0b4d8c]"
             }`}
           >
             Specialist Vault
