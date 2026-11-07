@@ -20,7 +20,11 @@ In strict adherence to **Section 8 of the Master Engineering Roadmap (`docs/repo
    - Synthesizes findings across 95 engineering days, verifying all 6 initial research questions.
    - Details post-quantum hybrid cryptographic migration combining Curve25519 with ML-KEM (NIST FIPS 203) for long-term health vault forward secrecy.
    - Formalizes international cross-border SMART-on-FHIR federation and zero-knowledge privacy-preserving decentralized epidemiological surveillance.
-3. **Automated LaTeX AST & Citation Validator (`scripts/validate_ieee_latex.py`):**
+3. **Federated Database Systems (FDBS) & 3-Tier Multi-Tenancy Architecture Formulation:**
+   - Formalized NIRMAYA in Section I as a **hybrid Federated Database System (FDBS)** that bridges traditional ISO/IEC 9075-9 SQL/MED database federation (`postgres_fdw`) with consent-bound cryptographic API federation.
+   - Codified Section II-E analyzing the four **Architectural Anti-Patterns of Raw Database-Level Federation** over WAN (firewall port exposure of 5432/3306, distributed 2PC deadlocks, tight schema coupling, and consent bypass).
+   - Formalized Section III-B detailing the **3-Tier Multi-Tenancy Spectrum Architecture for Major Populations** (Tier 1: Solo Doctors 85% with Local-First SQLite + RLS Cloud Tenant; Tier 2: Mid-sized clinics with Turnkey Docker Edge Appliance; Tier 3: Hospital Networks with SQL/MED FDW sidecar) enabling national scale across India's 1.4 billion citizens.
+4. **Automated LaTeX AST & Citation Validator (`scripts/validate_ieee_latex.py`):**
    - Verifies LaTeX environment balance, balanced braces, section headers, 8 tables, 3 algorithms, 5 mathematical equations, and verifies that 100% of in-text citations resolve to valid BibTeX records with zero undefined citation warnings.
 4. **Backend REST Schemas & Introspection Endpoints:**
    - Schemas: `CitationCatalogSummary` and `IeeeManuscriptDay95Overview` in `backend/app/schemas/monograph.py`.
@@ -112,3 +116,4 @@ The validation script `scripts/validate_ieee_latex.py` executes rigorous AST ver
 - **Backend Service:** [`backend/app/services/monograph_service.py`](file:///e:/nirmaya-side/backend/app/services/monograph_service.py)
 - **Backend Router:** [`backend/app/api/v1/endpoints/monograph.py`](file:///e:/nirmaya-side/backend/app/api/v1/endpoints/monograph.py)
 - **Integration Test:** [`backend/tests/test_ieee_manuscript_day95.py`](file:///e:/nirmaya-side/backend/tests/test_ieee_manuscript_day95.py)
+

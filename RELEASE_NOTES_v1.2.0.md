@@ -71,6 +71,9 @@ NIRMAYA v1.2.0 is validated through automated AST LaTeX syntax parsers (`scripts
 
 ### Day 95: Complete BibTeX Database, Conclusion, Future Directions & LaTeX Validation
 - Expanded `docs/academic/latex/references.bib` to all 26 peer-reviewed primary sources with complete DOIs, authors, titles, and journal publications.
+- Formalized NIRMAYA in Section I as a **hybrid Federated Database System (FDBS)** that unifies disparate autonomous clinical repositories via ISO/IEC 9075-9 SQL/MED and consent-bound API federation.
+- Codified Section II-E analyzing the four catastrophic **Architectural Anti-Patterns of Raw Database-Level Federation** over WAN (firewall port exposure of 5432/3306, distributed 2PC deadlocks, tight schema coupling, and consent bypass).
+- Formalized Section III-B detailing the **3-Tier Multi-Tenancy Spectrum Architecture for Major Populations** (Tier 1: Solo Doctors 85% with Local-First SQLite + RLS Cloud Tenant; Tier 2: Mid-sized clinics with Turnkey Docker Edge Appliance; Tier 3: Hospital Networks with SQL/MED FDW sidecar) enabling national scale across India's 1.4 billion citizens.
 - Penned Section V (Conclusion and Future Directions), detailing post-quantum hybrid cryptographic migration (ML-KEM / NIST FIPS 203), international SMART-on-FHIR federation, and privacy-preserving decentralized epidemiological surveillance.
 - Developed and executed `scripts/validate_ieee_latex.py`, verifying environment parity, citation integrity, and formatting compliances.
 - Built backend REST endpoints (`/api/v1/monograph/manuscript/day95`, `/api/v1/monograph/citations/catalog`) providing programmatic introspection.
@@ -93,3 +96,4 @@ All 26 citations and manuscript elements have been rigorously validated:
 - **Canonical Markdown Paper:** [`docs/academic/nirmaya-ieee-research-paper.md`](file:///e:/nirmaya-side/docs/academic/nirmaya-ieee-research-paper.md)
 - **LaTeX AST Validator:** [`scripts/validate_ieee_latex.py`](file:///e:/nirmaya-side/scripts/validate_ieee_latex.py)
 - **Engineering Journey Chapter:** [`docs/journey/month-5/day-95.md`](file:///e:/nirmaya-side/docs/journey/month-5/day-95.md)
+

@@ -43,6 +43,8 @@ Despite recent nationwide initiatives under the National Digital Health Blueprin
 
 Furthermore, public hospital Outpatient Departments (OPDs) in India operate under extreme temporal compression. A single physician in an urban civil or district hospital typically conducts between 60 and 100 consultations within a single 4-hour morning session, leaving an average consultation window of merely 45 to 90 seconds per patient. Conventional Electronic Medical Record (EMR) systems—predominantly designed for fee-for-service Western billing paradigms—impose complex multi-modal navigation, extensive drop-down selections, and high input latency, causing clinicians to abandon digital data entry in favor of paper registers.
 
+Architecturally, NIRMAYA is engineered as a hybrid Federated Database System (FDBS) that bridges traditional ISO/IEC 9075-9 SQL/MED database federation~\cite{iso_sql_med} with modern consent-bound cryptographic API federation. Unlike monolithic healthcare databases that attempt to centralize billions of records into a single cloud repository, NIRMAYA provides virtual transparency and query interoperability across thousands of autonomous, disparate healthcare nodes while preserving complete local clinical autonomy and statutory data sovereignty.
+
 \subsection{The Digital Public Health Trilemma}
 Modern healthcare networks operate at the intersection of three competing architectural imperatives, which we formalize as the \emph{Digital Public Health Trilemma}:
 \begin{enumerate}
@@ -87,6 +89,16 @@ Recent architectures such as Medplum and Smile CDR have embraced cloud-native, h
 
 \subsection{Indian Digital Public Infrastructure (DPI) Initiatives}
 The Government of India has pioneered monumental Digital Public Goods, notably the Aadhaar biometric identity system, Unified Payments Interface (UPI), and CoWIN for pandemic vaccine administration. The ABDM Reference Implementation published by the National Health Authority provides baseline sandbox specifications~\cite{nha_abdm_2023}. However, reference implementations primarily provide protocol definitions and mock gateways rather than a high-throughput, production-hardened clinical EMR. They omit critical clinical workflow ergonomics, sub-50ms prescription signing, and multi-tenant hospital administrative command structures.
+
+\subsection{Architectural Anti-Patterns of Raw Database-Level Federation}
+Prior efforts to interconnect healthcare facilities frequently attempted direct database-level federation (e.g., cross-facility linked servers, distributed ODBC/JDBC bridges, or wide-area PostgreSQL \texttt{postgres\_fdw} connections). However, empirical analysis demonstrates that raw relational database federation fails catastrophically across high-density national populations due to four core architectural anti-patterns:
+\begin{itemize}
+    \item \textbf{WAN Port Exposure and Ransomware Surface:} Opening raw relational database ports (e.g., PostgreSQL port 5432, MySQL port 3306) across public wide-area networks penetrates institutional firewalls, directly exposing internal database engines to automated exploit scanning and ransomware vectors.
+    \item \textbf{Distributed Two-Phase Commit (2PC) Deadlocks:} Maintaining distributed ACID transactional guarantees across disparate hospitals via two-phase commit protocols causes cascading connection pool exhaustion and complete application lockup whenever an edge clinic's fiber link experiences packet loss or power fluctuations.
+    \item \textbf{Tight Schema Coupling and Migration Fragility:} Direct SQL federation binds queries to exact table definitions. If Hospital A alters an internal column or upgrades its schema, all cross-database queries from other facilities fail instantly, preventing autonomous local software evolution.
+    \item \textbf{Circumvention of Statutory Patient Consent:} Standard SQL query engines have no native understanding of digital consent artefacts, temporal expiry deadlines, emergency Break-The-Glass protocols, or purpose-of-use constraints mandated by Section~6 of the Indian DPDP Act 2023~\cite{dpdp_act_2023}.
+\end{itemize}
+To resolve these failures, modern healthcare architectures must decouple internal storage engines from cross-institution transit through consent-bound, forward-secret API federation.
 
 \subsection{Comparative Evaluation Matrix}
 To formalize the specific technological voids addressed by this work, Table~\ref{tab:related_works} presents an exhaustive multi-parameter comparative analysis of NIRMAYA against the five leading enterprise, open-source, and reference platforms across nine fundamental architectural dimensions.
@@ -153,6 +165,16 @@ NIRMAYA achieves national resilience through a decoupled dual-plane architecture
 \begin{itemize}
     \item \textbf{Sovereign National Governance Plane:} Houses the 6-tier Indian LGD administrative directory (PostgreSQL \texttt{ltree}), Scoped TRBAC authorization enforcement, Argon2id Zero-Knowledge emergency Break-The-Glass (BTG) vault~\cite{biryukov_argon2}, and immutable SHA-256 Merkle audit logs.
     \item \textbf{Federated Clinical Data Plane:} Manages patient encounters, HL7 FHIR R4 Bundles, and peer-to-peer encrypted health record transfers. Crucially, clinical payloads never traverse the central gateway in plaintext; intermediate routing nodes operate exclusively as blind ciphertext forwarders.
+\end{itemize}
+
+\subsubsection{The 3-Tier Multi-Tenancy Spectrum Architecture for Major Populations}
+A primary systems obstacle to nationwide healthcare interoperability in developing nations is the \emph{Solo Doctor Dilemma}: over 85\% of outpatient clinical encounters in India occur in single-practitioner clinics, micro-dispensaries, and rural nursing homes lacking on-premise servers, database administrators, or static public IP addresses. When a solo physician shuts down their laptop at the conclusion of evening OPD, local storage becomes unreachable. Forcing such practitioners to host dedicated database servers results in immediate abandonment.
+
+To resolve this reality across India's 1.4 billion citizens without centralizing medical records, NIRMAYA introduces a 3-Tier Multi-Tenancy Spectrum Architecture:
+\begin{itemize}
+    \item \textbf{Tier 1 (Solo Practitioners and Micro-Clinics --- 85\% of Market):} Deploys a Local-First Progressive Web App (PWA) with an embedded, AES-encrypted SQLite database. Consultations execute locally with $0\text{ ms}$ input latency, completely immune to clinic connectivity outages. Updates are serialized as immutable, cryptographically signed append-only clinical event streams (UUIDv7) that synchronize conflict-free to a dedicated multi-tenant cloud workspace isolated via PostgreSQL Row-Level Security (\texttt{tenant\_id = clinic\_uuid}). The cloud tenant serves as a 24/7 ABDM gateway proxy, answering national discovery requests and streaming encrypted FHIR bundles on the physician's behalf even while their local device is offline.
+    \item \textbf{Tier 2 (Mid-Sized Clinics and Rural PHCs/CHCs):} Deploys a turnkey, dual-mode Docker Compose appliance operating on commodity fanless hardware constrained to a $< 480\text{MB}$ RAM cgroup budget. The edge node executes local FHIR normalization and provides asynchronous store-and-forward edge synchronization.
+    \item \textbf{Tier 3 (Large Hospital Networks and Tertiary Centers):} Implements an ISO/IEC 9075-9 SQL/MED Foreign Data Wrapper (\texttt{postgres\_fdw}) sidecar~\cite{iso_sql_med}. External legacy relational databases (e-Hospital, Bahmni, Oracle, MySQL) are mounted as read-only foreign schemas with strict AST mutation blocking, enabling instant FHIR federation with zero data migration downtime.
 \end{itemize}
 
 \subsection{Inbound Consent Notification and Ephemeral Key Pipeline}

@@ -118,6 +118,34 @@ def test_day95_latex_ast_validator_executes_cleanly():
     assert "100% of in-text citations resolve to valid BibTeX records." in result.stdout
 
 
+def test_day95_latex_federated_database_and_3tier_spectrum():
+    """Verify Federated Database System definition, anti-patterns, and 3-Tier Spectrum in LaTeX."""
+    tex_path = os.path.join(
+        os.path.dirname(__file__), "..", "..", "docs", "academic", "latex", "nirmaya_ieee_manuscript.tex"
+    )
+    with open(tex_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Section I: FDBS definition
+    assert "hybrid Federated Database System (FDBS)" in content
+    assert "bridges traditional ISO/IEC 9075-9 SQL/MED database federation" in content
+
+    # Section II: Anti-patterns of raw database federation
+    assert r"\subsection{Architectural Anti-Patterns of Raw Database-Level Federation}" in content
+    assert "WAN Port Exposure and Ransomware Surface" in content
+    assert "Distributed Two-Phase Commit (2PC) Deadlocks" in content
+    assert "Tight Schema Coupling and Migration Fragility" in content
+    assert "Circumvention of Statutory Patient Consent" in content
+
+    # Section III: 3-Tier Multi-Tenancy Spectrum for major populations
+    assert r"\subsubsection{The 3-Tier Multi-Tenancy Spectrum Architecture for Major Populations}" in content
+    assert "Solo Doctor Dilemma" in content
+    assert r"85\% of outpatient clinical encounters" in content
+    assert "Tier 1 (Solo Practitioners and Micro-Clinics" in content
+    assert "Tier 2 (Mid-Sized Clinics and Rural PHCs/CHCs)" in content
+    assert "Tier 3 (Large Hospital Networks and Tertiary Centers)" in content
+
+
 # =============================================================================
 # 2. Markdown Canonical Paper Parity
 # =============================================================================
@@ -139,6 +167,27 @@ def test_day95_markdown_paper_section5_and_references():
     # Check that formatted reference entries exist from [1] through [26]
     for i in range(1, 27):
         assert f"[{i}]" in content, f"Reference [{i}] missing from markdown paper"
+
+
+def test_day95_markdown_federated_database_and_3tier_spectrum():
+    """Verify Federated Database System definition, anti-patterns, and 3-Tier Spectrum in Markdown."""
+    md_path = os.path.join(
+        os.path.dirname(__file__), "..", "..", "docs", "academic", "nirmaya-ieee-research-paper.md"
+    )
+    with open(md_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "hybrid Federated Database System (FDBS)" in content
+    assert "### 2.5 Architectural Anti-Patterns of Raw Database-Level Federation" in content
+    assert "WAN Port Exposure and Ransomware Surface" in content
+    assert "Distributed Two-Phase Commit (2PC) Deadlocks" in content
+    assert "Tight Schema Coupling and Migration Fragility" in content
+    assert "Circumvention of Statutory Patient Consent" in content
+    assert "#### 3.2.1 The 3-Tier Multi-Tenancy Spectrum Architecture for Major Populations" in content
+    assert "Solo Doctor Dilemma" in content
+    assert "Tier 1 (Solo Practitioners & Micro-Clinics — 85% of Market)" in content
+    assert "Tier 2 (Mid-Sized Clinics & Rural PHCs/CHCs)" in content
+    assert "Tier 3 (Large Hospital Networks & Tertiary Centers)" in content
 
 
 # =============================================================================
