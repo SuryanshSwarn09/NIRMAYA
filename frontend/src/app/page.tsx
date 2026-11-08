@@ -42,7 +42,7 @@ export default function Home() {
                 <span>Government of India • ABDM & HL7 FHIR R4 Interoperable</span>
               </div>
 
-              <h1 className="display-xl text-[#0b4d8c]">
+              <h1 className="display-xl text-[#0b4d8c] max-w-3xl">
                 National Digital Health Infrastructure for 1.4 Billion Citizens
               </h1>
 
@@ -189,7 +189,7 @@ export default function Home() {
       </section>
 
       {/* 2. SIGNATURE NAV-PILL-GROUP CLINICAL PRODUCT SWITCHER */}
-      <section className="py-12 border-y border-[#e5e7eb] bg-[#f8fafc]">
+      <section className="py-16 sm:py-20 border-y border-[#e5e7eb] bg-[#f8fafc]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
           <div className="text-center max-w-2xl mx-auto space-y-4">

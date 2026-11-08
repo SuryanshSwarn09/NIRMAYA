@@ -352,7 +352,7 @@ export function ExpressOpdConsole({
 
       {/* 2. CRITICAL SAFETY: Prominent Crimson Allergy & Contraindication Banner */}
       {safetyProfile && safetyProfile.has_known_allergies ? (
-        <div className="rounded-xl border-2 border-red-500 bg-red-50 p-4 shadow-sm animate-pulse">
+        <div className="rounded-xl border border-red-300 bg-red-50/90 p-4 shadow-2xs">
           <div className="flex items-start gap-3">
             <ShieldAlert className="h-6 w-6 flex-shrink-0 text-red-600 mt-0.5" />
             <div className="space-y-1">
@@ -444,16 +444,16 @@ export function ExpressOpdConsole({
                     key={c.id}
                     type="button"
                     onClick={() => handleSelectComplaint(c)}
-                    className={`rounded-lg border px-3 py-2 text-xs font-semibold transition active:scale-95 text-left flex items-center gap-2 ${
+                    className={`rounded-lg border px-3 py-2 text-xs font-semibold transition active:scale-95 text-left flex items-center gap-2 cursor-pointer shadow-2xs ${
                       isSelected
-                        ? "border-gray-900 bg-gray-900 text-white shadow-xs"
-                        : "border-gray-200 bg-gray-50 text-gray-800 hover:border-gray-400 hover:bg-white"
+                        ? "border-[#0b4d8c] bg-[#0b4d8c] text-white shadow-xs"
+                        : "border-[#cbd5e1] bg-[#f8fafc] text-[#1e293b] hover:border-[#0b4d8c] hover:bg-[#e8f1f9]"
                     }`}
                   >
                     <span>{c.short_label}</span>
                     <span
-                      className={`text-[10px] font-mono rounded px-1.5 py-0.2 ${
-                        isSelected ? "bg-gray-800 text-gray-200" : "bg-gray-200 text-gray-600"
+                      className={`text-[10px] font-mono rounded px-1.5 py-0.5 ${
+                        isSelected ? "bg-[#083c6f] text-[#cde0f1]" : "bg-[#e2e8f0] text-[#475569]"
                       }`}
                     >
                       {c.icd10_code}
@@ -483,33 +483,33 @@ export function ExpressOpdConsole({
                 <div
                   key={b.bundle_id}
                   onClick={() => handleApplyBundle(b)}
-                  className="rounded-lg border border-gray-200 bg-white p-3 hover:border-gray-900 hover:shadow-xs transition cursor-pointer flex flex-col justify-between space-y-2"
+                  className="rounded-lg border border-[#cbd5e1] bg-white p-3.5 hover:border-[#0b4d8c] hover:shadow-xs transition cursor-pointer flex flex-col justify-between space-y-2.5"
                 >
                   <div>
                     <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-bold text-gray-900">{b.short_label}</h4>
-                      <span className="text-[10px] font-medium text-gray-500 capitalize bg-gray-100 rounded px-1.5 py-0.5">
+                      <h4 className="text-xs font-bold text-[#111827]">{b.short_label}</h4>
+                      <span className="text-[10px] font-semibold text-[#0b4d8c] capitalize bg-[#e8f1f9] border border-[#b9d5ee] rounded px-1.5 py-0.5">
                         {b.category}
                       </span>
                     </div>
-                    <p className="mt-1 text-[11px] text-gray-500 line-clamp-2">{b.description}</p>
+                    <p className="mt-1 text-[11px] text-[#4b5563] line-clamp-2">{b.description}</p>
                   </div>
 
                   {/* Medicines summary pill strip */}
-                  <div className="space-y-1 pt-1 border-t border-gray-100">
+                  <div className="space-y-1 pt-1.5 border-t border-[#f1f5f9]">
                     {b.medications.map((m, idx) => (
                       <div key={idx} className="flex items-center justify-between text-[11px]">
-                        <span className="font-semibold text-gray-800 truncate">{m.name}</span>
-                        <span className="font-mono text-[10px] font-bold bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded">
+                        <span className="font-semibold text-[#1e293b] truncate">{m.name}</span>
+                        <span className="font-mono text-[10px] font-bold bg-[#f1f5f9] text-[#334155] border border-[#e2e8f0] px-1.5 py-0.5 rounded">
                           {m.frequency_badge}
                         </span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between text-[10px] text-gray-400 pt-1">
+                  <div className="flex items-center justify-between text-[11px] text-[#64748b] pt-1">
                     <span>{b.follow_up_days}d course</span>
-                    <span className="font-bold text-gray-900 flex items-center gap-1">
+                    <span className="font-bold text-[#0b4d8c] flex items-center gap-1 hover:underline">
                       Apply Bundle <ArrowRight className="h-3 w-3" />
                     </span>
                   </div>
@@ -626,7 +626,7 @@ export function ExpressOpdConsole({
                 size="lg"
                 onClick={handleSubmitEncounter}
                 disabled={isSubmitting || prescribedMeds.length === 0}
-                className="w-full h-12 flex items-center justify-center gap-2 bg-gray-900 text-white hover:bg-black font-bold text-sm shadow-sm transition active:scale-98"
+                className="w-full h-12 flex items-center justify-center gap-2 bg-[#0b4d8c] text-white hover:bg-[#083c6f] font-bold text-sm shadow-sm transition active:scale-98 cursor-pointer"
               >
                 {isSubmitting ? (
                   <>
@@ -635,9 +635,9 @@ export function ExpressOpdConsole({
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-300" />
                     <span>Sign & Complete OPD Encounter</span>
-                    <span className="rounded bg-gray-800 px-1.5 py-0.5 text-[10px] font-mono text-gray-300">
+                    <span className="rounded bg-[#083c6f] px-1.5 py-0.5 text-[10px] font-mono text-[#cde0f1]">
                       Ctrl + ↵
                     </span>
                   </>

@@ -123,34 +123,34 @@ body {
 /* Geometric Display Typography Classes */
 .display-xl {
   font-family: var(--font-sans);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -2px;
+  font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
 }
 
 .display-lg {
   font-family: var(--font-sans);
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -1.5px;
+  font-size: clamp(1.875rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
 }
 
 .display-md {
   font-family: var(--font-sans);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-size: clamp(1.5rem, 2.75vw, 2rem);
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -1px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .display-sm {
   font-family: var(--font-sans);
-  font-size: clamp(1.5rem, 2.5vw, 1.75rem);
+  font-size: clamp(1.25rem, 2.25vw, 1.625rem);
   font-weight: 600;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
 }
 
 /* Subtle hairline borders and soft shadow utilities */

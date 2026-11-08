@@ -66,7 +66,7 @@ export function AccessibilityBar() {
   return (
     <>
       {/* Keyboard Accessibility Skip Link (WCAG 2.1 AA / GIGW 3.0) */}
-      <a href="#main-content" className="skip-to-content focus:not-sr-only">
+      <a href="#main-content" className="skip-to-content sr-only focus:not-sr-only">
         {t("nav.skip_to_content", "Skip to main content (Press Enter)")}
       </a>
 
@@ -309,21 +309,23 @@ export function AccessibilityBar() {
           </nav>
 
           {/* Plain-Language Clinical Explainer Toggle */}
-          <button
-            type="button"
-            onClick={toggleJargonHelper}
-            aria-pressed={jargonHelper}
-            className={cn(
-              "px-2 py-0.5 rounded text-[11px] font-semibold border flex items-center gap-1 transition-all cursor-pointer ml-auto",
-              jargonHelper
-                ? "bg-[#ecfdf5] text-[#065f46] border-[#a7f3d0]"
-                : "bg-white text-[#4b5563] border-[#d1d5db] hover:bg-[#f3f4f6]"
-            )}
-            title="Plain language explanations for clinical terms"
-          >
-            <Sparkles className="h-3 w-3 text-[#046a38]" />
-            <span>Simple Terms: {jargonHelper ? "On" : "Off"}</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleJargonHelper}
+              aria-pressed={jargonHelper}
+              className={cn(
+                "px-2.5 py-1 rounded-md text-[11px] font-semibold border flex items-center gap-1.5 transition-all cursor-pointer",
+                jargonHelper
+                  ? "bg-[#ecfdf5] text-[#065f46] border-[#a7f3d0] shadow-2xs"
+                  : "bg-white text-[#4b5563] border-[#d1d5db] hover:bg-[#e8f1f9] hover:text-[#0b4d8c]"
+              )}
+              title="Plain language explanations for clinical terms"
+            >
+              <Sparkles className="h-3 w-3 text-[#046a38]" />
+              <span>Simple Terms: {jargonHelper ? "On" : "Off"}</span>
+            </button>
+          </div>
         </div>
       </aside>
     </>
