@@ -52,6 +52,7 @@ from app.api.v1.endpoints import (
     guardian_delegation,
     workflow_isolation,
     guardian_conflict,
+    national_gateway,
 )
 
 api_router = APIRouter()
@@ -107,6 +108,7 @@ api_router.include_router(child_abha.router, prefix="", tags=["ABDM Child-ABHA L
 api_router.include_router(guardian_delegation.router, prefix="", tags=["Guardian Access Delegation & ABDM Consent Interceptor"])
 api_router.include_router(workflow_isolation.router, prefix="", tags=["Workflow Isolation & Dependent EHR View Segmentation"])
 api_router.include_router(guardian_conflict.router, prefix="", tags=["Multi-Guardian Concurrency & Conflict Resolution Engine"])
+api_router.include_router(national_gateway.router, prefix="", tags=["Universal High-Density National Health Gateway"])
 
 
 
