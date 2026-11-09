@@ -715,6 +715,20 @@ from app.schemas.guardian_conflict import (
     DualSignCounterSignatureRequest,
     DualSignConsentArtifactResponse,
 )
+from app.schemas.national_gateway import (
+    GatewayUserRole,
+    GatewayAuthChannel,
+    AadhaarOtpChallengeRequest,
+    AadhaarOtpChallengeResponse,
+    AadhaarOtpVerifyRequest,
+    DigiLockerKycAuthRequest,
+    AbhaMobileLoginRequest,
+    EmergencyBypassAuthRequest,
+    GatewaySessionResponse,
+    GatewayDeviceSession,
+    RateShieldMetrics,
+    SessionRevokeRequest,
+)
 
 
 
