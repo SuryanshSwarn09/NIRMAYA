@@ -893,6 +893,33 @@ class NIRMAYAAPIClient {
     );
   }
 
+  // ==========================================================================
+  // CoWIN/DigiLocker Citizen Portal (Day 87)
+  // ==========================================================================
+
+  public async getCitizenPortalTiles(patientId?: string): Promise<CitizenThreeTileResponse> {
+    const query = patientId ? `?patient_id=${encodeURIComponent(patientId)}` : "";
+    return this.get<CitizenThreeTileResponse>(`/api/v1/patient/citizen-portal/tiles${query}`);
+  }
+
+  public async getCitizenQrToken(patientId?: string, facilityContext?: string): Promise<HospitalCheckInQrResponse> {
+    const params = new URLSearchParams();
+    if (patientId) params.append("patient_id", patientId);
+    if (facilityContext) params.append("facility_context", facilityContext);
+    const qs = params.toString() ? `?${params.toString()}` : "";
+    return this.get<HospitalCheckInQrResponse>(`/api/v1/patient/citizen-portal/qr-token${qs}`);
+  }
+
+  public async getCitizenMedicines(patientId?: string): Promise<CitizenActiveMedicineItem[]> {
+    const query = patientId ? `?patient_id=${encodeURIComponent(patientId)}` : "";
+    return this.get<CitizenActiveMedicineItem[]>(`/api/v1/patient/citizen-portal/medicines${query}`);
+  }
+
+  public async getCitizenVisits(patientId?: string): Promise<CitizenVisitReportItem[]> {
+    const query = patientId ? `?patient_id=${encodeURIComponent(patientId)}` : "";
+    return this.get<CitizenVisitReportItem[]>(`/api/v1/patient/citizen-portal/visits${query}`);
+  }
+
   public patch<T>(
     endpoint: string,
     body?: unknown,
@@ -1572,3 +1599,82 @@ export interface AbhaQrVerificationApiResponse {
   claims?: Record<string, any> | null;
   verified_at: string;
 }
+
+// ============================================================================
+// Citizen Portal 3-Tile Types (Day 87)
+// ============================================================================
+
+export interface CitizenHealthIdSummary {
+  patient_id: string;
+  abha_number: string;
+  formatted_abha_number: string;
+  abha_address: string;
+  full_name: string;
+  gender: string;
+  date_of_birth: string;
+  age: number;
+  mobile_masked: string;
+  blood_group: string;
+  profile_photo_url?: string | null;
+  state: string;
+  district: string;
+  kyc_status: string;
+  created_at?: string | null;
+}
+
+export interface PlainScheduleItem {
+  slot: "morning" | "afternoon" | "night" | "as_needed";
+  label: string;
+  dose: string;
+  time_hint: string;
+  taken_today: boolean;
+}
+
+export interface CitizenActiveMedicineItem {
+  id: string;
+  brand_name: string;
+  generic_name: string;
+  dosage_display: string;
+  plain_schedule: PlainScheduleItem[];
+  frequency_badge: string;
+  instructions: string;
+  prescribing_doctor: string;
+  hospital_name: string;
+  prescribed_on: string;
+  end_date: string;
+  days_remaining: number;
+  course_duration_days: number;
+  refill_needed: boolean;
+  refill_urgency: "none" | "soon" | "urgent";
+}
+
+export interface CitizenVisitReportItem {
+  id: string;
+  item_type: "prescription" | "diagnostic_report";
+  encounter_date: string;
+  doctor_name: string;
+  facility_name: string;
+  plain_diagnosis: string;
+  summary: string;
+  document_url?: string | null;
+  digital_signature_seal?: string | null;
+}
+
+export interface CitizenThreeTileResponse {
+  health_id_tile: CitizenHealthIdSummary;
+  active_medicines_tile: CitizenActiveMedicineItem[];
+  visits_and_reports_tile: CitizenVisitReportItem[];
+  aggregated_at: string;
+  cache_hit: boolean;
+}
+
+export interface HospitalCheckInQrResponse {
+  patient_id: string;
+  abha_number: string;
+  token: string;
+  qr_payload: string;
+  expires_at: string;
+  ttl_seconds: number;
+  facility_context?: string | null;
+}
+
