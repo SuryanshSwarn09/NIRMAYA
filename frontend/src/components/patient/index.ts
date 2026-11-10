@@ -22,3 +22,8 @@ export * from "./PatientPasswordlessAuthCard";
 export * from "./CalcomDependentSwitcher";
 export * from "./PediatricImmunizationTimeline";
 export * from "./GeriatricCareAssessmentCard";
+export * from "./DpiQrCheckInModal";
+export * from "./DpiHealthIdTile";
+export * from "./DpiActiveMedicinesTile";
+export * from "./DpiPastVisitsTile";
+

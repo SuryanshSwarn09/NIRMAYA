@@ -22,6 +22,9 @@ import {
   GeriatricCareAssessmentCard,
   DependentContext,
   SEEDED_CONTEXTS,
+  DpiHealthIdTile,
+  DpiActiveMedicinesTile,
+  DpiPastVisitsTile,
 } from "@/components/patient";
 import { 
   ClinicalSlotPicker, 
@@ -35,7 +38,8 @@ import {
   SlotHoldResponse, 
   Appointment, 
   MedicationRequest,
-  ClinicalCondition 
+  ClinicalCondition,
+  CitizenThreeTileResponse,
 } from "@/lib/api";
 import {
   VitalsTimeSeriesPoint,
@@ -80,6 +84,36 @@ export default function PatientVaultPage() {
   const [activeTab, setActiveTab] = useState<PatientTabId>("overview");
   const [selectedContext, setSelectedContext] = useState<DependentContext>(SEEDED_CONTEXTS[0]);
   const [consentActive, setConsentActive] = useState(true);
+  const [portalMode, setPortalMode] = useState<"citizen_tiles" | "clinical_vault">("citizen_tiles");
+  const [citizenData, setCitizenData] = useState<CitizenThreeTileResponse | null>(null);
+  const [loadingCitizenData, setLoadingCitizenData] = useState<boolean>(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCitizenTiles() {
+      try {
+        setLoadingCitizenData(true);
+        const patientId =
+          selectedContext.type === "PEDIATRIC_MINOR"
+            ? "pat-aarav-patel"
+            : selectedContext.type === "GERIATRIC_SENIOR"
+            ? "pat-ramesh-patel"
+            : (user?.id || "pat-arun-patel");
+        const res = await apiClient.getCitizenPortalTiles(patientId);
+        if (isMounted && res) {
+          setCitizenData(res);
+        }
+      } catch (err) {
+        console.info("Using local context fallback for citizen tiles", err);
+      } finally {
+        if (isMounted) setLoadingCitizenData(false);
+      }
+    }
+    loadCitizenTiles();
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedContext.id, selectedContext.type, user?.id]);
 
   // ABHA ID Card & QR Verification States (Day 32, Day 44)
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -872,16 +906,104 @@ export default function PatientVaultPage() {
         onContextChange={(ctx) => setSelectedContext(ctx)}
       />
 
-      {/* Segmented Pediatric & Geriatric Workflow Isolation Panels */}
-      {selectedContext.type === "PEDIATRIC_MINOR" && (
-        <PediatricImmunizationTimeline />
-      )}
+      {/* Mode Switcher: CoWIN/DigiLocker 3-Tile Citizen Portal vs Specialist Clinical Vault */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#e5e7eb] pb-4">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-[#111827]">
+            {portalMode === "citizen_tiles"
+              ? "Citizen Health Portal (CoWIN/DigiLocker DPI)"
+              : "Specialist Health Vault"}
+          </h1>
+          <p className="text-xs text-[#6b7280]">
+            {portalMode === "citizen_tiles"
+              ? "Fast 3-tile citizen layout: ABHA QR card, plain daily schedule, and hospital visits."
+              : "Full longitudinal clinical EHR: FHIR resources, vitals telemetry, problem lists, and WebRTC."}
+          </p>
+        </div>
+        <div className="flex items-center rounded-lg border border-[#e5e7eb] bg-[#f9fafb] p-1 text-xs">
+          <button
+            type="button"
+            onClick={() => setPortalMode("citizen_tiles")}
+            className={`rounded-md px-3 py-1.5 font-semibold transition ${
+              portalMode === "citizen_tiles"
+                ? "bg-[#111827] text-white shadow-xs"
+                : "text-[#4b5563] hover:text-[#111827]"
+            }`}
+          >
+            3-Tile Citizen View
+          </button>
+          <button
+            type="button"
+            onClick={() => setPortalMode("clinical_vault")}
+            className={`rounded-md px-3 py-1.5 font-semibold transition ${
+              portalMode === "clinical_vault"
+                ? "bg-[#111827] text-white shadow-xs"
+                : "text-[#4b5563] hover:text-[#111827]"
+            }`}
+          >
+            Specialist Vault
+          </button>
+        </div>
+      </div>
 
-      {selectedContext.type === "GERIATRIC_SENIOR" && (
-        <GeriatricCareAssessmentCard />
-      )}
+      {portalMode === "citizen_tiles" ? (
+        <div className="space-y-6">
+          {/* Segmented Pediatric & Geriatric Workflow Isolation Panels */}
+          {selectedContext.type === "PEDIATRIC_MINOR" && (
+            <PediatricImmunizationTimeline />
+          )}
 
-      {/* 1. Cal.com Patient Header Shell */}
+          {selectedContext.type === "GERIATRIC_SENIOR" && (
+            <GeriatricCareAssessmentCard />
+          )}
+
+          {/* 3-Tile DPI Grid */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            {/* Tile 1: My Health ID (ABHA) */}
+            <div className="lg:col-span-2">
+              <DpiHealthIdTile
+                patientId={citizenData?.health_id_tile.patient_id || selectedContext.id}
+                patientName={citizenData?.health_id_tile.full_name || selectedContext.name}
+                abhaNumber={citizenData?.health_id_tile.formatted_abha_number || selectedContext.abha}
+                abhaAddress={citizenData?.health_id_tile.abha_address || `${selectedContext.name.toLowerCase().replace(/[^a-z0-9]/g, "")}@abdm`}
+                gender={citizenData?.health_id_tile.gender || "Male"}
+                dateOfBirth={citizenData?.health_id_tile.date_of_birth || (selectedContext.type === "PEDIATRIC_MINOR" ? "2019-08-14" : selectedContext.type === "GERIATRIC_SENIOR" ? "1956-03-22" : "1990-06-04")}
+                bloodGroup={citizenData?.health_id_tile.blood_group || "O+"}
+                mobile={citizenData?.health_id_tile.mobile_masked || "+91 ******4821"}
+                isDependent={selectedContext.type !== "SELF"}
+                relationship={selectedContext.relationship}
+              />
+            </div>
+
+            {/* Tile 2: Today's Active Medicines */}
+            <div className="lg:col-span-1">
+              <DpiActiveMedicinesTile
+                medicines={citizenData?.active_medicines_tile || []}
+                patientName={citizenData?.health_id_tile.full_name || selectedContext.name}
+              />
+            </div>
+
+            {/* Tile 3: Doctor Visits & Reports */}
+            <div className="lg:col-span-1">
+              <DpiPastVisitsTile
+                visits={citizenData?.visits_and_reports_tile || []}
+                patientName={citizenData?.health_id_tile.full_name || selectedContext.name}
+              />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Segmented Pediatric & Geriatric Workflow Isolation Panels */}
+          {selectedContext.type === "PEDIATRIC_MINOR" && (
+            <PediatricImmunizationTimeline />
+          )}
+
+          {selectedContext.type === "GERIATRIC_SENIOR" && (
+            <GeriatricCareAssessmentCard />
+          )}
+
+          {/* 1. Cal.com Patient Header Shell */}
       <PatientHeader
         patientName={selectedContext.type === "SELF" ? (user?.fullName || "Arun Patel") : selectedContext.name}
         abhaId={selectedContext.type === "SELF" ? (user?.abhaId || "91-8472-1092-4821") : selectedContext.abha}
@@ -1164,6 +1286,8 @@ export default function PatientVaultPage() {
           setIsTelemedicineModalOpen(false);
         }}
       />
+        </>
+      )}
 
     </div>
   );
