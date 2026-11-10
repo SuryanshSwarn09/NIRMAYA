@@ -2626,6 +2626,29 @@
 ---
 ### Week 18: Universal National Health Gateway, CoWIN/DigiLocker 3-Tile Citizen Portal, Express Doctor OPD & DPI Accessibility Suite
 
+#### Day 87 (Tue) - Milestone 18-02
+- **Focus:** Strict CoWIN/DigiLocker 3-Tile Citizen Portal (/patient), Elimination of Cognitive Friction, Tile 1 (My Health ID, 14-Digit ABHA, @abdm Handle, Full-Screen OPD Check-In QR Modal), Tile 2 (Today's Active Medicines, Plain Time-of-Day Badges Morning/Noon/Night, Refill Urgency Engine), Tile 3 (Doctor Visits & Verified Reports, Chronological Consultations, Plain Diagnoses, 1-Click Signed PDF Summaries), Cal.com Dependent Family Persona Switching, and Automated Test Suite (backend/tests/test_citizen_portal.py).
+- **Executed Commits (Logical Atomic Cadence - Method 2 Stamped):**
+  1. feat(schemas): define 3-tile citizen portal, plain medication, and opd qr models
+  2. feat(services): implement citizen portal aggregation service and plain language schedule engine
+  3. feat(api): expose citizen portal 3-tile aggregation, medicines, and hospital qr endpoints
+  4. feat(frontend): implement 3-tile citizen components (ABHA card, plain medicines, visits) and mount in patient page
+  5. test(citizen): author citizen portal test suite, update week-18, and publish day-87 log
+- **Key Deliverables:**
+  - **Tile 1 (My Health ID Card & OPD Counter QR):**
+    - High-density ABHA card with 14-digit number formatting, verified @abdm handle, demographics, 1-click copy action, and full-screen maximum-brightness QR check-in modal.
+  - **Tile 2 (Today's Active Medicines):**
+    - Complete elimination of Latin prescription abbreviations (b.i.d., t.i.d., q.h.s., p.o.) replaced by Morning, Afternoon, and Night indicators.
+    - Proactive course progress tracking and refill urgency computation (<= 3 days -> urgent, <= 7 days -> soon).
+  - **Tile 3 (Doctor Visits & Diagnostic Reports):**
+    - Chronological consultation timeline with plain-language diagnoses, hospital facilities, and 1-click downloads of tamper-evident digitally signed prescription summaries.
+  - **Header Dependent Context Switching:**
+    - Seamless switching across Self (Adult Arun Patel), Pediatric Minor (Aarav Patel), and Geriatric Senior (Ramesh Patel) profiles via CalcomDependentSwitcher.
+  - **Verification:**
+    - 26 / 26 dedicated tests passing in 1.78s (test_citizen_portal.py).
+    - 903 / 903 cumulative tests passing across 51 test modules (100% green).
+    - Next.js 15 production build passing cleanly across all 13 routes.
+
 #### Day 86 (Mon) - Milestone 18-01
 - **Focus:** Universal High-Density National Health Gateway, 4-Role Unified Access Portal, Multi-Channel Citizen Authentication (Aadhaar Demographic OTP, DigiLocker e-KYC, Active SIM Mobile Fallback, Offline Emergency Break-The-Glass), High-Density Token-Bucket Rate Limiter Shield (50,000 req/sec Capacity), Distributed Device Session Registry with Instant Multi-Device Revocation, Cal.com UniversalNationalGatewayCard.tsx, and Automated Test Suite (ackend/tests/test_national_gateway.py).
 - **Executed Commits (Logical Atomic Cadence - Method 2 Stamped):**
