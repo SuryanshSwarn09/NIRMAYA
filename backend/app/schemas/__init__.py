@@ -729,6 +729,14 @@ from app.schemas.national_gateway import (
     RateShieldMetrics,
     SessionRevokeRequest,
 )
+from app.schemas.citizen_portal import (
+    CitizenHealthIdSummary,
+    PlainScheduleItem,
+    CitizenActiveMedicineItem,
+    CitizenVisitReportItem,
+    CitizenThreeTileResponse,
+    HospitalCheckInQrResponse,
+)
 
 
 
