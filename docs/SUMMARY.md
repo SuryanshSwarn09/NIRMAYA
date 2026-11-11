@@ -127,6 +127,7 @@
   * [Week 18: Universal National Health Gateway, CoWIN/DigiLocker 3-Tile Citizen Portal, Express Doctor OPD & DPI Accessibility Suite](journey/month-4/week-18.md)
     * [Day 86: Universal High-Density National Health Gateway & Multi-Channel Authentication](journey/month-4/day-86.md)
     * [Day 87: Strict CoWIN/DigiLocker 3-Tile Citizen Portal](journey/month-4/day-87.md)
+    * [Day 88: Express 45-Second Doctor Consultation Mode](journey/month-4/day-88.md)
 
 ## Reports & Thesis Monographs
 * [Family Proxy Access & Zero-Contamination Architecture](reports/nirmaya-family-proxy-access-architecture.md)

@@ -2626,6 +2626,29 @@
 ---
 ### Week 18: Universal National Health Gateway, CoWIN/DigiLocker 3-Tile Citizen Portal, Express Doctor OPD & DPI Accessibility Suite
 
+#### Day 88 (Wed) - Milestone 18-03
+- **Focus:** Express 45-Second Doctor Consultation Mode (/doctor), High-Velocity OPD Clinical Ergonomics, Dual-Mode Clinician Workspace (Express 45s OPD Console vs Specialist EMR Vault), Prominent Crimson Allergy & Contraindication Safety Banner, 1-Click Curated Chief Complaint Chips (SNOMED CT, ICD-10), 1-Click Standard Prescription Regimen Bundles with Plain Time-of-Day Badges (Morning, Afternoon, Night), Fast-Track 1-Click HPR Cryptographic Sign & Queue Advance CTA (Ctrl+Enter), and Automated Test Suite (backend/tests/test_express_consultation.py).
+- **Executed Commits (Logical Atomic Cadence - Method 2 Stamped):**
+  1. feat(schemas): define express consultation, chief complaints, and rx bundle models
+  2. feat(services): implement express opd consultation service, allergy checker, and queue advancer
+  3. feat(api): expose express opd consultation templates and atomic submission endpoints
+  4. feat(frontend): create ExpressOpdConsole with allergy banner, 1-click bundles, and mount in doctor page
+  5. test(express): author express opd consultation test suite, update week-18, and publish day-88 log
+- **Key Deliverables:**
+  - **Dual-Mode Clinician Workspace:**
+    - Seamless 1-click switcher between Express 45s OPD Mode (default) and Comprehensive Specialist EMR Vault.
+  - **Prominent Crimson Allergy Safety Banner:**
+    - Always-visible high-contrast banner (border-red-500 bg-red-50) with verified allergens and contraindication blocking, or verified green NKDA badge.
+  - **1-Click Complaint Chips & Rx Bundles:**
+    - 7 curated clinical complaint chips (Viral Fever, Gastritis, Hypertension, Diabetes, Allergic Rhinitis, Back Pain, Pediatric Cold) with pre-mapped ICD-10 and SNOMED CT codes.
+    - 7 standard Ayushman Bharat prescription bundles with plain schedules (1-0-1, 1-0-0, 0-0-1).
+  - **Sub-50ms Fast-Track Encounter Submission:**
+    - Cryptographically seals encounter with Doctor HPR credential, mints ABDM FHIR R4 bundles, and summons next patient in OPD queue automatically.
+  - **Verification:**
+    - 26 / 26 dedicated tests passing in 1.09s (test_express_consultation.py).
+    - 929 / 929 cumulative tests passing across 52 test modules (100% green).
+    - Next.js 15 production build clean across all 13 routes.
+
 #### Day 87 (Tue) - Milestone 18-02
 - **Focus:** Strict CoWIN/DigiLocker 3-Tile Citizen Portal (/patient), Elimination of Cognitive Friction, Tile 1 (My Health ID, 14-Digit ABHA, @abdm Handle, Full-Screen OPD Check-In QR Modal), Tile 2 (Today's Active Medicines, Plain Time-of-Day Badges Morning/Noon/Night, Refill Urgency Engine), Tile 3 (Doctor Visits & Verified Reports, Chronological Consultations, Plain Diagnoses, 1-Click Signed PDF Summaries), Cal.com Dependent Family Persona Switching, and Automated Test Suite (backend/tests/test_citizen_portal.py).
 - **Executed Commits (Logical Atomic Cadence - Method 2 Stamped):**
