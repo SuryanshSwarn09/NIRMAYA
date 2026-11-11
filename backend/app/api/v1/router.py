@@ -54,7 +54,9 @@ from app.api.v1.endpoints import (
     guardian_conflict,
     national_gateway,
     citizen_portal,
+    express_consultation,
 )
+
 
 api_router = APIRouter()
 api_router.include_router(health.router, prefix="", tags=["Health & Telemetry"])
@@ -111,6 +113,8 @@ api_router.include_router(workflow_isolation.router, prefix="", tags=["Workflow 
 api_router.include_router(guardian_conflict.router, prefix="", tags=["Multi-Guardian Concurrency & Conflict Resolution Engine"])
 api_router.include_router(national_gateway.router, prefix="", tags=["Universal High-Density National Health Gateway"])
 api_router.include_router(citizen_portal.router, prefix="", tags=["Strict 3-Tile Citizen Portal"])
+api_router.include_router(express_consultation.router, prefix="", tags=["Express 45-Second Doctor Consultation"])
+
 
 
 

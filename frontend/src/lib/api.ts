@@ -920,6 +920,30 @@ class NIRMAYAAPIClient {
     return this.get<CitizenVisitReportItem[]>(`/api/v1/patient/citizen-portal/visits${query}`);
   }
 
+  // ==========================================================================
+  // Express 45-Second Doctor Consultation (Day 88)
+  // ==========================================================================
+
+  public async getExpressTemplates(category?: string): Promise<ExpressTemplatesResponse> {
+    const query = category ? `?category=${encodeURIComponent(category)}` : "";
+    return this.get<ExpressTemplatesResponse>(`/api/v1/doctor/express-consultation/templates${query}`);
+  }
+
+  public async getPatientSafetyProfile(patientId: string): Promise<PatientAllergyProfile> {
+    return this.get<PatientAllergyProfile>(`/api/v1/doctor/express-consultation/patient-safety/${encodeURIComponent(patientId)}`);
+  }
+
+  public async checkMedicationSafety(patientId: string, medications: QuickPrescriptionItem[]): Promise<SafetyCheckResponse> {
+    return this.post<SafetyCheckResponse>(`/api/v1/doctor/express-consultation/check-safety`, {
+      patient_id: patientId,
+      medications,
+    });
+  }
+
+  public async submitExpressEncounter(payload: ExpressEncounterSubmitRequest): Promise<ExpressEncounterSubmitResponse> {
+    return this.post<ExpressEncounterSubmitResponse>(`/api/v1/doctor/express-consultation/submit`, payload);
+  }
+
   public patch<T>(
     endpoint: string,
     body?: unknown,
@@ -1677,4 +1701,110 @@ export interface HospitalCheckInQrResponse {
   ttl_seconds: number;
   facility_context?: string | null;
 }
+
+// ============================================================================
+// Express 45-Second Doctor Consultation Types (Day 88)
+// ============================================================================
+
+export interface PatientAllergyItem {
+  substance: string;
+  reaction: string;
+  severity: string;
+  verification_status: string;
+  recorded_date: string;
+}
+
+export interface PatientAllergyProfile {
+  patient_id: string;
+  patient_name: string;
+  has_known_allergies: boolean;
+  allergies: PatientAllergyItem[];
+  contraindications: string[];
+  safety_alert_banner: string;
+  is_safe_to_prescribe: boolean;
+}
+
+export interface ChiefComplaintTemplate {
+  id: string;
+  code: string;
+  title: string;
+  short_label: string;
+  icd10_code: string;
+  snomed_ct_code: string;
+  typical_duration_days: number;
+  category: string;
+  recommended_bundle_id?: string | null;
+  default_advice: string;
+}
+
+export interface QuickPrescriptionItem {
+  medicine_id: string;
+  name: string;
+  generic_name: string;
+  dosage_form: string;
+  strength: string;
+  morning: boolean;
+  afternoon: boolean;
+  night: boolean;
+  frequency_badge: string;
+  duration_days: number;
+  instruction: string;
+  allergy_substance_tag?: string | null;
+}
+
+export interface PrescriptionBundleTemplate {
+  bundle_id: string;
+  title: string;
+  short_label: string;
+  description: string;
+  category: string;
+  medications: QuickPrescriptionItem[];
+  standard_advice: string[];
+  follow_up_days: number;
+}
+
+export interface ExpressTemplatesResponse {
+  chief_complaints: ChiefComplaintTemplate[];
+  prescription_bundles: PrescriptionBundleTemplate[];
+}
+
+export interface SafetyCheckResponse {
+  is_safe: boolean;
+  conflicts: string[];
+  alert_banner: string;
+}
+
+export interface ExpressEncounterSubmitRequest {
+  patient_id: string;
+  doctor_id: string;
+  doctor_hpr?: string;
+  facility_id?: string;
+  token_number?: string | null;
+  chief_complaints: string[];
+  clinical_diagnosis: string;
+  icd10_code?: string | null;
+  prescribed_medications: QuickPrescriptionItem[];
+  clinical_advice: string[];
+  follow_up_days: number;
+  emergency_escalation?: boolean;
+}
+
+export interface ExpressEncounterSubmitResponse {
+  encounter_id: string;
+  patient_id: string;
+  patient_name: string;
+  status: string;
+  digital_signature_hash: string;
+  hpr_sign_seal: string;
+  fhir_bundle_id: string;
+  fhir_encounter_uri: string;
+  prescribed_count: number;
+  completed_at: string;
+  latency_ms: number;
+  next_token_called?: string | null;
+  next_patient_name?: string | null;
+  queue_remaining_count: number;
+  signed_prescription_download_url: string;
+}
+
 
