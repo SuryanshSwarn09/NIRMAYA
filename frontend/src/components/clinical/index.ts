@@ -97,6 +97,8 @@ export {
   type DualSignItem,
   type AuditLedgerItem,
 } from "./MultiGuardianConflictResolutionCard";
+export { ExpressOpdConsole } from "./ExpressOpdConsole";
+
 
 
 

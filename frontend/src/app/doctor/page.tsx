@@ -66,6 +66,7 @@ import {
   ChildAbhaBindingCard,
   GuardianConsentDelegationCard,
   MultiGuardianConflictResolutionCard,
+  ExpressOpdConsole,
 } from "@/components/clinical";
 import { useClinicalNotificationsWebSocket } from "@/hooks/useClinicalNotificationsWebSocket";
 import { TelemedicineReadinessModal } from "@/components/patient";
@@ -224,6 +225,7 @@ export default function DoctorEMRPage() {
   const doctorId = user?.id || "doc-ananya-sharma";
   const doctorName = user?.fullName || "Dr. Ananya Sharma";
 
+  const [workspaceMode, setWorkspaceMode] = useState<"express_opd" | "specialist_vault">("express_opd");
   const [activeTab, setActiveTab] = useState<ClinicalTabType>("queue");
   const [selectedAppointment, setSelectedAppointment] = useState<QueueAppointment>(INITIAL_MOCK_QUEUE[0]);
   const [selectedPatientName, setSelectedPatientName] = useState<string>("Arun Patel");
@@ -360,6 +362,60 @@ export default function DoctorEMRPage() {
         </div>
       </div>
 
+      {/* Dual Workspace Mode Switcher: Express 45s OPD Console vs Specialist EMR Vault */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-gray-200 bg-gray-50/70 p-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
+            <h2 className="text-sm font-bold text-gray-900">
+              {workspaceMode === "express_opd"
+                ? "Express 45-Second Doctor Consultation Console (High-Velocity OPD)"
+                : "Specialist Comprehensive EMR Vault"}
+            </h2>
+          </div>
+          <p className="text-xs text-gray-500 mt-0.5">
+            {workspaceMode === "express_opd"
+              ? "Designed for high-throughput OPD queues (60-100 pts/morning) with 1-click complaint chips, plain Rx bundles, and sub-50ms HPR sign."
+              : "Full longitudinal clinical specialist workspace: SOAP documentation, PACS radiology, vital telemetry, and problem lists."}
+          </p>
+        </div>
+
+        <div className="flex items-center rounded-lg border border-gray-200 bg-white p-1 text-xs shadow-2xs">
+          <button
+            type="button"
+            onClick={() => setWorkspaceMode("express_opd")}
+            className={`rounded-md px-3.5 py-1.5 font-bold transition ${
+              workspaceMode === "express_opd"
+                ? "bg-gray-900 text-white shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Express 45s OPD Mode
+          </button>
+          <button
+            type="button"
+            onClick={() => setWorkspaceMode("specialist_vault")}
+            className={`rounded-md px-3.5 py-1.5 font-bold transition ${
+              workspaceMode === "specialist_vault"
+                ? "bg-gray-900 text-white shadow-xs"
+                : "text-gray-600 hover:text-gray-900"
+            }`}
+          >
+            Specialist EMR Vault
+          </button>
+        </div>
+      </div>
+
+      {workspaceMode === "express_opd" ? (
+        <ExpressOpdConsole
+          doctorId={doctorId}
+          doctorName={doctorName}
+          doctorHpr="ananya.sharma@hpr.abdm"
+          facilityId="aiims-delhi-01"
+          onSwitchToSpecialistVault={() => setWorkspaceMode("specialist_vault")}
+        />
+      ) : (
+        <>
       {/* 2. Active Patient Demographic & Clinical Banner */}
       <PatientDemographicBanner
         patient={activePatient}
@@ -841,6 +897,9 @@ export default function DoctorEMRPage() {
           </div>
 
         </div>
+      )}
+
+        </>
       )}
 
       {/* 5. Telemedicine Consultation Readiness & WebRTC Diagnostics Modal */}
