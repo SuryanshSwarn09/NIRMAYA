@@ -737,6 +737,16 @@ from app.schemas.citizen_portal import (
     CitizenThreeTileResponse,
     HospitalCheckInQrResponse,
 )
+from app.schemas.express_consultation import (
+    PatientAllergyItem,
+    PatientAllergyProfile,
+    ChiefComplaintTemplate,
+    QuickPrescriptionItem,
+    PrescriptionBundleTemplate,
+    ExpressEncounterSubmitRequest,
+    ExpressEncounterSubmitResponse,
+)
+
 
 
 
