@@ -746,6 +746,16 @@ from app.schemas.express_consultation import (
     ExpressEncounterSubmitRequest,
     ExpressEncounterSubmitResponse,
 )
+from app.schemas.accessibility import (
+    LocaleCode,
+    FontSizeLevel,
+    TranslationEntry,
+    BilingualDictionaryResponse,
+    AudioPromptRequest,
+    AudioPromptResponse,
+    UserAccessibilityPreference,
+)
+
 
 
 
