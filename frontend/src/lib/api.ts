@@ -1807,4 +1807,103 @@ export interface ExpressEncounterSubmitResponse {
   signed_prescription_download_url: string;
 }
 
+// ============================================================================
+// Day 89: Indian DPI Accessibility Suite & Bilingual Localization Types
+// ============================================================================
+
+export type LocaleCode = "en" | "hi";
+export type FontSizeLevel = "small" | "normal" | "large" | "xl";
+
+export interface TranslationEntry {
+  key: string;
+  en: string;
+  hi: string;
+  phonetic_hi?: string | null;
+  context?: string | null;
+}
+
+export interface BilingualDictionaryResponse {
+  version: string;
+  supported_locales: string[];
+  total_keys: number;
+  categories: Record<string, Record<string, string>>;
+  translations: Record<string, TranslationEntry>;
+}
+
+export interface AudioPromptRequest {
+  text_en: string;
+  text_hi?: string | null;
+  target_locale?: LocaleCode;
+  context_type?: string;
+}
+
+export interface AudioPromptResponse {
+  phonetic_speech_text: string;
+  target_locale: LocaleCode;
+  audio_hint: string;
+  generated_at: string;
+}
+
+export interface UserAccessibilityPreference {
+  user_id: string;
+  font_size: FontSizeLevel;
+  high_contrast: boolean;
+  locale: LocaleCode;
+  tts_enabled: boolean;
+  jargon_helper: boolean;
+  touch_target_optimized: boolean;
+  updated_at?: string;
+}
+
+// Accessibility API helper functions
+const API_BASE_URL = (
+  typeof process !== "undefined" && process.env?.NEXT_PUBLIC_API_URL
+    ? process.env.NEXT_PUBLIC_API_URL
+    : "http://localhost:8000"
+).replace(/\/$/, "");
+
+export async function getBilingualDictionary(locale?: LocaleCode): Promise<BilingualDictionaryResponse> {
+  const query = locale ? `?locale=${locale}` : "";
+  const res = await fetch(`${API_BASE_URL}/api/v1/accessibility/dictionary${query}`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to fetch bilingual dictionary");
+  const json = await res.json();
+  return json.data;
+}
+
+export async function createAudioPrompt(request: AudioPromptRequest): Promise<AudioPromptResponse> {
+  const res = await fetch(`${API_BASE_URL}/api/v1/accessibility/audio-prompt`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(request),
+  });
+  if (!res.ok) throw new Error("Failed to generate audio prompt");
+  const json = await res.json();
+  return json.data;
+}
+
+export async function getUserAccessibilityPreferences(userId: string): Promise<UserAccessibilityPreference> {
+  const res = await fetch(`${API_BASE_URL}/api/v1/accessibility/preferences/${userId}`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to fetch user accessibility preferences");
+  const json = await res.json();
+  return json.data;
+}
+
+export async function saveUserAccessibilityPreferences(
+  preferences: UserAccessibilityPreference
+): Promise<UserAccessibilityPreference> {
+  const res = await fetch(`${API_BASE_URL}/api/v1/accessibility/preferences`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(preferences),
+  });
+  if (!res.ok) throw new Error("Failed to save user accessibility preferences");
+  const json = await res.json();
+  return json.data;
+}
+
+
 

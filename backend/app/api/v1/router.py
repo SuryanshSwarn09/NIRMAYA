@@ -55,6 +55,7 @@ from app.api.v1.endpoints import (
     national_gateway,
     citizen_portal,
     express_consultation,
+    accessibility,
 )
 
 
@@ -114,6 +115,8 @@ api_router.include_router(guardian_conflict.router, prefix="", tags=["Multi-Guar
 api_router.include_router(national_gateway.router, prefix="", tags=["Universal High-Density National Health Gateway"])
 api_router.include_router(citizen_portal.router, prefix="", tags=["Strict 3-Tile Citizen Portal"])
 api_router.include_router(express_consultation.router, prefix="", tags=["Express 45-Second Doctor Consultation"])
+api_router.include_router(accessibility.router, prefix="", tags=["Indian DPI Accessibility Suite"])
+
 
 
 
