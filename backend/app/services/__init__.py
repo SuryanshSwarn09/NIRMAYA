@@ -328,6 +328,11 @@ from app.services.abdm_certification import (
     abdm_sandbox_certifier,
     OFFICIAL_VECTOR_CATALOG,
 )
+from app.services.accessibility_service import (
+    AccessibilityService,
+    accessibility_service,
+)
+
 
 
 
