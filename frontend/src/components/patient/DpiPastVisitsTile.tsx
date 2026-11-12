@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { CitizenVisitReportItem } from "@/lib/api";
+import { useAccessibility } from "@/context/AccessibilityContext";
 
 
 interface DpiPastVisitsTileProps {
@@ -13,6 +14,7 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
   visits,
   patientName,
 }) => {
+  const { t, locale } = useAccessibility();
   const [filter, setFilter] = useState<"all" | "prescription" | "diagnostic">("all");
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
@@ -69,11 +71,11 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
               3
             </span>
             <h2 id="tile-visits-title" className="text-base font-semibold text-gray-900">
-              Doctor Visits & Reports
+              {t("citizen.tile3.title", "Tile 3: Past Consultations & Reports")}
             </h2>
           </div>
           <p className="mt-1 text-xs text-gray-500">
-            Chronological hospital consultations and verified clinical diagnostic records.
+            {t("citizen.tile3.desc", "Doctor visits and 1-click verifiable signed prescription PDFs.")}
           </p>
         </div>
 
@@ -82,35 +84,35 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
           <button
             type="button"
             onClick={() => setFilter("all")}
-            className={`rounded-md px-3 py-1 font-medium transition ${
+            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "all"
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            All ({visits.length})
+            {locale === "hi" ? "सभी" : "All"} ({visits.length})
           </button>
           <button
             type="button"
             onClick={() => setFilter("prescription")}
-            className={`rounded-md px-3 py-1 font-medium transition ${
+            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "prescription"
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            Prescriptions
+            {locale === "hi" ? "पर्चे" : "Prescriptions"}
           </button>
           <button
             type="button"
             onClick={() => setFilter("diagnostic")}
-            className={`rounded-md px-3 py-1 font-medium transition ${
+            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "diagnostic"
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-600 hover:text-gray-900"
             }`}
           >
-            Reports
+            {locale === "hi" ? "रिपोर्ट्स" : "Reports"}
           </button>
         </div>
       </div>

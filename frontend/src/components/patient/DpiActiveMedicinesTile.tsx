@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { Pill, Clock, AlertCircle, CheckCircle2, Calendar, Stethoscope, ChevronRight } from "lucide-react";
+import { Pill, Clock, AlertCircle, CheckCircle2, Calendar, Stethoscope, ChevronRight, Volume2 } from "lucide-react";
 import { Card, Badge, Button } from "@/components/ui";
+import { useAccessibility } from "@/context/AccessibilityContext";
 
 export interface PlainSchedule {
   morning: boolean;
@@ -32,6 +33,8 @@ export interface DpiActiveMedicinesTileProps {
 }
 
 export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedicinesTileProps) {
+  const { t, locale, speakText } = useAccessibility();
+
   // Normalize items whether they conform to ActiveMedicine or CitizenActiveMedicineItem
   const normalizedMedicines: ActiveMedicine[] = medicines.map((item, idx) => {
     if ("medicine_id" in item && "schedule" in item) {
@@ -64,6 +67,34 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
     };
   });
 
+  const handleSpeakMedicines = () => {
+    if (normalizedMedicines.length === 0) {
+      speakText(
+        locale === "hi"
+          ? "आज के लिए कोई सक्रिय दवा निर्धारित नहीं है।"
+          : "No active prescription courses scheduled for today."
+      );
+      return;
+    }
+    const summary = normalizedMedicines
+      .map((m) => {
+        const times = [];
+        if (m.schedule.morning) times.push(locale === "hi" ? "सुबह" : "morning");
+        if (m.schedule.afternoon) times.push(locale === "hi" ? "दोपहर" : "afternoon");
+        if (m.schedule.night) times.push(locale === "hi" ? "रात" : "night");
+        const timesStr = times.join(locale === "hi" ? " और " : " and ");
+        return locale === "hi"
+          ? `${m.name}, ${timesStr} में लें।`
+          : `Take ${m.name} in the ${timesStr}.`;
+      })
+      .join(" ");
+
+    const prompt = locale === "hi"
+      ? `आपकी आज की दवाएं हैं: ${summary}`
+      : `Your scheduled medicines for today are: ${summary}`;
+    speakText(prompt);
+  };
+
   return (
     <Card variant="mockup" className="p-0 overflow-hidden border border-[#e5e7eb] bg-white shadow-xs">
       {/* Tile Title Strip */}
@@ -71,12 +102,23 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-[#3b82f6]" />
           <h3 className="text-xs font-bold uppercase tracking-wider text-[#111827]">
-            Tile 2: Today&apos;s Active Medicines (Daily Schedule)
+            {t("citizen.tile2.title", "Tile 2: Today's Active Medicines (Daily Schedule)")}
           </h3>
         </div>
-        <Badge variant="neutral" size="sm">
-          {normalizedMedicines.length} Prescriptions Active
-        </Badge>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleSpeakMedicines}
+            className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-white border border-[#e5e7eb] hover:bg-[#f3f4f6] text-[#374151] cursor-pointer"
+            title="Listen to medicine instructions (Audio readout)"
+          >
+            <Volume2 className="h-3 w-3 text-[#059669]" />
+            <span>{t("nav.listen", "Listen")}</span>
+          </button>
+          <Badge variant="neutral" size="sm">
+            {normalizedMedicines.length} {locale === "hi" ? "सक्रिय दवाएं" : "Prescriptions Active"}
+          </Badge>
+        </div>
       </div>
 
       <div className="p-5 sm:p-6 space-y-4">
@@ -127,7 +169,9 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
 
                   {/* Plain Language Time-of-Day Intake Indicators (No Latin abbreviations) */}
                   <div className="space-y-1.5">
-                    <div className="text-[11px] font-semibold text-[#6b7280]">When to take today:</div>
+                    <div className="text-[11px] font-semibold text-[#6b7280]">
+                      {locale === "hi" ? "आज कब दवा लें:" : "When to take today:"}
+                    </div>
                     <div className="grid grid-cols-3 gap-2">
                       {/* Morning Indicator */}
                       <div
@@ -137,7 +181,7 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
                             : "bg-[#f9fafb] border-[#e5e7eb] text-[#9ca3af] opacity-60"
                         }`}
                       >
-                        <span>Morning</span>
+                        <span>{locale === "hi" ? "सुबह" : "Morning"}</span>
                         {med.schedule.morning ? (
                           <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />
                         ) : (
@@ -153,7 +197,7 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
                             : "bg-[#f9fafb] border-[#e5e7eb] text-[#9ca3af] opacity-60"
                         }`}
                       >
-                        <span>Afternoon</span>
+                        <span>{locale === "hi" ? "दोपहर" : "Afternoon"}</span>
                         {med.schedule.afternoon ? (
                           <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />
                         ) : (
@@ -169,7 +213,7 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
                             : "bg-[#f9fafb] border-[#e5e7eb] text-[#9ca3af] opacity-60"
                         }`}
                       >
-                        <span>Night</span>
+                        <span>{locale === "hi" ? "रात" : "Night"}</span>
                         {med.schedule.night ? (
                           <span className="h-1.5 w-1.5 rounded-full bg-[#10b981]" />
                         ) : (

@@ -11,9 +11,11 @@ import {
   Calendar, 
   Droplet, 
   Phone,
-  Maximize2
+  Maximize2,
+  Volume2
 } from "lucide-react";
 import { Card, Button, Badge } from "@/components/ui";
+import { useAccessibility } from "@/context/AccessibilityContext";
 import { DpiQrCheckInModal } from "./DpiQrCheckInModal";
 
 export interface DpiHealthIdTileProps {
@@ -41,8 +43,16 @@ export function DpiHealthIdTile({
   isDependent = false,
   relationship,
 }: DpiHealthIdTileProps) {
+  const { t, locale, speakText } = useAccessibility();
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const handleSpeakCard = () => {
+    const cardSummary = locale === "hi"
+      ? `डिजिटल आभा स्वास्थ्य कार्ड। नाम: ${patientName}। आभा संख्या: ${abhaNumber.split("-").join(" ")}। पता: ${abhaAddress}। अस्पताल ओपीडी में दिखाने के लिए क्यूआर कोड बटन दबाएं।`
+      : `Digital ABHA Health Card. Name: ${patientName}. ABHA Number: ${abhaNumber}. Address: ${abhaAddress}. Press QR code button to display at hospital counter.`;
+    speakText(cardSummary);
+  };
 
   const handleCopyAbha = () => {
     navigator.clipboard.writeText(abhaNumber);
@@ -65,10 +75,19 @@ export function DpiHealthIdTile({
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#10b981]" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-[#111827]">
-              Tile 1: My Health ID (ABHA Card)
+              {t("citizen.tile1.title", "Tile 1: My Health ID (ABHA Card)")}
             </h3>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleSpeakCard}
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-white border border-[#e5e7eb] hover:bg-[#f3f4f6] text-[#374151] cursor-pointer"
+              title="Listen to ABHA Card information"
+            >
+              <Volume2 className="h-3 w-3 text-[#059669]" />
+              <span>{t("nav.listen", "Listen")}</span>
+            </button>
             {isDependent && relationship && (
               <Badge variant="warning" size="sm">
                 {relationship}
@@ -163,7 +182,7 @@ export function DpiHealthIdTile({
               onClick={() => setIsQrModalOpen(true)}
             >
               <QrCode className="h-4 w-4 mr-2" />
-              <span>Show at Hospital Counter / OPD Registration</span>
+              <span>{t("citizen.tile1.action", "Show at Hospital Counter / OPD Registration")}</span>
             </Button>
             <Button
               type="button"

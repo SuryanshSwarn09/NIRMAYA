@@ -134,7 +134,7 @@ body {
   border-radius: 4px;
 }
 
-/* Touch Targets: minimum 44px on interactive controls for elderly / tremor ease */
+/* Touch Targets: minimum 44px on interactive controls for elderly / tremor ease, 48px for DPI standards */
 .touch-target {
   min-height: 44px;
   min-width: 44px;
@@ -142,7 +142,23 @@ body {
   align-items: center;
 }
 
+.touch-target-48 {
+  min-height: 48px;
+  min-width: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Font Size Scaling Classes (Controlled via AccessibilityContext) */
+html.font-size-small {
+  font-size: 87.5%; /* 14px base */
+}
+
+html.font-size-normal {
+  font-size: 100%; /* 16px base */
+}
+
 html.font-size-large {
   font-size: 112.5%; /* 18px base */
 }
