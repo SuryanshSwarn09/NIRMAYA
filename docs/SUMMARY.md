@@ -128,6 +128,7 @@
     * [Day 86: Universal High-Density National Health Gateway & Multi-Channel Authentication](journey/month-4/day-86.md)
     * [Day 87: Strict CoWIN/DigiLocker 3-Tile Citizen Portal](journey/month-4/day-87.md)
     * [Day 88: Express 45-Second Doctor Consultation Mode](journey/month-4/day-88.md)
+    * [Day 89: Indian DPI Accessibility Suite, Bilingual Hindi/English Switcher & Visual Control Strip](journey/month-4/day-89.md)
 
 ## Reports & Thesis Monographs
 * [Family Proxy Access & Zero-Contamination Architecture](reports/nirmaya-family-proxy-access-architecture.md)
