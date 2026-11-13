@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     PROJECT_FULL_NAME: str = (
         "Networked Interoperable Records Medical Assets & Your Archives"
     )
-    VERSION: str = "0.2.0"
+    VERSION: str = "1.1.0"
     API_V1_STR: str = "/api/v1"
 
     # Environment & Debugging
