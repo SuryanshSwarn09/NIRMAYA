@@ -129,8 +129,10 @@
     * [Day 87: Strict CoWIN/DigiLocker 3-Tile Citizen Portal](journey/month-4/day-87.md)
     * [Day 88: Express 45-Second Doctor Consultation Mode](journey/month-4/day-88.md)
     * [Day 89: Indian DPI Accessibility Suite, Bilingual Hindi/English Switcher & Visual Control Strip](journey/month-4/day-89.md)
+    * [Day 90: Master Production Certification, 90-Day Engineering Monograph & Release v1.1.0](journey/month-4/day-90.md)
 
 ## Reports & Thesis Monographs
+* [Master Production Release Notes (v1.1.0)](../RELEASE_NOTES_v1.1.0.md)
 * [Family Proxy Access & Zero-Contamination Architecture](reports/nirmaya-family-proxy-access-architecture.md)
 * [Academic Project Monograph & Capstone Engineering Thesis](reports/nirmaya-academic-project-monograph-thesis.md)
 * [Capstone Defense Presentation Deck (12 Slides)](reports/nirmaya-capstone-presentation-deck.md)
@@ -140,6 +142,7 @@
 * [Master Engineering Roadmap (Days 1–80)](reports/master-engineering-roadmap-days-1-80.md)
 
 ## Audits & Retrospectives
+* [Week 18 Retrospective & Phase 5 DPI Synthesis (Release v1.1.0)](journey/month-4/week-18-retrospective.md)
 * [Week 1 Retrospective & Metrics](journey/month-1/week-1-review.md)
 * [Architecture Audit & Hardening](journey/month-1/architecture-audit.md)
 * [Week 2 Retrospective & Metrics](journey/month-1/week-2-review.md)
