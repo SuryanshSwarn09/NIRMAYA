@@ -659,6 +659,7 @@ from app.schemas.release import (
     MajorBreakthroughItem,
     Phase5RoadmapItem,
     MasterReleaseManifest,
+    Phase5CertificationReport,
 )
 from app.schemas.family_proxy import (
     RelationshipTypeEnum,
