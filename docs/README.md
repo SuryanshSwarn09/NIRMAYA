@@ -160,3 +160,4 @@ This GitBook documentation captures both the architectural blueprint and the liv
 - **Part I: System Vision & Architecture:** The problem analysis, solution architecture, and technology selections.
 - **Part II: Healthcare Standards:** In-depth mappings of HL7 FHIR R4 and simulated ABDM consent flows.
 - **Part III: The 4-Month Development Journey:** Day-by-day micro-commit logs, architectural decisions, and technical milestones.
+- **Part IV: Master Reports & Comparative Monograph:** Exhaustive architectural comparison of [NIRMAYA vs. Apollo 24/7, Aarogya Setu, eSanjeevani, CoWIN, and ABDM ABHA App](reports/nirmaya-vs-apollo-aarogyasetu-comparative-analysis.md).

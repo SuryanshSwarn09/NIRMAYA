@@ -1,39 +1,38 @@
 ---
-updated: 2026-11-18T17:05:00Z
+updated: 2026-11-18T17:42:00Z
 ---
 
 # Project State
 
 ## Current Position
 
-**Milestone:** Frontend Visual Audit & Layout Remediation (v1.3.1)
-**Phase:** Phase 7 - Comprehensive Frontend Visual Audit & Layout Remediation
+**Milestone:** National Platform Comparison & Academic Monograph (v1.3.2)
+**Phase:** Phase 8 - Exhaustive Multi-Platform Comparative Benchmark & Deep Architecture Report
 **Status:** ✅ Complete
-**Plan:** 3-Part GSD Sequence: Part 1 File Audit (`.gsd/FRONTEND-AUDIT.md`), Part 2 Defect Analysis (`.gsd/DEFECT-ANALYSIS.md`), Part 3 Implementation Plan & Rectification (`phase-7-visual-scale-and-consoles-finishing-plan.md`).
+**Plan:** 4-Part Delivery: Alignment Interview (`/grill-me`), Plan Artifact (`phase-8-comparative-platform-benchmark-plan.md`), Master Engineering Whitepaper (`docs/reports/nirmaya-vs-apollo-aarogyasetu-comparative-analysis.md`), In-App Interactive Viewer Card (`PlatformComparisonViewerCard.tsx`), and Automated Test Suite (`backend/tests/test_platform_comparison_report.py`).
 
 ## Last Action
 
-Completed Phase 7 Frontend Visual Remediation:
-- Decoupled destructive `ux4g-web-components/styles.css` reset (8.37 MB) while preserving official Government of India color tokens.
-- Clamped `.display-xl` (from oversized 64px down to `clamp(1.875rem, 3.25vw, 2.625rem)`), `.display-lg`, `.display-md`, and `.display-sm`.
-- Restored crisp Cal.com card boundaries (`rounded-[10px] border border-[#d1d5db] bg-white shadow-xs`) across all 8 routes (`/`, `/doctor`, `/register`, `/login`, `/fhir`, `/patient`, `/lab`, `/admin`).
-- Eliminated all orphaned `ux4g-*` component classes across the codebase.
-- Passed `npm run typecheck --prefix frontend` (0 errors).
-- Passed backend test suite (`pytest backend/tests/test_ux4g_design_system_phase6.py` - 14/14 passed).
+Completed Phase 8 Multi-Platform Comparison:
+- Published comprehensive architectural whitepaper in `docs/reports/nirmaya-vs-apollo-aarogyasetu-comparative-analysis.md` (10 dimensions, 6 platforms, detailed technical schematics and sequence diagrams).
+- Built interactive in-app `PlatformComparisonViewerCard.tsx` in `frontend/src/components/clinical/` with side-by-side matrices, dimension filters, radar scorecard, and JSON export.
+- Mounted component in `/admin` Super Admin Command Center.
+- Verified 0 TypeScript errors via `npm run typecheck --prefix frontend`.
+- Passed all automated comparison tests (`backend/tests/test_platform_comparison_report.py` - 5/5 passed).
+- Passed all design system regression tests (`backend/tests/test_ux4g_design_system_phase6.py` - 14/14 passed).
 
 ## Next Steps
 
-1. Push all Phase 7 remediations to `origin/main` for automated Vercel live production deployment.
-2. Final verification on live domain `https://nirmaya-tau.vercel.app`.
+1. Commit all Phase 8 deliverables and push to `origin/main` for automated Vercel deployment.
+2. Verify live deployment at `https://nirmaya-tau.vercel.app/admin`.
 
 ## Active Decisions
 
 | Decision | Choice | Made | Affects |
 |:---|:---|:---|:---|
-| CSS Architecture | Decouple `ux4g-web-components/styles.css` reset, retain CSS color variables in `globals.css` | Phase 7 | `frontend/src/app/globals.css` |
-| Component Primitives | Pure Tailwind v4 styling with Cal.com card standards and Sovereign Government palette | Phase 7 | `frontend/src/components/ui/` |
-| Display Typography | Fluid CSS clamping (`clamp(1.875rem, 3.25vw, 2.625rem)`) for display headings | Phase 7 | `frontend/src/app/globals.css`, `frontend/src/app/page.tsx` |
-| Card Structure | Unified `bg-white rounded-[10px] border border-[#d1d5db] shadow-xs` containers | Phase 7 | All routes & consoles |
+| Comparative Benchmark Platforms | NIRMAYA, Apollo 24/7, Aarogya Setu, eSanjeevani, CoWIN, ABDM ABHA App | Phase 8 Alignment | Documentation, In-App UI |
+| Evaluation Dimensions | 10 Dimensions (Topology, DPDP 2023, Crypto, FHIR R4, OPD Velocity, Identity, Telemedicine, Pathology, LGD, A11y) | Phase 8 Alignment | Whitepaper, Comparison Card |
+| Component Presentation | Cal.com White Card container with side-by-side comparison matrix and radar table | Phase 8 | `frontend/src/app/admin/page.tsx` |
 
 ## Blockers
 

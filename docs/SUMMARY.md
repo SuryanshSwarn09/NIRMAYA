@@ -132,6 +132,7 @@
     * [Day 90: Master Production Certification, 90-Day Engineering Monograph & Release v1.1.0](journey/month-4/day-90.md)
 
 ## Reports & Thesis Monographs
+* [Sovereign DPI vs Commercial & Legacy Platforms (Apollo 24/7, Aarogya Setu, eSanjeevani, CoWIN, ABDM)](reports/nirmaya-vs-apollo-aarogyasetu-comparative-analysis.md)
 * [Master Production Release Notes (v1.1.0)](../RELEASE_NOTES_v1.1.0.md)
 * [Family Proxy Access & Zero-Contamination Architecture](reports/nirmaya-family-proxy-access-architecture.md)
 * [Academic Project Monograph & Capstone Engineering Thesis](reports/nirmaya-academic-project-monograph-thesis.md)

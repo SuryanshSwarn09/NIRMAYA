@@ -70,6 +70,7 @@ export { DockerOrchestrationCard } from "./DockerOrchestrationCard";
 export { EdgeNodeSyncCard } from "./EdgeNodeSyncCard";
 export { LegacyHisFederationCard } from "./LegacyHisFederationCard";
 export { AcademicMonographViewerCard } from "./AcademicMonographViewerCard";
+export { PlatformComparisonViewerCard } from "./PlatformComparisonViewerCard";
 export { PerformanceBenchmarkCard } from "./PerformanceBenchmarkCard";
 export { InteractiveDemoSandboxCard } from "./InteractiveDemoSandboxCard";
 export { SystemAuditLicenseCard } from "./SystemAuditLicenseCard";

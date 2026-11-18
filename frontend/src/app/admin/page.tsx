@@ -29,6 +29,7 @@ import {
   EdgeNodeSyncCard,
   LegacyHisFederationCard,
   AcademicMonographViewerCard,
+  PlatformComparisonViewerCard,
   PerformanceBenchmarkCard,
   InteractiveDemoSandboxCard,
   SystemAuditLicenseCard,
@@ -128,6 +129,7 @@ export default function AdminConsolePage() {
         {/* 3. Production Release & Monograph Showcase */}
         <ProductionReleaseCard />
         <AcademicMonographViewerCard />
+        <PlatformComparisonViewerCard />
 
         {/* 4. Security, Compliance & Audit Trail */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
