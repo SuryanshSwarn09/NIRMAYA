@@ -238,3 +238,12 @@
 * [schemas/abdm_m1_issuance.py (ABHA Number & HPR Onboarding)](audit/02_backend/app/schemas/abdm_m1_issuance.py.report.md)
 * [schemas/abdm_m2_bridge.py (Discovery & Care Context Linkage)](audit/02_backend/app/schemas/abdm_m2_bridge.py.report.md)
 * [schemas/abdm_m3_audit.py (M3 Compliance & Fidelius Telemetry)](audit/02_backend/app/schemas/abdm_m3_audit.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 2 - ABDM & Security (Batch B2-06)
+* [schemas/abdm_m3_consent.py (M3 Electronic Consent Artefacts)](audit/02_backend/app/schemas/abdm_m3_consent.py.report.md)
+* [schemas/abdm_m3_crypto.py (ECDH Key Exchange & Fidelius Cryptography)](audit/02_backend/app/schemas/abdm_m3_crypto.py.report.md)
+* [schemas/abdm_m3_hiu.py (HIU Data Consumer & Parsed FHIR)](audit/02_backend/app/schemas/abdm_m3_hiu.py.report.md)
+* [schemas/abdm_m3_transfer.py (AES-256-GCM Encrypted Transfer Pipeline)](audit/02_backend/app/schemas/abdm_m3_transfer.py.report.md)
+* [schemas/abdm_security_audit.py (Automated Security Penetration Testing)](audit/02_backend/app/schemas/abdm_security_audit.py.report.md)
+* [schemas/abha_card.py (Digital ABHA ID Card & QR Verification)](audit/02_backend/app/schemas/abha_card.py.report.md)
+* [schemas/accessibility.py (Indian DPI Accessibility & Bilingual TTS)](audit/02_backend/app/schemas/accessibility.py.report.md)
