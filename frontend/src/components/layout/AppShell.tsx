@@ -36,7 +36,7 @@ export function AppShell({ children }: AppShellProps) {
           />
 
           {/* 4. Main Page Viewport Container with accessible landmark */}
-          <main id="main-content" className="flex-1 w-full bg-white focus:outline-none" tabIndex={-1}>
+          <main id="main-content" className="flex-1 w-full flex flex-col bg-white focus:outline-none" tabIndex={-1}>
             {children}
           </main>
 

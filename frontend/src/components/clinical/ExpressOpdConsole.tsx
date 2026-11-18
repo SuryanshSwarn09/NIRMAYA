@@ -303,7 +303,7 @@ export function ExpressOpdConsole({
   return (
     <div className="space-y-4">
       {/* 1. OPD Queue Action Strip & Live Token Header */}
-      <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs">
+      <div className="rounded-xl border border-[#d1d5db] bg-white p-4 shadow-xs">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {/* Active Token & Patient Info */}
           <div className="flex items-center gap-3">
@@ -423,7 +423,7 @@ export function ExpressOpdConsole({
         {/* Left Side: 1-Click Complaint Chips & Rx Bundles (7 Cols) */}
         <div className="space-y-4 lg:col-span-7">
           {/* Step 1: 1-Click Chief Complaint Chips */}
-          <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs space-y-3">
+          <div className="rounded-xl border border-[#d1d5db] bg-white p-4 shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-[11px] font-bold text-white">
@@ -465,7 +465,7 @@ export function ExpressOpdConsole({
           </div>
 
           {/* Step 2: 1-Click Standard Prescription Bundles */}
-          <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs space-y-3">
+          <div className="rounded-xl border border-[#d1d5db] bg-white p-4 shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-[11px] font-bold text-white">
@@ -521,7 +521,7 @@ export function ExpressOpdConsole({
 
         {/* Right Side: Active Prescription Authoring & Fast-Track Sign Pad (5 Cols) */}
         <div className="space-y-4 lg:col-span-5">
-          <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-xs space-y-4">
+          <div className="rounded-xl border border-[#d1d5db] bg-white p-4 shadow-xs space-y-4">
             {/* Pad Title */}
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div>

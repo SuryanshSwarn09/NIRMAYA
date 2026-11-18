@@ -96,7 +96,7 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
   };
 
   return (
-    <Card variant="mockup" className="p-0 overflow-hidden border border-[#0b4d8c]/20 bg-white shadow-xs ux4g-card ux4g-card-elevated">
+    <Card variant="mockup" className="p-0 overflow-hidden border border-[#0b4d8c]/20 bg-white shadow-xs">
       {/* Tile Title Strip */}
       <div className="px-5 py-3 bg-[#f0f6ff]/40 border-b border-[#0b4d8c]/20 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -109,7 +109,7 @@ export function DpiActiveMedicinesTile({ medicines, patientName }: DpiActiveMedi
           <button
             type="button"
             onClick={handleSpeakMedicines}
-            className="ux4g-btn ux4g-btn-s inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-white border border-[#0b4d8c]/20 hover:bg-[#f0f6ff] text-[#0b4d8c] cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[11px] font-semibold bg-white border border-[#0b4d8c]/20 hover:bg-[#f0f6ff] text-[#0b4d8c] cursor-pointer shadow-2xs transition-colors"
             title="Listen to medicine instructions (Audio readout)"
           >
             <Volume2 className="h-3 w-3 text-[#046a38]" />

@@ -140,7 +140,7 @@ export function DigitalAbhaCard({
               FRONT FACE (Ayushman Bharat Health Account ID - Official NHA Spec)
               ==================================================================== */}
           <div
-            className="w-full rounded-[16px] bg-white border border-[#0b4d8c]/30 shadow-md overflow-hidden flex flex-col justify-between ux4g-card ux4g-card-elevated"
+            className="w-full rounded-[16px] bg-white border-2 border-[#0b4d8c]/30 shadow-md overflow-hidden flex flex-col justify-between"
             style={{
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
@@ -253,7 +253,7 @@ export function DigitalAbhaCard({
                 <button
                   type="button"
                   onClick={handleCopyAbhaId}
-                  className="ux4g-btn ux4g-btn-s px-2.5 py-1 rounded-[6px] bg-white border border-[#0b4d8c]/20 text-[11px] font-semibold text-[#0b4d8c] hover:bg-[#f0f6ff] flex items-center gap-1 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-[6px] bg-white border border-[#0b4d8c]/20 text-[11px] font-semibold text-[#0b4d8c] hover:bg-[#f0f6ff] flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
                 >
                   {copiedId ? (
                     <>
@@ -275,7 +275,7 @@ export function DigitalAbhaCard({
               BACK FACE (Medical Emergency, Jurisdiction & ABDM Security)
               ==================================================================== */}
           <div
-            className="absolute inset-0 w-full h-full rounded-[16px] bg-[#ffffff] border border-[#0b4d8c]/30 shadow-md overflow-hidden flex flex-col justify-between ux4g-card ux4g-card-elevated"
+            className="absolute inset-0 w-full h-full rounded-[16px] bg-[#ffffff] border-2 border-[#0b4d8c]/30 shadow-md overflow-hidden flex flex-col justify-between"
             style={{
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",

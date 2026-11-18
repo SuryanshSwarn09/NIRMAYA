@@ -12,28 +12,28 @@ export function Card({
   glass = false,
   ...props
 }: CardProps) {
-  // Official UX4G Card Styling & Indian Government Elevated Standards
+  // Cal.com Modern SaaS Card Styling & Indian Government Elevated Standards
   const variantStyles: Record<string, string> = {
-    // Standard UX4G Feature Card: Clean white surface with subtle gov border and 8px radius
+    // Standard Feature Card: Clean white surface with subtle hairline border and 8px radius
     feature:
-      "ux4g-card ux4g-card-elevated rounded-[8px] bg-white text-[#171717] p-6 sm:p-8 border border-[#d1d5db] shadow-xs transition-all duration-150",
+      "bg-white text-[#111827] rounded-[8px] p-6 sm:p-8 border border-[#e5e7eb] shadow-xs transition-all duration-150",
     // Official Government Outlined Card
     outlined:
-      "ux4g-card ux4g-card-outlined rounded-[8px] bg-white text-[#171717] p-6 border-2 border-[#0b4d8c]/20 hover:border-[#0b4d8c] transition-colors",
+      "bg-white text-[#111827] rounded-[8px] p-6 border-2 border-[#0b4d8c]/20 hover:border-[#0b4d8c] transition-colors",
     // Official Government Elevated Card
     elevated:
-      "ux4g-card ux4g-card-elevated rounded-[8px] bg-white text-[#171717] p-6 sm:p-8 border border-[#d1d5db] shadow-sm",
+      "bg-white text-[#111827] rounded-[8px] p-6 sm:p-8 border border-[#d1d5db] shadow-sm transition-all duration-150",
     // Mockup card: crisp white canvas with hairline border & subtle shadow
     mockup:
-      "ux4g-card rounded-[8px] bg-white text-[#171717] p-6 border border-[#d1d5db] shadow-xs",
+      "bg-white text-[#111827] rounded-[8px] p-6 border border-[#e5e7eb] shadow-xs",
     // Hero marquee mockup container: elevated shadow
     "hero-mockup":
-      "ux4g-card ux4g-card-elevated rounded-[10px] bg-white text-[#171717] p-6 sm:p-8 border border-[#b9d5ee] shadow-md",
-    // Featured dark card (e.g. secure cryptographic ledger): #072847 deep navy
+      "bg-white text-[#111827] rounded-[10px] p-6 sm:p-8 border border-[#b9d5ee] shadow-md",
+    // Featured dark card (e.g. secure cryptographic ledger): #051c33 deep navy
     "featured-dark":
-      "ux4g-card rounded-[8px] bg-[#051c33] text-white p-6 sm:p-8 border border-[#0b4d8c] shadow-md",
+      "bg-[#051c33] text-white rounded-[8px] p-6 sm:p-8 border border-[#0b4d8c] shadow-md",
     default:
-      "ux4g-card rounded-[8px] bg-white text-[#171717] p-6 border border-[#d1d5db] shadow-xs",
+      "bg-white text-[#111827] rounded-[8px] p-6 border border-[#e5e7eb] shadow-xs",
   };
 
   return (

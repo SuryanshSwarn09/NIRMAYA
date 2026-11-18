@@ -16,22 +16,22 @@ export function Alert({
 }: AlertProps) {
   const variantMap = {
     info: {
-      container: "ux4g-alert ux4g-alert-info bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
+      container: "bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
       icon: <Info className="h-5 w-5 text-[#0b4d8c] flex-shrink-0" />,
       titleColor: "text-[#0b4d8c]",
     },
     warning: {
-      container: "ux4g-alert ux4g-alert-warning bg-[#fff5ea] text-[#b45309] border-[#ffd9af]",
+      container: "bg-[#fff5ea] text-[#b45309] border-[#ffd9af]",
       icon: <AlertTriangle className="h-5 w-5 text-[#f47920] flex-shrink-0" />,
       titleColor: "text-[#b45309]",
     },
     error: {
-      container: "ux4g-alert ux4g-alert-danger bg-[#fde8e8] text-[#9b1c1c] border-[#f8b4b4]",
+      container: "bg-[#fde8e8] text-[#9b1c1c] border-[#f8b4b4]",
       icon: <AlertCircle className="h-5 w-5 text-[#db372d] flex-shrink-0" />,
       titleColor: "text-[#9b1c1c]",
     },
     success: {
-      container: "ux4g-alert ux4g-alert-success bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
+      container: "bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
       icon: <CheckCircle2 className="h-5 w-5 text-[#046a38] flex-shrink-0" />,
       titleColor: "text-[#046a38]",
     },

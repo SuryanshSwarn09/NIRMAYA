@@ -924,7 +924,7 @@ export default function PatientVaultPage() {
           <button
             type="button"
             onClick={() => setPortalMode("citizen_tiles")}
-            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1.5 font-semibold transition cursor-pointer ${
+            className={`rounded-md px-3 py-1.5 font-semibold transition cursor-pointer ${
               portalMode === "citizen_tiles"
                 ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
                 : "text-[#4b5563] hover:text-[#0b4d8c]"
@@ -935,7 +935,7 @@ export default function PatientVaultPage() {
           <button
             type="button"
             onClick={() => setPortalMode("clinical_vault")}
-            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1.5 font-semibold transition cursor-pointer ${
+            className={`rounded-md px-3 py-1.5 font-semibold transition cursor-pointer ${
               portalMode === "clinical_vault"
                 ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
                 : "text-[#4b5563] hover:text-[#0b4d8c]"

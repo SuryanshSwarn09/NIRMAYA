@@ -28,21 +28,21 @@ export function Badge({
   dot = false,
   ...props
 }: BadgeProps) {
-  // Official UX4G Government Badge Palette
+  // Sovereign Government Badge Palette
   const variantStyles: Record<string, string> = {
-    default: "ux4g-badge bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
-    neutral: "ux4g-badge bg-[#f3f4f6] text-[#374151] border-[#d1d5db]",
-    verified: "ux4g-badge ux4g-badge-success bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
-    pending: "ux4g-badge ux4g-badge-warning bg-[#fff4e5] text-[#b45309] border-[#fed7aa]",
-    warning: "ux4g-badge ux4g-badge-warning bg-[#fff4e5] text-[#b45309] border-[#fed7aa]",
-    critical: "ux4g-badge ux4g-badge-danger bg-[#fde8e8] text-[#9b1c1c] border-[#f8b4b4]",
-    fhir: "ux4g-badge bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
-    abdm: "ux4g-badge bg-[#f3e8ff] text-[#6b21a8] border-[#d8b4fe]",
-    outline: "ux4g-badge bg-transparent text-[#0b4d8c] border-2 border-[#0b4d8c]",
-    orange: "ux4g-badge bg-[#fff5ea] text-[#f47920] border-[#ffd9af]",
-    pink: "ux4g-badge bg-[#fdf2f8] text-[#be185d] border-[#fbcfe8]",
-    violet: "ux4g-badge bg-[#f3e8ff] text-[#6b21a8] border-[#d8b4fe]",
-    emerald: "ux4g-badge bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
+    default: "bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
+    neutral: "bg-[#f3f4f6] text-[#374151] border-[#d1d5db]",
+    verified: "bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
+    pending: "bg-[#fff4e5] text-[#b45309] border-[#fed7aa]",
+    warning: "bg-[#fff4e5] text-[#b45309] border-[#fed7aa]",
+    critical: "bg-[#fde8e8] text-[#9b1c1c] border-[#f8b4b4]",
+    fhir: "bg-[#e8f1f9] text-[#0b4d8c] border-[#b9d5ee]",
+    abdm: "bg-[#f3e8ff] text-[#6b21a8] border-[#d8b4fe]",
+    outline: "bg-transparent text-[#0b4d8c] border-2 border-[#0b4d8c]",
+    orange: "bg-[#fff5ea] text-[#f47920] border-[#ffd9af]",
+    pink: "bg-[#fdf2f8] text-[#be185d] border-[#fbcfe8]",
+    violet: "bg-[#f3e8ff] text-[#6b21a8] border-[#d8b4fe]",
+    emerald: "bg-[#e6f4ea] text-[#046a38] border-[#a3d9b8]",
   };
 
   const dotColors: Record<string, string> = {

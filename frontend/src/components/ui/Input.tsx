@@ -40,8 +40,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           ref={ref}
           className={cn(
-            "ux4g-input ux4g-input-m w-full h-10 px-3 py-2 text-sm rounded-[6px] bg-white text-[#171717]",
-            "border border-[#d1d5db] transition-colors",
+            "w-full h-10 px-3.5 py-2 text-sm rounded-[6px] bg-white text-[#111827]",
+            "border border-[#d1d5db] transition-colors placeholder:text-[#9ca3af]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b4d8c] focus-visible:border-[#0b4d8c]",
             "disabled:bg-[#f3f4f6] disabled:text-[#9ca3af] disabled:cursor-not-allowed",
             error && "border-[#db372d] focus-visible:ring-[#db372d]",

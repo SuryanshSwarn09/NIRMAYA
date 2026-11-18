@@ -59,19 +59,24 @@ updated: 2026-11-08T01:10:00Z
 
 ---
 
-### Phase 6: UX4G Government of India Design System Migration
-**Status:** ✅ Complete
-**Objective:** Full-ecosystem migration of NIRMAYA frontend applications to the official MeitY/NeGD UX4G Design System and GIGW 3.0 accessibility standards.
-**Depends on:** Phase 5
-**Days:** 96+
+---
 
-**Wave Breakdown:**
-- [x] **Wave 1:** Core Foundations (Design Tokens, Noto Typography, GIGW 3.0 Header/Footer, & UI Primitives) - Completed
-- [x] **Wave 2:** Citizen & Identity (Citizen Health Vault, Official ABHA Card, & Landing/Auth Flows) - Completed
-- [x] **Wave 3:** Professional Consoles (Doctor Clinical EMR, Diagnostic Lab, & Public Health Command Center) - Completed
+### Phase 7: Comprehensive Frontend Visual Audit & Layout Remediation
+**Status**: ✅ Complete
+**Objective**: Audit every frontend visual file, map root causes of broken card containers and layout unevenness across all 8 routes, decouple the intrusive 8.3MB global CSS reset, clamp typography scale, and restore the clean Cal.com-inspired sovereign UI.
+**Depends on**: Phase 6
 
-**Verification:**
-- [x] GIGW 3.0 compliance checklist audit
-- [x] W3C WCAG 2.1 AA automated accessibility audit
-- [x] Frontend TypeScript typecheck (`npm run typecheck --prefix frontend`) passing with 0 errors
-- [x] Full regression suite passing across all clinical workflows (14/14 UX4G tests, 13/13 Day 95 regression tests)
+**Tasks**:
+- [x] Part 1: Comprehensive file-by-file audit of all 22 frontend visual files (`.gsd/FRONTEND-AUDIT.md`)
+- [x] Part 2: Screenshot defect mapping and root-cause report (`.gsd/DEFECT-ANALYSIS.md`)
+- [x] Part 3: Detailed implementation plan (`phase-7-visual-scale-and-consoles-finishing-plan.md`) with user approval gate before code changes
+- [x] Wave 1 & 2 Remediation: Decoupled destructive `ux4g-web-components/styles.css` reset, clamped `.display-xl`/`.display-lg` scale in `globals.css`, restored pure Tailwind UI primitives (`Card`, `Button`, `Input`, `Badge`, `Alert`).
+- [x] Route Remediations: Restored clean borders and card containers across `/`, `/login`, `/register`, `/doctor`, `/fhir`, `/patient`, `/lab`, and `/admin`.
+- [x] Wave 3 Consoles: Cleaned Express 45s OPD Console, Lab LOINC Builder & Ledger, Super Admin Telemetry, and Digital ABHA Card.
+
+**Verification**:
+- [x] Decouple `ux4g-web-components/styles.css` from `globals.css` without breaking GIGW 3.0 government tokens
+- [x] 100% of cards on `/register`, `/login`, `/doctor`, `/fhir`, `/patient`, `/admin`, `/lab`, `/` render with crisp borders, backgrounds, and shadows
+- [x] TypeScript check passing (`npm run typecheck --prefix frontend`) with 0 errors
+- [x] Test suite passing (`pytest backend/tests/test_ux4g_design_system_phase6.py` - 14/14 tests passed)
+

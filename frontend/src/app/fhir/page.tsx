@@ -508,13 +508,13 @@ export default function FhirStandardsPage() {
   );
 
   return (
-    <div className="bg-white min-h-screen py-10 lg:py-14">
+    <div className="bg-[#f8fafc] min-h-screen py-8 lg:py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         {/* Navigation & Header */}
         <div className="space-y-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#6b7280] hover:text-[#111111] transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0b4d8c] hover:underline transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             <span>Return to Home</span>
@@ -527,17 +527,17 @@ export default function FhirStandardsPage() {
             <Badge variant="default" size="sm">
               NRCeS India Profile Spec
             </Badge>
-            <Badge variant="fhir" size="sm">
+            <Badge variant="abdm" size="sm">
               ABDM Milestone 3 Certified
             </Badge>
           </div>
 
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-[#111111]">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0b4d8c]">
                 HL7 FHIR R4 Standards & Conformance Engine
               </h1>
-              <p className="text-sm text-[#6b7280] mt-1 max-w-3xl">
+              <p className="text-xs sm:text-sm text-[#4b5563] mt-1 max-w-3xl leading-relaxed">
                 Interactive bundle validator, NRCeS India profile catalog, and clinical ontology binding registry aligned
                 with the Ayushman Bharat Digital Mission (ABDM) national interoperability charter.
               </p>
@@ -547,7 +547,7 @@ export default function FhirStandardsPage() {
                 href="https://nrces.in/ndhm/fhir/r4/index.html"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium border border-[#e5e7eb] rounded-md text-[#111111] hover:bg-[#f9fafb] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold border border-[#0b4d8c]/30 rounded-md text-[#0b4d8c] bg-white hover:bg-[#f0f6ff] transition-colors shadow-2xs"
               >
                 <span>NRCeS R4 Docs</span>
                 <ExternalLink className="h-3 w-3" />
@@ -557,13 +557,13 @@ export default function FhirStandardsPage() {
         </div>
 
         {/* Tab Selection */}
-        <div className="flex border-b border-[#e5e7eb] space-x-6 text-sm font-medium">
+        <div className="flex border-b border-[#d1d5db] space-x-6 text-xs sm:text-sm font-semibold overflow-x-auto pb-px">
           <button
             onClick={() => setActiveTab("validator")}
-            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === "validator"
-                ? "border-[#111111] text-[#111111]"
-                : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                ? "border-[#0b4d8c] text-[#0b4d8c]"
+                : "border-transparent text-[#6b7280] hover:text-[#111827]"
             }`}
           >
             <FileCode className="h-4 w-4" />
@@ -571,10 +571,10 @@ export default function FhirStandardsPage() {
           </button>
           <button
             onClick={() => setActiveTab("profiles")}
-            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === "profiles"
-                ? "border-[#111111] text-[#111111]"
-                : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                ? "border-[#0b4d8c] text-[#0b4d8c]"
+                : "border-transparent text-[#6b7280] hover:text-[#111827]"
             }`}
           >
             <Layers className="h-4 w-4" />
@@ -582,10 +582,10 @@ export default function FhirStandardsPage() {
           </button>
           <button
             onClick={() => setActiveTab("terminology")}
-            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === "terminology"
-                ? "border-[#111111] text-[#111111]"
-                : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                ? "border-[#0b4d8c] text-[#0b4d8c]"
+                : "border-transparent text-[#6b7280] hover:text-[#111827]"
             }`}
           >
             <Search className="h-4 w-4" />
@@ -593,10 +593,10 @@ export default function FhirStandardsPage() {
           </button>
           <button
             onClick={() => setActiveTab("architecture")}
-            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`pb-3 border-b-2 flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === "architecture"
-                ? "border-[#111111] text-[#111111]"
-                : "border-transparent text-[#6b7280] hover:text-[#111111]"
+                ? "border-[#0b4d8c] text-[#0b4d8c]"
+                : "border-transparent text-[#6b7280] hover:text-[#111827]"
             }`}
           >
             <ShieldCheck className="h-4 w-4" />
@@ -610,13 +610,13 @@ export default function FhirStandardsPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left Column: Code Editor & Presets */}
               <div className="lg:col-span-7 space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-3 bg-[#f9fafb] p-3 rounded-lg border border-[#e5e7eb]">
+                <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 rounded-[8px] border border-[#d1d5db] shadow-xs">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-[#111111]">Preset Sample:</span>
+                    <span className="text-xs font-semibold text-[#111827]">Preset Sample:</span>
                     <select
                       value={selectedPreset}
                       onChange={(e) => handlePresetSelect(e.target.value)}
-                      className="text-xs bg-white border border-[#e5e7eb] rounded px-2.5 py-1 text-[#111111] focus:outline-none focus:ring-1 focus:ring-black"
+                      className="text-xs bg-white border border-[#d1d5db] rounded px-2.5 py-1 text-[#111827] focus:outline-none focus:ring-1 focus:ring-[#0b4d8c]"
                     >
                       <option value="op_consultation">Outpatient Consultation (Valid)</option>
                       <option value="prescription">Prescription Bundle (Valid)</option>
@@ -625,12 +625,12 @@ export default function FhirStandardsPage() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <label className="flex items-center gap-1.5 text-xs text-[#6b7280] cursor-pointer">
+                    <label className="flex items-center gap-1.5 text-xs text-[#4b5563] cursor-pointer">
                       <input
                         type="checkbox"
                         checked={strictMode}
                         onChange={(e) => setStrictMode(e.target.checked)}
-                        className="rounded border-[#e5e7eb] text-black focus:ring-black"
+                        className="rounded border-[#d1d5db] text-[#0b4d8c] focus:ring-[#0b4d8c]"
                       />
                       <span>Strict Validation</span>
                     </label>
@@ -647,16 +647,16 @@ export default function FhirStandardsPage() {
                   </div>
                 </div>
 
-                <div className="relative border border-[#e5e7eb] rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-black bg-[#fafafa]">
-                  <div className="bg-[#f3f4f6] px-3 py-1.5 border-b border-[#e5e7eb] flex items-center justify-between">
-                    <span className="text-[11px] font-mono font-medium text-[#6b7280]">FHIR R4 Bundle Payload (JSON)</span>
+                <div className="relative border border-[#d1d5db] rounded-[8px] overflow-hidden focus-within:ring-2 focus-within:ring-[#0b4d8c] bg-white shadow-xs">
+                  <div className="bg-[#f0f4f8] px-3.5 py-2 border-b border-[#d1d5db] flex items-center justify-between">
+                    <span className="text-[11px] font-mono font-semibold text-[#0b4d8c]">FHIR R4 Bundle Payload (JSON)</span>
                     <span className="text-[11px] text-[#6b7280]">{bundleJsonText.split("\n").length} lines</span>
                   </div>
                   <textarea
                     value={bundleJsonText}
                     onChange={(e) => setBundleJsonText(e.target.value)}
                     rows={18}
-                    className="w-full font-mono text-xs p-3 bg-transparent text-[#111111] focus:outline-none resize-y"
+                    className="w-full font-mono text-xs p-3.5 bg-white text-[#111827] focus:outline-none resize-y"
                     placeholder="Paste your FHIR R4 Document Bundle JSON here..."
                     spellCheck={false}
                   />
@@ -667,9 +667,11 @@ export default function FhirStandardsPage() {
                     Evaluates against NRCeS R4 Document Manifest, Cardinalities & Terminology Bindings.
                   </span>
                   <Button
+                    variant="primary"
+                    size="md"
                     onClick={handleValidateBundle}
                     disabled={isValidating}
-                    className="text-xs font-semibold px-4 py-2 flex items-center gap-2"
+                    className="text-xs font-semibold px-4 py-2 flex items-center gap-2 shadow-xs"
                   >
                     {isValidating ? (
                       <>
@@ -688,7 +690,7 @@ export default function FhirStandardsPage() {
 
               {/* Right Column: Conformance Report */}
               <div className="lg:col-span-5 space-y-4">
-                <Card className="p-5 border-[#e5e7eb] space-y-5">
+                <Card variant="elevated" className="p-5 border-[#d1d5db] space-y-5 bg-white">
                   <div className="flex items-center justify-between border-b border-[#e5e7eb] pb-3">
                     <div className="flex items-center gap-2">
                       <Code2 className="h-4 w-4 text-[#111111]" />

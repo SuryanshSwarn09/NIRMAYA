@@ -99,10 +99,10 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={() => setRole("patient")}
-            className={`ux4g-btn ux4g-btn-s py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               role === "patient"
                 ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
-                : "text-[#4b5563] hover:text-[#0b4d8c]"
+                : "text-[#4b5563] hover:text-[#0b4d8c] hover:bg-white"
             }`}
           >
             <User className="h-3.5 w-3.5" />
@@ -111,10 +111,10 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={() => setRole("doctor")}
-            className={`ux4g-btn ux4g-btn-s py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               role === "doctor"
                 ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
-                : "text-[#4b5563] hover:text-[#0b4d8c]"
+                : "text-[#4b5563] hover:text-[#0b4d8c] hover:bg-white"
             }`}
           >
             <Stethoscope className="h-3.5 w-3.5" />
@@ -123,10 +123,10 @@ export default function RegisterPage() {
           <button
             type="button"
             onClick={() => setRole("lab")}
-            className={`ux4g-btn ux4g-btn-s py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`py-2 px-2 text-center font-medium rounded-[6px] transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               role === "lab"
                 ? "bg-[#0b4d8c] text-white shadow-xs font-semibold"
-                : "text-[#4b5563] hover:text-[#0b4d8c]"
+                : "text-[#4b5563] hover:text-[#0b4d8c] hover:bg-white"
             }`}
           >
             <Building2 className="h-3.5 w-3.5" />
@@ -135,7 +135,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Registration Card */}
-        <Card variant="mockup" className="ux4g-card ux4g-card-elevated p-6 sm:p-7 space-y-5 border border-[#0b4d8c]/20">
+        <Card variant="elevated" className="p-6 sm:p-8 space-y-5 border border-[#e5e7eb] shadow-sm">
           {role === "patient" ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between pb-1 border-b border-[#f3f4f6]">
@@ -177,7 +177,7 @@ export default function RegisterPage() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Dr. / Practitioner Name"
-                    className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
+                    className="w-full h-10 px-3.5 rounded-[8px] border border-[#d1d5db] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
                   />
                 </div>
 
@@ -193,7 +193,7 @@ export default function RegisterPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="doctor@hospital.org"
-                    className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
+                    className="w-full h-10 px-3.5 rounded-[8px] border border-[#d1d5db] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
                   />
                 </div>
 
@@ -208,7 +208,7 @@ export default function RegisterPage() {
                     value={idNumber}
                     onChange={(e) => setIdNumber(e.target.value)}
                     placeholder={role === "doctor" ? "DMC-2018-98412" : "HFR-DEL-91024"}
-                    className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
+                    className="w-full h-10 px-3.5 rounded-[8px] border border-[#d1d5db] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
                   />
                 </div>
 
@@ -224,7 +224,7 @@ export default function RegisterPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="At least 8 characters"
-                    className="ux4g-input ux4g-input-m w-full h-10 px-3.5 rounded-[8px] border border-[#e5e7eb] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
+                    className="w-full h-10 px-3.5 rounded-[8px] border border-[#d1d5db] bg-white text-sm text-[#111827] placeholder:text-[#9ca3af] focus:outline-none focus:border-[#0b4d8c] transition-colors"
                   />
                 </div>
 
@@ -233,7 +233,7 @@ export default function RegisterPage() {
                   variant="primary"
                   size="md"
                   isLoading={isSubmitting}
-                  className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full mt-2"
+                  className="w-full mt-2 justify-center shadow-xs"
                 >
                   <span>Complete Professional Registration</span>
                   <ArrowRight className="h-4 w-4 ml-1" />

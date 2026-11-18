@@ -86,7 +86,7 @@ export function PatientDemographicBanner({
   const hasAllergies = patient.allergies && patient.allergies.length > 0;
 
   return (
-    <div className="bg-white rounded-xl border border-[#0b4d8c]/20 shadow-xs overflow-hidden transition-all ux4g-card ux4g-card-elevated">
+    <div className="bg-white rounded-xl border border-[#0b4d8c]/20 shadow-xs overflow-hidden transition-all">
       {/* 1. Primary Clinical Demographics Strip */}
       <div className="p-4 sm:p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         
@@ -177,7 +177,7 @@ export function PatientDemographicBanner({
               <button
                 type="button"
                 onClick={onViewFullRecord}
-                className="ux4g-btn ux4g-btn-s py-1.5 px-3 rounded-lg border border-[#0b4d8c]/20 bg-white text-xs font-semibold text-[#0b4d8c] hover:bg-[#f0f6ff] transition-all flex items-center gap-1 cursor-pointer"
+                className="py-1.5 px-3 rounded-lg border border-[#0b4d8c]/20 bg-white text-xs font-semibold text-[#0b4d8c] hover:bg-[#f0f6ff] transition-all flex items-center gap-1 cursor-pointer shadow-2xs"
               >
                 <span>Full Chart</span>
                 <ExternalLink className="h-3 w-3" />
@@ -187,7 +187,7 @@ export function PatientDemographicBanner({
             <button
               type="button"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="ux4g-btn ux4g-btn-s p-1.5 rounded-lg border border-[#0b4d8c]/20 bg-white text-[#0b4d8c] hover:bg-[#f0f6ff] transition-all cursor-pointer"
+              className="p-1.5 rounded-lg border border-[#0b4d8c]/20 bg-white text-[#0b4d8c] hover:bg-[#f0f6ff] transition-all cursor-pointer shadow-2xs"
               title={isExpanded ? "Collapse Details" : "Expand Demographics & Clinical Profile"}
             >
               {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}

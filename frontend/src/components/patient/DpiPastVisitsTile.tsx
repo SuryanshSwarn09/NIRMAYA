@@ -61,7 +61,7 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
   return (
     <section
       aria-labelledby="tile-visits-title"
-      className="rounded-xl border border-[#0b4d8c]/20 bg-white p-5 shadow-sm transition hover:shadow-md ux4g-card ux4g-card-elevated"
+      className="rounded-xl border border-[#0b4d8c]/20 bg-white p-5 shadow-sm transition hover:shadow-md"
     >
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-[#0b4d8c]/20 pb-4">
@@ -84,7 +84,7 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
           <button
             type="button"
             onClick={() => setFilter("all")}
-            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1 font-medium transition cursor-pointer ${
+            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "all"
                 ? "bg-[#0b4d8c] text-white shadow-sm font-semibold"
                 : "text-gray-600 hover:text-[#0b4d8c]"
@@ -95,7 +95,7 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
           <button
             type="button"
             onClick={() => setFilter("prescription")}
-            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1 font-medium transition cursor-pointer ${
+            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "prescription"
                 ? "bg-[#0b4d8c] text-white shadow-sm font-semibold"
                 : "text-gray-600 hover:text-[#0b4d8c]"
@@ -106,7 +106,7 @@ export const DpiPastVisitsTile: React.FC<DpiPastVisitsTileProps> = ({
           <button
             type="button"
             onClick={() => setFilter("diagnostic")}
-            className={`ux4g-btn ux4g-btn-s rounded-md px-3 py-1 font-medium transition cursor-pointer ${
+            className={`rounded-md px-3 py-1 font-medium transition cursor-pointer ${
               filter === "diagnostic"
                 ? "bg-[#0b4d8c] text-white shadow-sm font-semibold"
                 : "text-gray-600 hover:text-[#0b4d8c]"

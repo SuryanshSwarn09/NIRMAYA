@@ -63,7 +63,7 @@ export function DpiHealthIdTile({
 
   return (
     <>
-      <Card variant="mockup" className="p-0 overflow-hidden border border-[#0b4d8c]/20 bg-white shadow-xs ux4g-card ux4g-card-elevated">
+      <Card variant="mockup" className="p-0 overflow-hidden border border-[#0b4d8c]/20 bg-white shadow-xs">
         {/* Tricolor Micro-Strip Header */}
         <div className="h-1.5 w-full flex">
           <div className="h-full w-1/3 bg-[#f47920]" />
@@ -179,7 +179,7 @@ export function DpiHealthIdTile({
               type="button"
               variant="primary"
               size="lg"
-              className="ux4g-btn ux4g-btn-primary ux4g-btn-l flex-1 justify-center h-12 text-sm font-semibold shadow-xs"
+              className="flex-1 justify-center h-12 text-sm font-semibold shadow-xs"
               onClick={() => setIsQrModalOpen(true)}
             >
               <QrCode className="h-4 w-4 mr-2" />
@@ -189,7 +189,7 @@ export function DpiHealthIdTile({
               type="button"
               variant="outline"
               size="lg"
-              className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-l justify-center h-12 text-xs bg-white hover:bg-[#f0f6ff]"
+              className="justify-center h-12 text-xs bg-white hover:bg-[#f0f6ff] border-[#d1d5db]"
               onClick={() => alert(`ABHA Card for ${patientName} is digitally stamped under Ayushman Bharat Digital Mission.`)}
             >
               <Download className="h-4 w-4 mr-1.5" />

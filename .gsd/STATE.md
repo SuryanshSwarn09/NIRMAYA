@@ -1,38 +1,39 @@
 ---
-updated: 2026-11-08T01:10:00Z
+updated: 2026-11-18T17:05:00Z
 ---
 
 # Project State
 
 ## Current Position
 
-**Milestone:** UX4G Government Design System Migration (v1.3.0)
-**Phase:** Phase 6 - UX4G Government of India Design System Migration
-**Status:** Complete (Wave 1, Wave 2, and Wave 3 Fully Implemented & Verified)
-**Plan:** All 3 Waves executed, verified with 14/14 automated UX4G tests and 0 TypeScript compilation errors.
+**Milestone:** Frontend Visual Audit & Layout Remediation (v1.3.1)
+**Phase:** Phase 7 - Comprehensive Frontend Visual Audit & Layout Remediation
+**Status:** ✅ Complete
+**Plan:** 3-Part GSD Sequence: Part 1 File Audit (`.gsd/FRONTEND-AUDIT.md`), Part 2 Defect Analysis (`.gsd/DEFECT-ANALYSIS.md`), Part 3 Implementation Plan & Rectification (`phase-7-visual-scale-and-consoles-finishing-plan.md`).
 
 ## Last Action
 
-Completed Wave 3: Professional Consoles.
-- Modernized Doctor Clinical EMR (`/doctor`): Sovereign Ashok Stambh header, MoHFW / NHA / AIIMS credentials, dual workspace switcher (`Express OPD` vs `Specialist EMR Vault`) with `ux4g-btn ux4g-btn-s`, high-contrast Break-The-Glass emergency override banner (`ux4g-alert ux4g-alert-danger`), `ClinicalQuickActionRail` modernized with UX4G button groupings and badges, and `ClinicianConsultationQueue` modernized with `ux4g-card ux4g-card-elevated` and `ux4g-input ux4g-input-s`.
-- Modernized Diagnostic Laboratory Console (`/lab`): Sovereign NABL accreditation header (`NABL-ICMR-DEL-0412`), LOINC observation builder with real-time reference threshold evaluation, SHA-256 tamper-evident integrity digest card, direct ABDM HIP gateway CTAs (`ux4g-btn ux4g-btn-primary ux4g-btn-m` / `ux4g-btn-outline-primary`), and requisition queue worklist.
-- Modernized National Administrative Command Center (`/admin`): Sovereign DevOps header with NationalEmblem, 4-tier infrastructure telemetry cards (`ux4g-card ux4g-card-elevated`), `TerritorialCommandCenterCard` with 6-tier sovereign LGD administrative hierarchy selector and epidemiological incidence tracking, and `AdministrativeHierarchyViewerCard` with interactive LGD tree navigation.
-- Verified 14 / 14 UX4G automated tests (`backend/tests/test_ux4g_design_system_phase6.py`), 13 / 13 Day 95 regression tests (`backend/tests/test_ieee_manuscript_day95.py`), and 0 TypeScript errors (`npm run typecheck --prefix frontend`).
+Completed Phase 7 Frontend Visual Remediation:
+- Decoupled destructive `ux4g-web-components/styles.css` reset (8.37 MB) while preserving official Government of India color tokens.
+- Clamped `.display-xl` (from oversized 64px down to `clamp(1.875rem, 3.25vw, 2.625rem)`), `.display-lg`, `.display-md`, and `.display-sm`.
+- Restored crisp Cal.com card boundaries (`rounded-[10px] border border-[#d1d5db] bg-white shadow-xs`) across all 8 routes (`/`, `/doctor`, `/register`, `/login`, `/fhir`, `/patient`, `/lab`, `/admin`).
+- Eliminated all orphaned `ux4g-*` component classes across the codebase.
+- Passed `npm run typecheck --prefix frontend` (0 errors).
+- Passed backend test suite (`pytest backend/tests/test_ux4g_design_system_phase6.py` - 14/14 passed).
 
 ## Next Steps
 
-1. Review full platform walkthrough across all 15 routes under UX4G styling.
-2. Commit and push Wave 3 implementation and roadmap state to `origin/main`.
+1. Push all Phase 7 remediations to `origin/main` for automated Vercel live production deployment.
+2. Final verification on live domain `https://nirmaya-tau.vercel.app`.
 
 ## Active Decisions
 
 | Decision | Choice | Made | Affects |
 |:---|:---|:---|:---|
-| Migration Scope | Full Ecosystem (Citizen, Doctor, Lab, Admin/Command Center, Auth) | Phase 6 Inception | All 15 frontend routes |
-| Integration Architecture | Native Tailwind CSS v4 UX4G Token & Component System in `globals.css` | Phase 6 Inception | `frontend/src/app/globals.css`, `frontend/src/components/ui/` |
-| Government Navigation | Full GIGW 3.0 Standard Bar (Tricolor stripe, Ashok Stambh, A-/A/A+, high-contrast, bilingual) | Phase 6 Inception | `frontend/src/components/layout/` |
-| Typography Standard | Noto Sans & Noto Sans Devanagari via `next/font/google` | Phase 6 Inception | `frontend/src/app/layout.tsx` |
-| Execution Phasing | 3-Wave Execution (Foundations -> Citizen/Auth -> Professional Consoles) | Phase 6 Inception | Phase 6 Roadmap |
+| CSS Architecture | Decouple `ux4g-web-components/styles.css` reset, retain CSS color variables in `globals.css` | Phase 7 | `frontend/src/app/globals.css` |
+| Component Primitives | Pure Tailwind v4 styling with Cal.com card standards and Sovereign Government palette | Phase 7 | `frontend/src/components/ui/` |
+| Display Typography | Fluid CSS clamping (`clamp(1.875rem, 3.25vw, 2.625rem)`) for display headings | Phase 7 | `frontend/src/app/globals.css`, `frontend/src/app/page.tsx` |
+| Card Structure | Unified `bg-white rounded-[10px] border border-[#d1d5db] shadow-xs` containers | Phase 7 | All routes & consoles |
 
 ## Blockers
 

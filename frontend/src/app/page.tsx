@@ -42,7 +42,7 @@ export default function Home() {
                 <span>Government of India • ABDM & HL7 FHIR R4 Interoperable</span>
               </div>
 
-              <h1 className="display-xl text-[#0b4d8c] max-w-3xl">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#0b4d8c] max-w-3xl leading-[1.15]">
                 National Digital Health Infrastructure for 1.4 Billion Citizens
               </h1>
 
@@ -51,16 +51,16 @@ export default function Home() {
                 into an interoperable, consent-driven network anchored on HL7 FHIR R4 and the Ayushman Bharat Digital Mission (ABDM).
               </p>
 
-              {/* 2 Focused Primary CTAs (UX4G Standard) */}
+              {/* 2 Focused Primary CTAs */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link href="/patient">
-                  <Button variant="primary" size="lg" className="ux4g-btn ux4g-btn-primary ux4g-btn-l shadow-sm">
+                  <Button variant="primary" size="lg" className="shadow-xs">
                     <span>Access Patient Vault</span>
                     <ArrowRight className="h-4 w-4 ml-1" />
                   </Button>
                 </Link>
                 <Link href="/doctor">
-                  <Button variant="outline-primary" size="lg" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-l">
+                  <Button variant="outline-primary" size="lg">
                     <Stethoscope className="h-4 w-4 mr-1.5" />
                     <span>Provider EMR</span>
                   </Button>
@@ -86,7 +86,7 @@ export default function Home() {
 
             {/* Right 5 Columns: Hero App Mockup Card with Real Booking Chrome */}
             <div className="lg:col-span-5">
-              <Card variant="hero-mockup" className="relative ux4g-card ux4g-card-elevated">
+              <Card variant="hero-mockup" className="relative shadow-md border border-[#b9d5ee]">
                 {/* Doctor Chrome Header */}
                 <div className="flex items-center justify-between pb-4 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-3">
@@ -133,7 +133,7 @@ export default function Home() {
                         <button
                           key={date}
                           onClick={() => setSelectedDate(date)}
-                          className={`ux4g-btn ux4g-btn-s py-2 text-xs font-medium rounded-[8px] border transition-all text-center cursor-pointer ${
+                          className={`py-2 text-xs font-medium rounded-[8px] border transition-all text-center cursor-pointer ${
                             selectedDate === date
                               ? "bg-[#0b4d8c] text-white border-[#0b4d8c] shadow-xs"
                               : "bg-[#f8f9fa] text-[#374151] border-[#e5e7eb] hover:bg-[#f5f5f5]"
@@ -156,7 +156,7 @@ export default function Home() {
                           <button
                             key={slot}
                             onClick={() => setSelectedSlot(slot)}
-                            className={`ux4g-btn ux4g-btn-s py-2 px-3 text-xs font-medium rounded-[8px] border transition-all text-left flex items-center justify-between cursor-pointer ${
+                            className={`py-2 px-3 text-xs font-medium rounded-[8px] border transition-all text-left flex items-center justify-between cursor-pointer ${
                               selectedSlot === slot
                                 ? "bg-[#0b4d8c] text-white border-[#0b4d8c]"
                                 : "bg-white text-[#374151] border-[#e5e7eb] hover:bg-[#f5f5f5]"
@@ -176,7 +176,7 @@ export default function Home() {
                 {/* Confirm Action Button */}
                 <div className="pt-3 border-t border-[#e5e7eb]">
                   <Link href="/patient" className="block w-full">
-                    <Button variant="primary" size="md" className="ux4g-btn ux4g-btn-primary ux4g-btn-m w-full">
+                    <Button variant="primary" size="md" className="w-full justify-center shadow-xs">
                       Book Clinical Consultation
                     </Button>
                   </Link>
@@ -229,7 +229,7 @@ export default function Home() {
           {/* Interactive Pillar Mockup Zone */}
           <div className="max-w-4xl mx-auto">
             {selectedPillar === "patient" && (
-              <Card variant="mockup" className="ux4g-card ux4g-card-elevated space-y-5">
+              <Card variant="mockup" className="space-y-5 bg-white border border-[#d1d5db] shadow-xs">
                 <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="h-5 w-5 text-[#0b4d8c]" />
@@ -273,7 +273,7 @@ export default function Home() {
                 <div className="flex items-center justify-between pt-2 text-xs text-[#6b7280]">
                   <span>Consent Delegation: Revocable any time by patient.</span>
                   <Link href="/patient">
-                    <Button variant="outline-primary" size="sm" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s">
+                    <Button variant="outline-primary" size="sm">
                       Open Patient Vault
                     </Button>
                   </Link>
@@ -282,7 +282,7 @@ export default function Home() {
             )}
 
             {selectedPillar === "doctor" && (
-              <Card variant="mockup" className="ux4g-card ux4g-card-elevated space-y-5">
+              <Card variant="mockup" className="space-y-5 bg-white border border-[#d1d5db] shadow-xs">
                 <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-2">
                     <Stethoscope className="h-5 w-5 text-[#0b4d8c]" />
@@ -347,7 +347,7 @@ export default function Home() {
                 <div className="flex items-center justify-between pt-1 text-xs text-[#6b7280]">
                   <span>Instant history review & structured e-prescriptions.</span>
                   <Link href="/doctor">
-                    <Button variant="outline-primary" size="sm" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s">
+                    <Button variant="outline-primary" size="sm">
                       Open Doctor EMR
                     </Button>
                   </Link>
@@ -356,7 +356,7 @@ export default function Home() {
             )}
 
             {selectedPillar === "lab" && (
-              <Card variant="mockup" className="ux4g-card ux4g-card-elevated space-y-5">
+              <Card variant="mockup" className="space-y-5 bg-white border border-[#d1d5db] shadow-xs">
                 <div className="flex items-center justify-between pb-3 border-b border-[#e5e7eb]">
                   <div className="flex items-center gap-2">
                     <FlaskConical className="h-5 w-5 text-[#0b4d8c]" />
@@ -421,7 +421,7 @@ export default function Home() {
                 <div className="flex items-center justify-between pt-1 text-xs text-[#6b7280]">
                   <span>Accredited diagnostic ingestion directly into patient vault.</span>
                   <Link href="/lab">
-                    <Button variant="outline-primary" size="sm" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-s">
+                    <Button variant="outline-primary" size="sm">
                       Open Diagnostic Gateway
                     </Button>
                   </Link>
@@ -433,7 +433,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. FEATURE CARDS GRID (UX4G Standard Cards) */}
+      {/* 3. FEATURE CARDS GRID (Clean Cal.com Cards) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
           <Badge variant="default">Enterprise Guarantees</Badge>
@@ -447,7 +447,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1: Self-Sovereign Consent */}
-          <Card variant="feature" className="ux4g-card ux4g-card-elevated p-6 flex flex-col justify-between border-t-4 border-t-[#0b4d8c]">
+          <Card variant="feature" className="p-6 flex flex-col justify-between border-t-4 border-t-[#0b4d8c] shadow-xs">
             <div>
               <div className="h-10 w-10 rounded-[8px] bg-[#f0f6ff] border border-[#0b4d8c]/20 flex items-center justify-center text-[#0b4d8c] mb-5 shadow-xs">
                 <Lock className="h-5 w-5" />
@@ -460,7 +460,7 @@ export default function Home() {
           </Card>
 
           {/* Card 2: FHIR R4 Bundle Compliance */}
-          <Card variant="feature" className="ux4g-card ux4g-card-elevated p-6 flex flex-col justify-between border-t-4 border-t-[#f47920]">
+          <Card variant="feature" className="p-6 flex flex-col justify-between border-t-4 border-t-[#f47920] shadow-xs">
             <div>
               <div className="h-10 w-10 rounded-[8px] bg-[#fff7ed] border border-[#f47920]/20 flex items-center justify-center text-[#f47920] mb-5 shadow-xs">
                 <FileText className="h-5 w-5" />
@@ -473,7 +473,7 @@ export default function Home() {
           </Card>
 
           {/* Card 3: Tamper-Evident Security */}
-          <Card variant="feature" className="ux4g-card ux4g-card-elevated p-6 flex flex-col justify-between border-t-4 border-t-[#046a38]">
+          <Card variant="feature" className="p-6 flex flex-col justify-between border-t-4 border-t-[#046a38] shadow-xs">
             <div>
               <div className="h-10 w-10 rounded-[8px] bg-[#f0fdf4] border border-[#046a38]/20 flex items-center justify-center text-[#046a38] mb-5 shadow-xs">
                 <ShieldCheck className="h-5 w-5" />
@@ -487,9 +487,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. PRE-FOOTER LIGHT CTA BAND (UX4G Government Card) */}
+      {/* 4. PRE-FOOTER LIGHT CTA BAND */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-[12px] bg-[#f0f6ff] p-10 sm:p-14 text-center space-y-6 border border-[#0b4d8c]/20">
+        <div className="rounded-[12px] bg-[#f0f6ff] p-10 sm:p-14 text-center space-y-6 border border-[#0b4d8c]/20 shadow-xs">
           <div className="max-w-2xl mx-auto space-y-3">
             <h3 className="display-sm text-[#0b4d8c]">
               Smarter, simpler clinical records and scheduling.
@@ -501,13 +501,13 @@ export default function Home() {
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link href="/register">
-              <Button variant="primary" size="lg" className="ux4g-btn ux4g-btn-primary ux4g-btn-l shadow-sm">
+              <Button variant="primary" size="lg" className="shadow-xs">
                 <span>Create ABHA Profile</span>
                 <ArrowRight className="h-4 w-4 ml-1" />
               </Button>
             </Link>
             <Link href="/doctor">
-              <Button variant="outline-primary" size="lg" className="ux4g-btn ux4g-btn-outline-primary ux4g-btn-l">
+              <Button variant="outline-primary" size="lg">
                 Provider Onboarding
               </Button>
             </Link>
