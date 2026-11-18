@@ -229,3 +229,12 @@
 * [models/patient.py (Patient Longitudinal Vault & ABHA)](audit/02_backend/app/models/patient.py.report.md)
 * [models/soap_note.py (FHIR Composition & SOAP Note)](audit/02_backend/app/models/soap_note.py.report.md)
 * [models/user.py (User Identity & Supabase Auth)](audit/02_backend/app/models/user.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 1 - ABDM (Batch B2-05)
+* [schemas/__init__.py (Unified Schemas Catalog)](audit/02_backend/app/schemas/__init__.py.report.md)
+* [schemas/abdm.py (Gateway Sessions & Headers)](audit/02_backend/app/schemas/abdm.py.report.md)
+* [schemas/abdm_certification.py (Official Sandbox Test Harness)](audit/02_backend/app/schemas/abdm_certification.py.report.md)
+* [schemas/abdm_m1.py (Direct Aadhaar OTP & Demographics)](audit/02_backend/app/schemas/abdm_m1.py.report.md)
+* [schemas/abdm_m1_issuance.py (ABHA Number & HPR Onboarding)](audit/02_backend/app/schemas/abdm_m1_issuance.py.report.md)
+* [schemas/abdm_m2_bridge.py (Discovery & Care Context Linkage)](audit/02_backend/app/schemas/abdm_m2_bridge.py.report.md)
+* [schemas/abdm_m3_audit.py (M3 Compliance & Fidelius Telemetry)](audit/02_backend/app/schemas/abdm_m3_audit.py.report.md)
