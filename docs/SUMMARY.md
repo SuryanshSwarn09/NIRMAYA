@@ -347,3 +347,12 @@
 * [services/command_center_service.py (Public Health Surveillance & Territorial Rollups)](audit/02_backend/app/services/command_center_service.py.report.md)
 * [services/condition.py (Clinical Condition Lifecycle & Problem List Service)](audit/02_backend/app/services/condition.py.report.md)
 
+## Codebase Technical Audit: Core Business Services Part 3 - Container, Delegation, Demo, Diagnostics & Doctor (Batch B2-18)
+* [services/container_service.py (CIS Docker Security & Runtime Telemetry Engine)](audit/02_backend/app/services/container_service.py.report.md)
+* [services/delegation_service.py (Administrative Chain of Command & Scoped TRBAC)](audit/02_backend/app/services/delegation_service.py.report.md)
+* [services/demo_service.py (Interactive Demonstration Engine & Presentation Deck)](audit/02_backend/app/services/demo_service.py.report.md)
+* [services/dependency_scanner.py (Dependency Vulnerability Scanner & Advisory Engine)](audit/02_backend/app/services/dependency_scanner.py.report.md)
+* [services/diagnostic.py (Diagnostic Service Requests & Verified Pathology Reports)](audit/02_backend/app/services/diagnostic.py.report.md)
+* [services/digilocker.py (DigiLocker OAuth2 PKCE & e-Aadhaar Verification Service)](audit/02_backend/app/services/digilocker.py.report.md)
+* [services/doctor.py (Doctor Profile EMR Service & HPR Registration Registry)](audit/02_backend/app/services/doctor.py.report.md)
+
