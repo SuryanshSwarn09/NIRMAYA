@@ -283,3 +283,12 @@
 * [schemas/guardian_delegation.py (Delegated Consent & Scoped Proxy Tokens)](audit/02_backend/app/schemas/guardian_delegation.py.report.md)
 * [schemas/health.py (System Health Telemetry & DB Probes)](audit/02_backend/app/schemas/health.py.report.md)
 * [schemas/lab.py (Diagnostic Lab Facility & ABDM HFR Registry)](audit/02_backend/app/schemas/lab.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 7 - Medication, HIS & Gateway (Batch B2-11)
+* [schemas/legacy_his.py (Legacy HIS Federation & SQL/MED)](audit/02_backend/app/schemas/legacy_his.py.report.md)
+* [schemas/license_audit.py (Software Bill of Materials & License Gates)](audit/02_backend/app/schemas/license_audit.py.report.md)
+* [schemas/medication.py (Medication Formulary & Ontology Mapping)](audit/02_backend/app/schemas/medication.py.report.md)
+* [schemas/medication_dispense.py (Pharmacy Dispensing & Lot Traceability)](audit/02_backend/app/schemas/medication_dispense.py.report.md)
+* [schemas/medication_request.py (FHIR MedicationRequest Electronic Prescriptions)](audit/02_backend/app/schemas/medication_request.py.report.md)
+* [schemas/monograph.py (Academic Monograph & IEEE Capstone Benchmarks)](audit/02_backend/app/schemas/monograph.py.report.md)
+* [schemas/national_gateway.py (Universal Gateway & Multi-Channel Auth)](audit/02_backend/app/schemas/national_gateway.py.report.md)
