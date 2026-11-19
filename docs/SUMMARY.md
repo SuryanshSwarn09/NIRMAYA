@@ -18,8 +18,7 @@
 ## Engineering Journey (80-Day Roadmap)
 * [Development Methodology & Pacing](journey/overview.md)
 * [Month 1: Foundation, Schemas & RBAC Auth](journey/month-1/overview.md)
-  * [Week 1: Monorepo Scaffold & Core Settings](journey/month
-  -1/week-1.md)
+  * [Week 1: Monorepo Scaffold & Core Settings](journey/month-1/week-1.md)
     * [Day 1: Monorepo Scaffold & FastAPI Init](journey/month-1/day-1.md)
     * [Day 2: Tailwind CSS v4 & Clinical Design Tokens](journey/month-1/day-2.md)
     * [Day 3: FastAPI Core Settings & Telemetry](journey/month-1/day-3.md)
@@ -356,3 +355,12 @@
 * [services/digilocker.py (DigiLocker OAuth2 PKCE & e-Aadhaar Verification Service)](audit/02_backend/app/services/digilocker.py.report.md)
 * [services/doctor.py (Doctor Profile EMR Service & HPR Registration Registry)](audit/02_backend/app/services/doctor.py.report.md)
 
+
+## Codebase Technical Audit: Core Business Services Part 4 - DoS Shield, Edge Sync, Emergency Dispatch & Vault, Express Consultation, Proxy & FHIR Validator (Batch B2-19)
+* [services/dos_shield.py (DoS Rate-Limiting Shield & IP Jail Penalty Box)](audit/02_backend/app/services/dos_shield.py.report.md)
+* [services/edge_sync_service.py (Local-First Offline Event Log & Store-and-Forward Sync)](audit/02_backend/app/services/edge_sync_service.py.report.md)
+* [services/emergency_dispatch.py (Emergency Contact SMS Dispatcher & Forensic Audit)](audit/02_backend/app/services/emergency_dispatch.py.report.md)
+* [services/emergency_vault.py (Zero-Knowledge Break-The-Glass Emergency Vault)](audit/02_backend/app/services/emergency_vault.py.report.md)
+* [services/express_consultation_service.py (Express 45-Second Consultation & Fast-Track EMR)](audit/02_backend/app/services/express_consultation_service.py.report.md)
+* [services/family_proxy_service.py (Family Health Proxy & Dependent Access Engine)](audit/02_backend/app/services/family_proxy_service.py.report.md)
+* [services/fhir_validator.py (HL7 FHIR R4 Bundle Validator & NRCES Enforcement)](audit/02_backend/app/services/fhir_validator.py.report.md)
