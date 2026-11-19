@@ -373,3 +373,11 @@
 * [services/medication.py (Medication Formulary Catalog & RxNorm/ATC Query Engine)](audit/02_backend/app/services/medication.py.report.md)
 * [services/medication_dispense.py (Pharmacy Medication Dispense & Refill Governance)](audit/02_backend/app/services/medication_dispense.py.report.md)
 * [services/medication_request.py (Electronic Prescription Authoring & SHA-256 Signing)](audit/02_backend/app/services/medication_request.py.report.md)
+
+## Codebase Technical Audit: Core Business Services Part 6 - Monograph, Gateway, Slots, EMR, Sockets (Batch B2-21)
+* [services/monograph_service.py (Academic Project Monograph & IEEE Dataset Repository)](audit/02_backend/app/services/monograph_service.py.report.md)
+* [services/national_gateway_service.py (Universal High-Density National Health Gateway)](audit/02_backend/app/services/national_gateway_service.py.report.md)
+* [services/observation.py (Clinical Observations & Vital Signs Telemetry Engine)](audit/02_backend/app/services/observation.py.report.md)
+* [services/opd_queue.py (OPD Consultation Queue & Triage Prioritization Engine)](audit/02_backend/app/services/opd_queue.py.report.md)
+* [services/orchestration_service.py (Container Topology Inspector & Caddy Reverse Proxy Auditor)](audit/02_backend/app/services/orchestration_service.py.report.md)
+* [services/patient.py (Patient Vault Business Logic & Sovereign ABHA Resolution)](audit/02_backend/app/services/patient.py.report.md)
