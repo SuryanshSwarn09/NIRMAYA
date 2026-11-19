@@ -265,3 +265,12 @@
 * [schemas/common.py (Generic Envelopes & Pagination Wrappers)](audit/02_backend/app/schemas/common.py.report.md)
 * [schemas/condition.py (FHIR Condition Problem List Management)](audit/02_backend/app/schemas/condition.py.report.md)
 * [schemas/container_runtime.py (CIS Docker Security & OCI Manifests)](audit/02_backend/app/schemas/container_runtime.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 5 - Clinical Services & Sync (Batch B2-09)
+* [schemas/delegation.py (Administrative Delegation & Officer Verification)](audit/02_backend/app/schemas/delegation.py.report.md)
+* [schemas/demo.py (Demonstration Seeders & Vitals Simulation)](audit/02_backend/app/schemas/demo.py.report.md)
+* [schemas/diagnostic.py (FHIR DiagnosticReport & Observation Orders)](audit/02_backend/app/schemas/diagnostic.py.report.md)
+* [schemas/digilocker.py (DigiLocker OAuth2 PKCE & e-Aadhaar Extraction)](audit/02_backend/app/schemas/digilocker.py.report.md)
+* [schemas/doctor.py (Doctor Profiles & Clinical Specializations)](audit/02_backend/app/schemas/doctor.py.report.md)
+* [schemas/edge_sync.py (Dual-Mode Edge Node & Event Sync)](audit/02_backend/app/schemas/edge_sync.py.report.md)
+* [schemas/emergency_vault.py (Break-The-Glass Vault & Forensic Audit)](audit/02_backend/app/schemas/emergency_vault.py.report.md)
