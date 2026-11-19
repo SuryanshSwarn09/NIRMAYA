@@ -256,3 +256,12 @@
 * [schemas/auth.py (JWT Bearer Tokens & AuthContext)](audit/02_backend/app/schemas/auth.py.report.md)
 * [schemas/benchmark.py (Subsystem Benchmarks & IEEE Exports)](audit/02_backend/app/schemas/benchmark.py.report.md)
 * [schemas/cds.py (CDS Safety Engine & Clinical Overrides)](audit/02_backend/app/schemas/cds.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 4 - Portals & Security (Batch B2-08)
+* [schemas/child_abha.py (Child-ABHA & Guardian Proxy Linkage)](audit/02_backend/app/schemas/child_abha.py.report.md)
+* [schemas/citizen_portal.py (3-Tile CoWIN/DigiLocker Citizen Portal)](audit/02_backend/app/schemas/citizen_portal.py.report.md)
+* [schemas/clinical_alerts.py (Laboratory Panic Values & Clinician Acknowledgment)](audit/02_backend/app/schemas/clinical_alerts.py.report.md)
+* [schemas/command_center.py (Public Health Surveillance & Directives)](audit/02_backend/app/schemas/command_center.py.report.md)
+* [schemas/common.py (Generic Envelopes & Pagination Wrappers)](audit/02_backend/app/schemas/common.py.report.md)
+* [schemas/condition.py (FHIR Condition Problem List Management)](audit/02_backend/app/schemas/condition.py.report.md)
+* [schemas/container_runtime.py (CIS Docker Security & OCI Manifests)](audit/02_backend/app/schemas/container_runtime.py.report.md)
