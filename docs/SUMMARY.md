@@ -274,3 +274,12 @@
 * [schemas/doctor.py (Doctor Profiles & Clinical Specializations)](audit/02_backend/app/schemas/doctor.py.report.md)
 * [schemas/edge_sync.py (Dual-Mode Edge Node & Event Sync)](audit/02_backend/app/schemas/edge_sync.py.report.md)
 * [schemas/emergency_vault.py (Break-The-Glass Vault & Forensic Audit)](audit/02_backend/app/schemas/emergency_vault.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 6 - Clinical Governance & FHIR (Batch B2-10)
+* [schemas/express_consultation.py (Express 45-Second Consultation Mode)](audit/02_backend/app/schemas/express_consultation.py.report.md)
+* [schemas/family_proxy.py (Family Health Proxy & Dependent Access)](audit/02_backend/app/schemas/family_proxy.py.report.md)
+* [schemas/fhir_validator.py (HL7 FHIR R4 Validation & NRCES Profiles)](audit/02_backend/app/schemas/fhir_validator.py.report.md)
+* [schemas/guardian_conflict.py (Guardian Conflict Arbitration & Co-Signing)](audit/02_backend/app/schemas/guardian_conflict.py.report.md)
+* [schemas/guardian_delegation.py (Delegated Consent & Scoped Proxy Tokens)](audit/02_backend/app/schemas/guardian_delegation.py.report.md)
+* [schemas/health.py (System Health Telemetry & DB Probes)](audit/02_backend/app/schemas/health.py.report.md)
+* [schemas/lab.py (Diagnostic Lab Facility & ABDM HFR Registry)](audit/02_backend/app/schemas/lab.py.report.md)
