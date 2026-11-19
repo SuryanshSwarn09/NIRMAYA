@@ -318,3 +318,13 @@
 * [services/abdm_crypto.py (Fidelius Curve25519 Key Agreement Engine)](audit/02_backend/app/services/abdm_crypto.py.report.md)
 * [services/abdm_discovery.py (M2 Care Context Discovery & Fuzzy Matcher)](audit/02_backend/app/services/abdm_discovery.py.report.md)
 * [services/abdm_hip_bridge.py (M2 HIP Ingress Webhooks & Replay Defense)](audit/02_backend/app/services/abdm_hip_bridge.py.report.md)
+
+## Codebase Technical Audit: ABDM Transfer, HIU & Security Audit (Batch B2-15)
+* [services/abdm_hiu.py (Health Information User Data Consumer & FHIR Parser)](audit/02_backend/app/services/abdm_hiu.py.report.md)
+* [services/abdm_issuance.py (ABHA Number Minting & Doctor HPR Onboarding)](audit/02_backend/app/services/abdm_issuance.py.report.md)
+* [services/abdm_linkage.py (Care Context Linkage Sessions & OTP Verification)](audit/02_backend/app/services/abdm_linkage.py.report.md)
+* [services/abdm_m3_audit.py (M3 Data Transfer Audit & Telemetry Generator)](audit/02_backend/app/services/abdm_m3_audit.py.report.md)
+* [services/abdm_security_audit.py (ABDM Security Penetration Test Suite)](audit/02_backend/app/services/abdm_security_audit.py.report.md)
+* [services/abdm_transfer.py (AES-256-GCM Encrypted Health Data Push)](audit/02_backend/app/services/abdm_transfer.py.report.md)
+* [services/abha_card.py (Physical ABHA Card & QR Code Rendering)](audit/02_backend/app/services/abha_card.py.report.md)
+
