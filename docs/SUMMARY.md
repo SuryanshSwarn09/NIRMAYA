@@ -328,3 +328,13 @@
 * [services/abdm_transfer.py (AES-256-GCM Encrypted Health Data Push)](audit/02_backend/app/services/abdm_transfer.py.report.md)
 * [services/abha_card.py (Physical ABHA Card & QR Code Rendering)](audit/02_backend/app/services/abha_card.py.report.md)
 
+## Codebase Technical Audit: Core Business & Governance Services Part 1 (Batch B2-16)
+* [services/accessibility_service.py (Bilingual Localization & Speech Synthesis)](audit/02_backend/app/services/accessibility_service.py.report.md)
+* [services/administrative_hierarchy_service.py (LGD Territorial Jurisdiction Traversal)](audit/02_backend/app/services/administrative_hierarchy_service.py.report.md)
+* [services/appointment.py (FHIR Clinical Appointment Lifecycle & Slot Locks)](audit/02_backend/app/services/appointment.py.report.md)
+* [services/asvs_audit_service.py (OWASP ASVS Level 2 Verification Auditor)](audit/02_backend/app/services/asvs_audit_service.py.report.md)
+* [services/asvs_fuzzer.py (Defensive SQLi & XSS Fuzzing & Sanitization)](audit/02_backend/app/services/asvs_fuzzer.py.report.md)
+* [services/audit_hash_chain.py (Immutable SHA-256 Forensic Audit Ledger)](audit/02_backend/app/services/audit_hash_chain.py.report.md)
+* [services/benchmark_service.py (High-Throughput Subsystem SLA Benchmarking)](audit/02_backend/app/services/benchmark_service.py.report.md)
+
+
