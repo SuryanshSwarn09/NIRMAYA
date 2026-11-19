@@ -18,7 +18,8 @@
 ## Engineering Journey (80-Day Roadmap)
 * [Development Methodology & Pacing](journey/overview.md)
 * [Month 1: Foundation, Schemas & RBAC Auth](journey/month-1/overview.md)
-  * [Week 1: Monorepo Scaffold & Core Settings](journey/month-1/week-1.md)
+  * [Week 1: Monorepo Scaffold & Core Settings](journey/month
+  -1/week-1.md)
     * [Day 1: Monorepo Scaffold & FastAPI Init](journey/month-1/day-1.md)
     * [Day 2: Tailwind CSS v4 & Clinical Design Tokens](journey/month-1/day-2.md)
     * [Day 3: FastAPI Core Settings & Telemetry](journey/month-1/day-3.md)
@@ -308,3 +309,12 @@
 * [schemas/user.py (IAM User Identity & Profile Validation)](audit/02_backend/app/schemas/user.py.report.md)
 * [schemas/websocket_events.py (Pub/Sub Event Bus & OPD Queue Telemetry)](audit/02_backend/app/schemas/websocket_events.py.report.md)
 * [schemas/workflow_isolation.py (Zero-Contamination Persona Isolation & CGA)](audit/02_backend/app/schemas/workflow_isolation.py.report.md)
+
+## Codebase Technical Audit: ABDM & Core Services Part 1 (Batch B2-14)
+* [services/__init__.py (Service Layer Barrel Exporter & Boundaries)](audit/02_backend/app/services/__init__.py.report.md)
+* [services/aadhaar_otp.py (Aadhaar OTP Authentication & Demographic Sync)](audit/02_backend/app/services/aadhaar_otp.py.report.md)
+* [services/abdm_certification.py (NHA Gateway Sandbox E2E Test Harness)](audit/02_backend/app/services/abdm_certification.py.report.md)
+* [services/abdm_consent.py (ABDM M3 Electronic Consent Ingestion)](audit/02_backend/app/services/abdm_consent.py.report.md)
+* [services/abdm_crypto.py (Fidelius Curve25519 Key Agreement Engine)](audit/02_backend/app/services/abdm_crypto.py.report.md)
+* [services/abdm_discovery.py (M2 Care Context Discovery & Fuzzy Matcher)](audit/02_backend/app/services/abdm_discovery.py.report.md)
+* [services/abdm_hip_bridge.py (M2 HIP Ingress Webhooks & Replay Defense)](audit/02_backend/app/services/abdm_hip_bridge.py.report.md)
