@@ -338,3 +338,12 @@
 * [services/benchmark_service.py (High-Throughput Subsystem SLA Benchmarking)](audit/02_backend/app/services/benchmark_service.py.report.md)
 
 
+## Codebase Technical Audit: Core Business Services Part 2 - CDS, Child ABHA, Portal, Alerts & Conditions (Batch B2-17)
+* [services/cds_rules.py (Pharmacological Interaction Matrix & DDI Rules)](audit/02_backend/app/services/cds_rules.py.report.md)
+* [services/cds_safety.py (Pre-Prescription CDS Safety & Contraindication Engine)](audit/02_backend/app/services/cds_safety.py.report.md)
+* [services/child_abha_service.py (ABDM Child-ABHA & Guardian Proxy Delegation)](audit/02_backend/app/services/child_abha_service.py.report.md)
+* [services/citizen_portal_service.py (CoWIN/DigiLocker 3-Tile Citizen Portal)](audit/02_backend/app/services/citizen_portal_service.py.report.md)
+* [services/clinical_alerts.py (Laboratory Panic Alerting & Clinician Acknowledgment)](audit/02_backend/app/services/clinical_alerts.py.report.md)
+* [services/command_center_service.py (Public Health Surveillance & Territorial Rollups)](audit/02_backend/app/services/command_center_service.py.report.md)
+* [services/condition.py (Clinical Condition Lifecycle & Problem List Service)](audit/02_backend/app/services/condition.py.report.md)
+
