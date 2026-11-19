@@ -364,3 +364,12 @@
 * [services/express_consultation_service.py (Express 45-Second Consultation & Fast-Track EMR)](audit/02_backend/app/services/express_consultation_service.py.report.md)
 * [services/family_proxy_service.py (Family Health Proxy & Dependent Access Engine)](audit/02_backend/app/services/family_proxy_service.py.report.md)
 * [services/fhir_validator.py (HL7 FHIR R4 Bundle Validator & NRCES Enforcement)](audit/02_backend/app/services/fhir_validator.py.report.md)
+
+## Codebase Technical Audit: Core Business Services Part 5 - Guardian Conflict & Delegation, Legacy HIS, License Audit, Medication & Dispensing (Batch B2-20)
+* [services/guardian_conflict_service.py (Multi-Guardian Arbitration & Custodial Legal Freeze)](audit/02_backend/app/services/guardian_conflict_service.py.report.md)
+* [services/guardian_delegation_service.py (ABDM Consent Delegation & Scoped Proxy Tokens)](audit/02_backend/app/services/guardian_delegation_service.py.report.md)
+* [services/legacy_his_service.py (PostgreSQL Foreign Data Wrapper & SQL/MED Federation)](audit/02_backend/app/services/legacy_his_service.py.report.md)
+* [services/license_audit_service.py (Software Bill of Materials SBOM & CycloneDX 1.5 JSON)](audit/02_backend/app/services/license_audit_service.py.report.md)
+* [services/medication.py (Medication Formulary Catalog & RxNorm/ATC Query Engine)](audit/02_backend/app/services/medication.py.report.md)
+* [services/medication_dispense.py (Pharmacy Medication Dispense & Refill Governance)](audit/02_backend/app/services/medication_dispense.py.report.md)
+* [services/medication_request.py (Electronic Prescription Authoring & SHA-256 Signing)](audit/02_backend/app/services/medication_request.py.report.md)
