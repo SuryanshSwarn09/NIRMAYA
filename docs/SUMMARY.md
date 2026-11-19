@@ -292,3 +292,12 @@
 * [schemas/medication_request.py (FHIR MedicationRequest Electronic Prescriptions)](audit/02_backend/app/schemas/medication_request.py.report.md)
 * [schemas/monograph.py (Academic Monograph & IEEE Capstone Benchmarks)](audit/02_backend/app/schemas/monograph.py.report.md)
 * [schemas/national_gateway.py (Universal Gateway & Multi-Channel Auth)](audit/02_backend/app/schemas/national_gateway.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 8 - Clinical Observations & Auth (Batch B2-12)
+* [schemas/observation.py (Clinical Observations, Vitals & LOINC Mapping)](audit/02_backend/app/schemas/observation.py.report.md)
+* [schemas/opd_queue.py (OPD Queue Management & Room Calling)](audit/02_backend/app/schemas/opd_queue.py.report.md)
+* [schemas/orchestration.py (Docker Compose Topology & Caddy Reverse Proxy)](audit/02_backend/app/schemas/orchestration.py.report.md)
+* [schemas/patient.py (Patient Demographics & ABDM ABHA Identification)](audit/02_backend/app/schemas/patient.py.report.md)
+* [schemas/patient_auth.py (Passwordless Patient Auth & SIM Fallback)](audit/02_backend/app/schemas/patient_auth.py.report.md)
+* [schemas/release.py (Master Production Release Verification v1.1.0)](audit/02_backend/app/schemas/release.py.report.md)
+* [schemas/security_scanner.py (SAST Security Scanner & Connection Pool Telemetry)](audit/02_backend/app/schemas/security_scanner.py.report.md)
