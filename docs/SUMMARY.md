@@ -247,3 +247,12 @@
 * [schemas/abdm_security_audit.py (Automated Security Penetration Testing)](audit/02_backend/app/schemas/abdm_security_audit.py.report.md)
 * [schemas/abha_card.py (Digital ABHA ID Card & QR Verification)](audit/02_backend/app/schemas/abha_card.py.report.md)
 * [schemas/accessibility.py (Indian DPI Accessibility & Bilingual TTS)](audit/02_backend/app/schemas/accessibility.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 3 - Clinical & Core (Batch B2-07)
+* [schemas/administrative_hierarchy.py (LGD 5-Tier Territorial Units)](audit/02_backend/app/schemas/administrative_hierarchy.py.report.md)
+* [schemas/appointment.py (FHIR Appointment & Slot Booking)](audit/02_backend/app/schemas/appointment.py.report.md)
+* [schemas/asvs_fuzzer.py (OWASP ASVS & Defensive Fuzzing)](audit/02_backend/app/schemas/asvs_fuzzer.py.report.md)
+* [schemas/audit_hash_chain.py (Immutable SHA-256 Hash Chain Ledger)](audit/02_backend/app/schemas/audit_hash_chain.py.report.md)
+* [schemas/auth.py (JWT Bearer Tokens & AuthContext)](audit/02_backend/app/schemas/auth.py.report.md)
+* [schemas/benchmark.py (Subsystem Benchmarks & IEEE Exports)](audit/02_backend/app/schemas/benchmark.py.report.md)
+* [schemas/cds.py (CDS Safety Engine & Clinical Overrides)](audit/02_backend/app/schemas/cds.py.report.md)
