@@ -347,11 +347,11 @@ The following runtime, cache, and dependency directories are strictly excluded f
 | 171 | `backend/app/schemas/patient_auth.py` | `02_backend` | PHASE 2 | Python Source | 62 | `DONE` |
 | 172 | `backend/app/schemas/release.py` | `02_backend` | PHASE 2 | Python Source | 110 | `DONE` |
 | 173 | `backend/app/schemas/security_scanner.py` | `02_backend` | PHASE 2 | Python Source | 156 | `DONE` |
-| 174 | `backend/app/schemas/soap_note.py` | `02_backend` | PHASE 2 | Python Source | 150 | `PENDING` |
-| 175 | `backend/app/schemas/terminology_validator.py` | `02_backend` | PHASE 2 | Python Source | 171 | `PENDING` |
-| 176 | `backend/app/schemas/user.py` | `02_backend` | PHASE 2 | Python Source | 67 | `PENDING` |
-| 177 | `backend/app/schemas/websocket_events.py` | `02_backend` | PHASE 2 | Python Source | 247 | `PENDING` |
-| 178 | `backend/app/schemas/workflow_isolation.py` | `02_backend` | PHASE 2 | Python Source | 109 | `PENDING` |
+| 174 | `backend/app/schemas/soap_note.py` | `02_backend` | PHASE 2 | Python Source | 150 | `DONE` |
+| 175 | `backend/app/schemas/terminology_validator.py` | `02_backend` | PHASE 2 | Python Source | 171 | `DONE` |
+| 176 | `backend/app/schemas/user.py` | `02_backend` | PHASE 2 | Python Source | 67 | `DONE` |
+| 177 | `backend/app/schemas/websocket_events.py` | `02_backend` | PHASE 2 | Python Source | 247 | `DONE` |
+| 178 | `backend/app/schemas/workflow_isolation.py` | `02_backend` | PHASE 2 | Python Source | 109 | `DONE` |
 | 179 | `backend/app/services/__init__.py` | `02_backend` | PHASE 2 | Python Source | 339 | `PENDING` |
 | 180 | `backend/app/services/aadhaar_otp.py` | `02_backend` | PHASE 2 | Python Source | 320 | `PENDING` |
 | 181 | `backend/app/services/abdm_certification.py` | `02_backend` | PHASE 2 | Python Source | 798 | `PENDING` |

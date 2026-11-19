@@ -301,3 +301,10 @@
 * [schemas/patient_auth.py (Passwordless Patient Auth & SIM Fallback)](audit/02_backend/app/schemas/patient_auth.py.report.md)
 * [schemas/release.py (Master Production Release Verification v1.1.0)](audit/02_backend/app/schemas/release.py.report.md)
 * [schemas/security_scanner.py (SAST Security Scanner & Connection Pool Telemetry)](audit/02_backend/app/schemas/security_scanner.py.report.md)
+
+## Codebase Technical Audit: Pydantic Schemas Part 9 - Clinical Notes & Personas (Batch B2-13)
+* [schemas/soap_note.py (FHIR Composition SOAP Notes & Attestation)](audit/02_backend/app/schemas/soap_note.py.report.md)
+* [schemas/terminology_validator.py (SNOMED, LOINC & ICD-10 Ontology Binding)](audit/02_backend/app/schemas/terminology_validator.py.report.md)
+* [schemas/user.py (IAM User Identity & Profile Validation)](audit/02_backend/app/schemas/user.py.report.md)
+* [schemas/websocket_events.py (Pub/Sub Event Bus & OPD Queue Telemetry)](audit/02_backend/app/schemas/websocket_events.py.report.md)
+* [schemas/workflow_isolation.py (Zero-Contamination Persona Isolation & CGA)](audit/02_backend/app/schemas/workflow_isolation.py.report.md)
