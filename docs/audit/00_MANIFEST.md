@@ -187,11 +187,11 @@ The following runtime, cache, and dependency directories are strictly excluded f
 | 11 | `backend/alembic/versions/2026_10_14_0009_medication_request_schema.py` | `02_backend` | PHASE 2 | Database Migration | 94 | `PENDING` |
 | 12 | `backend/alembic/versions/2026_10_15_0010_medication_dispense_schema.py` | `02_backend` | PHASE 2 | Database Migration | 81 | `PENDING` |
 | 13 | `backend/alembic/versions/2026_11_01_0011_lgd_administrative_hierarchy_ltree.py` | `02_backend` | PHASE 2 | Database Migration | 92 | `PENDING` |
-| 14 | `backend/app/__init__.py` | `02_backend` | PHASE 2 | Python Source | 5 | `PENDING` |
-| 15 | `backend/app/abdm/__init__.py` | `02_backend` | PHASE 2 | Python Source | 11 | `PENDING` |
-| 16 | `backend/app/abdm/client.py` | `02_backend` | PHASE 2 | Python Source | 172 | `PENDING` |
-| 17 | `backend/app/abdm/security/__init__.py` | `02_backend` | PHASE 2 | Python Source | 5 | `PENDING` |
-| 18 | `backend/app/abdm/security/rsa.py` | `02_backend` | PHASE 2 | Python Source | 171 | `PENDING` |
+| 14 | `backend/app/__init__.py` | `02_backend` | PHASE 2 | Python Source | 5 | `DONE` |
+| 15 | `backend/app/abdm/__init__.py` | `02_backend` | PHASE 2 | Python Source | 11 | `DONE` |
+| 16 | `backend/app/abdm/client.py` | `02_backend` | PHASE 2 | Python Source | 172 | `DONE` |
+| 17 | `backend/app/abdm/security/__init__.py` | `02_backend` | PHASE 2 | Python Source | 5 | `DONE` |
+| 18 | `backend/app/abdm/security/rsa.py` | `02_backend` | PHASE 2 | Python Source | 171 | `DONE` |
 | 19 | `backend/app/api/__init__.py` | `02_backend` | PHASE 2 | Python Source | 1 | `PENDING` |
 | 20 | `backend/app/api/v1/__init__.py` | `02_backend` | PHASE 2 | Python Source | 1 | `PENDING` |
 | 21 | `backend/app/api/v1/endpoints/__init__.py` | `02_backend` | PHASE 2 | Python Source | 4 | `PENDING` |
@@ -272,7 +272,7 @@ The following runtime, cache, and dependency directories are strictly excluded f
 | 96 | `backend/app/fhir/__init__.py` | `02_backend` | PHASE 2 | Python Source | 100 | `PENDING` |
 | 97 | `backend/app/fhir/schemas.py` | `02_backend` | PHASE 2 | Python Source | 1169 | `PENDING` |
 | 98 | `backend/app/fhir/transformers.py` | `02_backend` | PHASE 2 | Python Source | 2047 | `PENDING` |
-| 99 | `backend/app/main.py` | `02_backend` | PHASE 2 | Python Source | 94 | `PENDING` |
+| 99 | `backend/app/main.py` | `02_backend` | PHASE 2 | Python Source | 94 | `DONE` |
 | 100 | `backend/app/models/__init__.py` | `02_backend` | PHASE 2 | Python Source | 116 | `DONE` |
 | 101 | `backend/app/models/administrative_hierarchy.py` | `02_backend` | PHASE 2 | Python Source | 172 | `DONE` |
 | 102 | `backend/app/models/appointment.py` | `02_backend` | PHASE 2 | Python Source | 223 | `DONE` |
@@ -415,8 +415,8 @@ The following runtime, cache, and dependency directories are strictly excluded f
 | 239 | `backend/app/services/terminology_validator.py` | `02_backend` | PHASE 2 | Python Source | 831 | `DONE` |
 | 240 | `backend/app/services/websocket_manager.py` | `02_backend` | PHASE 2 | Python Source | 472 | `DONE` |
 | 241 | `backend/app/services/workflow_isolation_service.py` | `02_backend` | PHASE 2 | Python Source | 436 | `DONE` |
-| 242 | `backend/docker-entrypoint.sh` | `02_backend` | PHASE 2 | Backend Asset | 32 | `PENDING` |
-| 243 | `backend/pytest.ini` | `02_backend` | PHASE 2 | Backend Asset | 9 | `PENDING` |
+| 242 | `backend/docker-entrypoint.sh` | `02_backend` | PHASE 2 | Backend Asset | 32 | `DONE` |
+| 243 | `backend/pytest.ini` | `02_backend` | PHASE 2 | Backend Asset | 9 | `DONE` |
 | 244 | `frontend/public/apple-touch-icon.png` | `03_frontend` | PHASE 3 | Binary (PNG) | 0 | `CATALOGED-ONLY` |
 | 245 | `frontend/public/favicon.ico` | `03_frontend` | PHASE 3 | Binary (ICO) | 0 | `CATALOGED-ONLY` |
 | 246 | `frontend/public/file.svg` | `03_frontend` | PHASE 3 | Binary (SVG) | 0 | `CATALOGED-ONLY` |

@@ -391,3 +391,13 @@
 * [services/terminology_validator.py (Medical Ontology Binding Audit & Terminology Validator)](audit/02_backend/app/services/terminology_validator.py.report.md)
 * [services/websocket_manager.py (Distributed WebSocket Manager & Redis Pub/Sub Bus)](audit/02_backend/app/services/websocket_manager.py.report.md)
 * [services/workflow_isolation_service.py (Pediatric/Geriatric Workflow Isolation & Zero-Contamination)](audit/02_backend/app/services/workflow_isolation_service.py.report.md)
+
+## Codebase Technical Audit: Container Entrypoint, App Root, Testing & ABDM Gateway Client / RSA (Batch B2-23)
+* [docker-entrypoint.sh (Container Lifecycle Bootstrap & Database Migration Entrypoint)](audit/02_backend/docker-entrypoint.sh.report.md)
+* [pytest.ini (Global Test Discovery & Asyncio Fixture Configuration)](audit/02_backend/pytest.ini.report.md)
+* [app/__init__.py (Top-Level Backend Application Package Anchor)](audit/02_backend/app/__init__.py.report.md)
+* [app/main.py (FastAPI Application Factory, Middleware Pipeline & Root Routes)](audit/02_backend/app/main.py.report.md)
+* [app/abdm/__init__.py (ABDM Interoperability Package Barrel Export)](audit/02_backend/app/abdm/__init__.py.report.md)
+* [app/abdm/client.py (NHA ABDM Gateway HTTP Client & Session Token Manager)](audit/02_backend/app/abdm/client.py.report.md)
+* [app/abdm/security/__init__.py (ABDM Security & Cryptographic Submodule Anchor)](audit/02_backend/app/abdm/security/__init__.py.report.md)
+* [app/abdm/security/rsa.py (RSA-2048 OAEP SHA-256 Demographic Cryptographic Engine)](audit/02_backend/app/abdm/security/rsa.py.report.md)
