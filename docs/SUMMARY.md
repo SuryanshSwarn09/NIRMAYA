@@ -401,3 +401,8 @@
 * [app/abdm/client.py (NHA ABDM Gateway HTTP Client & Session Token Manager)](audit/02_backend/app/abdm/client.py.report.md)
 * [app/abdm/security/__init__.py (ABDM Security & Cryptographic Submodule Anchor)](audit/02_backend/app/abdm/security/__init__.py.report.md)
 * [app/abdm/security/rsa.py (RSA-2048 OAEP SHA-256 Demographic Cryptographic Engine)](audit/02_backend/app/abdm/security/rsa.py.report.md)
+
+## Codebase Technical Audit: HL7 FHIR R4 Subsystem - Domain Schemas & Resource Transformers (Batch B2-24)
+* [app/fhir/__init__.py (HL7 FHIR Release 4 Package Anchor & Resource Registry)](audit/02_backend/app/fhir/__init__.py.report.md)
+* [app/fhir/schemas.py (HL7 FHIR R4 & ABDM CareContext Pydantic Data Models)](audit/02_backend/app/fhir/schemas.py.report.md)
+* [app/fhir/transformers.py (Relational Model to HL7 FHIR R4 Resource Translation Engine)](audit/02_backend/app/fhir/transformers.py.report.md)

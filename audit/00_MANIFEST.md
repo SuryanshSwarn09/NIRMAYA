@@ -269,9 +269,9 @@ The following runtime, cache, and dependency directories are strictly excluded f
 | 93 | `backend/app/db/seeder.py` | `02_backend` | PHASE 2 | Python Source | 143 | `DONE` |
 | 94 | `backend/app/db/session.py` | `02_backend` | PHASE 2 | Python Source | 153 | `DONE` |
 | 95 | `backend/app/db/tenant_context.py` | `02_backend` | PHASE 2 | Python Source | 93 | `DONE` |
-| 96 | `backend/app/fhir/__init__.py` | `02_backend` | PHASE 2 | Python Source | 100 | `PENDING` |
-| 97 | `backend/app/fhir/schemas.py` | `02_backend` | PHASE 2 | Python Source | 1169 | `PENDING` |
-| 98 | `backend/app/fhir/transformers.py` | `02_backend` | PHASE 2 | Python Source | 2047 | `PENDING` |
+| 96 | `backend/app/fhir/__init__.py` | `02_backend` | PHASE 2 | Python Source | 100 | `DONE` |
+| 97 | `backend/app/fhir/schemas.py` | `02_backend` | PHASE 2 | Python Source | 1169 | `DONE` |
+| 98 | `backend/app/fhir/transformers.py` | `02_backend` | PHASE 2 | Python Source | 2047 | `DONE` |
 | 99 | `backend/app/main.py` | `02_backend` | PHASE 2 | Python Source | 94 | `DONE` |
 | 100 | `backend/app/models/__init__.py` | `02_backend` | PHASE 2 | Python Source | 116 | `DONE` |
 | 101 | `backend/app/models/administrative_hierarchy.py` | `02_backend` | PHASE 2 | Python Source | 172 | `DONE` |
