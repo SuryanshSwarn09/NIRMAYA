@@ -381,3 +381,13 @@
 * [services/opd_queue.py (OPD Consultation Queue & Triage Prioritization Engine)](audit/02_backend/app/services/opd_queue.py.report.md)
 * [services/orchestration_service.py (Container Topology Inspector & Caddy Reverse Proxy Auditor)](audit/02_backend/app/services/orchestration_service.py.report.md)
 * [services/patient.py (Patient Vault Business Logic & Sovereign ABHA Resolution)](audit/02_backend/app/services/patient.py.report.md)
+
+## Codebase Technical Audit: Core Business Services Part 7 - Auth, Release, Scanner, Slots, Notes, Terminology, Sockets, Workflow (Batch B2-22)
+* [services/patient_auth.py (Unified DigiLocker & Aadhaar OTP Passwordless Patient Gateway)](audit/02_backend/app/services/patient_auth.py.report.md)
+* [services/release_service.py (Master Production Release Management & Deployment Verification)](audit/02_backend/app/services/release_service.py.report.md)
+* [services/security_scanner.py (AST Static Application Security Testing SAST Scanner)](audit/02_backend/app/services/security_scanner.py.report.md)
+* [services/slot_engine.py (Conflict-Free Consultation Slot Engine & Row-Level Locking)](audit/02_backend/app/services/slot_engine.py.report.md)
+* [services/soap_note.py (Structured SOAP Clinical Notes & Cryptographic Attestation)](audit/02_backend/app/services/soap_note.py.report.md)
+* [services/terminology_validator.py (Medical Ontology Binding Audit & Terminology Validator)](audit/02_backend/app/services/terminology_validator.py.report.md)
+* [services/websocket_manager.py (Distributed WebSocket Manager & Redis Pub/Sub Bus)](audit/02_backend/app/services/websocket_manager.py.report.md)
+* [services/workflow_isolation_service.py (Pediatric/Geriatric Workflow Isolation & Zero-Contamination)](audit/02_backend/app/services/workflow_isolation_service.py.report.md)
